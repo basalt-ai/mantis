@@ -10,6 +10,7 @@
     "deploy:vercel": "npm run build && npx --yes --cache ./.npm-cache vercel deploy --prod --yes --scope basalt-ai"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "googleapis": "^171.4.0",
     "next": "14.2.18",
     "qrcode": "^1.5.4",
