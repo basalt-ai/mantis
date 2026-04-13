@@ -16,7 +16,7 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Basalt",
+  title: "Pancake",
   description: "Let OpenClaw run your autonomous company.",
 };
 

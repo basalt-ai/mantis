@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { hero } from "@/lib/copy";
-import { MantisLogo } from "./MantisLogo";
+import { PancakeLogo } from "./PancakeLogo";
 
 type NavProps = {
   ctaHref?: string;
@@ -21,7 +21,7 @@ export function Nav({ ctaHref = "/signup" }: NavProps) {
           className="flex items-center text-[var(--text)]"
           aria-label="Basalt home"
         >
-          <MantisLogo
+          <PancakeLogo
             className="h-10"
             aria-hidden
           />
