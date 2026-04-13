@@ -18,6 +18,14 @@ const spaceMono = Space_Mono({
 export const metadata: Metadata = {
   title: "Pancake",
   description: "Let OpenClaw run your autonomous company.",
+  icons: {
+    icon: [
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
 };
 
 export default function RootLayout({
