@@ -18,7 +18,7 @@ export const orgChart = {
   title: "An entire organization working for you while you sleep.",
   ceoLabel: "CEO AGENT",
   /** Shown once under each cluster’s agent grid */
-  moreComingSoon: "More coming soon.",
+  moreComingSoon: "+ build your own",
   /** Visual clusters only — flat reporting to CEO */
   clusters: [
     {
@@ -80,47 +80,30 @@ export const orgChart = {
 export const slack = {
   titleLine1: "Your agents live in Slack.",
   titleLine2: "They don't wait to be asked.",
-  channels: ["#aria-updates", "#outbound", "#deploys", "#support-queue"] as const,
-  activeChannel: "#outbound" as const,
-  /** Sidebar DMs — teammates with distinct avatar colors */
-  teammates: [
-    { handle: "sales-lead", initials: "SL", avatarColor: "#E01E5A" },
-    { handle: "ops-manager", initials: "OM", avatarColor: "#1264A3" },
-    { handle: "engineering-bot", initials: "EB", avatarColor: "#2EB67D" },
+  workspaceName: "Spectra",
+  channels: ["#briefing", "#outbound", "#content", "#product"] as const,
+  defaultChannel: "#briefing" as const,
+  /** Unread counts shown on channel rows (Slack-style badges) */
+  channelUnread: {
+    "#briefing": 1,
+    "#outbound": 3,
+    "#content": 1,
+    "#product": 2,
+  } as const,
+  /** Agents that post in channels — sidebar DMs removed; used for avatars in the thread */
+  agents: [
+    { handle: "aria", initials: "AR", avatarColor: "#E9738E" },
+    { handle: "scout", initials: "SC", avatarColor: "#1264A3" },
+    { handle: "ghostwriter", initials: "GW", avatarColor: "#5B2C83" },
+    { handle: "shipwright", initials: "SW", avatarColor: "#2EB67D" },
   ] as const,
-  valuePropBadge: "3 agents acted while you were in meetings",
-  messages: [
-    {
-      id: "1",
-      kind: "agent" as const,
-      agentHandle: "sales-lead",
-      time: "8:47 AM",
-      text: 'Morning. 3 high-intent leads went cold this week — I drafted re-engagement emails for all 3 and scheduled sends for 2pm. Flagging one for you: Acme Corp, $40K deal, last touched 9 days ago. Want me to call or keep it async?',
-      actions: ["approve", "edit", "skip"] as const,
-    },
-    {
-      id: "2",
-      kind: "user" as const,
-      time: "9:18 AM",
-      text: "Close out last week and send invoices.",
-    },
-    {
-      id: "3",
-      kind: "agent" as const,
-      agentHandle: "ops-manager",
-      time: "9:18 AM",
-      text: "On it. 6 invoices drafted in Stripe, 4 sent. 2 flagged — unusual payment terms, need your sign-off before sending.",
-      taskTag: "Task completed · 4 sent automatically",
-    },
-    {
-      id: "4",
-      kind: "agent" as const,
-      agentHandle: "engineering-bot",
-      time: "9:21 AM",
-      text: "PR #184 passed all checks. Deployed to staging. Notified the team in #deploys. Ready to merge on your go.",
-      showDeployButton: true,
-    },
-  ],
+  /** Per-channel floating badge text (typewriter / receipt style, punchy caps) */
+  channelBadges: {
+    "#briefing": "YOUR COMPANY WHILE YOU SLEPT. ALL CLEAR.",
+    "#outbound": "131 LEADS CONTACTED WHILE YOU WERE CODING",
+    "#content": "847K IMPRESSIONS ON AUTOPILOT",
+    "#product": "1 BUG CAUGHT & FIXED AT 3:12 AM",
+  } as const,
 } as const;
 
 export const safeCompliant = {
