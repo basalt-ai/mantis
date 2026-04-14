@@ -37,9 +37,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" style={{ backgroundColor: "var(--bg, #fffef8)" }}>
       <body
         className={`theme-neo-brutalism ${grotesk.variable} ${dmSans.variable} ${lato.variable} ${spaceMono.variable}`}
+        style={{
+          margin: 0,
+          backgroundColor: "var(--bg, #fffef8)",
+          color: "var(--text, #0a0a0a)",
+          fontFamily: 'var(--font-body), ui-sans-serif, system-ui, sans-serif',
+        }}
       >
         {children}
       </body>
