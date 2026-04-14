@@ -79,15 +79,11 @@ post or company news. Here are 3 previews:`,
             body: `"Saw your post about scaling code reviews across 12 repos. We built an API that plugs into your existing PR flow — mind if I share a 2-min demo?"`,
           },
           {
-            lead: "→ Marc Dupont, CTO @ Mistral",
-            body: `"Congrats on the Series B. With the team growing from 40 to 120 engineers, code review bottlenecks hit hard — we solve exactly that. Worth a look?"`,
-          },
-          {
             lead: "→ Priya Sharma, Head of Platform @ Vercel",
             body: `"Loved your talk at Next.js Conf on CI pipelines. We just shipped an API that drops review time by 60%. Thought you'd find it interesting."`,
           },
         ],
-        moreLabel: "⋯ 144 more",
+        moreLabel: "⋯ 145 more",
       },
       actions: ["Send 147 invites", "Edit list", "Skip"],
     },
@@ -556,10 +552,10 @@ function StaticReactions({ reactions }: { reactions: readonly { emoji: string; c
       {reactions.map((r) => (
         <span
           key={`${r.emoji}-${r.count}`}
-          className="inline-flex cursor-default items-center gap-1 rounded border border-[#e8e8e8] bg-white px-2 py-0.5 text-[13px] leading-tight text-[#1d1c1d] shadow-sm"
+          className="inline-flex cursor-default items-center gap-1 rounded-full bg-[#f0f0f0] px-2 py-1 text-[13px] leading-none text-[#1d1c1d]"
         >
-          <span>{r.emoji}</span>
-          <span className="tabular-nums text-[12px] text-[#616061]">{r.count}</span>
+          <span className="text-[15px] leading-none">{r.emoji}</span>
+          <span className="tabular-nums text-[12px] font-normal text-[#1d1c1d]">{r.count}</span>
         </span>
       ))}
     </div>
@@ -694,7 +690,7 @@ export function SlackUI() {
                             </span>
                             {unread > 0 ? (
                               <span
-                                className="shrink-0 rounded-full bg-white/[0.22] px-1.5 py-0.5 text-[11px] font-bold tabular-nums leading-none text-white"
+                                className="shrink-0 rounded-full bg-[#e01e5a] px-1.5 py-0.5 text-[11px] font-bold tabular-nums leading-none text-white shadow-[0_1px_2px_rgba(0,0,0,0.25)]"
                                 aria-label={`${unread} unread`}
                               >
                                 {unread}
