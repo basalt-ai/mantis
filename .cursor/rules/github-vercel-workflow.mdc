@@ -1,0 +1,11 @@
+---
+description: Source of truth is GitHub; Vercel deploys from pushes (not local CLI by default).
+alwaysApply: true
+---
+
+# GitHub → Vercel (mantis)
+
+- **Canonical repo:** https://github.com/basalt-ai/mantis — edit, commit, and **push here**.
+- **Production:** Vercel should be connected to this repo (e.g. branch `main`). A successful push triggers a deploy automatically.
+- **Do not** rely on `npm run deploy:vercel` for routine changes unless Git integration is broken or the user asks for a CLI deploy.
+- After code changes that affect the site, **commit + push to GitHub** in the same session; confirm the Vercel deployment from the dashboard or GitHub checks if needed.
