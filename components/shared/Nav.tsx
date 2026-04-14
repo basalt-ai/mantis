@@ -4,9 +4,11 @@ import { PancakeLogo } from "./PancakeLogo";
 
 type NavProps = {
   ctaHref?: string;
+  /** When false, hides the primary CTA (e.g. on the signup page). */
+  showCta?: boolean;
 };
 
-export function Nav({ ctaHref = "/signup" }: NavProps) {
+export function Nav({ ctaHref = "/signup", showCta = true }: NavProps) {
   return (
     <header
       className="fixed left-0 right-0 top-0 z-50 !shadow-none backdrop-blur-md"
@@ -26,13 +28,15 @@ export function Nav({ ctaHref = "/signup" }: NavProps) {
             aria-hidden
           />
         </Link>
-        <Link
-          href={ctaHref}
-          style={{ backgroundColor: hero.autonomousAccent }}
-          className="max-w-[min(72vw,16rem)] rounded-theme brut-border px-2 py-2 text-center text-[0.62rem] font-semibold leading-[1.15] text-black transition sm:max-w-xs sm:px-3 sm:text-[0.7rem] md:max-w-[20rem] md:text-xs lg:text-sm"
-        >
-          {hero.cta}
-        </Link>
+        {showCta && (
+          <Link
+            href={ctaHref}
+            style={{ backgroundColor: hero.autonomousAccent }}
+            className="max-w-[min(72vw,16rem)] rounded-theme brut-border px-2 py-2 text-center text-[0.62rem] font-semibold leading-[1.15] text-black transition sm:max-w-xs sm:px-3 sm:text-[0.7rem] md:max-w-[20rem] md:text-xs lg:text-sm"
+          >
+            {hero.cta}
+          </Link>
+        )}
       </nav>
     </header>
   );
