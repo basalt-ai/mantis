@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { slack } from "@/lib/copy";
 
 const SLACK_PURPLE = "#4A154B";
 const SLACK_ACTIVE = "rgba(255,255,255,0.14)";
 const SLACK_MUTED = "rgba(255,255,255,0.55)";
 const SLACK_TEXT = "#1d1c1d";
+
+const AGENT_DISPLAY_NAME = "CEO Agents";
 
 type Channel = (typeof slack.channels)[number];
 
@@ -19,12 +21,12 @@ type AgentMessage = {
   time: string;
   text: string;
   actions?: string[];
-  /** Slack workflow-style footer (grey, optional leading ✅ in copy) */
   taskTag?: string;
-  /** Blue link under the message body (e.g. Notion) */
   actionLink?: { label: string };
   previewBlock?: { rows: PreviewRow[]; moreLabel: string };
   errorRateBar?: { before: string; after: string };
+  /** Decorative Slack-style reactions (non-interactive) */
+  reactions?: readonly { emoji: string; count: number }[];
 };
 
 type UserMessage = {
@@ -43,7 +45,7 @@ const CHANNEL_MESSAGES: Record<Channel, SlackMsg[]> = {
       kind: "agent",
       agentHandle: "aria",
       time: "8:00 AM",
-      text: `Good morning. Here's Spectra overnight:
+      text: `Good morning. Here's Your Company overnight:
 
 · MRR: $4,280 → $4,620 (+$340, 2 new customers from LinkedIn outbound)
 · Outbound: 131 connection requests sent Monday → 34 accepted → 6 demo calls booked this week
@@ -105,6 +107,7 @@ post or company news. Here are 3 previews:`,
 companies). Follow-up messages drip to acceptors over 5 days.
 I'll report conversions daily in #briefing.`,
       taskTag: "✅ Task completed · outbound pipeline",
+      reactions: [{ emoji: "🚀", count: 1 }],
     },
   ],
   "#content": [
@@ -152,6 +155,7 @@ Here's what I did:
 
 23 affected webhook deliveries have been auto-retried. All succeeded.`,
       errorRateBar: { before: "12.4%", after: "0.02%" },
+      reactions: [{ emoji: "🫡", count: 1 }],
     },
     {
       id: "p2",
@@ -172,15 +176,160 @@ deploy next time.`,
   ],
 };
 
-function SlackComposer({ channelLabel }: { channelLabel: string }) {
-  const name = channelLabel.replace(/^#/, "");
+const COMPOSER_TEMPLATE: Record<Channel, string> = {
+  "#briefing": "What needs me today?",
+  "#outbound": "Send. But skip companies under Series A.",
+  "#content": "Repurpose this into a LinkedIn carousel too.",
+  "#product": "Good bot.",
+};
+
+const PICKER_EMOJIS = ["🤖", "🫡", "🚀", "👀"] as const;
+
+type ComposerState = { revealed: number; started: boolean; suffix: string };
+
+function emptyComposerState(): Record<Channel, ComposerState> {
+  return {
+    "#briefing": { revealed: 0, started: false, suffix: "" },
+    "#outbound": { revealed: 0, started: false, suffix: "" },
+    "#content": { revealed: 0, started: false, suffix: "" },
+    "#product": { revealed: 0, started: false, suffix: "" },
+  };
+}
+
+function SlackComposer({ activeChannel }: { activeChannel: Channel }) {
+  const [byChannel, setByChannel] = useState(emptyComposerState);
+  const [clipTipVisible, setClipTipVisible] = useState(false);
+  const [emojiOpen, setEmojiOpen] = useState(false);
+  const clipTipTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const emojiRef = useRef<HTMLDivElement>(null);
+
+  const template = COMPOSER_TEMPLATE[activeChannel];
+  const state = byChannel[activeChannel];
+  const fullTemplateLen = template.length;
+  const typed = template.slice(0, Math.min(state.revealed, fullTemplateLen));
+  const display = typed + state.suffix;
+  const templateComplete = state.revealed >= fullTemplateLen;
+  const showPlaceholder = !state.started && state.revealed === 0;
+  const showCaret = state.started && !templateComplete;
+
+  useEffect(() => {
+    if (!state.started || state.revealed >= fullTemplateLen) return;
+    const id = window.setTimeout(() => {
+      setByChannel((prev) => {
+        const s = prev[activeChannel];
+        const len = COMPOSER_TEMPLATE[activeChannel].length;
+        return {
+          ...prev,
+          [activeChannel]: {
+            ...s,
+            revealed: Math.min(s.revealed + 1, len),
+          },
+        };
+      });
+    }, 50);
+    return () => window.clearTimeout(id);
+  }, [activeChannel, state.started, state.revealed, fullTemplateLen]);
+
+  useEffect(() => {
+    return () => {
+      if (clipTipTimer.current) clearTimeout(clipTipTimer.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!emojiOpen) return;
+    const close = (e: MouseEvent) => {
+      if (emojiRef.current && !emojiRef.current.contains(e.target as Node)) {
+        setEmojiOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, [emojiOpen]);
+
+  const bumpOnKey = useCallback(() => {
+    setByChannel((prev) => {
+      const s = prev[activeChannel];
+      const len = COMPOSER_TEMPLATE[activeChannel].length;
+      return {
+        ...prev,
+        [activeChannel]: {
+          ...s,
+          started: true,
+          revealed: Math.min(s.revealed + 4, len),
+        },
+      };
+    });
+  }, [activeChannel]);
+
+  const onComposerKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Backspace" || e.key === "Delete") {
+      e.preventDefault();
+      return;
+    }
+    if (e.key === "Tab") return;
+    e.preventDefault();
+    bumpOnKey();
+  };
+
+  const onComposerFocus = () => {
+    setByChannel((prev) => ({
+      ...prev,
+      [activeChannel]: { ...prev[activeChannel], started: true },
+    }));
+  };
+
+  const channelName = activeChannel.replace(/^#/, "");
+
+  const onPaperclipClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (clipTipTimer.current) clearTimeout(clipTipTimer.current);
+    setClipTipVisible(true);
+    clipTipTimer.current = setTimeout(() => setClipTipVisible(false), 2600);
+  };
+
+  const insertEmoji = (ch: string) => {
+    setByChannel((prev) => ({
+      ...prev,
+      [activeChannel]: {
+        ...prev[activeChannel],
+        started: true,
+        revealed: Math.max(prev[activeChannel].revealed, COMPOSER_TEMPLATE[activeChannel].length),
+        suffix: prev[activeChannel].suffix + ch,
+      },
+    }));
+    setEmojiOpen(false);
+  };
+
   return (
     <div className="border-t border-[#e8e8e8] bg-white px-4 pb-4 pt-3">
       <div className="rounded-lg border border-[#cccccc] bg-white px-3 py-2 shadow-[inset_0_1px_1px_rgba(0,0,0,0.04)]">
-        <div className="min-h-[22px] text-[15px] leading-normal text-[#868686]">
-          Message #{name}
+        <div
+          role="textbox"
+          tabIndex={0}
+          aria-label={`Message ${activeChannel}`}
+          onFocus={onComposerFocus}
+          onKeyDown={onComposerKeyDown}
+          className="min-h-[22px] cursor-text select-none text-left text-[15px] leading-normal outline-none ring-0 focus:outline-none"
+          style={{ color: showPlaceholder ? "#868686" : SLACK_TEXT }}
+        >
+          {showPlaceholder ? (
+            <span className="text-[#868686]">Message #{channelName}</span>
+          ) : (
+            <span className="whitespace-pre-wrap break-words">
+              {display}
+              {showCaret ? (
+                <span
+                  className="ml-px inline-block w-px animate-pulse bg-[#1d1c1d]"
+                  style={{ height: "1.15em", verticalAlign: "text-bottom" }}
+                  aria-hidden
+                />
+              ) : null}
+            </span>
+          )}
         </div>
-        <div className="mt-2 flex items-center gap-4 border-t border-[#f0f0f0] pt-2 text-[13px] font-semibold text-[#868686]">
+        <div className="relative mt-2 flex items-center gap-4 border-t border-[#f0f0f0] pt-2 text-[13px] font-semibold text-[#868686]">
           <span title="Bold" className="cursor-default select-none">
             B
           </span>
@@ -190,12 +339,55 @@ function SlackComposer({ channelLabel }: { channelLabel: string }) {
           <span title="Link" className="cursor-default select-none">
             🔗
           </span>
-          <span title="Emoji" className="cursor-default select-none">
-            😊
-          </span>
-          <span title="Attach" className="cursor-default select-none">
-            📎
-          </span>
+          <div className="relative" ref={emojiRef}>
+            <button
+              type="button"
+              title="Emoji"
+              className="cursor-pointer select-none border-0 bg-transparent p-0 text-[inherit]"
+              onClick={(e) => {
+                e.preventDefault();
+                setEmojiOpen((o) => !o);
+              }}
+            >
+              😊
+            </button>
+            {emojiOpen ? (
+              <div
+                className="absolute bottom-full left-0 z-30 mb-1 flex gap-1 rounded-md border border-[#e0e0e0] bg-white px-2 py-1.5 shadow-md"
+                role="listbox"
+              >
+                {PICKER_EMOJIS.map((em) => (
+                  <button
+                    key={em}
+                    type="button"
+                    className="rounded px-1.5 py-0.5 text-lg leading-none hover:bg-[#f0f0f0]"
+                    onClick={() => insertEmoji(em)}
+                  >
+                    {em}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </div>
+          <div className="relative">
+            <button
+              type="button"
+              title="Attach"
+              className="cursor-pointer select-none border-0 bg-transparent p-0 text-[inherit]"
+              onClick={onPaperclipClick}
+            >
+              📎
+            </button>
+            <div
+              className={`absolute bottom-full left-1/2 z-30 mb-2 w-[min(16rem,calc(100vw-8rem))] -translate-x-1/2 rounded-md border border-[#e0e0e0] bg-[#1d1c1d] px-3 py-2 text-center text-[12px] font-normal leading-snug text-white shadow-lg transition-opacity duration-300 ${
+                clipTipVisible ? "pointer-events-none opacity-100" : "pointer-events-none opacity-0"
+              }`}
+              role="tooltip"
+              aria-hidden={!clipTipVisible}
+            >
+              You&apos;re too curious. We didn&apos;t think of this edge case 😅
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -276,6 +468,22 @@ function ErrorRateMiniBar({ before, after }: { before: string; after: string }) 
   );
 }
 
+function StaticReactions({ reactions }: { reactions: readonly { emoji: string; count: number }[] }) {
+  return (
+    <div className="mt-2 flex flex-wrap gap-1.5" aria-hidden>
+      {reactions.map((r) => (
+        <span
+          key={`${r.emoji}-${r.count}`}
+          className="inline-flex cursor-default items-center gap-1 rounded border border-[#e8e8e8] bg-white px-2 py-0.5 text-[13px] leading-tight text-[#1d1c1d] shadow-sm"
+        >
+          <span>{r.emoji}</span>
+          <span className="tabular-nums text-[12px] text-[#616061]">{r.count}</span>
+        </span>
+      ))}
+    </div>
+  );
+}
+
 function SlackMessageBlock({ message }: { message: SlackMsg }) {
   if (message.kind === "user") {
     return (
@@ -303,7 +511,7 @@ function SlackMessageBlock({ message }: { message: SlackMsg }) {
       <TeammateAvatar initials={initials} backgroundColor={bg} />
       <div className="min-w-0 flex-1 pt-0.5">
         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0">
-          <span className="text-[15px] font-bold text-[#1d1c1d]">{message.agentHandle}</span>
+          <span className="text-[15px] font-bold text-[#1d1c1d]">{AGENT_DISPLAY_NAME}</span>
           <span className="text-[12px] font-normal text-[#616061]">{message.time}</span>
         </div>
         <p className="mt-1 whitespace-pre-line text-[15px] font-normal leading-[1.46668]" style={{ color: SLACK_TEXT }}>
@@ -314,6 +522,9 @@ function SlackMessageBlock({ message }: { message: SlackMsg }) {
         ) : null}
         {message.errorRateBar ? (
           <ErrorRateMiniBar before={message.errorRateBar.before} after={message.errorRateBar.after} />
+        ) : null}
+        {message.reactions && message.reactions.length > 0 ? (
+          <StaticReactions reactions={message.reactions} />
         ) : null}
         {message.actions && message.actions.length > 0 ? (
           <InlineActionRow actions={message.actions} />
@@ -335,7 +546,6 @@ export function SlackUI() {
   const [activeChannel, setActiveChannel] = useState<Channel>(slack.defaultChannel);
 
   const messages = CHANNEL_MESSAGES[activeChannel];
-  const badge = slack.channelBadges[activeChannel];
 
   return (
     <section className="px-4 py-16 sm:px-6 sm:py-24">
@@ -356,15 +566,6 @@ export function SlackUI() {
                   'var(--font-lato), "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
               }}
             >
-              {/* Value prop — floating callout on the mock */}
-              <div
-                className="pointer-events-none absolute right-2 top-2 z-20 max-w-[min(16rem,calc(100vw-3rem))] rotate-[0.5deg] border-[3px] border-black bg-[#fffef8] px-2.5 py-1.5 text-center font-mono text-[9px] font-bold uppercase leading-snug tracking-wide text-black shadow-[4px_4px_0_0_#0a0a0a] sm:right-4 sm:top-4 sm:max-w-[18rem] sm:px-3 sm:py-2 sm:text-[10px]"
-                role="note"
-              >
-                {badge}
-              </div>
-
-              {/* Sidebar — Slack aubergine */}
               <aside
                 className="flex w-full shrink-0 flex-col md:w-[240px]"
                 style={{ backgroundColor: SLACK_PURPLE }}
@@ -397,8 +598,8 @@ export function SlackUI() {
                           <button
                             type="button"
                             onClick={() => setActiveChannel(ch)}
-                            className={`flex w-full cursor-pointer items-center justify-between gap-2 rounded-md px-2 py-1.5 text-left text-[15px] ${
-                              isActive ? "text-white" : "text-white/95"
+                            className={`flex w-full cursor-pointer items-center justify-between gap-2 rounded-md px-2 py-1.5 text-left text-[15px] transition-colors ${
+                              isActive ? "text-white" : "text-white/95 hover:bg-white/10"
                             }`}
                             style={{
                               backgroundColor: isActive ? SLACK_ACTIVE : "transparent",
@@ -426,7 +627,6 @@ export function SlackUI() {
                 </div>
               </aside>
 
-              {/* Main */}
               <div className="flex min-w-0 flex-1 flex-col bg-white">
                 <header className="flex items-center border-b border-[#e8e8e8] bg-white px-4 py-3">
                   <div className="flex items-baseline gap-1.5">
@@ -443,7 +643,7 @@ export function SlackUI() {
                       <SlackMessageBlock key={m.id} message={m} />
                     ))}
                   </div>
-                  <SlackComposer channelLabel={activeChannel} />
+                  <SlackComposer activeChannel={activeChannel} />
                 </div>
               </div>
             </div>

@@ -82,7 +82,7 @@ export const orgChart = {
 export const slack = {
   titleLine1: "Your agents live in Slack.",
   titleLine2: "They don't wait to be asked.",
-  workspaceName: "Spectra",
+  workspaceName: "Your Company",
   channels: ["#briefing", "#outbound", "#content", "#product"] as const,
   defaultChannel: "#briefing" as const,
   /** Unread counts shown on channel rows (Slack-style badges) */
@@ -99,13 +99,6 @@ export const slack = {
     { handle: "ghostwriter", initials: "GW", avatarColor: "#5B2C83" },
     { handle: "shipwright", initials: "SW", avatarColor: "#2EB67D" },
   ] as const,
-  /** Per-channel floating badge text (typewriter / receipt style, punchy caps) */
-  channelBadges: {
-    "#briefing": "YOUR COMPANY WHILE YOU SLEPT. ALL CLEAR.",
-    "#outbound": "131 LEADS CONTACTED WHILE YOU WERE CODING",
-    "#content": "847K IMPRESSIONS ON AUTOPILOT",
-    "#product": "1 BUG CAUGHT & FIXED AT 3:12 AM",
-  } as const,
 } as const;
 
 export const safeCompliant = {

@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "../themes/neo-brutalism.css";
-
 html {
   scroll-behavior: smooth;
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans, Lato, Space_Grotesk, Space_Mono } from "next/font/google";
+import "../themes/neo-brutalism.css";
 import "./globals.css";
 
 const grotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space-grotesk", display: "swap" });
