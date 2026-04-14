@@ -36,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${grotesk.variable} ${dmSans.variable} ${lato.variable} ${spaceMono.variable}`}
+        className={`theme-neo-brutalism ${grotesk.variable} ${dmSans.variable} ${lato.variable} ${spaceMono.variable}`}
       >
         {children}
       </body>

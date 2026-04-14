@@ -8,7 +8,7 @@ import { StackIntegrations } from "./StackIntegrations";
 
 export function LandingPage() {
   return (
-    <main className="min-h-screen theme-neo-brutalism">
+    <main className="min-h-screen">
       <Nav />
       <div>
         <Hero />
