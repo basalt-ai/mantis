@@ -131,28 +131,51 @@ export const safeCompliant = {
 } as const;
 
 export const stackIntegrations = {
-  title: "Plug in your stack for full agency.",
-  subtitle: "Basalt integrates with Slack and your entire stack.",
-  contextColumn: {
-    title: "Context",
-    subtitle: "Agents read your tools to understand your business.",
-    items: [
-      { name: "Gmail", description: "Inbox and thread context for outreach." },
-      { name: "Slack", description: "Decisions and updates where your team lives." },
-      { name: "Granola", description: "Meeting notes feed agent memory." },
-      { name: "Notion", description: "Specs, wikis, and CRM-style pages." },
-    ],
-  },
-  executionColumn: {
-    title: "Execution",
-    subtitle: "Agents act on your tools to ship, charge, and deliver.",
-    items: [
-      { name: "Vercel", description: "Ship previews and production deploys." },
-      { name: "Stripe", description: "Invoices, subscriptions, and revenue ops." },
-      { name: "Lemlist", description: "Sequences and reply handling." },
-      { name: "Gong", description: "Call insights for coaching and follow-up." },
-    ],
-  },
+  title: "Plug in your stack. Agents do the rest.",
+  subtitle:
+    "Connect your tools. Your agents read, write, ship, and sell through them — like an employee would.",
+  integrations: [
+    {
+      id: "github",
+      name: "GitHub",
+      description: "Opens PRs, writes tests, ships hotfixes at 3 AM.",
+    },
+    {
+      id: "vercel",
+      name: "Vercel",
+      description: "Deploys previews, promotes to prod, rolls back.",
+    },
+    {
+      id: "stripe",
+      name: "Stripe",
+      description: "Tracks MRR, flags churn risk, invoices new deals.",
+    },
+    {
+      id: "sentry",
+      name: "Sentry",
+      description: "Catches errors, traces root cause, triggers fix.",
+    },
+    {
+      id: "linkedin",
+      name: "LinkedIn",
+      description: "Sources leads, sends personalized outreach.",
+    },
+    {
+      id: "x",
+      name: "X (Twitter)",
+      description: "Posts threads, engages replies, grows audience.",
+    },
+    {
+      id: "notion",
+      name: "Notion",
+      description: "Writes postmortems, specs, changelogs, CRM updates.",
+    },
+    {
+      id: "slack",
+      name: "Slack",
+      description: "Reports progress, asks approvals, briefs you daily.",
+    },
+  ],
   mcpRow: "+ Any MCP server",
 } as const;
 
