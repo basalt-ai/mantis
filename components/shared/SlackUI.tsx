@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { slack } from "@/lib/copy";
 
 const SLACK_PURPLE = "#4A154B";
@@ -13,6 +14,11 @@ type Channel = (typeof slack.channels)[number];
 
 type PreviewRow = { lead: string; body: string };
 
+type NotionLinkPreviewSpec = {
+  pageTitle: string;
+  metaLines: readonly [string, string, string];
+};
+
 type AgentMessage = {
   id: string;
   kind: "agent";
@@ -21,7 +27,7 @@ type AgentMessage = {
   text: string;
   actions?: string[];
   taskTag?: string;
-  actionLink?: { label: string };
+  actionLink?: { label: string; notionPreview?: NotionLinkPreviewSpec };
   previewBlock?: { rows: PreviewRow[]; moreLabel: string };
   /** Decorative Slack-style reactions (non-interactive) */
   reactions?: readonly { emoji: string; count: number }[];
@@ -53,7 +59,17 @@ const CHANNEL_MESSAGES: Record<Channel, SlackMsg[]> = {
 One thing needs you today:
 Demo call with Ramp (Series B fintech, $80K potential ACV) at 2pm.
 Prep doc ready →`,
-      actionLink: { label: "Open prep doc in Notion →" },
+      actionLink: {
+        label: "Open prep doc in Notion →",
+        notionPreview: {
+          pageTitle: "Prep: Ramp Demo Call",
+          metaLines: [
+            "Company: Ramp (Series B)",
+            "ACV: $80K",
+            "Contact: Lisa Park, VP Eng",
+          ],
+        },
+      },
     },
   ],
   "#outbound": [
@@ -547,6 +563,90 @@ function StaticReactions({ reactions }: { reactions: readonly { emoji: string; c
   );
 }
 
+function NotionLinkHoverPreviewCard({ preview }: { preview: NotionLinkPreviewSpec }) {
+  const [a, b, c] = preview.metaLines;
+  return (
+    <div
+      className="box-border flex h-[200px] w-[280px] flex-col rounded-md border border-[#e3e3e3] bg-white p-3 shadow-[0_8px_28px_rgba(15,15,15,0.12),0_2px_8px_rgba(15,15,15,0.06)]"
+      role="presentation"
+    >
+      <div className="flex min-h-0 flex-1 flex-col gap-2">
+        <div className="flex items-start gap-2">
+          <span className="shrink-0 text-[15px] leading-none" aria-hidden>
+            📄
+          </span>
+          <p className="min-w-0 flex-1 text-[13px] font-bold leading-snug text-[#1d1c1d]">{preview.pageTitle}</p>
+        </div>
+        <div className="space-y-1 text-[11px] leading-snug text-[#37352f]">
+          <p>{a}</p>
+          <p>{b}</p>
+          <p>{c}</p>
+        </div>
+        <div className="mt-0.5 min-h-0 flex-1">
+          <p className="text-[11px] font-bold text-[#1d1c1d]">Agenda</p>
+          <div className="mt-2 space-y-1.5">
+            <div className="h-2 rounded-full bg-[#e8e8e8]" style={{ width: "96%" }} />
+            <div className="h-2 rounded-full bg-[#e8e8e8]" style={{ width: "72%" }} />
+            <div className="h-2 rounded-full bg-[#e8e8e8]" style={{ width: "88%" }} />
+            <div className="h-2 rounded-full bg-[#e8e8e8]" style={{ width: "64%" }} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function NotionActionLinkHover({
+  label,
+  preview,
+}: {
+  label: string;
+  preview: NotionLinkPreviewSpec;
+}) {
+  const anchorRef = useRef<HTMLSpanElement>(null);
+  const [fixedPos, setFixedPos] = useState<{ top: number; left: number } | null>(null);
+
+  const showPreview = useCallback(() => {
+    const el = anchorRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    setFixedPos({ top: r.bottom + 6, left: r.left + 6 });
+  }, []);
+
+  const hidePreview = useCallback(() => {
+    setFixedPos(null);
+  }, []);
+
+  return (
+    <>
+      <span
+        ref={anchorRef}
+        className="cursor-default select-none hover:underline"
+        onMouseEnter={showPreview}
+        onMouseLeave={hidePreview}
+      >
+        {label}
+      </span>
+      {fixedPos !== null
+        ? createPortal(
+            <div
+              className="pointer-events-none"
+              style={{
+                position: "fixed",
+                top: fixedPos.top,
+                left: fixedPos.left,
+                zIndex: 9999,
+              }}
+            >
+              <NotionLinkHoverPreviewCard preview={preview} />
+            </div>,
+            document.body
+          )
+        : null}
+    </>
+  );
+}
+
 function SlackMessageBlock({ message }: { message: SlackMsg }) {
   if (message.kind === "user") {
     return (
@@ -587,7 +687,11 @@ function SlackMessageBlock({ message }: { message: SlackMsg }) {
         ) : null}
         {message.actionLink ? (
           <p className="mt-2 text-[13px] font-medium leading-snug text-[#1264A3]">
-            <span className="cursor-default select-none hover:underline">{message.actionLink.label}</span>
+            {message.actionLink.notionPreview ? (
+              <NotionActionLinkHover label={message.actionLink.label} preview={message.actionLink.notionPreview} />
+            ) : (
+              <span className="cursor-default select-none hover:underline">{message.actionLink.label}</span>
+            )}
           </p>
         ) : null}
         {message.taskTag ? (
