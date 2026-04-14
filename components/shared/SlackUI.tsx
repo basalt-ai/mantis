@@ -63,24 +63,18 @@ Prep doc ready →`,
       kind: "agent",
       agentHandle: "scout",
       time: "9:15 AM",
-      text: `Signal detected: 23 companies on your ICP posted "Senior AI Engineer"
-job listings on LinkedIn in the past 72h. Teams hiring for AI = teams
-that need code review tooling.
+      text: `Signal: 23 ICP companies posted "Senior AI Engineer" on LinkedIn in 72h. 19 are net-new. 147 decision-makers listed, each with a personalized invite:
 
-I cross-referenced with your CRM — 19 are net-new prospects.
-Built a list of 147 decision-makers (VP Eng, CTO, Head of Platform).
-
-Each connection request is personalized using their latest LinkedIn
-post or company news. Here are 3 previews:`,
+Preview cards:`,
       previewBlock: {
         rows: [
           {
             lead: "→ Sarah Chen, VP Eng @ Raycast",
-            body: `"Saw your post about scaling code reviews across 12 repos. We built an API that plugs into your existing PR flow — mind if I share a 2-min demo?"`,
+            body: `"Saw your post on scaling reviews across 12 repos — we built an API for that. 2-min demo?"`,
           },
           {
             lead: "→ Priya Sharma, Head of Platform @ Vercel",
-            body: `"Loved your talk at Next.js Conf on CI pipelines. We just shipped an API that drops review time by 60%. Thought you'd find it interesting."`,
+            body: `"Loved your Next.js Conf talk on CI. We cut review time by 60% — worth a look?"`,
           },
         ],
         moreLabel: "⋯ 145 more",
@@ -91,16 +85,14 @@ post or company news. Here are 3 previews:`,
       id: "o2",
       kind: "user",
       time: "9:18 AM",
-      text: "Send. But skip companies under Series A.",
+      text: "Send. Skip under Series A.",
     },
     {
       id: "o3",
       kind: "agent",
       agentHandle: "scout",
       time: "9:18 AM",
-      text: `Done. 131 invites sent (removed 16 profiles from 4 pre-seed
-companies). Follow-up messages drip to acceptors over 5 days.
-I'll report conversions daily in #briefing.`,
+      text: `Done. 131 sent, 16 pre-seed removed. Follow-ups drip over 5 days.`,
       taskTag: "✅ Task completed · outbound pipeline",
       reactions: [{ emoji: "🚀", count: 1 }],
     },
@@ -137,18 +129,13 @@ momentum going. Also:
       time: "3:47 AM",
       text: `🔴 Incident auto-resolved.
 
-3:12 AM — Sentry flagged 340 TypeError exceptions on /api/v2/webhooks.
-Traced to PR #291 (merged yesterday): payload.metadata is null when
-webhook source is Stripe.
+3:12 AM — Sentry flagged 340 TypeError on /api/v2/webhooks. Root cause: PR #291, payload.metadata is null when source is Stripe.
 
-Here's what I did:
-  1. Isolated root cause in webhook_handler.ts:L142
-  2. Pushed fix → PR #294 (added null coalescing + fallback)
-  3. Tests: 14/14 passing, including new edge case coverage
-  4. Deployed to staging → error rate dropped to 0
-  5. Deployed to prod at 3:41 AM → confirmed fix
+1. Fixed in webhook_handler.ts:L142 → PR #294 (null coalescing + fallback)
+2. 14/14 tests passing, new edge case covered
+3. Deployed to staging → errors dropped to 0 → shipped to prod at 3:41 AM
 
-23 affected webhook deliveries have been auto-retried. All succeeded.`,
+23 affected webhook deliveries auto-retried. All succeeded.`,
       errorRateBar: { before: "12.4%", after: "0.02%" },
       reactions: [{ emoji: "🫡", count: 1 }],
     },
@@ -157,9 +144,7 @@ Here's what I did:
       kind: "agent",
       agentHandle: "shipwright",
       time: "3:48 AM",
-      text: `Incident postmortem drafted in Notion. I've also added a pre-merge
-check so nullable fields from payment providers get caught before
-deploy next time.`,
+      text: `Postmortem drafted in Notion. Added a pre-merge check for nullable fields from payment providers.`,
       taskTag: "✅ Incident resolved · 28 min from detection to fix",
     },
     {
@@ -173,7 +158,7 @@ deploy next time.`,
 
 const COMPOSER_TEMPLATE: Record<Channel, string> = {
   "#briefing": "What needs me today?",
-  "#outbound": "Send. But skip companies under Series A.",
+  "#outbound": "Send. Skip under Series A.",
   "#content": "Repurpose this into a LinkedIn carousel too.",
   "#product": "Good bot.",
 };
@@ -484,20 +469,24 @@ function UserAvatar({ initials, className }: { initials: string; className?: str
   );
 }
 
-function TeammateAvatar({ initials, backgroundColor }: { initials: string; backgroundColor: string }) {
+function CeoAgentAvatar() {
   return (
     <div
-      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[13px] font-bold text-white shadow-[inset_0_-1px_0_rgba(0,0,0,0.12)]"
-      style={{ backgroundColor }}
+      className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full shadow-[inset_0_-1px_0_rgba(0,0,0,0.12)]"
       aria-hidden
     >
-      {initials}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/ceo-agent-avatar.png"
+        alt=""
+        width={36}
+        height={36}
+        className="h-9 w-9 object-cover"
+        loading="lazy"
+        decoding="async"
+      />
     </div>
   );
-}
-
-function agentByHandle(handle: string) {
-  return slack.agents.find((a) => a.handle === handle);
 }
 
 function InlineActionRow({ actions }: { actions: string[] }) {
@@ -580,13 +569,9 @@ function SlackMessageBlock({ message }: { message: SlackMsg }) {
     );
   }
 
-  const tm = agentByHandle(message.agentHandle);
-  const initials = tm?.initials ?? "??";
-  const bg = tm?.avatarColor ?? "#4A154B";
-
   return (
     <div className="flex gap-3" style={{ gap: 12 }}>
-      <TeammateAvatar initials={initials} backgroundColor={bg} />
+      <CeoAgentAvatar />
       <div className="min-w-0 flex-1 pt-0.5">
         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0">
           <span className="text-[15px] font-bold text-[#1d1c1d]">{AGENT_DISPLAY_NAME}</span>

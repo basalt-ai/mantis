@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { DM_Sans, Lato, Space_Grotesk, Space_Mono } from "next/font/google";
-import "../themes/neo-brutalism.css";
 import "./globals.css";
 
 const grotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space-grotesk", display: "swap" });
@@ -44,7 +43,7 @@ export default function RootLayout({
           margin: 0,
           backgroundColor: "var(--bg, #fffef8)",
           color: "var(--text, #0a0a0a)",
-          fontFamily: 'var(--font-body), ui-sans-serif, system-ui, sans-serif',
+          fontFamily: "var(--font-body, ui-sans-serif)",
         }}
       >
         {children}
