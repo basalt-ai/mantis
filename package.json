@@ -8,7 +8,7 @@
   },
   "scripts": {
     "clean:cache": "node scripts/clean-build-cache.mjs",
-    "predev": "node scripts/clean-build-cache.mjs",
+    "predev": "node scripts/predev-cache.mjs",
     "dev": "next dev --turbo -p 3001",
     "dev:webpack": "next dev -p 3001",
     "dev:fast": "next dev --turbo -p 3001",

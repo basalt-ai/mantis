@@ -12,7 +12,8 @@ alwaysApply: true
 
 ## Local Next.js (avoid broken front / HTTP 500 in dev)
 
-- **`npm run dev`** (port 3001) runs **`predev`**: it deletes **`.next`** and **`node_modules/.cache`** before starting, so stale webpack chunks (`Cannot find module './XXX.js'`) should not recur. Dev mode also uses **`webpack.cache = false`** in `next.config.mjs` to limit filesystem cache drift.
-- **`npm run dev:fast`** skips the **`predev`** clean (same as `next dev` only). **`SKIP_PREDEV=1 npm run dev`** skips the clean while still using the `dev` script.
-- Do **not** run **`npm install`** while **`npm run dev`** is running in another terminal (install can touch `node_modules` and leave the live dev server in a bad state). Stop dev, install, then **`npm run dev`** again.
-- One dev server on **3001** at a time; if anything still looks wrong, run **`npm run clean:cache`**, kill stray **`node`** on **3001**, then **`npm run dev`** again.
+- **`npm run dev`** (port 3001, Turbopack) runs **`predev`**, which only clears **`node_modules/.cache`** — it does **not** delete **`.next`**. Deleting **`.next`** while another **`next dev`** is still running causes Turbopack **`ENOENT`** on **`app-build-manifest.json`**, HTTP **500**, and “missing required error components”.
+- For a **full** cache wipe (stale chunks / weird state), run **`npm run clean:cache`** (or **`dev:rescue`**) with **no** dev server on **3001**, then start **`npm run dev`** once.
+- **`SKIP_PREDEV=1 npm run dev`** skips **`predev`** entirely.
+- Avoid **two** terminals both running **`npm run dev`** for the same project (second run’s lifecycle can still confuse things). One listener on **3001**.
+- Dev mode uses **`webpack.cache = false`** in `next.config.mjs` for the non-Turbo webpack path; production **`npm run build`** is unchanged.

@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { slack } from "@/lib/copy";
 
 const SLACK_PURPLE = "#4A154B";
-const SLACK_ACTIVE = "rgba(255,255,255,0.14)";
 const SLACK_MUTED = "rgba(255,255,255,0.55)";
 const SLACK_TEXT = "#1d1c1d";
 
@@ -598,12 +597,11 @@ export function SlackUI() {
                           <button
                             type="button"
                             onClick={() => setActiveChannel(ch)}
-                            className={`flex w-full cursor-pointer items-center justify-between gap-2 rounded-md px-2 py-1.5 text-left text-[15px] transition-colors ${
-                              isActive ? "text-white" : "text-white/95 hover:bg-white/10"
+                            className={`flex w-full cursor-pointer items-center justify-between gap-2 rounded-md px-2 py-1.5 text-left text-[15px] transition-[background-color,color,transform] duration-150 ease-out active:scale-[0.99] ${
+                              isActive
+                                ? "bg-white/[0.14] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] hover:bg-white/[0.2]"
+                                : "bg-transparent text-white/95 hover:bg-white/[0.12] hover:text-white hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]"
                             }`}
-                            style={{
-                              backgroundColor: isActive ? SLACK_ACTIVE : "transparent",
-                            }}
                           >
                             <span className="min-w-0 truncate">
                               <span className="mr-0.5 font-normal opacity-75">#</span>
