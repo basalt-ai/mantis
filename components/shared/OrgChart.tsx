@@ -1,10 +1,10 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
+import { HiOutlineUser } from "react-icons/hi2";
 import { orgChart } from "@/lib/copy";
 
 const CEO_PINK = "#FF7B9C";
-const BRUT_SHADOW = "4px 4px 0 0 #0a0a0a";
 const RUNNING_GREEN = "#22C55E";
 
 type ConnectorGeom = {
@@ -12,6 +12,53 @@ type ConnectorGeom = {
   hBar: { x1: number; x2: number; y: number };
   stems: { x: number; yTop: number; yBottom: number }[];
 };
+
+function round1(n: number) {
+  return Math.round(n * 10) / 10;
+}
+
+function geomKey(g: ConnectorGeom) {
+  return JSON.stringify({
+    trunk: {
+      x: round1(g.trunk.x),
+      y1: round1(g.trunk.y1),
+      y2: round1(g.trunk.y2),
+    },
+    hBar: {
+      x1: round1(g.hBar.x1),
+      x2: round1(g.hBar.x2),
+      y: round1(g.hBar.y),
+    },
+    stems: g.stems.map((s) => ({
+      x: round1(s.x),
+      yTop: round1(s.yTop),
+      yBottom: round1(s.yBottom),
+    })),
+  });
+}
+
+/** Short vertical double arrow between You and CEO (fixed layout, no measure) */
+function YouCeoBidirectionalArrow() {
+  return (
+    <svg
+      width={14}
+      height={20}
+      viewBox="0 0 14 20"
+      className="shrink-0 overflow-visible"
+      aria-hidden
+    >
+      <path d="M7 2 L3 6 L11 6 Z" fill="#0a0a0a" />
+      <path
+        d="M7 6 L7 14"
+        fill="none"
+        stroke="#0a0a0a"
+        strokeWidth={2}
+        strokeLinecap="round"
+      />
+      <path d="M7 18 L3 14 L11 14 Z" fill="#0a0a0a" />
+    </svg>
+  );
+}
 
 function RunningDot() {
   return (
@@ -33,6 +80,7 @@ export function OrgChart() {
   const ceoRef = useRef<HTMLDivElement>(null);
   const clustersRowRef = useRef<HTMLDivElement>(null);
   const clusterRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const lastGeomKey = useRef<string | null>(null);
   const [geom, setGeom] = useState<ConnectorGeom | null>(null);
 
   const clusters = orgChart.clusters;
@@ -41,7 +89,19 @@ export function OrgChart() {
     const container = containerRef.current;
     if (!container) return;
 
+    let cancelled = false;
+    let rafScheduled = false;
+    function scheduleMeasure() {
+      if (rafScheduled) return;
+      rafScheduled = true;
+      requestAnimationFrame(() => {
+        rafScheduled = false;
+        if (!cancelled) measure();
+      });
+    }
+
     function measure() {
+      if (cancelled) return;
       const c = containerRef.current;
       const ceoEl = ceoRef.current;
       const row = clustersRowRef.current;
@@ -71,24 +131,40 @@ export function OrgChart() {
         stems.push({ x, yTop: stemTop, yBottom });
       }
 
-      setGeom({
+      const next: ConnectorGeom = {
         trunk: { x: ceoX, y1: y1Trunk, y2: gapMidY },
         hBar: { x1: hx1, x2: hx2, y: gapMidY },
         stems,
-      });
+      };
+      const key = geomKey(next);
+      if (lastGeomKey.current === key) return;
+      lastGeomKey.current = key;
+      setGeom(next);
     }
 
     measure();
-    const id = requestAnimationFrame(measure);
+    const id = requestAnimationFrame(() => {
+      if (!cancelled) measure();
+    });
 
-    const ro = new ResizeObserver(measure);
-    ro.observe(container);
-
-    window.addEventListener("resize", measure);
+    /* No ResizeObserver — it can thrash with layout + setState in dev and trigger
+     * “missing required error components” / infinite refresh. Window resize only. */
+    window.addEventListener("resize", scheduleMeasure);
+    const onOrientation = () => scheduleMeasure();
+    window.addEventListener("orientationchange", onOrientation);
+    const fonts = document.fonts;
+    let fontDone: Promise<unknown> | undefined;
+    if (fonts?.ready) {
+      fontDone = fonts.ready.then(() => {
+        if (!cancelled) scheduleMeasure();
+      });
+    }
     return () => {
+      cancelled = true;
       cancelAnimationFrame(id);
-      ro.disconnect();
-      window.removeEventListener("resize", measure);
+      window.removeEventListener("resize", scheduleMeasure);
+      window.removeEventListener("orientationchange", onOrientation);
+      void fontDone;
     };
   }, [clusters.length]);
 
@@ -99,9 +175,12 @@ export function OrgChart() {
           {orgChart.title}
         </h2>
 
-        <div ref={containerRef} className="relative mt-12 sm:mt-14">
+        <div
+          ref={containerRef}
+          className="relative mt-12 min-h-[8rem] pt-4 sm:mt-14 sm:min-h-[9rem] sm:pt-5"
+        >
           <svg
-            className="pointer-events-none absolute inset-0 z-0 h-full w-full overflow-visible"
+            className="pointer-events-none absolute inset-0 z-[1] h-full w-full overflow-visible"
             aria-hidden
           >
             {geom ? (
@@ -141,15 +220,29 @@ export function OrgChart() {
             ) : null}
           </svg>
 
-          <div className="relative z-10 flex flex-col items-center">
+          <div className="relative z-[20] flex w-full flex-col items-center">
+            {/*
+              items-stretch + w-full so the arrow row spans the same width as CEO;
+              You stays w-fit and mx-auto so the arrow centers on the column, not on the icon.
+            */}
+            <div className="mx-auto flex w-full max-w-[300px] flex-col items-stretch sm:max-w-[340px]">
+              <div className="mx-auto flex w-fit max-w-full items-center gap-2 rounded-theme brut-border bg-[#fffef8] px-3 py-2 sm:px-4 sm:py-2.5">
+                <HiOutlineUser
+                  className="h-6 w-6 shrink-0 text-black sm:h-7 sm:w-7"
+                  aria-hidden
+                />
+                <p className="font-display text-base font-bold text-black sm:text-lg md:text-xl">
+                  {orgChart.youLabel}
+                </p>
+              </div>
+              <div className="flex w-full justify-center pt-2.5 pb-2 sm:pt-3 sm:pb-2.5">
+                <YouCeoBidirectionalArrow />
+              </div>
+            </div>
             <div
               ref={ceoRef}
-              className="mx-auto w-full max-w-[300px] border-[3px] border-black px-4 py-3 text-center sm:max-w-[340px] sm:px-5 sm:py-4"
-              style={{
-                backgroundColor: CEO_PINK,
-                borderRadius: 0,
-                boxShadow: BRUT_SHADOW,
-              }}
+              className="mx-auto w-full max-w-[300px] rounded-theme brut-border px-4 py-3 text-center sm:max-w-[340px] sm:px-5 sm:py-4"
+              style={{ backgroundColor: CEO_PINK }}
             >
               <p className="font-display text-lg font-bold uppercase tracking-wide text-black sm:text-xl md:text-2xl">
                 {orgChart.ceoLabel}
@@ -168,7 +261,7 @@ export function OrgChart() {
                   ref={(el) => {
                     clusterRefs.current[i] = el;
                   }}
-                  className="relative flex min-h-0 flex-1 flex-col rounded-[12px] border-2 border-dashed border-black p-3 pb-4 pt-9 sm:p-4 sm:pb-4 sm:pt-10"
+                  className="brut-lift relative flex min-h-0 flex-1 flex-col rounded-[12px] border-2 border-dashed border-black p-3 pb-4 pt-9 sm:p-4 sm:pb-4 sm:pt-10"
                   style={{ backgroundColor: cluster.tint }}
                 >
                   <span className="absolute left-3 top-3 font-mono text-[12px] font-bold uppercase tracking-wide text-black sm:left-4 sm:top-3.5">
@@ -178,11 +271,7 @@ export function OrgChart() {
                     {cluster.agents.map((name) => (
                       <div
                         key={name}
-                        className="flex min-h-[2.75rem] items-center gap-2 border-[3px] border-black bg-[#fffef8] px-2 py-1.5"
-                        style={{
-                          borderRadius: 0,
-                          boxShadow: "3px 3px 0 0 #0a0a0a",
-                        }}
+                        className="flex min-h-[2.75rem] items-center gap-2 rounded-theme brut-border bg-[#fffef8] px-2 py-1.5"
                       >
                         <RunningDot />
                         <span className="text-left text-[10px] font-semibold leading-tight text-black sm:text-[11px]">
@@ -204,8 +293,7 @@ export function OrgChart() {
           {orgChart.features.map((f) => (
             <li
               key={f.title}
-              className="flex h-full min-h-[9.5rem] flex-col border-[3px] border-black bg-[#fffef8] p-4"
-              style={{ borderRadius: 0, boxShadow: BRUT_SHADOW }}
+              className="flex h-full min-h-[9.5rem] flex-col rounded-theme brut-border bg-[#fffef8] p-4"
             >
               <div className="flex items-center gap-2">
                 <span
