@@ -17,7 +17,7 @@ export function Nav({ ctaHref = "/signup", showCta = true }: NavProps) {
         background: "#fffef8",
       }}
     >
-      <nav className="mx-auto flex min-h-[4.5rem] max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
+      <nav className="mx-auto flex min-h-[4.5rem] max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         <Link
           href="/"
           className="flex items-center text-[var(--text)]"
@@ -25,15 +25,23 @@ export function Nav({ ctaHref = "/signup", showCta = true }: NavProps) {
         >
           <PancakeLogo aria-hidden />
         </Link>
-        {showCta && (
+        <div className="flex shrink-0 items-center gap-4 sm:gap-6">
           <Link
-            href={ctaHref}
-            style={{ backgroundColor: hero.autonomousAccent }}
-            className="max-w-[min(72vw,16rem)] rounded-theme brut-border px-2 py-2 text-center text-[0.62rem] font-semibold leading-[1.15] text-black transition sm:max-w-xs sm:px-3 sm:text-[0.7rem] md:max-w-[20rem] md:text-xs lg:text-sm"
+            href="/pricing"
+            className="text-sm font-medium text-[var(--text)] underline-offset-4 transition hover:underline"
           >
-            {hero.cta}
+            Pricing
           </Link>
-        )}
+          {showCta && (
+            <Link
+              href={ctaHref}
+              style={{ backgroundColor: hero.autonomousAccent }}
+              className="max-w-[min(72vw,16rem)] rounded-theme brut-border px-2 py-2 text-center text-[0.62rem] font-semibold leading-[1.15] text-black transition sm:max-w-xs sm:px-3 sm:text-[0.7rem] md:max-w-[20rem] md:text-xs lg:text-sm"
+            >
+              {hero.cta}
+            </Link>
+          )}
+        </div>
       </nav>
     </header>
   );

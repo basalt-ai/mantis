@@ -2,17 +2,19 @@ import type { Metadata } from "next";
 import { DM_Sans, Lato, Space_Grotesk, Space_Mono } from "next/font/google";
 import "./globals.css";
 
-const grotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space-grotesk" });
-const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans" });
+const grotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space-grotesk", display: "swap" });
+const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans", display: "swap" });
 const lato = Lato({
   weight: ["400", "700", "900"],
   subsets: ["latin"],
   variable: "--font-lato",
+  display: "swap",
 });
 const spaceMono = Space_Mono({
   weight: ["400", "700"],
   subsets: ["latin"],
   variable: "--font-space-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {

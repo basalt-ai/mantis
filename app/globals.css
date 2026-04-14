@@ -9,6 +9,10 @@ html {
 }
 
 @layer base {
+  html {
+    /* Avoid black flash before theme + body paint (esp. during client hydration). */
+    background-color: #fffef8;
+  }
   body {
     @apply antialiased;
     background: var(--bg);

@@ -43,7 +43,7 @@ const CHANNEL_MESSAGES: Record<Channel, SlackMsg[]> = {
       kind: "agent",
       agentHandle: "ceo",
       time: "8:00 AM",
-      text: `Good morning. Here's Spectra overnight:
+      text: `Good morning. Here's your company overnight:
 
 · MRR: $4,280 → $4,620 (+$340, 2 new customers from LinkedIn outbound)
 · Outbound: 131 connection requests sent Monday → 34 accepted → 6 demo calls booked this week
