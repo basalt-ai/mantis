@@ -207,8 +207,11 @@ export function OrgChart() {
               className="flex h-full min-h-[9.5rem] flex-col border-[3px] border-black bg-[#fffef8] p-4"
               style={{ borderRadius: 0, boxShadow: BRUT_SHADOW }}
             >
-              <div className="flex items-start gap-2">
-                <span className="shrink-0 font-mono text-black" aria-hidden>
+              <div className="flex items-center gap-2">
+                <span
+                  className="inline-flex shrink-0 select-none items-center justify-center font-mono text-sm leading-none text-black"
+                  aria-hidden
+                >
                   ✓
                 </span>
                 <span className="text-sm font-bold leading-snug text-black">
