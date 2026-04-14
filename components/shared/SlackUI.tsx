@@ -457,18 +457,6 @@ function SlackComposer({ activeChannel }: { activeChannel: Channel }) {
   );
 }
 
-function UserAvatar({ initials, className }: { initials: string; className?: string }) {
-  return (
-    <div
-      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[13px] font-bold text-white ${className ?? ""}`}
-      style={{ width: 36, height: 36, fontSize: 13 }}
-      aria-hidden
-    >
-      {initials}
-    </div>
-  );
-}
-
 function CeoAgentAvatar() {
   return (
     <div
@@ -478,6 +466,26 @@ function CeoAgentAvatar() {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/ceo-agent-avatar.png"
+        alt=""
+        width={36}
+        height={36}
+        className="h-9 w-9 object-cover"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+  );
+}
+
+function YouAvatar() {
+  return (
+    <div
+      className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full shadow-[inset_0_-1px_0_rgba(0,0,0,0.12)]"
+      aria-hidden
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/you-avatar.png"
         alt=""
         width={36}
         height={36}
@@ -555,7 +563,7 @@ function SlackMessageBlock({ message }: { message: SlackMsg }) {
   if (message.kind === "user") {
     return (
       <div className="flex gap-3" style={{ gap: 12 }}>
-        <UserAvatar initials="YO" className="bg-[#36C5F0]" />
+        <YouAvatar />
         <div className="min-w-0 flex-1 pt-0.5">
           <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0">
             <span className="text-[15px] font-bold text-[#1d1c1d]">You</span>
