@@ -23,7 +23,6 @@ type AgentMessage = {
   taskTag?: string;
   actionLink?: { label: string };
   previewBlock?: { rows: PreviewRow[]; moreLabel: string };
-  errorRateBar?: { before: string; after: string };
   /** Decorative Slack-style reactions (non-interactive) */
   reactions?: readonly { emoji: string; count: number }[];
 };
@@ -136,7 +135,6 @@ momentum going. Also:
 3. Deployed to staging → errors dropped to 0 → shipped to prod at 3:41 AM
 
 23 affected webhook deliveries auto-retried. All succeeded.`,
-      errorRateBar: { before: "12.4%", after: "0.02%" },
       reactions: [{ emoji: "🫡", count: 1 }],
     },
     {
@@ -533,16 +531,6 @@ function PreviewQuoteBlock({ rows, moreLabel }: { rows: PreviewRow[]; moreLabel:
   );
 }
 
-function ErrorRateMiniBar({ before, after }: { before: string; after: string }) {
-  return (
-    <p className="mt-3 font-mono text-[12px] leading-relaxed tracking-tight text-[#1d1c1d]">
-      Error rate: <span className="text-[#b91c1c]">████████░░ {before}</span>
-      {"  →  "}
-      <span className="text-[#15803d]">░░░░░░░░░░ {after}</span>
-    </p>
-  );
-}
-
 function StaticReactions({ reactions }: { reactions: readonly { emoji: string; count: number }[] }) {
   return (
     <div className="mt-2 flex flex-wrap gap-1.5" aria-hidden>
@@ -590,9 +578,6 @@ function SlackMessageBlock({ message }: { message: SlackMsg }) {
         </p>
         {message.previewBlock ? (
           <PreviewQuoteBlock rows={message.previewBlock.rows} moreLabel={message.previewBlock.moreLabel} />
-        ) : null}
-        {message.errorRateBar ? (
-          <ErrorRateMiniBar before={message.errorRateBar.before} after={message.errorRateBar.after} />
         ) : null}
         {message.reactions && message.reactions.length > 0 ? (
           <StaticReactions reactions={message.reactions} />
