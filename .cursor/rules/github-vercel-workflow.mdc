@@ -9,3 +9,10 @@ alwaysApply: true
 - **Production:** Vercel should be connected to this repo (e.g. branch `main`). A successful push triggers a deploy automatically.
 - **Do not** rely on `npm run deploy:vercel` for routine changes unless Git integration is broken or the user asks for a CLI deploy.
 - After code changes that affect the site, **commit + push to GitHub** in the same session; confirm the Vercel deployment from the dashboard or GitHub checks if needed.
+
+## Local Next.js (avoid broken front / HTTP 500 in dev)
+
+- **`npm run dev`** (port 3001) runs **`predev`**: it deletes **`.next`** and **`node_modules/.cache`** before starting, so stale webpack chunks (`Cannot find module './XXX.js'`) should not recur. Dev mode also uses **`webpack.cache = false`** in `next.config.mjs` to limit filesystem cache drift.
+- **`npm run dev:fast`** skips the **`predev`** clean (same as `next dev` only). **`SKIP_PREDEV=1 npm run dev`** skips the clean while still using the `dev` script.
+- Do **not** run **`npm install`** while **`npm run dev`** is running in another terminal (install can touch `node_modules` and leave the live dev server in a bad state). Stop dev, install, then **`npm run dev`** again.
+- One dev server on **3001** at a time; if anything still looks wrong, run **`npm run clean:cache`**, kill stray **`node`** on **3001**, then **`npm run dev`** again.

@@ -5,26 +5,34 @@ import {
   SiGmail,
   SiNotion,
   SiSlack,
-  SiStripe,
   SiVercel,
   SiX,
 } from "react-icons/si";
 
+import { GranolaMark } from "./GranolaMark";
 import { stackIntegrations } from "@/lib/copy";
 
-const INTEGRATION_ICONS: Record<
-  (typeof stackIntegrations.integrations)[number]["id"],
-  { Icon: IconType; className: string }
-> = {
+type IntegrationId = (typeof stackIntegrations.integrations)[number]["id"];
+
+const INTEGRATION_ICONS: {
+  [K in Exclude<IntegrationId, "granola">]: { Icon: IconType; className: string };
+} = {
   github: { Icon: SiGithub, className: "text-black" },
   vercel: { Icon: SiVercel, className: "text-black" },
-  stripe: { Icon: SiStripe, className: "text-[#635BFF]" },
   gmail: { Icon: SiGmail, className: "text-[#EA4335]" },
   linkedin: { Icon: GrLinkedin, className: "text-[#0A66C2]" },
   x: { Icon: SiX, className: "text-black" },
   notion: { Icon: SiNotion, className: "text-black" },
   slack: { Icon: SiSlack, className: "text-[#4A154B]" },
 };
+
+function IntegrationIcon({ id }: { id: IntegrationId }) {
+  if (id === "granola") {
+    return <GranolaMark />;
+  }
+  const { Icon, className } = INTEGRATION_ICONS[id];
+  return <Icon size={24} className={className} />;
+}
 
 export function StackIntegrations() {
   return (
@@ -39,7 +47,6 @@ export function StackIntegrations() {
 
         <ul className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2">
           {stackIntegrations.integrations.map((item) => {
-            const { Icon, className } = INTEGRATION_ICONS[item.id];
             return (
               <li
                 key={item.id}
@@ -50,7 +57,7 @@ export function StackIntegrations() {
                     className="flex h-10 w-10 shrink-0 items-center justify-center rounded-theme border border-[var(--border-color)] bg-[var(--surface)]"
                     aria-hidden
                   >
-                    <Icon size={24} className={className} />
+                    <IntegrationIcon id={item.id} />
                   </span>
                   <div className="min-w-0">
                     <p className="font-semibold text-[var(--text)]">{item.name}</p>

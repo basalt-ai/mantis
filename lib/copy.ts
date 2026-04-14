@@ -68,8 +68,9 @@ export const orgChart = {
         "Every agent, role, and workflow defined in .md files you control",
     },
     {
-      title: "Open source",
-      description: "Audit the code. Fork the repo. No black box.",
+      title: "Plugged into your brain",
+      description:
+        "Agents pull context from your Notion, docs, and meeting notes. They know your business.",
     },
     {
       title: "Always on",
@@ -147,9 +148,9 @@ export const stackIntegrations = {
       description: "Deploys previews, promotes to prod, rolls back.",
     },
     {
-      id: "stripe",
-      name: "Stripe",
-      description: "Tracks MRR, flags churn risk, invoices new deals.",
+      id: "granola",
+      name: "Granola",
+      description: "Meeting notes and call context feed agent memory.",
     },
     {
       id: "gmail",
@@ -182,14 +183,14 @@ export const stackIntegrations = {
 
 export const finalCta = {
   title: "Build your autonomous company.",
-  subtitle: "Open source. Deploy in minutes. Scale without hiring.",
+  subtitle: "Deploy in minutes. Scale without hiring.",
   cta: "Start building",
 } as const;
 
 export const pricing = {
   title: "Simple pricing.",
   subtitle: "One plan. Everything included.",
-  priceLine: "€49 / month",
+  priceLine: "$49 / month",
   cardLine: "Your full agent workforce",
   cta: "Start building",
 } as const;

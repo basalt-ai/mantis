@@ -7,9 +7,13 @@
     "url": "https://github.com/basalt-ai/mantis.git"
   },
   "scripts": {
-    "dev": "next dev -p 3001",
-    "dev:clean": "rm -rf .next && next dev -p 3001",
-    "dev:rescue": "rm -rf .next node_modules/.cache && next dev -p 3001",
+    "clean:cache": "node scripts/clean-build-cache.mjs",
+    "predev": "node scripts/clean-build-cache.mjs",
+    "dev": "next dev --turbo -p 3001",
+    "dev:webpack": "next dev -p 3001",
+    "dev:fast": "next dev --turbo -p 3001",
+    "dev:clean": "node scripts/clean-build-cache.mjs && next dev --turbo -p 3001",
+    "dev:rescue": "node scripts/clean-build-cache.mjs && next dev --turbo -p 3001",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
