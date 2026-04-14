@@ -1,6 +1,9 @@
+import { HiOutlineLockOpen } from "react-icons/hi2";
+
 import { safeCompliant } from "@/lib/copy";
 
-const iconClass = "h-8 w-8 text-[var(--accent)]";
+/** Same purple as the Slack mockup’s left column (`SlackUI` sidebar). */
+const iconClass = "h-8 w-8 text-[#4A154B]";
 
 function HumanApprovalIcon() {
   return (
@@ -27,15 +30,7 @@ function AuditLogIcon() {
 }
 
 function ScopedAccessIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className={iconClass} aria-hidden>
-      <path
-        fill="currentColor"
-        d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"
-        opacity={0.9}
-      />
-    </svg>
-  );
+  return <HiOutlineLockOpen className={`${iconClass} opacity-90`} aria-hidden />;
 }
 
 function SafeCompliantIcon({ kind }: { kind: "check" | "list" | "lock" }) {
@@ -65,7 +60,7 @@ export function SafeCompliant() {
               <h3 className="mt-4 font-display text-xl font-bold text-[var(--text)]">
                 {b.title}
               </h3>
-              <p className="mt-2 whitespace-pre-line text-sm text-[var(--text-muted)]">
+              <p className="mt-2 text-[0.7rem] leading-snug text-[var(--text-muted)] sm:text-[0.75rem]">
                 {b.description}
               </p>
             </div>
