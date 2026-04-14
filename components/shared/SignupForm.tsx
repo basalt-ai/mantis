@@ -55,7 +55,7 @@ export function SignupForm() {
             />
           </label>
           <label className="block text-sm font-medium text-[var(--text-muted)]">
-            Work email
+            Email (not work email)
             <input
               required
               type="email"
