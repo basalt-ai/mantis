@@ -199,8 +199,11 @@ function SlackComposer({ activeChannel }: { activeChannel: Channel }) {
   const [byChannel, setByChannel] = useState(emptyComposerState);
   const [clipTipVisible, setClipTipVisible] = useState(false);
   const [emojiOpen, setEmojiOpen] = useState(false);
+  const [linkPopoverOpen, setLinkPopoverOpen] = useState(false);
   const clipTipTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const emojiRef = useRef<HTMLDivElement>(null);
+  const clipRef = useRef<HTMLDivElement>(null);
+  const linkRef = useRef<HTMLDivElement>(null);
 
   const template = COMPOSER_TEMPLATE[activeChannel];
   const state = byChannel[activeChannel];
@@ -246,6 +249,32 @@ function SlackComposer({ activeChannel }: { activeChannel: Channel }) {
     return () => document.removeEventListener("mousedown", close);
   }, [emojiOpen]);
 
+  useEffect(() => {
+    if (!clipTipVisible) return;
+    const close = (e: MouseEvent) => {
+      if (clipRef.current && !clipRef.current.contains(e.target as Node)) {
+        if (clipTipTimer.current) {
+          clearTimeout(clipTipTimer.current);
+          clipTipTimer.current = null;
+        }
+        setClipTipVisible(false);
+      }
+    };
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, [clipTipVisible]);
+
+  useEffect(() => {
+    if (!linkPopoverOpen) return;
+    const close = (e: MouseEvent) => {
+      if (linkRef.current && !linkRef.current.contains(e.target as Node)) {
+        setLinkPopoverOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, [linkPopoverOpen]);
+
   const bumpOnKey = useCallback(() => {
     setByChannel((prev) => {
       const s = prev[activeChannel];
@@ -280,12 +309,30 @@ function SlackComposer({ activeChannel }: { activeChannel: Channel }) {
 
   const channelName = activeChannel.replace(/^#/, "");
 
+  /** Shared Slack-style mini tooltip (link + paperclip) */
+  const slackTooltipWrap =
+    "absolute bottom-full left-1/2 z-30 mb-1.5 flex -translate-x-1/2 flex-col items-center";
+  const slackTooltipCard =
+    "w-fit max-w-[min(18rem,calc(100vw-2rem))] rounded-lg bg-[#1a1d21] px-2.5 py-1.5 text-center shadow-[0_3px_10px_rgba(0,0,0,0.2)]";
+  const slackTooltipCaret =
+    "-mt-px h-0 w-0 border-l-[5px] border-r-[5px] border-t-[6px] border-l-transparent border-r-transparent border-t-[#1a1d21]";
+
   const onPaperclipClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (clipTipTimer.current) clearTimeout(clipTipTimer.current);
+    if (clipTipTimer.current) {
+      clearTimeout(clipTipTimer.current);
+      clipTipTimer.current = null;
+    }
+    if (clipTipVisible) {
+      setClipTipVisible(false);
+      return;
+    }
     setClipTipVisible(true);
-    clipTipTimer.current = setTimeout(() => setClipTipVisible(false), 2600);
+    clipTipTimer.current = setTimeout(() => {
+      setClipTipVisible(false);
+      clipTipTimer.current = null;
+    }, 2600);
   };
 
   const insertEmoji = (ch: string) => {
@@ -335,9 +382,34 @@ function SlackComposer({ activeChannel }: { activeChannel: Channel }) {
           <span title="Italic" className="cursor-default italic select-none">
             I
           </span>
-          <span title="Link" className="cursor-default select-none">
-            🔗
-          </span>
+          <div className="relative" ref={linkRef}>
+            <button
+              type="button"
+              title="Link"
+              className="cursor-pointer select-none border-0 bg-transparent p-0 text-[inherit]"
+              onClick={(e) => {
+                e.preventDefault();
+                setLinkPopoverOpen((o) => !o);
+              }}
+            >
+              🔗
+            </button>
+            {linkPopoverOpen ? (
+              <div className={slackTooltipWrap} role="dialog" aria-label="flappybird.io">
+                <div className={slackTooltipCard}>
+                  <a
+                    href="https://flappybird.io"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[12px] font-medium leading-tight text-[#36C5F0] underline decoration-[#36C5F0]/70 underline-offset-2 hover:text-[#70d4f7]"
+                  >
+                    flappybird.io
+                  </a>
+                </div>
+                <div className={slackTooltipCaret} aria-hidden />
+              </div>
+            ) : null}
+          </div>
           <div className="relative" ref={emojiRef}>
             <button
               type="button"
@@ -368,7 +440,7 @@ function SlackComposer({ activeChannel }: { activeChannel: Channel }) {
               </div>
             ) : null}
           </div>
-          <div className="relative">
+          <div className="relative" ref={clipRef}>
             <button
               type="button"
               title="Attach"
@@ -377,15 +449,16 @@ function SlackComposer({ activeChannel }: { activeChannel: Channel }) {
             >
               📎
             </button>
-            <div
-              className={`absolute bottom-full left-1/2 z-30 mb-2 w-[min(16rem,calc(100vw-8rem))] -translate-x-1/2 rounded-md border border-[#e0e0e0] bg-[#1d1c1d] px-3 py-2 text-center text-[12px] font-normal leading-snug text-white shadow-lg transition-opacity duration-300 ${
-                clipTipVisible ? "pointer-events-none opacity-100" : "pointer-events-none opacity-0"
-              }`}
-              role="tooltip"
-              aria-hidden={!clipTipVisible}
-            >
-              You&apos;re too curious. We didn&apos;t think of this edge case 😅
-            </div>
+            {clipTipVisible ? (
+              <div className={slackTooltipWrap} role="tooltip">
+                <div className={slackTooltipCard}>
+                  <p className="whitespace-nowrap text-[12px] font-medium leading-tight text-white/95">
+                    Nice try — no upload yet 😅
+                  </p>
+                </div>
+                <div className={slackTooltipCaret} aria-hidden />
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
