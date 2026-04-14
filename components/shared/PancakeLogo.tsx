@@ -9,11 +9,12 @@ export function PancakeLogo({ className, ...props }: PancakeLogoProps) {
   return (
     <div className={`flex items-center gap-3 ${className ?? ""}`} {...props}>
       <Image
-        src="/pancake-icon.jpg"
-        alt="Pancake icon"
-        width={48}
-        height={48}
-        style={{ flexShrink: 0, objectFit: "contain", borderRadius: "6px" }}
+        src="/pancake-mark.svg"
+        alt=""
+        width={80}
+        height={80}
+        className="h-10 w-10 shrink-0 object-contain"
+        unoptimized
       />
       <span
         style={{
@@ -25,7 +26,7 @@ export function PancakeLogo({ className, ...props }: PancakeLogoProps) {
           lineHeight: 1,
         }}
       >
-        Pancake
+        pancake
       </span>
 
     </div>
