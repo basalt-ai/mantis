@@ -114,7 +114,7 @@ export const safeCompliant = {
   badges: [
     {
       icon: "check" as const,
-      title: "Human approval",
+      title: "Human guardrails",
       description:
         "Sensitive actions pause and wait for your go-ahead.\nAgents never send, delete, or charge without permission.",
     },
