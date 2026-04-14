@@ -81,7 +81,7 @@ export const orgChart = {
 export const slack = {
   titleLine1: "Your agents live in Slack.",
   titleLine2: "They don't wait to be asked.",
-  workspaceName: "Your Company",
+  workspaceName: "Spectra",
   channels: ["#briefing", "#outbound", "#content", "#product"] as const,
   defaultChannel: "#briefing" as const,
   /** Unread counts shown on channel rows (Slack-style badges) */

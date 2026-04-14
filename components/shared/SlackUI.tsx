@@ -43,7 +43,7 @@ const CHANNEL_MESSAGES: Record<Channel, SlackMsg[]> = {
       kind: "agent",
       agentHandle: "ceo",
       time: "8:00 AM",
-      text: `Good morning. Here's your company overnight:
+      text: `Good morning. Here's Spectra overnight:
 
 · MRR: $4,280 → $4,620 (+$340, 2 new customers from LinkedIn outbound)
 · Outbound: 131 connection requests sent Monday → 34 accepted → 6 demo calls booked this week
@@ -139,7 +139,7 @@ momentum going. Also:
       time: "3:47 AM",
       text: `🔴 Incident auto-resolved.
 
-3:12 AM — Gmail rules surfaced 340 bounced /api/v2/webhooks delivery failures.
+3:12 AM — Sentry flagged 340 TypeError exceptions on /api/v2/webhooks.
 Traced to PR #291 (merged yesterday): payload.metadata is null when
 webhook source is Stripe.
 
