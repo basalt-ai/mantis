@@ -107,20 +107,17 @@ export const safeCompliant = {
     {
       icon: "check" as const,
       title: "Human guardrails",
-      description:
-        "Sensitive actions pause and wait for your go-ahead.\nAgents never send, delete, or charge without permission.",
+      description: "Sensitive actions pause and wait for your go-ahead.",
     },
     {
       icon: "list" as const,
       title: "Full audit trail",
-      description:
-        "Every action every agent takes is recorded.\nSee exactly what ran, when, and why.",
+      description: "Every action every agent takes is recorded.",
     },
     {
       icon: "lock" as const,
       title: "Scoped access",
-      description:
-        "Each agent only sees what it needs.\nYou decide which tools, channels, and data each one can touch.",
+      description: "Each agent only sees what it needs.",
     },
   ],
 } as const;
