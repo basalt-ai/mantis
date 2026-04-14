@@ -41,7 +41,7 @@ const CHANNEL_MESSAGES: Record<Channel, SlackMsg[]> = {
     {
       id: "b1",
       kind: "agent",
-      agentHandle: "aria",
+      agentHandle: "ceo",
       time: "8:00 AM",
       text: `Good morning. Here's Spectra overnight:
 
@@ -60,7 +60,7 @@ Prep doc ready →`,
     {
       id: "o1",
       kind: "agent",
-      agentHandle: "scout",
+      agentHandle: "ceo",
       time: "9:15 AM",
       text: `Signal detected: 23 companies on your ICP posted "Senior AI Engineer"
 job listings on LinkedIn in the past 72h. Teams hiring for AI = teams
@@ -99,7 +99,7 @@ post or company news. Here are 3 previews:`,
     {
       id: "o3",
       kind: "agent",
-      agentHandle: "scout",
+      agentHandle: "ceo",
       time: "9:18 AM",
       text: `Done. 131 invites sent (removed 16 profiles from 4 pre-seed
 companies). Follow-up messages drip to acceptors over 5 days.
@@ -111,7 +111,7 @@ I'll report conversions daily in #briefing.`,
     {
       id: "c1",
       kind: "agent",
-      agentHandle: "ghostwriter",
+      agentHandle: "ceo",
       time: "7:45 AM",
       text: `Your X thread just crossed 847K impressions in 48 hours.
 Here's the breakdown:
@@ -135,7 +135,7 @@ momentum going. Also:
     {
       id: "p1",
       kind: "agent",
-      agentHandle: "shipwright",
+      agentHandle: "ceo",
       time: "3:47 AM",
       text: `🔴 Incident auto-resolved.
 
@@ -156,7 +156,7 @@ Here's what I did:
     {
       id: "p2",
       kind: "agent",
-      agentHandle: "shipwright",
+      agentHandle: "ceo",
       time: "3:48 AM",
       text: `Incident postmortem drafted in Notion. I've also added a pre-merge
 check so nullable fields from payment providers get caught before
@@ -297,13 +297,14 @@ function SlackMessageBlock({ message }: { message: SlackMsg }) {
   const tm = agentByHandle(message.agentHandle);
   const initials = tm?.initials ?? "??";
   const bg = tm?.avatarColor ?? "#4A154B";
+  const agentLabel = tm?.displayName ?? message.agentHandle;
 
   return (
     <div className="flex gap-3" style={{ gap: 12 }}>
       <TeammateAvatar initials={initials} backgroundColor={bg} />
       <div className="min-w-0 flex-1 pt-0.5">
         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0">
-          <span className="text-[15px] font-bold text-[#1d1c1d]">{message.agentHandle}</span>
+          <span className="text-[15px] font-bold text-[#1d1c1d]">{agentLabel}</span>
           <span className="text-[12px] font-normal text-[#616061]">{message.time}</span>
         </div>
         <p className="mt-1 whitespace-pre-line text-[15px] font-normal leading-[1.46668]" style={{ color: SLACK_TEXT }}>

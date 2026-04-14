@@ -93,10 +93,12 @@ export const slack = {
   } as const,
   /** Agents that post in channels — sidebar DMs removed; used for avatars in the thread */
   agents: [
-    { handle: "aria", initials: "AR", avatarColor: "#E9738E" },
-    { handle: "scout", initials: "SC", avatarColor: "#1264A3" },
-    { handle: "ghostwriter", initials: "GW", avatarColor: "#5B2C83" },
-    { handle: "shipwright", initials: "SW", avatarColor: "#2EB67D" },
+    {
+      handle: "ceo",
+      displayName: "CEO Agent",
+      initials: "CA",
+      avatarColor: "#FF7B9C",
+    },
   ] as const,
   /** Per-channel floating badge text (typewriter / receipt style, punchy caps) */
   channelBadges: {
