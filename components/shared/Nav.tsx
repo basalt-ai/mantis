@@ -23,10 +23,7 @@ export function Nav({ ctaHref = "/signup", showCta = true }: NavProps) {
           className="flex items-center text-[var(--text)]"
           aria-label="pancake home"
         >
-          <PancakeLogo
-            className="h-10"
-            aria-hidden
-          />
+          <PancakeLogo aria-hidden />
         </Link>
         {showCta && (
           <Link

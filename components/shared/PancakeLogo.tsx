@@ -7,7 +7,10 @@ type PancakeLogoProps = {
 
 export function PancakeLogo({ className, ...props }: PancakeLogoProps) {
   return (
-    <div className={`flex items-center gap-3 ${className ?? ""}`} {...props}>
+    <div
+      className={`inline-flex items-center gap-1.5 ${className ?? ""}`}
+      {...props}
+    >
       <Image
         src="/pancake-icon.jpg"
         alt=""
@@ -15,10 +18,11 @@ export function PancakeLogo({ className, ...props }: PancakeLogoProps) {
         height={96}
         quality={100}
         priority
-        className="h-10 w-10 shrink-0 object-contain"
+        className="h-8 w-8 shrink-0 translate-y-0.5 object-contain object-left sm:h-9 sm:w-9"
         style={{ borderRadius: "6px" }}
       />
       <span
+        className="-ml-px leading-none sm:-ml-0.5"
         style={{
           fontFamily: "var(--font-space-grotesk), 'Space Grotesk', sans-serif",
           fontWeight: 700,
