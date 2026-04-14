@@ -17,6 +17,8 @@ export const hero = {
 export const orgChart = {
   title: "An entire organization working for you while you sleep.",
   ceoLabel: "CEO AGENT",
+  /** Shown once under each cluster’s agent grid */
+  moreComingSoon: "More coming soon.",
   /** Visual clusters only — flat reporting to CEO */
   clusters: [
     {
@@ -24,15 +26,11 @@ export const orgChart = {
       label: "GROWTH",
       tint: "#FFE4EC",
       agents: [
-        "Content Writer",
-        "Ad Manager",
         "Outbound SDR",
-        "Lead Qualifier",
-        "SEO Specialist",
-        "Social Media Manager",
         "Email Marketer",
+        "Ad Manager",
         "Copywriter",
-        "PR Agent",
+        "Social Media Manager",
         "Partnership Outreach",
       ],
     },
@@ -42,12 +40,10 @@ export const orgChart = {
       tint: "#E4EEFF",
       agents: [
         "Full-stack Engineer",
-        "Frontend Dev",
-        "Backend Dev",
         "DevOps",
-        "Security Auditor",
         "QA Tester",
         "Performance Monitor",
+        "Security Auditor",
       ],
     },
     {
@@ -55,19 +51,12 @@ export const orgChart = {
       label: "OPERATIONS",
       tint: "#FFF8E1",
       agents: [
-        "Invoicing",
         "Scheduling",
-        "Payroll",
-        "Support Tier 1",
-        "Support Tier 2",
-        "Escalation Manager",
-        "Data Analyst",
-        "Compliance Officer",
-        "Contract Reviewer",
-        "Onboarding Specialist",
-        "Customer Success",
+        "Customer Support",
         "Recruiting Screener",
-        "Meeting Scheduler",
+        "Contract Reviewer",
+        "Invoicing",
+        "Onboarding Specialist",
       ],
     },
   ],

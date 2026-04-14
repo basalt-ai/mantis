@@ -191,6 +191,9 @@ export function OrgChart() {
                       </div>
                     ))}
                   </div>
+                  <p className="mt-3 text-center font-mono text-[10px] font-medium uppercase tracking-wide text-[#666] sm:mt-4 sm:text-[11px]">
+                    {orgChart.moreComingSoon}
+                  </p>
                 </div>
               ))}
             </div>
