@@ -179,7 +179,7 @@ export const stackIntegrations = {
       description: "Reports progress, asks approvals, briefs you daily.",
     },
   ],
-  mcpRow: "+ Any MCP server",
+  mcpRow: "+ Any tool with an API",
 } as const;
 
 export const finalCta = {
