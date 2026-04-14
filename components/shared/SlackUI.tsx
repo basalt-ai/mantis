@@ -139,7 +139,7 @@ momentum going. Also:
       time: "3:47 AM",
       text: `🔴 Incident auto-resolved.
 
-3:12 AM — Sentry flagged 340 TypeError exceptions on /api/v2/webhooks.
+3:12 AM — Gmail rules surfaced 340 bounced /api/v2/webhooks delivery failures.
 Traced to PR #291 (merged yesterday): payload.metadata is null when
 webhook source is Stripe.
 

@@ -16,6 +16,7 @@ export const hero = {
 
 export const orgChart = {
   title: "An entire organization working for you while you sleep.",
+  youLabel: "You",
   ceoLabel: "CEO AGENT",
   /** Shown once under each cluster’s agent grid */
   moreComingSoon: "+ build your own",
@@ -151,9 +152,9 @@ export const stackIntegrations = {
       description: "Tracks MRR, flags churn risk, invoices new deals.",
     },
     {
-      id: "sentry",
-      name: "Sentry",
-      description: "Catches errors, traces root cause, triggers fix.",
+      id: "gmail",
+      name: "Gmail",
+      description: "Reads inbox, drafts replies, labels and routes mail.",
     },
     {
       id: "linkedin",
@@ -182,6 +183,14 @@ export const stackIntegrations = {
 export const finalCta = {
   title: "Build your autonomous company.",
   subtitle: "Open source. Deploy in minutes. Scale without hiring.",
+  cta: "Start building",
+} as const;
+
+export const pricing = {
+  title: "Simple pricing.",
+  subtitle: "One plan. Everything included.",
+  priceLine: "€49 / month",
+  cardLine: "Your full agent workforce",
   cta: "Start building",
 } as const;
 

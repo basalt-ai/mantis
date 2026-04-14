@@ -2,8 +2,8 @@ import type { IconType } from "react-icons";
 import { GrLinkedin } from "react-icons/gr";
 import {
   SiGithub,
+  SiGmail,
   SiNotion,
-  SiSentry,
   SiSlack,
   SiStripe,
   SiVercel,
@@ -19,7 +19,7 @@ const INTEGRATION_ICONS: Record<
   github: { Icon: SiGithub, className: "text-black" },
   vercel: { Icon: SiVercel, className: "text-black" },
   stripe: { Icon: SiStripe, className: "text-[#635BFF]" },
-  sentry: { Icon: SiSentry, className: "text-[#362D59]" },
+  gmail: { Icon: SiGmail, className: "text-[#EA4335]" },
   linkedin: { Icon: GrLinkedin, className: "text-[#0A66C2]" },
   x: { Icon: SiX, className: "text-black" },
   notion: { Icon: SiNotion, className: "text-black" },
