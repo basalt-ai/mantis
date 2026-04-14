@@ -375,13 +375,23 @@ function SlackComposer({ activeChannel }: { activeChannel: Channel }) {
             </span>
           )}
         </div>
-        <div className="relative mt-2 flex items-center gap-4 border-t border-[#f0f0f0] pt-2 text-[13px] font-semibold text-[#868686]">
-          <span title="Bold" className="cursor-default select-none">
+        <div className="relative mt-2 flex items-center gap-3 border-t border-[#f0f0f0] pt-2 text-[13px] font-semibold text-[#868686]">
+          <button
+            type="button"
+            title="Bold"
+            tabIndex={-1}
+            className="-mx-0.5 cursor-pointer select-none rounded px-1.5 py-0.5 font-semibold not-italic text-[#868686] transition-[color,background-color,transform] duration-150 ease-out hover:bg-[#ececec] hover:text-[#1d1c1d] active:scale-[0.96]"
+          >
             B
-          </span>
-          <span title="Italic" className="cursor-default italic select-none">
+          </button>
+          <button
+            type="button"
+            title="Italic"
+            tabIndex={-1}
+            className="-mx-0.5 cursor-pointer select-none rounded px-1.5 py-0.5 italic text-[#868686] transition-[color,background-color,transform] duration-150 ease-out hover:bg-[#ececec] hover:text-[#1d1c1d] active:scale-[0.96]"
+          >
             I
-          </span>
+          </button>
           <div className="relative" ref={linkRef}>
             <button
               type="button"
@@ -424,7 +434,7 @@ function SlackComposer({ activeChannel }: { activeChannel: Channel }) {
             </button>
             {emojiOpen ? (
               <div
-                className="absolute bottom-full left-0 z-30 mb-1 flex gap-1 rounded-md border border-[#e0e0e0] bg-white px-2 py-1.5 shadow-md"
+                className="absolute bottom-full left-1/2 z-30 mb-1 flex -translate-x-1/2 gap-1 rounded-md border border-[#e0e0e0] bg-white px-2 py-1.5 shadow-md"
                 role="listbox"
               >
                 {PICKER_EMOJIS.map((em) => (
