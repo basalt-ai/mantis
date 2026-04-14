@@ -154,7 +154,7 @@ export const stackIntegrations = {
     },
     {
       id: "x",
-      name: "X (Twitter)",
+      name: "X",
       description: "Posts threads, engages replies, grows audience.",
     },
     {
