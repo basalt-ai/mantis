@@ -120,7 +120,7 @@ export const safeCompliant = {
     },
     {
       icon: "list" as const,
-      title: "Full audit log",
+      title: "Full audit trail",
       description:
         "Every action every agent takes is recorded.\nSee exactly what ran, when, and why.",
     },
