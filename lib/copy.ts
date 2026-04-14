@@ -124,19 +124,25 @@ export const slack = {
 } as const;
 
 export const safeCompliant = {
-  title: "Safe and compliant by design.",
+  title: "You're always in control.",
   badges: [
     {
-      title: "SOC 2",
-      description: "audit-ready infrastructure",
+      icon: "check" as const,
+      title: "Human approval",
+      description:
+        "Sensitive actions pause and wait for your go-ahead.\nAgents never send, delete, or charge without permission.",
     },
     {
-      title: "Guardrails",
-      description: "every agent action is bounded and logged",
+      icon: "list" as const,
+      title: "Full audit log",
+      description:
+        "Every action every agent takes is recorded.\nSee exactly what ran, when, and why.",
     },
     {
-      title: "Permissions",
-      description: "granular access control per agent, per tool",
+      icon: "lock" as const,
+      title: "Scoped access",
+      description:
+        "Each agent only sees what it needs.\nYou decide which tools, channels, and data each one can touch.",
     },
   ],
 } as const;
