@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { hero } from "@/lib/copy";
 import { PancakeLogo } from "./PancakeLogo";
+import { SiDiscord } from "react-icons/si";
 
 type NavProps = {
   ctaHref?: string;
@@ -32,6 +33,15 @@ export function Nav({ ctaHref = "/signup", showCta = true }: NavProps) {
           >
             Pricing
           </Link>
+          <a
+            href="https://discord.gg/AHkdX75k"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[var(--text)] transition hover:opacity-70"
+            aria-label="Join our Discord"
+          >
+            <SiDiscord size={20} />
+          </a>
           {showCta && (
             <Link
               href={ctaHref}
