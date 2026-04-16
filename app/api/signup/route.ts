@@ -69,7 +69,7 @@ export async function POST(req: Request) {
     }
 
     // Sync to Loops (non-blocking — fire and forget)
-    addContactToLoops(email, name ?? undefined);
+    addContactToLoops(email, name ?? undefined, referralCode);
 
     return NextResponse.json({ ok: true, referralCode });
   } catch (err: unknown) {

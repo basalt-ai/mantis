@@ -4,6 +4,7 @@ const LOOPS_API_KEY = process.env.LOOPS_API_KEY!;
 export async function addContactToLoops(
   email: string,
   name?: string,
+  referralCode?: string,
 ): Promise<void> {
   if (!LOOPS_API_KEY) return;
 
@@ -37,6 +38,10 @@ export async function addContactToLoops(
       body: JSON.stringify({
         email: email.toLowerCase().trim(),
         eventName: "signup_complete",
+        eventProperties: {
+          referralCode,
+          referralLink: referralCode ? `https://trypancake.ai/signup?ref=${referralCode}` : "",
+        },
       }),
     });
   } catch (err) {
