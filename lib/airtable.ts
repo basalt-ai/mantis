@@ -3,12 +3,13 @@ const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN!;
 const AIRTABLE_BASE = process.env.AIRTABLE_BASE_ID!;
 
 const TABLES = {
-  signups: "Signups",
-  invites: "Invites",
+  signups: "tblXBOYUY7OfKItXz",
+  invites: "tbl6cnGtnzWSIZUFp",
 } as const;
 
 function airtableUrl(table: string, extra = "") {
-  return `https://api.airtable.com/v0/${AIRTABLE_BASE}/${encodeURIComponent(table)}${extra}`;
+  const base = AIRTABLE_BASE.trim();
+  return `https://api.airtable.com/v0/${base}/${encodeURIComponent(table)}${extra}`;
 }
 
 function headers() {
