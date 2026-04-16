@@ -196,7 +196,7 @@ export const signup = {
     "We're releasing Pancake to more people each day and we can't wait for you to try it.",
   referralTitle: "Skip the waitlist.",
   referralBody:
-    "Refer 2 people. When they sign up, you get immediate access to the early version of Pancake.",
+    "Refer 2 people. When they sign up, you get immediate access to the early version of Pancake — and so do they.",
   referralCta: "Get your referral link →",
   discordLabel: "Or join our Discord",
   discordBody: "Connect with other Autonomous Company founders sharing best practices.",

@@ -53,7 +53,7 @@ export function SignupForm() {
   function handleGenerateLink() {
     // TODO: wire to /api/referral/generate — for now use placeholder
     const link = `https://trypancake.ai?ref=PLACEHOLDER`;
-    const message = `Hey! I've been exploring Pancake — an AI platform that runs your entire company autonomously. Agents handle ops, growth, and engineering while you focus on strategy.\n\nSign up with my link and I get early access: ${link}`;
+    const message = `Hey! I've been exploring Pancake — an AI platform that helps you build Autonomous Companies: AI handles most of the execution and humans act as board members.\n\nIt's closed to the public, I'm able to get you early access here: ${link}`;
     setReferralLink(link);
     setReferralMessage(message);
   }
