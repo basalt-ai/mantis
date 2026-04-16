@@ -11,6 +11,8 @@ export function SignupForm() {
   // Referral state
   const [referralEmails, setReferralEmails] = useState(["", ""]);
   const [sentIndexes, setSentIndexes] = useState<Set<number>>(new Set());
+  const [referralCode, setReferralCode] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState("");
   const [referralLink, setReferralLink] = useState<string | null>(null);
   const [referralMessage, setReferralMessage] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -22,13 +24,20 @@ export function SignupForm() {
     const form = e.currentTarget;
     const email = (form.elements.namedItem("email") as HTMLInputElement).value;
     const name = (form.elements.namedItem("name") as HTMLInputElement).value;
+
+    // Check for ref param in URL
+    const ref = new URLSearchParams(window.location.search).get("ref") ?? undefined;
+
     try {
       const res = await fetch("/api/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, name }),
+        body: JSON.stringify({ email, name, ref }),
       });
       if (!res.ok) throw new Error("Failed");
+      const data = await res.json();
+      setReferralCode(data.referralCode ?? null);
+      setUserEmail(email);
       setSubmitted(true);
     } catch {
       setError("Something went wrong. Please try again.");
@@ -41,21 +50,42 @@ export function SignupForm() {
     setReferralEmails((prev) => prev.map((e, i) => (i === index ? value : e)));
   }
 
-  function handleSendInvite(index: number) {
-    // TODO: wire to /api/referral/invite
-    setSentIndexes((prev) => new Set(prev).add(index));
+  async function handleSendInvite(index: number) {
+    if (!referralCode) return;
+    const email = referralEmails[index];
+    if (!email) return;
+    try {
+      await fetch("/api/referral/invite", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ referrerCode: referralCode, email }),
+      });
+      setSentIndexes((prev) => new Set(prev).add(index));
+    } catch {
+      // silently fail for now
+    }
   }
 
   function handleAddEmail() {
     setReferralEmails((prev) => [...prev, ""]);
   }
 
-  function handleGenerateLink() {
-    // TODO: wire to /api/referral/generate — for now use placeholder
-    const link = `https://trypancake.ai?ref=PLACEHOLDER`;
-    const message = `Hey! I've been exploring Pancake — an AI platform that helps you build Autonomous Companies: AI handles most of the execution and humans act as board members.\n\nIt's closed to the public, I'm able to get you early access here: ${link}`;
-    setReferralLink(link);
-    setReferralMessage(message);
+  async function handleGenerateLink() {
+    if (!userEmail) return;
+    try {
+      const res = await fetch("/api/referral/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: userEmail }),
+      });
+      const data = await res.json();
+      setReferralLink(data.link);
+      setReferralMessage(data.message);
+    } catch {
+      const link = `https://trypancake.ai/signup?ref=${referralCode}`;
+      setReferralLink(link);
+      setReferralMessage(`Hey! I've been exploring Pancake \u2014 an AI platform that helps you build Autonomous Companies: AI handles most of the execution and humans act as board members.\n\nIt's closed to the public, I'm able to get you early access here: ${link}`);
+    }
   }
 
   function handleCopy() {
@@ -103,7 +133,7 @@ export function SignupForm() {
                     className="shrink-0 rounded-theme border-[2px] border-[var(--border-color)] px-3 py-2.5 text-sm font-semibold !text-black transition hover:-translate-x-0.5 hover:-translate-y-0.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0"
                     style={{ backgroundColor: sentIndexes.has(i) ? "#d4f4dd" : "var(--accent)" }}
                   >
-                    {sentIndexes.has(i) ? "✓ Sent" : "Send →"}
+                    {sentIndexes.has(i) ? "\u2713 Sent" : "Send \u2192"}
                   </button>
                 </div>
               ))}
@@ -126,15 +156,13 @@ export function SignupForm() {
                   className="w-full rounded-theme brut-border px-4 py-3 text-sm font-semibold !text-black transition hover:-translate-x-0.5 hover:-translate-y-0.5"
                   style={{ backgroundColor: "var(--bg)" }}
                 >
-                  🔗 Generate a referral link + message
+                  \ud83d\udd17 Generate a referral link + message
                 </button>
               ) : (
                 <div className="space-y-3">
-                  {/* Link display */}
                   <div className="flex items-center gap-2 rounded-theme border-[2px] border-[var(--border-color)] bg-[var(--bg)] px-3 py-2.5">
                     <span className="flex-1 truncate font-mono text-xs text-[var(--text-muted)]">{referralLink}</span>
                   </div>
-                  {/* Copyable message */}
                   <div className="relative rounded-theme border-[2px] border-[var(--border-color)] bg-[var(--bg)] p-3">
                     <p className="font-body text-xs text-[var(--text-muted)] whitespace-pre-wrap leading-relaxed">{referralMessage}</p>
                     <button
@@ -142,7 +170,7 @@ export function SignupForm() {
                       className="mt-3 flex items-center gap-1.5 text-xs font-semibold underline underline-offset-2"
                       style={{ color: "var(--accent)" }}
                     >
-                      {copied ? "✓ Copied!" : "📋 Copy message"}
+                      {copied ? "\u2713 Copied!" : "\ud83d\udccb Copy message"}
                     </button>
                   </div>
                 </div>
