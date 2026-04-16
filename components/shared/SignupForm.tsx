@@ -39,9 +39,41 @@ export function SignupForm() {
   return (
     <>
       {submitted ? (
-        <p className="mt-10 rounded-theme brut-border bg-[#FFE4EC] p-5 font-body text-[var(--text)]">
-          {signup.success}
-        </p>
+        <div className="mt-10 space-y-6">
+          {/* Confirmation */}
+          <div className="rounded-theme brut-border bg-[#FFE4EC] p-6">
+            <p className="font-display text-xl font-semibold text-[var(--text)]">{signup.successTitle}</p>
+            <p className="mt-2 font-body text-[var(--text-muted)]">{signup.successBody}</p>
+          </div>
+
+          {/* Referral — primary action */}
+          <div className="rounded-theme brut-border bg-[var(--surface)] p-6">
+            <p className="font-display text-lg font-semibold text-[var(--text)]">{signup.referralTitle}</p>
+            <p className="mt-2 font-body text-sm text-[var(--text-muted)]">{signup.referralBody}</p>
+            <button
+              className="mt-4 w-full rounded-theme brut-border px-4 py-4 text-base font-semibold !text-black transition hover:-translate-x-0.5 hover:-translate-y-0.5"
+              style={{ backgroundColor: "var(--accent)" }}
+              onClick={() => alert("Referral link coming soon!")}
+            >
+              {signup.referralCta}
+            </button>
+          </div>
+
+          {/* Discord — secondary */}
+          <div className="rounded-theme border border-[var(--border-color)] bg-[var(--surface)] p-5">
+            <p className="font-display text-sm font-semibold text-[var(--text-muted)] uppercase tracking-wide">{signup.discordLabel}</p>
+            <p className="mt-1 font-body text-sm text-[var(--text-muted)]">{signup.discordBody}</p>
+            <a
+              href={signup.discordUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-block font-semibold text-sm underline underline-offset-2"
+              style={{ color: "var(--accent)" }}
+            >
+              {signup.discordCta}
+            </a>
+          </div>
+        </div>
       ) : (
         <form onSubmit={handleSubmit} className="mt-10 space-y-6">
           <label className="block text-sm font-medium text-[var(--text-muted)]">
