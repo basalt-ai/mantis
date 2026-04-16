@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createRecord, findRecords, updateRecord, generateReferralCode, TABLES } from "@/lib/airtable";
+import { addContactToLoops } from "@/lib/loops";
 
 export async function POST(req: Request) {
   try {
@@ -66,6 +67,9 @@ export async function POST(req: Request) {
         }
       }
     }
+
+    // Sync to Loops (non-blocking — fire and forget)
+    addContactToLoops(email, name ?? undefined);
 
     return NextResponse.json({ ok: true, referralCode });
   } catch (err: unknown) {
