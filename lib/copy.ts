@@ -201,5 +201,5 @@ export const signup = {
   discordLabel: "Or join our Discord",
   discordBody: "Connect with other Autonomous Company founders sharing best practices.",
   discordCta: "Join the community →",
-  discordUrl: "https://discord.gg/pancake",
+  discordUrl: "https://discord.gg/AHkdX75k",
 } as const;
