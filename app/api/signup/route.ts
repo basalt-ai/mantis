@@ -68,8 +68,8 @@ export async function POST(req: Request) {
       }
     }
 
-    // Sync to Loops (non-blocking — fire and forget)
-    addContactToLoops(email, name ?? undefined, referralCode);
+    // Sync to Loops — must await before response or Vercel kills it
+    await addContactToLoops(email, name ?? undefined, referralCode);
 
     return NextResponse.json({ ok: true, referralCode });
   } catch (err: unknown) {
