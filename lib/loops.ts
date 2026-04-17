@@ -72,6 +72,7 @@ export async function sendInviteEmail(
     userGroup: "invited",
     inviteLink,
     invitedBy: referrerName,
+    referralLink: inviteLink,
   });
 
   // Fire friend_invited event
