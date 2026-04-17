@@ -71,9 +71,11 @@ export async function POST(req: Request) {
             `AND({Referred By} = "${ref}", {Email} != "${email}")`,
             10,
           );
+          // Grant early access to all previous referrals too
           for (const prev of prevReferrals) {
             const prevEmail = prev.fields["Email"] as string;
             const prevCode = prev.fields["Referral Code"] as string;
+            await updateRecord(TABLES.signups, prev.id, { "Early Access": true });
             await sendEarlyAccessEmail(prevEmail, prevCode);
           }
         }
