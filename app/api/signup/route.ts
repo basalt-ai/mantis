@@ -33,6 +33,7 @@ export async function POST(req: Request) {
       "Referral Count": 0,
       "Early Access": false,
       "Signup Date": new Date().toISOString(),
+      Source: "Website",
     });
 
     // If referred by someone, update their referral count + check early access
