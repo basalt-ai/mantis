@@ -25,6 +25,8 @@ export async function addContactToLoops(
         lastName,
         source: "pancake-landing",
         userGroup: "early-access",
+        referralCode,
+        referralLink: referralCode ? `https://trypancake.ai/signup?ref=${referralCode}` : "",
       }),
     });
 
