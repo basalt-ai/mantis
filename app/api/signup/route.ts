@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createRecord, findRecords, updateRecord, generateReferralCode, TABLES } from "@/lib/airtable";
-import { addContactToLoops } from "@/lib/loops";
+import { addContactToLoops, sendEarlyAccessEmail } from "@/lib/loops";
 
 export async function POST(req: Request) {
   try {
@@ -48,11 +48,33 @@ export async function POST(req: Request) {
           "Early Access": earlyAccess,
         });
 
-        // If referrer just hit 2, also grant early access to this new user
+        // If referrer just hit 2 — grant early access to all three and fire emails
         if (earlyAccess) {
+          // Grant early access to this new signup
           const thisUser = await findRecords(TABLES.signups, `{Email} = "${email}"`, 1);
           if (thisUser.length > 0) {
             await updateRecord(TABLES.signups, thisUser[0].id, { "Early Access": true });
+          }
+
+          // Fire early_access_granted for referrer
+          const referrerEmail = r.fields["Email"] as string;
+          const referrerCode = r.fields["Referral Code"] as string;
+          await sendEarlyAccessEmail(referrerEmail, referrerCode);
+
+          // Fire early_access_granted for this new signup
+          await sendEarlyAccessEmail(email, referralCode);
+
+          // Also fire for the first friend who signed up (referral count was 1 before this)
+          // Find all signups referred by this referrer code (excluding current email)
+          const prevReferrals = await findRecords(
+            TABLES.signups,
+            `AND({Referred By} = "${ref}", {Email} != "${email}")`,
+            10,
+          );
+          for (const prev of prevReferrals) {
+            const prevEmail = prev.fields["Email"] as string;
+            const prevCode = prev.fields["Referral Code"] as string;
+            await sendEarlyAccessEmail(prevEmail, prevCode);
           }
         }
 
