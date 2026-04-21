@@ -8,33 +8,18 @@ type PancakeLogoProps = {
 export function PancakeLogo({ className, ...props }: PancakeLogoProps) {
   return (
     <div
-      className={`inline-flex items-center gap-1.5 ${className ?? ""}`}
+      className={`inline-flex items-center ${className ?? ""}`}
       {...props}
     >
       <Image
-        src="/pancake-icon.jpg"
+        src="/pancake-wordmark.png"
         alt=""
-        width={96}
-        height={96}
+        width={739}
+        height={291}
         quality={100}
         priority
-        className="h-8 w-8 shrink-0 translate-y-0.5 object-contain object-left sm:h-9 sm:w-9"
-        style={{ borderRadius: "6px" }}
+        className="h-8 w-auto object-contain object-left sm:h-9"
       />
-      <span
-        className="-ml-px leading-none sm:-ml-0.5"
-        style={{
-          fontFamily: "var(--font-space-grotesk), 'Space Grotesk', sans-serif",
-          fontWeight: 700,
-          fontSize: "1.5rem",
-          letterSpacing: "-0.02em",
-          color: "#1a1a1a",
-          lineHeight: 1,
-        }}
-      >
-        pancake
-      </span>
-
     </div>
   );
 }
