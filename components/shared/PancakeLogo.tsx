@@ -6,17 +6,16 @@ type PancakeLogoProps = {
 };
 
 /**
- * Mark is sized to cap-height of the wordmark (top of "P" to baseline of
- * "Panca", ignoring the "k" descender). P letter spans y=109→251 of the 291-
- * tall wordmark image (≈49%), so at rendered h-8/sm:h-9 that's 16/18 px.
- * The wordmark's geometric center sits above the baseline because of the
- * tall "k" ascender, so the mark is nudged down by ~4 px via translate-y to
- * snap its top to the cap line.
+ * Mark spans from the top of the "k" ascender to the baseline of "Panca"
+ * (ignoring the "k" descender). K top ≈ top of the wordmark image and the
+ * baseline sits at ~86% of the image height (251/291). At rendered h-8 /
+ * sm:h-9, that translates to 28 / 31 px tall. `items-start` anchors both
+ * tops, so the mark top aligns with the k-ascender.
  */
 export function PancakeLogo({ className, ...props }: PancakeLogoProps) {
   return (
     <div
-      className={`inline-flex items-center gap-1 sm:gap-[5px] ${className ?? ""}`}
+      className={`inline-flex items-start gap-[6px] sm:gap-2 ${className ?? ""}`}
       {...props}
     >
       <Image
@@ -26,7 +25,7 @@ export function PancakeLogo({ className, ...props }: PancakeLogoProps) {
         height={512}
         quality={100}
         priority
-        className="h-4 w-4 shrink-0 translate-y-[4px] sm:h-[18px] sm:w-[18px]"
+        className="h-[28px] w-[28px] shrink-0 sm:h-[31px] sm:w-[31px]"
       />
       <Image
         src="/pancake-wordmark.png"
