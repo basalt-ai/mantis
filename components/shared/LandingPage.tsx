@@ -1,5 +1,6 @@
 import { FinalCTA } from "./FinalCTA";
 import { Hero } from "./Hero";
+import { ItLearns } from "./ItLearns";
 import { Nav } from "./Nav";
 import { OrgChart } from "./OrgChart";
 import { SafeCompliant } from "./SafeCompliant";
@@ -14,6 +15,7 @@ export function LandingPage() {
         <Hero />
         <OrgChart />
         <SlackUI />
+        <ItLearns />
         <SafeCompliant />
         <StackIntegrations />
         <FinalCTA />

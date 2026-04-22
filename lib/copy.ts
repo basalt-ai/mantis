@@ -101,6 +101,14 @@ export const slack = {
   ] as const,
 } as const;
 
+export const itLearns = {
+  eyebrow: "IT LEARNS.",
+  /** Cream text + pink accent on `headlineAccent` only; period after accent is cream */
+  headlineLead: "Give feedback. It gets ",
+  headlineAccent: "sharper",
+  subhead: "Correct it once. It remembers forever.",
+} as const;
+
 export const safeCompliant = {
   title: "You're always in control.",
   badges: [
