@@ -23,7 +23,7 @@ export function PancakeLogo({ className, ...props }: PancakeLogoProps) {
         height={512}
         quality={100}
         priority
-        className="h-[34px] w-[34px] shrink-0 sm:h-[38px] sm:w-[38px]"
+        className="-ml-[4px] h-[34px] w-[34px] shrink-0 translate-y-[2px] sm:-ml-[5px] sm:h-[38px] sm:w-[38px] sm:translate-y-[3px]"
       />
       <Image
         src="/pancake-wordmark.png"
