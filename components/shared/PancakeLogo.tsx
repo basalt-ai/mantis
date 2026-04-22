@@ -6,13 +6,14 @@ type PancakeLogoProps = {
 };
 
 /**
- * Mark is sized to match the wordmark's cap height
- * (P letter ≈ 49% of the wordmark image height — 32px → ~16px, 36px → ~18px).
+ * The wordmark's tall "k" ascender pushes the letters' optical center below
+ * the image's geometric center (~12% of the image height, ≈ 3–4 px at the
+ * rendered sizes), so the mark is nudged down to sit on the letters' center.
  */
 export function PancakeLogo({ className, ...props }: PancakeLogoProps) {
   return (
     <div
-      className={`inline-flex items-center gap-2 sm:gap-2.5 ${className ?? ""}`}
+      className={`inline-flex items-center gap-1 sm:gap-[5px] ${className ?? ""}`}
       {...props}
     >
       <Image
@@ -22,7 +23,7 @@ export function PancakeLogo({ className, ...props }: PancakeLogoProps) {
         height={512}
         quality={100}
         priority
-        className="h-4 w-4 shrink-0 sm:h-[18px] sm:w-[18px]"
+        className="h-8 w-8 shrink-0 translate-y-[3px] sm:h-9 sm:w-9 sm:translate-y-[4px]"
       />
       <Image
         src="/pancake-wordmark.png"
