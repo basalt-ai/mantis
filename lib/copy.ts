@@ -102,11 +102,9 @@ export const slack = {
 } as const;
 
 export const itLearns = {
-  eyebrow: "IT LEARNS.",
   headlineBefore: "Give feedback. It gets ",
   headlineAccent: "sharper",
   subhead: "Correct it once. It remembers forever.",
-  footnote: "persistent memory across every agent.",
 } as const;
 
 export const safeCompliant = {
