@@ -17,10 +17,10 @@ export const hero = {
 export const orgChart = {
   title: "An entire organization working for you while you sleep.",
   youLabel: "You",
-  ceoLabel: "CEO AGENT",
+  ceoLabel: "AI cofounder",
   /** Shown once under each cluster’s agent grid */
   moreComingSoon: "+ build your own",
-  /** Visual clusters only — flat reporting to CEO */
+  /** Visual clusters only — flat reporting to your AI cofounder */
   clusters: [
     {
       id: "growth",
