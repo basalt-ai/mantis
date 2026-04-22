@@ -5,7 +5,7 @@ import { Nav } from "@/components/shared/Nav";
 import { hero, pricing } from "@/lib/copy";
 
 export const metadata: Metadata = {
-  title: "Pricing — pancake",
+  title: "Pricing — Pancake",
   description: pricing.subtitle,
 };
 
