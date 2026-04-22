@@ -244,7 +244,7 @@ export function OrgChart() {
               className="mx-auto w-full max-w-[300px] rounded-theme brut-border px-4 py-3 text-center sm:max-w-[340px] sm:px-5 sm:py-4"
               style={{ backgroundColor: CEO_PINK }}
             >
-              <p className="font-display text-lg font-bold uppercase tracking-wide text-black sm:text-xl md:text-2xl">
+              <p className="font-display text-lg font-bold tracking-wide text-black sm:text-xl md:text-2xl">
                 {orgChart.ceoLabel}
               </p>
             </div>

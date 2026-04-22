@@ -8,7 +8,7 @@ const SLACK_PURPLE = "#4A154B";
 const SLACK_MUTED = "rgba(255,255,255,0.55)";
 const SLACK_TEXT = "#1d1c1d";
 
-const AGENT_DISPLAY_NAME = "AI Cofounder";
+const AGENT_DISPLAY_NAME = "AI Co-Founder";
 
 type Channel = (typeof slack.channels)[number];
 
