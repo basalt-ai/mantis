@@ -103,10 +103,10 @@ export const slack = {
 
 export const itLearns = {
   eyebrow: "IT LEARNS.",
-  /** Cream text + pink accent on `headlineAccent` only; period after accent is cream */
-  headlineLead: "Give feedback. It gets ",
+  headlineBefore: "Give feedback. It gets ",
   headlineAccent: "sharper",
   subhead: "Correct it once. It remembers forever.",
+  footnote: "persistent memory across every agent.",
 } as const;
 
 export const safeCompliant = {
