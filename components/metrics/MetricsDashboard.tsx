@@ -486,15 +486,17 @@ export function MetricsDashboard({ metrics }: Props) {
         <KpiCard
           label="Total signups"
           value={formatNumber(metrics.totalSignups)}
-          sublabel={
+          sublabel={[
+            `+${metrics.todaySignups} today`,
+            metrics.bucketedWithCreatedTime > 0
+              ? `${formatNumber(metrics.bucketedWithCreatedTime)} used record created time (no Signup Date)`
+              : null,
             metrics.signupsWithoutDate > 0
-              ? `+${metrics.todaySignups} today. Charts exclude ${formatNumber(
-                  metrics.signupsWithoutDate,
-                )} row(s) with no Signup Date (${formatNumber(
-                  metrics.totalSignups + metrics.signupsWithoutDate,
-                )} rows in Airtable).`
-              : `+${metrics.todaySignups} today`
-          }
+              ? `Warning: ${formatNumber(metrics.signupsWithoutDate)} row(s) could not be dated`
+              : null,
+          ]
+            .filter(Boolean)
+            .join(" · ")}
         />
         <KpiCard
           label="Ambassadors"
@@ -522,8 +524,8 @@ export function MetricsDashboard({ metrics }: Props) {
       </div>
 
       <p className="mt-6 text-center font-mono text-[11px] text-[var(--text-muted)] sm:text-[12px]">
-        Daily and cumulative series use the Signup Date field (UTC day). Updated{" "}
-        {new Date(metrics.updatedAt).toUTCString()}.
+        Daily and cumulative series use Signup Date when set, otherwise the row&apos;s Airtable
+        created time (UTC day). Updated {new Date(metrics.updatedAt).toUTCString()}.
       </p>
     </div>
   );

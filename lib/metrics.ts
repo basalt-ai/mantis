@@ -1,12 +1,14 @@
-import { listAllRecords, TABLES } from "./airtable";
+import { listAllRecords, type AirtableRecord, TABLES } from "./airtable";
 
 export type Point = { date: string; value: number };
 
 export type Metrics = {
-  /** Signups with a usable `Signup Date` (same sum as the chart’s cumulative total). */
+  /** All rows in the signups table (= last point of cumulative signups). */
   totalSignups: number;
-  /** Rows in Airtable with no `Signup Date` — excluded from daily / cumulative series. */
+  /** Rows with no day bucket (neither valid Signup Date nor record `createdTime`). Should be 0. */
   signupsWithoutDate: number;
+  /** Count of rows where we used `createdTime` because `Signup Date` was empty. */
+  bucketedWithCreatedTime: number;
   ambassadors: number;
   invitesSent: number;
   conversionPct: number;
@@ -31,6 +33,19 @@ function toUtcDay(raw: string | undefined): string | null {
   const d = new Date(t);
   if (Number.isNaN(d.getTime())) return null;
   return d.toISOString().slice(0, 10);
+}
+
+/**
+ * Day used for analytics: `Signup Date` if set, else Airtable record `createdTime` (always present in API).
+ */
+function bucketDayForRecord(r: AirtableRecord): { day: string | null; usedCreatedTime: boolean } {
+  const signup = toUtcDay(r.fields["Signup Date"] as string | undefined);
+  if (signup) return { day: signup, usedCreatedTime: false };
+  if (r.createdTime) {
+    const d = toUtcDay(r.createdTime);
+    if (d) return { day: d, usedCreatedTime: true };
+  }
+  return { day: null, usedCreatedTime: false };
 }
 
 function isoDay(input: string | number | Date): string {
@@ -69,6 +84,7 @@ export async function getMetrics(): Promise<Metrics> {
   let invitesSent = 0;
   let ambassadors = 0;
   let signupsWithoutDate = 0;
+  let bucketedWithCreatedTime = 0;
 
   for (const r of records) {
     const refCount = Number(r.fields["Referral Count"] ?? 0);
@@ -77,20 +93,19 @@ export async function getMetrics(): Promise<Metrics> {
       ambassadors += 1;
     }
 
-    const raw = r.fields["Signup Date"] as string | undefined;
-    const day = toUtcDay(raw);
+    const { day, usedCreatedTime } = bucketDayForRecord(r);
     if (!day) {
       signupsWithoutDate += 1;
       continue;
     }
+    if (usedCreatedTime) bucketedWithCreatedTime += 1;
     dailySignupMap.set(day, (dailySignupMap.get(day) ?? 0) + 1);
     if (Number.isFinite(refCount) && refCount > 0) {
       dailyAmbassadorMap.set(day, (dailyAmbassadorMap.get(day) ?? 0) + 1);
     }
   }
 
-  const totalSignups = records.length - signupsWithoutDate;
-  // % of *all* table rows who ever referred (unchanged from previous product sense).
+  const totalSignups = records.length;
   const conversionPct = records.length === 0 ? 0 : (ambassadors / records.length) * 100;
 
   const allDays = Array.from(dailySignupMap.keys()).sort();
@@ -100,6 +115,7 @@ export async function getMetrics(): Promise<Metrics> {
     return {
       totalSignups,
       signupsWithoutDate,
+      bucketedWithCreatedTime,
       ambassadors,
       invitesSent,
       conversionPct,
@@ -140,6 +156,7 @@ export async function getMetrics(): Promise<Metrics> {
   return {
     totalSignups,
     signupsWithoutDate,
+    bucketedWithCreatedTime,
     ambassadors,
     invitesSent,
     conversionPct,

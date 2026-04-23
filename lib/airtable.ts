@@ -60,7 +60,12 @@ export function generateReferralCode(): string {
   return Math.random().toString(36).substring(2, 8);
 }
 
-export type AirtableRecord = { id: string; fields: Record<string, unknown> };
+/** Airtable returns `createdTime` (ISO) on every record, even when you only request `fields[]`. */
+export type AirtableRecord = {
+  id: string;
+  createdTime?: string;
+  fields: Record<string, unknown>;
+};
 
 export async function listAllRecords(
   table: string,
@@ -89,8 +94,21 @@ export async function listAllRecords(
       cache: "no-store",
     });
     if (!res.ok) throw new Error(`Airtable list error: ${await res.text()}`);
-    const data = (await res.json()) as { records: AirtableRecord[]; offset?: string };
-    all.push(...data.records);
+    const data = (await res.json()) as {
+      records: Array<{
+        id: string;
+        createdTime: string;
+        fields: Record<string, unknown>;
+      }>;
+      offset?: string;
+    };
+    for (const rec of data.records) {
+      all.push({
+        id: rec.id,
+        createdTime: rec.createdTime,
+        fields: rec.fields,
+      });
+    }
     offset = data.offset;
   } while (offset);
   return all;
