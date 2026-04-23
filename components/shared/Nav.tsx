@@ -40,7 +40,7 @@ export function Nav({ ctaHref = "/signup", showCta = true }: NavProps) {
             Pricing
           </Link>
           <a
-            href="https://discord.gg/AHkdX75k"
+            href="https://discord.gg/p6BHRtAq"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[var(--text)] transition hover:opacity-70"
