@@ -28,6 +28,12 @@ export function Nav({ ctaHref = "/signup", showCta = true }: NavProps) {
         </Link>
         <div className="flex shrink-0 items-center gap-4 sm:gap-6">
           <Link
+            href="/build-in-public"
+            className="text-sm font-medium text-[var(--text)] underline-offset-4 transition hover:underline"
+          >
+            Build in public
+          </Link>
+          <Link
             href="/pricing"
             className="text-sm font-medium text-[var(--text)] underline-offset-4 transition hover:underline"
           >
