@@ -522,11 +522,6 @@ export function MetricsDashboard({ metrics }: Props) {
         />
         <DailyChart signups={metrics.dailySignups} />
       </div>
-
-      <p className="mt-6 text-center font-mono text-[11px] text-[var(--text-muted)] sm:text-[12px]">
-        Daily and cumulative series use Signup Date when set, otherwise the row&apos;s Airtable
-        created time (UTC day). Updated {new Date(metrics.updatedAt).toUTCString()}.
-      </p>
     </div>
   );
 }
