@@ -486,7 +486,15 @@ export function MetricsDashboard({ metrics }: Props) {
         <KpiCard
           label="Total signups"
           value={formatNumber(metrics.totalSignups)}
-          sublabel={`+${metrics.todaySignups} today`}
+          sublabel={
+            metrics.signupsWithoutDate > 0
+              ? `+${metrics.todaySignups} today. Charts exclude ${formatNumber(
+                  metrics.signupsWithoutDate,
+                )} row(s) with no Signup Date (${formatNumber(
+                  metrics.totalSignups + metrics.signupsWithoutDate,
+                )} rows in Airtable).`
+              : `+${metrics.todaySignups} today`
+          }
         />
         <KpiCard
           label="Ambassadors"
@@ -514,7 +522,8 @@ export function MetricsDashboard({ metrics }: Props) {
       </div>
 
       <p className="mt-6 text-center font-mono text-[11px] text-[var(--text-muted)] sm:text-[12px]">
-        Data is live from our signups table. Updated {new Date(metrics.updatedAt).toUTCString()}.
+        Daily and cumulative series use the Signup Date field (UTC day). Updated{" "}
+        {new Date(metrics.updatedAt).toUTCString()}.
       </p>
     </div>
   );

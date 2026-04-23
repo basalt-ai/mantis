@@ -3,7 +3,10 @@ import { listAllRecords, TABLES } from "./airtable";
 export type Point = { date: string; value: number };
 
 export type Metrics = {
+  /** Signups with a usable `Signup Date` (same sum as the chart’s cumulative total). */
   totalSignups: number;
+  /** Rows in Airtable with no `Signup Date` — excluded from daily / cumulative series. */
+  signupsWithoutDate: number;
   ambassadors: number;
   invitesSent: number;
   conversionPct: number;
@@ -15,6 +18,20 @@ export type Metrics = {
   todaySignups: number;
   updatedAt: string;
 };
+
+/**
+ * Bucket by calendar day in UTC. Plain `YYYY-MM-DD` from Airtable is used as-is
+ * so we don’t shift a local-midnight instant into the previous/next UTC day.
+ */
+function toUtcDay(raw: string | undefined): string | null {
+  if (raw == null) return null;
+  const t = String(raw).trim();
+  if (!t) return null;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(t)) return t;
+  const d = new Date(t);
+  if (Number.isNaN(d.getTime())) return null;
+  return d.toISOString().slice(0, 10);
+}
 
 function isoDay(input: string | number | Date): string {
   return new Date(input).toISOString().slice(0, 10);
@@ -51,22 +68,30 @@ export async function getMetrics(): Promise<Metrics> {
   const dailyAmbassadorMap = new Map<string, number>();
   let invitesSent = 0;
   let ambassadors = 0;
+  let signupsWithoutDate = 0;
 
   for (const r of records) {
-    const raw = r.fields["Signup Date"] as string | undefined;
-    if (!raw) continue;
-    const day = isoDay(raw);
-    dailySignupMap.set(day, (dailySignupMap.get(day) ?? 0) + 1);
     const refCount = Number(r.fields["Referral Count"] ?? 0);
     if (Number.isFinite(refCount) && refCount > 0) {
       invitesSent += refCount;
       ambassadors += 1;
+    }
+
+    const raw = r.fields["Signup Date"] as string | undefined;
+    const day = toUtcDay(raw);
+    if (!day) {
+      signupsWithoutDate += 1;
+      continue;
+    }
+    dailySignupMap.set(day, (dailySignupMap.get(day) ?? 0) + 1);
+    if (Number.isFinite(refCount) && refCount > 0) {
       dailyAmbassadorMap.set(day, (dailyAmbassadorMap.get(day) ?? 0) + 1);
     }
   }
 
-  const totalSignups = records.length;
-  const conversionPct = totalSignups === 0 ? 0 : (ambassadors / totalSignups) * 100;
+  const totalSignups = records.length - signupsWithoutDate;
+  // % of *all* table rows who ever referred (unchanged from previous product sense).
+  const conversionPct = records.length === 0 ? 0 : (ambassadors / records.length) * 100;
 
   const allDays = Array.from(dailySignupMap.keys()).sort();
   const today = isoDay(new Date());
@@ -74,6 +99,7 @@ export async function getMetrics(): Promise<Metrics> {
   if (allDays.length === 0) {
     return {
       totalSignups,
+      signupsWithoutDate,
       ambassadors,
       invitesSent,
       conversionPct,
@@ -113,6 +139,7 @@ export async function getMetrics(): Promise<Metrics> {
 
   return {
     totalSignups,
+    signupsWithoutDate,
     ambassadors,
     invitesSent,
     conversionPct,
