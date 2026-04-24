@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Footer } from "@/components/shared/Footer";
 import { Nav } from "@/components/shared/Nav";
 import { SignupForm } from "@/components/shared/SignupForm";
 import { hero, signup } from "@/lib/copy";
@@ -21,6 +22,7 @@ export default function SignupPage() {
         <p className="mt-4 text-lg font-light leading-snug text-[var(--text-muted)]">{signup.subtitle}</p>
         <SignupForm />
       </div>
+      <Footer />
     </main>
   );
 }

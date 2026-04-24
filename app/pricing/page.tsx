@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { Footer } from "@/components/shared/Footer";
 import { Nav } from "@/components/shared/Nav";
 import { hero, pricing } from "@/lib/copy";
 
@@ -39,6 +40,7 @@ export default function PricingPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </main>
   );
 }

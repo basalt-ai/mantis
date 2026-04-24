@@ -1,4 +1,5 @@
 import { FinalCTA } from "./FinalCTA";
+import { Footer } from "./Footer";
 import { Hero } from "./Hero";
 import { ItLearns } from "./ItLearns";
 import { Nav } from "./Nav";
@@ -20,6 +21,7 @@ export function LandingPage() {
         <StackIntegrations />
         <FinalCTA />
       </div>
+      <Footer />
     </main>
   );
 }

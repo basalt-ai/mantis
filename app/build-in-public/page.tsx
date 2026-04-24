@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Footer } from "@/components/shared/Footer";
 import { Nav } from "@/components/shared/Nav";
 import { MetricsDashboard } from "@/components/metrics/MetricsDashboard";
 import { getMetrics } from "@/lib/metrics";
@@ -39,6 +40,7 @@ export default async function BuildInPublicPage() {
           <MetricsDashboard metrics={metrics} />
         </div>
       ) : null}
+      <Footer />
     </main>
   );
 }
