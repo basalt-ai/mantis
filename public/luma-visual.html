@@ -70,11 +70,19 @@
         padding: 24px;
       }
 
-      /* export mode: strip padding/bg so the card fills the viewport for screenshots */
+      /* export mode: pin the card to the viewport top-left for clean screenshots */
       html.export, html.export body {
-        padding: 0;
+        margin: 0 !important;
+        padding: 0 !important;
         background: transparent;
         min-height: 0;
+        display: block;
+        height: auto;
+      }
+      html.export .card {
+        position: absolute;
+        top: 0;
+        left: 0;
       }
 
       .card {
@@ -193,7 +201,7 @@
         align-items: center;
         justify-content: center;
         gap: 36px;
-        padding: 140px 110px 0;
+        padding: 240px 110px 0;
         z-index: 5;
         text-align: center;
       }
@@ -276,7 +284,7 @@
         position: absolute;
         left: 0;
         right: 0;
-        bottom: 95px;
+        bottom: 70px;
         z-index: 9;
         display: flex;
         align-items: center;
