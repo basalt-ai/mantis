@@ -211,13 +211,10 @@
         display: block;
       }
 
-      /* "Meetup #2" label sitting on the purple blob, with orange highlighter */
+      /* "Meetup #2" label sitting under the headline, with orange highlighter */
       .edition {
-        position: absolute;
-        top: 130px;
-        left: 905px;
-        transform: translate(-50%, -50%);
-        z-index: 9;
+        position: relative;
+        z-index: 6;
         font-family: var(--font-display);
         font-weight: 700;
         font-size: 46px;
@@ -227,6 +224,7 @@
         white-space: nowrap;
         padding: 6px 18px;
         display: inline-block;
+        margin-top: 28px;
       }
       .edition::before {
         content: "";
@@ -338,8 +336,6 @@
         <span class="logo-url">getpancake.ai</span>
       </div>
 
-      <div class="edition">Meetup #2</div>
-
       <section class="content">
         <h1>
           <span>Build an</span>
@@ -347,7 +343,7 @@
           <span>company with</span>
           <span>OpenClaw</span>
         </h1>
-
+        <div class="edition">Meetup #2</div>
       </section>
 
       <div class="footer">
