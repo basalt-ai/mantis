@@ -20,7 +20,7 @@ export default function BookedPage() {
             Can&apos;t wait to meet you !
           </h1>
           <h2 className="mt-4 text-lg text-[var(--text-muted)] sm:text-xl">
-            In the mean, try beating our high score (327)
+            In the meantime, try beating our high score (327)
           </h2>
 
           <div className="mt-12 flex justify-center">
