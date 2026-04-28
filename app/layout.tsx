@@ -48,20 +48,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-M37BB9RG');`,
           }}
         />
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-6KWBYRZSDX"
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-6KWBYRZSDX');
-            `,
-          }}
-        />
       </head>
       <body
         className={`theme-neo-brutalism ${grotesk.variable} ${dmSans.variable} ${lato.variable} ${spaceMono.variable}`}
