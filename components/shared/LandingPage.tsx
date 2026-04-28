@@ -7,6 +7,7 @@ import { OrgChart } from "./OrgChart";
 import { SafeCompliant } from "./SafeCompliant";
 import { SlackUI } from "./SlackUI";
 import { StackIntegrations } from "./StackIntegrations";
+import { TalkToHuman } from "./TalkToHuman";
 
 export function LandingPage() {
   return (
@@ -20,6 +21,7 @@ export function LandingPage() {
         <SafeCompliant />
         <StackIntegrations />
         <FinalCTA />
+        <TalkToHuman />
       </div>
       <Footer />
     </main>
