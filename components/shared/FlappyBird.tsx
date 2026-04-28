@@ -22,11 +22,40 @@ type Pipe = {
 
 type GameState = "ready" | "playing" | "over";
 
+type LeaderboardEntry = { name: string; score: number };
+
+const DEFAULT_LEADERBOARD: LeaderboardEntry[] = [
+  { name: "Cyril Codron", score: 536 },
+  { name: "Guillaume Marquis", score: 327 },
+  { name: "Theophile Cousin", score: 322 },
+];
+
+const LEADERBOARD_KEY = "flappy-leaderboard";
+const TOP_N = 3;
+const MAX_NAME_LENGTH = 20;
+
+const sortLeaderboard = (entries: LeaderboardEntry[]) =>
+  [...entries].sort((a, b) => b.score - a.score).slice(0, TOP_N);
+
+const qualifiesForLeaderboard = (
+  score: number,
+  board: LeaderboardEntry[],
+) => {
+  if (score <= 0) return false;
+  if (board.length < TOP_N) return true;
+  return score > board[board.length - 1].score;
+};
+
 export function FlappyBird() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const nameInputRef = useRef<HTMLInputElement | null>(null);
   const [score, setScore] = useState(0);
   const [best, setBest] = useState(0);
   const [state, setState] = useState<GameState>("ready");
+  const [leaderboard, setLeaderboard] =
+    useState<LeaderboardEntry[]>(DEFAULT_LEADERBOARD);
+  const [pendingScore, setPendingScore] = useState<number | null>(null);
+  const [nameInput, setNameInput] = useState("");
 
   const stateRef = useRef<GameState>("ready");
   const birdYRef = useRef(HEIGHT / 2);
@@ -36,15 +65,47 @@ export function FlappyBird() {
   const frameRef = useRef(0);
   const scoreRef = useRef(0);
   const animRef = useRef<number | null>(null);
+  const leaderboardRef = useRef<LeaderboardEntry[]>(DEFAULT_LEADERBOARD);
+  const pendingScoreRef = useRef<number | null>(null);
 
   useEffect(() => {
     stateRef.current = state;
   }, [state]);
 
   useEffect(() => {
+    leaderboardRef.current = leaderboard;
+  }, [leaderboard]);
+
+  useEffect(() => {
+    pendingScoreRef.current = pendingScore;
+  }, [pendingScore]);
+
+  useEffect(() => {
     const stored = window.localStorage.getItem("flappy-best");
     if (stored) setBest(parseInt(stored, 10) || 0);
+
+    const storedBoard = window.localStorage.getItem(LEADERBOARD_KEY);
+    if (storedBoard) {
+      try {
+        const parsed = JSON.parse(storedBoard);
+        if (Array.isArray(parsed)) {
+          const valid = parsed.filter(
+            (e: unknown): e is LeaderboardEntry =>
+              !!e &&
+              typeof (e as LeaderboardEntry).name === "string" &&
+              typeof (e as LeaderboardEntry).score === "number",
+          );
+          if (valid.length > 0) setLeaderboard(sortLeaderboard(valid));
+        }
+      } catch {}
+    }
   }, []);
+
+  useEffect(() => {
+    if (pendingScore !== null && nameInputRef.current) {
+      nameInputRef.current.focus();
+    }
+  }, [pendingScore]);
 
   const reset = useCallback(() => {
     birdYRef.current = HEIGHT / 2;
@@ -69,6 +130,7 @@ export function FlappyBird() {
       return;
     }
     if (s === "over") {
+      if (pendingScoreRef.current !== null) return;
       reset();
       setState("ready");
     }
@@ -76,6 +138,13 @@ export function FlappyBird() {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === "INPUT" || target.tagName === "TEXTAREA")
+      ) {
+        return;
+      }
       if (e.code === "Space" || e.code === "ArrowUp") {
         e.preventDefault();
         flap();
@@ -170,12 +239,16 @@ export function FlappyBird() {
       ctx.textAlign = "center";
       ctx.fillText("Click or press Space", WIDTH / 2, HEIGHT / 2 - 40);
       ctx.font = "16px 'DM Sans', system-ui, sans-serif";
-      ctx.fillText("High score to beat: 327", WIDTH / 2, HEIGHT / 2 - 10);
+      const top = leaderboardRef.current[0];
+      const target = top ? `${top.name} — ${top.score}` : "—";
+      ctx.fillText(`Top: ${target}`, WIDTH / 2, HEIGHT / 2 - 10);
     };
 
     const drawOver = () => {
       ctx.fillStyle = "rgba(10, 10, 10, 0.55)";
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+      if (pendingScoreRef.current !== null) return;
 
       const boxW = 300;
       const boxH = 200;
@@ -198,7 +271,11 @@ export function FlappyBird() {
       ctx.fillText("Game Over", WIDTH / 2, boxY + 50);
       ctx.font = "16px 'DM Sans', system-ui, sans-serif";
       ctx.fillText(`Score: ${scoreRef.current}`, WIDTH / 2, boxY + 90);
-      ctx.fillText(`Best: ${Math.max(scoreRef.current, best)}`, WIDTH / 2, boxY + 115);
+      ctx.fillText(
+        `Best: ${Math.max(scoreRef.current, best)}`,
+        WIDTH / 2,
+        boxY + 115,
+      );
       ctx.font = "bold 16px 'Space Grotesk', system-ui, sans-serif";
       ctx.fillText("Click to retry", WIDTH / 2, boxY + 160);
     };
@@ -292,6 +369,11 @@ export function FlappyBird() {
         } catch {}
         return next;
       });
+      if (qualifiesForLeaderboard(finalScore, leaderboardRef.current)) {
+        pendingScoreRef.current = finalScore;
+        setPendingScore(finalScore);
+        setNameInput("");
+      }
     };
 
     animRef.current = requestAnimationFrame(tick);
@@ -300,10 +382,28 @@ export function FlappyBird() {
     };
   }, [best]);
 
+  const handleSubmitName = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (pendingScore === null) return;
+    const trimmed = nameInput.trim().slice(0, MAX_NAME_LENGTH);
+    const name = trimmed || "Anonymous";
+    setLeaderboard((prev) => {
+      const next = sortLeaderboard([...prev, { name, score: pendingScore }]);
+      try {
+        window.localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+    setPendingScore(null);
+    setNameInput("");
+  };
+
+  const topEntry = leaderboard[0];
+
   return (
     <div className="flex flex-col items-center gap-4">
       <div
-        className="rounded-theme brut-border overflow-hidden"
+        className="relative rounded-theme brut-border overflow-hidden"
         style={{ background: "#fffef8" }}
       >
         <canvas
@@ -319,15 +419,74 @@ export function FlappyBird() {
           style={{ width: WIDTH, maxWidth: "100%" }}
           aria-label="Flappy bird game canvas"
         />
+        {pendingScore !== null && (
+          <div className="absolute inset-0 flex items-center justify-center px-6">
+            <form
+              onSubmit={handleSubmitName}
+              className="brut-border rounded-theme flex w-full max-w-[320px] flex-col gap-3 p-5"
+              style={{ background: "#fffef8" }}
+            >
+              <h3 className="text-center font-display text-xl font-bold">
+                New high score!
+              </h3>
+              <p className="text-center text-sm">
+                You scored{" "}
+                <span className="font-mono font-semibold">{pendingScore}</span>
+              </p>
+              <input
+                ref={nameInputRef}
+                type="text"
+                value={nameInput}
+                onChange={(e) => setNameInput(e.target.value)}
+                placeholder="Your name"
+                maxLength={MAX_NAME_LENGTH}
+                className="brut-border rounded-theme px-3 py-2 outline-none"
+                style={{ background: "#fffef8" }}
+              />
+              <button
+                type="submit"
+                className="brut-border rounded-theme px-4 py-2 font-semibold"
+                style={{ background: "#FFE566" }}
+              >
+                Add to leaderboard
+              </button>
+            </form>
+          </div>
+        )}
       </div>
       <p className="text-sm text-[var(--text-muted)]">
         Score: <span className="font-mono font-semibold">{score}</span>
         <span className="mx-2">·</span>
         Best: <span className="font-mono font-semibold">{best}</span>
-        <span className="mx-2">·</span>
-        High score to beat:{" "}
-        <span className="font-mono font-semibold">327</span>
+        {topEntry && (
+          <>
+            <span className="mx-2">·</span>
+            Top:{" "}
+            <span className="font-mono font-semibold">
+              {topEntry.name} ({topEntry.score})
+            </span>
+          </>
+        )}
       </p>
+      <div className="w-full max-w-[480px]">
+        <h3 className="mb-2 text-center font-display text-lg font-semibold">
+          Leaderboard
+        </h3>
+        <ol className="brut-border rounded-theme overflow-hidden">
+          {leaderboard.map((entry, i) => (
+            <li
+              key={`${entry.name}-${i}`}
+              className="flex items-center justify-between border-b border-black/10 px-4 py-2 last:border-b-0"
+              style={{ background: i === 0 ? "#FFE566" : "#fffef8" }}
+            >
+              <span className="font-semibold">
+                {i + 1}. {entry.name}
+              </span>
+              <span className="font-mono font-semibold">{entry.score}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
     </div>
   );
 }
