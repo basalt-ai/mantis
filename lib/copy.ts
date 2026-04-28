@@ -183,6 +183,11 @@ export const finalCta = {
   cta: "Start building",
 } as const;
 
+export const talkToHuman = {
+  title: "Or talk to a human",
+  subtitle: "Let's put your company on autopilot",
+} as const;
+
 export const pricing = {
   title: "Simple pricing.",
   subtitle: "One plan. Everything included.",
