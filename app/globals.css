@@ -1,10 +1,10 @@
-/* Kit + Tailwind: `component` is last so `@layer component` from ported kit CSS overrides Tailwind utilities. */
-@layer reference, semantic, reset, base, components, utilities, component;
+/* Kit stylesheets use @layer reference / semantic / reset / component; Tailwind is forced into tw-base + tw-utilities so kit @layer component (components.css) wins over preflight. */
+@layer reference, semantic, reset, tw-base, component, tw-utilities;
 
-@import "./_styles/tokens.css";
-@import "./_styles/reset.css";
+@import "tailwindcss/base" layer(tw-base);
+@import "tailwindcss/components" layer(component);
+@import "tailwindcss/utilities" layer(tw-utilities);
+
 @import "./_styles/style.css";
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "./_styles/reset.css";
+@import "./_styles/tokens.css";
