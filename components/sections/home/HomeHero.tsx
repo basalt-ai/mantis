@@ -1,7 +1,13 @@
+import type { CSSProperties } from "react";
 import Link from "next/link";
 
 import { HOME_PAGE_CONTAINER_CLASS } from "@/components/sections/home/home-layout";
 import { HOME_HERO_ORBIT_LAYERS_OUTER_TO_INNER } from "@/components/sections/home/home-hero-orbit-layers";
+import {
+  HOME_HERO_MONSTER_FIGMA_PX,
+  HOME_HERO_ORBIT_SATELLITES,
+  homeHeroOrbitSatelliteSrc,
+} from "@/components/sections/home/home-hero-orbit-satellites";
 import { H1 } from "@/components/ui/Headings";
 
 /**
@@ -78,6 +84,31 @@ export function HomeHero() {
                   </svg>
                 </div>
               ))}
+              {HOME_HERO_ORBIT_SATELLITES.filter((s) => s.layer === "behindMascot").map((s) => (
+                <div
+                  key={s.figmaNode}
+                  className="home-hero-orbit-satellite home-hero-orbit-satellite--behind"
+                  data-figma-node={s.figmaNode}
+                  data-orbit={s.orbit}
+                  style={
+                    {
+                      "--sat-dx": `calc(var(--size-home-hero-monster-max-width) * ${s.dxFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
+                      "--sat-dy": `calc(var(--size-home-hero-monster-max-width) * ${s.dyFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
+                      "--sat-rot": `${s.rotationDeg}deg`,
+                      width: `calc(var(--size-home-hero-monster-max-width) * ${s.widthFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
+                      height: `calc(var(--size-home-hero-monster-max-width) * ${s.heightFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
+                    } as CSSProperties
+                  }
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element -- Figma SVG export */}
+                  <img
+                    className="home-hero-orbit-satellite-img"
+                    src={homeHeroOrbitSatelliteSrc(s.figmaNode)}
+                    alt=""
+                    decoding="async"
+                  />
+                </div>
+              ))}
               {/* eslint-disable-next-line @next/next/no-img-element -- Figma-export rasters */}
               <img
                 className="home-hero-pancake-img"
@@ -87,6 +118,31 @@ export function HomeHero() {
                 height={512}
                 decoding="async"
               />
+              {HOME_HERO_ORBIT_SATELLITES.filter((s) => s.layer === "frontOfMascot").map((s) => (
+                <div
+                  key={s.figmaNode}
+                  className="home-hero-orbit-satellite home-hero-orbit-satellite--front"
+                  data-figma-node={s.figmaNode}
+                  data-orbit={s.orbit}
+                  style={
+                    {
+                      "--sat-dx": `calc(var(--size-home-hero-monster-max-width) * ${s.dxFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
+                      "--sat-dy": `calc(var(--size-home-hero-monster-max-width) * ${s.dyFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
+                      "--sat-rot": `${s.rotationDeg}deg`,
+                      width: `calc(var(--size-home-hero-monster-max-width) * ${s.widthFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
+                      height: `calc(var(--size-home-hero-monster-max-width) * ${s.heightFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
+                    } as CSSProperties
+                  }
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element -- Figma SVG export */}
+                  <img
+                    className="home-hero-orbit-satellite-img"
+                    src={homeHeroOrbitSatelliteSrc(s.figmaNode)}
+                    alt=""
+                    decoding="async"
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </div>
