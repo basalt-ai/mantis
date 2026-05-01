@@ -20,7 +20,7 @@ export function HomeHero() {
       style={{ backgroundColor: "var(--surface)" }}
     >
       <div
-        className={`${HOME_PAGE_CONTAINER_CLASS} grid grid-cols-1 pt-[var(--spacing-xl)] pb-[var(--spacing-xxl)] lg:grid-cols-[minmax(0,9fr)_minmax(0,3fr)] lg:gap-x-[var(--spacing-xxl)] lg:pt-[var(--spacing-xxl)] lg:pb-[var(--spacing-xxl)]`}
+        className={`${HOME_PAGE_CONTAINER_CLASS} grid grid-cols-1 pt-[var(--spacing-home-hero-padding-top-mobile)] pb-[var(--spacing-xxl)] lg:grid-cols-[minmax(0,9fr)_minmax(0,3fr)] lg:gap-x-[var(--spacing-xxl)] lg:pt-[var(--spacing-home-hero-padding-top)] lg:pb-[var(--spacing-xxl)]`}
         style={{ rowGap: "var(--spacing-xl)" }}
       >
         <div className="home-hero-text-stack relative z-[1] lg:pr-[var(--spacing-md)]">
