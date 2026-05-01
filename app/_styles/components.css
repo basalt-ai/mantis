@@ -150,4 +150,58 @@
     --card-background-color: var(--alt-weak-branded-surface-02);
     --card-border-color: var(--branded-stroke-03);
   }
+
+  .input {
+    --input-padding: var(--spacing-md) var(--spacing-xl);
+    --input-height: var(--control-size-md);
+    --input-border-color: var(--stroke);
+    --input-radius: var(--radius-md);
+
+    height: var(--input-height);
+    padding: var(--input-padding);
+    background-color: var(--surface);
+    border: 1px solid var(--input-border-color);
+    color: var(--text);
+    border-radius: var(--input-radius);
+    font-size: var(--font-size-body-regular);
+    outline-color: var(--input-border-color);
+    outline-width: 0px;
+
+    corner-shape: squircle;
+  }
+
+  .input:focus {
+    --input-border-color: var(--interactive-text);
+  }
+
+  .input:disabled {
+    --input-border-color: var(--subtle-stroke);
+    background-color: var(--alt-surface);
+    color: var(--disabled-text);
+    cursor: not-allowed;
+  }
+
+  .input:disabled::placeholder {
+    color: var(--disabled-text);
+  }
+
+  .input::placeholder {
+    color: var(--subtle-text);
+  }
+
+  .input[data-size="sm"] {
+    --input-padding: var(--spacing-sm) var(--spacing-lg);
+    --input-height: var(--control-size-sm);
+    --input-radius: var(--radius-sm);
+  }
+
+  .input[data-size="lg"] {
+    --input-padding: var(--spacing-lg) var(--spacing-xxl);
+    --input-height: var(--control-size-lg);
+    --input-radius: var(--radius-lg);
+  }
+
+  .input[data-err] {
+    --input-border-color: var(--negative-stroke);
+  }
 }
