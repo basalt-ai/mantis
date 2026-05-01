@@ -470,7 +470,9 @@
 
   @media (min-width: 1024px) {
     .home-hero-pancake-stack {
-      margin-top: var(--spacing-home-hero-monster-stack-margin-top);
+      margin-top: calc(
+        var(--spacing-home-hero-monster-stack-margin-top) + var(--spacing-home-hero-monster-ensemble-nudge)
+      );
     }
   }
 

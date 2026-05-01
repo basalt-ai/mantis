@@ -162,6 +162,9 @@
       var(--size-home-hero-monster-ellipse-width) / 2 - var(--size-home-hero-monster-max-width) / 2
     );
 
+    /* Nudge entire halo + mascot down as one unit (added to stack margin-top at lg+) */
+    --spacing-home-hero-monster-ensemble-nudge: 7mm;
+
     /* Home hero (Figma desktop): subtitle ~22.62px = 16 × 1.414 */
     --font-size-home-hero-subtitle: calc(var(--font-size-base) * 1.414);
     --line-height-home-hero-subtitle: 32px;
