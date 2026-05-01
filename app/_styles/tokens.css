@@ -141,6 +141,9 @@
     --line-height-home-hero-subtitle: 32px;
     --line-height-home-hero-cta-note: 24px;
 
+    /* Home nav primary links (Figma: Product / Resources / Pricing) */
+    --line-height-nav-primary-link: 40px;
+
     /* Font weights */
     --font-semibold: 500;
     --font-heavy: 600;

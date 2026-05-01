@@ -14,7 +14,7 @@ function MenuIcon() {
 }
 
 const navLinkClassName =
-  "inline-flex min-h-[var(--control-size-md)] items-center text-[length:var(--font-size-body-regular)] no-underline transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2";
+  "home-nav-primary-link inline-flex min-h-[var(--control-size-md)] items-center no-underline transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2";
 
 export function HomeNav() {
   return (
@@ -46,13 +46,13 @@ export function HomeNav() {
           </div>
 
           <nav className="hidden items-center lg:flex" style={{ gap: "calc(2 * var(--spacing-xl))" }} aria-label="Primary">
-            <Link href="/" className={navLinkClassName} style={{ color: "var(--text)", fontWeight: "var(--font-heavy)" }}>
+            <Link href="/" className={navLinkClassName}>
               Product
             </Link>
-            <Link href="/build-in-public" className={navLinkClassName} style={{ color: "var(--text)", fontWeight: "var(--font-heavy)" }}>
+            <Link href="/build-in-public" className={navLinkClassName}>
               Resources
             </Link>
-            <Link href="/pricing" className={navLinkClassName} style={{ color: "var(--text)", fontWeight: "var(--font-heavy)" }}>
+            <Link href="/pricing" className={navLinkClassName}>
               Pricing
             </Link>
           </nav>

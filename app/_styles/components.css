@@ -1,4 +1,13 @@
 @layer component {
+  .home-nav-primary-link {
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    font-style: normal;
+    font-weight: var(--font-semibold);
+    line-height: var(--line-height-nav-primary-link);
+  }
+
   .button {
     --button-padding: var(--spacing-md) var(--spacing-xl);
     --button-background-color: var(--strong-branded-surface);
