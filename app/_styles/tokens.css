@@ -153,8 +153,8 @@
      */
     --size-home-hero-monster-ellipse-width: calc(var(--size-home-hero-monster-max-width) * 11823 / 8000);
 
-    /* Push ellipse + mascot slightly below vertical center (Figma) */
-    --spacing-home-hero-monster-drop: calc(2 * var(--spacing-xxl));
+    /* Hero right column: vertical nudge for ellipse + mascot (lg); smaller = higher */
+    --spacing-home-hero-monster-drop: var(--spacing-xxl);
 
     /* Home hero (Figma desktop): subtitle ~22.62px = 16 × 1.414 */
     --font-size-home-hero-subtitle: calc(var(--font-size-base) * 1.414);
