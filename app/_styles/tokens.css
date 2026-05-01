@@ -160,7 +160,7 @@
      * • Orbits 2–6: `orbit₁ × (Oᵢ/O₁)` (Figma node widths vs Ellipse 10). Rotations: CSS = −`node.rotation` (orbit 1 Dev `27.159deg`).
      * • `--ratio-home-hero-mascot-orbits`: uniform scale vs pure Figma math so orbit 2 sits like the file (e.g. near “cofounder” / `r`); tweak only this — cream + monster unchanged.
      */
-    --ratio-home-hero-mascot-orbits: 1.09;
+    --ratio-home-hero-mascot-orbits: 1.11;
 
     --size-home-hero-monster-dotted-ring-width: calc(
       var(--size-home-hero-monster-ellipse-width) * 169765 * 8000 * var(--ratio-home-hero-mascot-orbits) /
