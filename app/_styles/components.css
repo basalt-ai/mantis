@@ -505,7 +505,7 @@
 
   /**
    * Dotted orbits 1–6: Figma `428:14903` … `428:14909` — MCP SVG paths, stroke `var(--text)`,
-   * dash `0.578125 6.9375` (node), rotation via tokens (−node.rotation).
+   * dash `0.578125 6.9375` (node). Width tokens scale vs **cream ellipse** (`428:16771`), not 160² frame.
    */
   .home-hero-pancake-orbit {
     position: absolute;

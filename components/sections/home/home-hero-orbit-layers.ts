@@ -1,8 +1,8 @@
 /**
  * Hero dotted orbits — Figma `428:14900` (`hero`).
  * Ordered **outer → inner** (paint back → front). Paths, viewBoxes, opacities from Figma MCP
- * SVG exports; widths and angles live in `app/_styles/tokens.css` (node `width` ÷ monster 160;
- * CSS angle = −`node.rotation` like orbit 1 / Dev).
+ * SVG exports; **layout widths** in `app/_styles/tokens.css` scale vs cream `428:16771`
+ * (`--size-home-hero-monster-ellipse-width`) so orbit/cream proportions match Figma. Angles: −`node.rotation`.
  */
 export type HomeHeroOrbitLayer = {
   readonly orbit: 1 | 2 | 3 | 4 | 5 | 6;
