@@ -254,4 +254,58 @@
   .textarea[data-err] {
     --textarea-border-color: var(--negative-stroke);
   }
+
+  .toast {
+    --toast-padding: var(--spacing-md) var(--spacing-xl);
+    --toast-background-color: var(--surface);
+    --toast-border-color: var(--stroke);
+    --toast-radius: var(--radius-md);
+
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: var(--spacing-sm);
+    padding: var(--toast-padding);
+    background-color: var(--toast-background-color);
+    border: 1px solid var(--toast-border-color);
+    border-radius: var(--toast-radius);
+    color: var(--text);
+    corner-shape: squircle;
+  }
+
+  .toast-prefix,
+  .toast-close {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .toast-body {
+    flex-grow: 1;
+    flex-shrink: 0;
+    text-align: start;
+    font-weight: var(--font-heavy);
+    font-size: var(--font-size-body-regular);
+  }
+
+  .toast[data-variant="inverted"] {
+    --toast-background-color: var(--inverted-surface);
+    --toast-border-color: var(--inverted-surface);
+    color: var(--text-on-inverted-surface);
+  }
+
+  .toast[data-variant="success"] {
+    --toast-background-color: var(--positive-surface);
+    --toast-border-color: var(--positive-surface);
+  }
+
+  .toast[data-variant="warning"] {
+    --toast-background-color: var(--warning-surface);
+    --toast-border-color: var(--warning-surface);
+  }
+
+  .toast[data-variant="error"] {
+    --toast-background-color: var(--negative-surface);
+    --toast-border-color: var(--negative-surface);
+  }
 }
