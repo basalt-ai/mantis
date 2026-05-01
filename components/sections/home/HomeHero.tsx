@@ -9,9 +9,9 @@ import { H1 } from "@/components/ui/Headings";
  */
 const HERO_TITLE = "The OpenClaw cofounder\nthat makes your\ncompany autonomous";
 
-/** Verbatim from desktop frame `428:16742`. */
+/** Line 2 must start with “than you” (Figma wrap); explicit `\n` after “better”. */
 const HERO_SUB =
-  "Pancake gets you a cofounder that knows your company better than you and handles 50% of the job.";
+  "Pancake gets you a cofounder that knows your company better\nthan you and handles 50% of the job.";
 
 export function HomeHero() {
   return (
@@ -25,7 +25,7 @@ export function HomeHero() {
       >
         <div className="relative z-[1] flex min-w-0 flex-col lg:pr-[var(--spacing-md)]" style={{ gap: "var(--spacing-xl)" }}>
           <H1 className="whitespace-pre-line">{HERO_TITLE}</H1>
-          <p className="home-hero-body">{HERO_SUB}</p>
+          <p className="home-hero-body whitespace-pre-line">{HERO_SUB}</p>
           <div className="flex flex-row flex-wrap items-center" style={{ gap: "var(--spacing-md)" }}>
             <Link
               href="/signup"
