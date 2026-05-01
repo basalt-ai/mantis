@@ -1,3 +1,10 @@
+/* Kit + Tailwind: `component` is last so `@layer component` from ported kit CSS overrides Tailwind utilities. */
+@layer reference, semantic, reset, base, components, utilities, component;
+
+@import "./_styles/tokens.css";
+@import "./_styles/reset.css";
+@import "./_styles/style.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

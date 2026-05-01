@@ -52,7 +52,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         className={aeonikFono.variable}
         style={{
           margin: 0,
-          fontFamily: "var(--font-aeonik-fono), system-ui, -apple-system, sans-serif",
+          backgroundColor: "var(--surface)",
+          color: "var(--text)",
         }}
       >
         <noscript>
