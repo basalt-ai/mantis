@@ -457,7 +457,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       width: 100%;
     }
   }
@@ -470,7 +470,7 @@
 
   @media (min-width: 1024px) {
     .home-hero-pancake-stack {
-      margin-top: var(--spacing-home-hero-monster-drop);
+      margin-top: var(--spacing-home-hero-monster-stack-margin-top);
     }
   }
 

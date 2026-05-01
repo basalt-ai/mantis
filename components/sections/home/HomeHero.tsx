@@ -39,7 +39,7 @@ export function HomeHero() {
           </div>
         </div>
 
-        {/* HQ mascot + ellipse glow — Figma exports; centered in column, nudged down via token. */}
+        {/* HQ mascot + ellipse glow — Figma exports; column-top alignment via stack margin token. */}
         <div className="home-hero-pancake" aria-hidden>
           <div className="home-hero-pancake-stack">
             <div className="home-hero-pancake-stack-inner">
