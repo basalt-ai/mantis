@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { HOME_PAGE_CONTAINER_CLASS } from "@/components/sections/home/home-layout";
+import { HOME_HERO_ORBIT_LAYERS_OUTER_TO_INNER } from "@/components/sections/home/home-hero-orbit-layers";
 import { H1 } from "@/components/ui/Headings";
 
 /**
@@ -39,7 +40,7 @@ export function HomeHero() {
           </div>
         </div>
 
-        {/* HQ mascot + ellipse glow — Figma `428:14900`; inner dotted ring `428:14903` (Ellipse 10). */}
+        {/* HQ mascot + cream + dotted orbits 1–6 — Figma `428:14900` (see `home-hero-orbit-layers.ts`). */}
         <div className="home-hero-pancake" aria-hidden>
           <div className="home-hero-pancake-stack">
             <div className="home-hero-pancake-stack-inner">
@@ -52,23 +53,31 @@ export function HomeHero() {
                 height={946}
                 decoding="async"
               />
-              <div className="home-hero-pancake-dotted-ring">
-                <svg
-                  viewBox="0 0 415.465 405.127"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  preserveAspectRatio="xMidYMid meet"
-                  aria-hidden
+              {HOME_HERO_ORBIT_LAYERS_OUTER_TO_INNER.map((layer) => (
+                <div
+                  key={layer.figmaNode}
+                  className={`home-hero-pancake-orbit home-hero-pancake-orbit--${layer.orbit}`}
+                  data-figma-node={layer.figmaNode}
+                  data-figma-name={layer.figmaName}
                 >
-                  <path
-                    d="M414.965 184.749C414.965 298.876 325.247 404.627 210.795 404.627C154.366 404.627 92.9966 395.3 55.6259 358.819C17.1997 321.308 0.5 252.787 0.5 194.929C0.5 130.2 35.4502 87.2514 82.1681 49.3617C117.82 20.4465 161.257 0.5 210.795 0.5C325.247 0.5 414.965 70.6229 414.965 184.749Z"
-                    stroke="var(--text)"
-                    strokeLinecap="round"
-                    strokeWidth={1}
-                    strokeDasharray="0.578125 6.9375"
-                  />
-                </svg>
-              </div>
+                  <svg
+                    viewBox={layer.viewBox}
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    preserveAspectRatio="xMidYMid meet"
+                    aria-hidden
+                  >
+                    <path
+                      d={layer.pathD}
+                      stroke="var(--text)"
+                      strokeLinecap="round"
+                      strokeWidth={1}
+                      strokeDasharray="0.578125 6.9375"
+                      {...(layer.pathOpacity !== undefined ? { opacity: layer.pathOpacity } : {})}
+                    />
+                  </svg>
+                </div>
+              ))}
               {/* eslint-disable-next-line @next/next/no-img-element -- Figma-export rasters */}
               <img
                 className="home-hero-pancake-img"

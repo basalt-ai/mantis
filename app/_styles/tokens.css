@@ -154,12 +154,24 @@
     --size-home-hero-monster-ellipse-width: calc(var(--size-home-hero-monster-max-width) * 11823 / 8000);
 
     /*
-     * Inner dashed orbit: Figma hero `428:14900` — vector `428:14903` (“Ellipse 10”), smallest
-     * dotted concentric vs `428:14902`. Local size 414.465×404.127; monster frame `428:14920` = 160².
-     * Rotation: Dev handoff `rotate(27.159deg)` (CSS +angle; Figma layer rotation reads negative on node).
+     * Dotted orbits 1–6: Figma hero `428:14900` vectors (inner→outer: 10, 4, 9, 11, 5, 6).
+     * Width = node `width` ÷ monster frame `428:14920` (160). Orbit 1 path from `428:14903` (“Ellipse 10”).
+     * Rotation: CSS angle = −`node.rotation` (orbit 1 Dev handoff `27.159deg`; Figma reads negative).
      */
-    --size-home-hero-monster-dotted-ring-width: calc(var(--size-home-hero-monster-max-width) * 82893 / 32000);
+    --size-home-hero-monster-dotted-ring-width: calc(var(--size-home-hero-monster-max-width) * 169765 / 65536);
     --angle-home-hero-monster-dotted-ring: 27.159deg;
+
+    --size-home-hero-monster-orbit-2-width: calc(var(--size-home-hero-monster-max-width) * 1816689 / 524288);
+    --size-home-hero-monster-orbit-3-width: calc(var(--size-home-hero-monster-max-width) * 5746423 / 1310720);
+    --size-home-hero-monster-orbit-4-width: calc(var(--size-home-hero-monster-max-width) * 14317801 / 2621440);
+    --size-home-hero-monster-orbit-5-width: calc(var(--size-home-hero-monster-max-width) * 2275107 / 327680);
+    --size-home-hero-monster-orbit-6-width: calc(var(--size-home-hero-monster-max-width) * 11827023 / 1310720);
+
+    --angle-home-hero-monster-orbit-2: 31.50293043038189deg;
+    --angle-home-hero-monster-orbit-3: 39.229604184027835deg;
+    --angle-home-hero-monster-orbit-4: 42.572312193102164deg;
+    --angle-home-hero-monster-orbit-5: 54.45646253706197deg;
+    --angle-home-hero-monster-orbit-6: 49.64686984016708deg;
 
     /*
      * Halo is larger than the 160² inner frame and is absolutely centered in it, so the

@@ -479,6 +479,7 @@
   .home-hero-pancake-stack-inner {
     position: relative;
     display: flex;
+    overflow: visible;
     width: var(--size-home-hero-monster-max-width);
     min-height: var(--size-home-hero-monster-max-width);
     max-width: 100%;
@@ -503,24 +504,55 @@
   }
 
   /**
-   * Inner dashed orbit (Figma `428:14903` “Ellipse 10”): stroke + dash from file; rotation `27.159deg` (Dev).
+   * Dotted orbits 1–6: Figma `428:14903` … `428:14909` — MCP SVG paths, stroke `var(--text)`,
+   * dash `0.578125 6.9375` (node), rotation via tokens (−node.rotation).
    */
-  .home-hero-pancake-dotted-ring {
+  .home-hero-pancake-orbit {
     position: absolute;
     left: 50%;
     top: 50%;
     z-index: 1;
-    width: var(--size-home-hero-monster-dotted-ring-width);
+    width: var(--orbit-w);
     height: auto;
     max-width: none;
-    transform: translate(-50%, -50%) rotate(var(--angle-home-hero-monster-dotted-ring));
+    transform: translate(-50%, -50%) rotate(var(--orbit-a));
     pointer-events: none;
   }
 
-  .home-hero-pancake-dotted-ring svg {
+  .home-hero-pancake-orbit svg {
     display: block;
     width: 100%;
     height: auto;
+  }
+
+  .home-hero-pancake-orbit--1 {
+    --orbit-w: var(--size-home-hero-monster-dotted-ring-width);
+    --orbit-a: var(--angle-home-hero-monster-dotted-ring);
+  }
+
+  .home-hero-pancake-orbit--2 {
+    --orbit-w: var(--size-home-hero-monster-orbit-2-width);
+    --orbit-a: var(--angle-home-hero-monster-orbit-2);
+  }
+
+  .home-hero-pancake-orbit--3 {
+    --orbit-w: var(--size-home-hero-monster-orbit-3-width);
+    --orbit-a: var(--angle-home-hero-monster-orbit-3);
+  }
+
+  .home-hero-pancake-orbit--4 {
+    --orbit-w: var(--size-home-hero-monster-orbit-4-width);
+    --orbit-a: var(--angle-home-hero-monster-orbit-4);
+  }
+
+  .home-hero-pancake-orbit--5 {
+    --orbit-w: var(--size-home-hero-monster-orbit-5-width);
+    --orbit-a: var(--angle-home-hero-monster-orbit-5);
+  }
+
+  .home-hero-pancake-orbit--6 {
+    --orbit-w: var(--size-home-hero-monster-orbit-6-width);
+    --orbit-a: var(--angle-home-hero-monster-orbit-6);
   }
 
   .home-hero-pancake-img {
