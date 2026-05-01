@@ -1,9 +1,13 @@
 import Link from "next/link";
 
+import { HOME_PAGE_CONTAINER_CLASS } from "@/components/sections/home/home-layout";
 import { H1 } from "@/components/ui/Headings";
 
-/** Verbatim from desktop frame `428:16741` (includes U+2028 line break). */
-const HERO_TITLE = "The OpenClaw cofounder that makes your \u2028company autonomous";
+/**
+ * H1 line breaks per Figma v3 desktop visual (3 lines). Node `428:16741` stores a
+ * single U+2028; browser wrapping did not match the frame — explicit `\n` matches Tristan’s spec.
+ */
+const HERO_TITLE = "The OpenClaw cofounder\nthat makes your\ncompany autonomous";
 
 /** Verbatim from desktop frame `428:16742`. */
 const HERO_SUB =
@@ -11,15 +15,15 @@ const HERO_SUB =
 
 export function HomeHero() {
   return (
-    <section className="relative w-full overflow-hidden" style={{ backgroundColor: "var(--surface)" }}>
+    <section className="relative w-full overflow-hidden" style={{ backgroundColor: "var(--elevated-surface)" }}>
       <div
-        className="relative mx-auto grid w-full max-w-[1136px] grid-cols-1 px-[var(--spacing-md)] pb-[var(--spacing-xxl)] pt-[var(--spacing-xl)] lg:grid-cols-[minmax(0,752px)_minmax(0,1fr)] lg:pb-[calc(4*var(--spacing-xxl))] lg:pt-[calc(2*var(--spacing-xxl))]"
-        style={{ gap: "var(--spacing-xxl)" }}
+        className={`${HOME_PAGE_CONTAINER_CLASS} grid grid-cols-1 pb-[var(--spacing-xxl)] pt-[var(--spacing-xl)] lg:grid-cols-[minmax(0,6fr)_minmax(0,5fr)] lg:gap-x-[var(--spacing-xxl)] lg:pb-[calc(4*var(--spacing-xxl))] lg:pt-[calc(2*var(--spacing-xxl))]`}
+        style={{ rowGap: "var(--spacing-xxl)" }}
       >
-        <div className="relative z-[1] flex max-w-[752px] flex-col lg:max-w-none" style={{ gap: "var(--spacing-xxl)" }}>
+        <div className="relative z-[1] flex min-w-0 flex-col lg:pr-[var(--spacing-md)]" style={{ gap: "var(--spacing-xxl)" }}>
           <H1 className="whitespace-pre-line">{HERO_TITLE}</H1>
           <p
-            className="m-0 max-w-full lg:max-w-[752px]"
+            className="m-0 max-w-full lg:max-w-[40rem]"
             style={{
               color: "var(--subtle-text)",
               fontSize: "var(--font-size-body-large)",
@@ -29,7 +33,12 @@ export function HomeHero() {
             {HERO_SUB}
           </p>
           <div className="flex flex-col" style={{ gap: "var(--spacing-md)" }}>
-            <Link href="/signup" className="button inline-flex w-fit items-center justify-center no-underline" prefetch={false}>
+            <Link
+              href="/signup"
+              className="button inline-flex w-fit items-center justify-center no-underline"
+              data-size="lg"
+              prefetch={false}
+            >
               Try for free
             </Link>
             <p className="m-0" style={{ color: "var(--subtle-text)", fontSize: "var(--font-size-body-regular)" }}>
@@ -39,7 +48,7 @@ export function HomeHero() {
         </div>
 
         <div
-          className="pointer-events-none relative -mx-[var(--spacing-md)] mt-[var(--spacing-xl)] min-h-[min(60vw,280px)] select-none sm:min-h-[min(50vw,320px)] lg:mx-0 lg:mt-0 lg:min-h-[min(36rem,55vh)]"
+          className="pointer-events-none relative -mx-[var(--spacing-xxl)] mt-[var(--spacing-xl)] min-h-[min(60vw,280px)] select-none sm:min-h-[min(50vw,320px)] lg:mx-0 lg:mt-0 lg:min-h-[min(38rem,70vh)]"
           aria-hidden
         >
           <div

@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { HOME_PAGE_CONTAINER_CLASS } from "@/components/sections/home/home-layout";
 import { Button } from "@/components/ui/Button";
 
 function MenuIcon() {
@@ -23,13 +24,7 @@ export function HomeNav() {
         backgroundColor: "var(--surface)",
       }}
     >
-      <div
-        className="mx-auto flex w-full max-w-[1136px] items-center justify-between gap-[var(--spacing-md)]"
-        style={{
-          paddingLeft: "var(--spacing-md)",
-          paddingRight: "var(--spacing-md)",
-        }}
-      >
+      <div className={`flex items-center justify-between gap-[var(--spacing-md)] ${HOME_PAGE_CONTAINER_CLASS}`}>
         <Link href="/" className="inline-flex shrink-0 items-center no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" aria-label="Pancake home">
           {/* eslint-disable-next-line @next/next/no-img-element -- vector logo; next/image SVG tradeoffs */}
           <img
@@ -43,37 +38,25 @@ export function HomeNav() {
           />
         </Link>
 
-        <Button type="button" iconOnly size="lg" variant="ghost" className="lg:hidden" aria-label="Menu">
-          <MenuIcon />
-        </Button>
+        <div className="flex items-center justify-end" style={{ gap: "calc(2 * var(--spacing-xl))" }}>
+          <div className="flex lg:hidden">
+            <Button type="button" iconOnly size="lg" variant="ghost" aria-label="Menu">
+              <MenuIcon />
+            </Button>
+          </div>
 
-        <nav
-          className="hidden items-center lg:flex"
-          style={{ gap: "calc(2 * var(--spacing-xl))" }}
-          aria-label="Primary"
-        >
-          <Link
-            href="/"
-            className={navLinkClassName}
-            style={{ color: "var(--text)", fontWeight: "var(--font-heavy)" }}
-          >
-            Product
-          </Link>
-          <Link
-            href="/build-in-public"
-            className={navLinkClassName}
-            style={{ color: "var(--text)", fontWeight: "var(--font-heavy)" }}
-          >
-            Resources
-          </Link>
-          <Link
-            href="/pricing"
-            className={navLinkClassName}
-            style={{ color: "var(--text)", fontWeight: "var(--font-heavy)" }}
-          >
-            Pricing
-          </Link>
-        </nav>
+          <nav className="hidden items-center lg:flex" style={{ gap: "calc(2 * var(--spacing-xl))" }} aria-label="Primary">
+            <Link href="/" className={navLinkClassName} style={{ color: "var(--text)", fontWeight: "var(--font-heavy)" }}>
+              Product
+            </Link>
+            <Link href="/build-in-public" className={navLinkClassName} style={{ color: "var(--text)", fontWeight: "var(--font-heavy)" }}>
+              Resources
+            </Link>
+            <Link href="/pricing" className={navLinkClassName} style={{ color: "var(--text)", fontWeight: "var(--font-heavy)" }}>
+              Pricing
+            </Link>
+          </nav>
+        </div>
       </div>
     </header>
   );
