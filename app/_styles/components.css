@@ -503,7 +503,7 @@
   }
 
   /**
-   * Inner dashed orbit (Figma `428:14903` “Ellipse 10”): stroke + dash from file; rotation from node.
+   * Inner dashed orbit (Figma `428:14903` “Ellipse 10”): stroke + dash from file; rotation `27.159deg` (Dev).
    */
   .home-hero-pancake-dotted-ring {
     position: absolute;
