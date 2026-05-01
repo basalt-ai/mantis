@@ -146,8 +146,6 @@
 
     /* Home hero mascot raster (`/pancake-monster.png`); max display width on desktop */
     --size-home-hero-monster-max-width: calc(12 * var(--spacing-xxl));
-    /* Nudge mascot up vs vertical center (Figma sits higher in the hero band) */
-    --spacing-home-hero-monster-lift: calc(4 * var(--spacing-xxl));
 
     /* Home hero (Figma desktop): subtitle ~22.62px = 16 × 1.414 */
     --font-size-home-hero-subtitle: calc(var(--font-size-base) * 1.414);
