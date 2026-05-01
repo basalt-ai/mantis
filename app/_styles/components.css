@@ -502,9 +502,30 @@
     object-fit: contain;
   }
 
+  /**
+   * Inner dashed orbit (Figma `428:14903` “Ellipse 10”): stroke + dash from file; rotation from node.
+   */
+  .home-hero-pancake-dotted-ring {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: var(--size-home-hero-monster-dotted-ring-width);
+    height: auto;
+    max-width: none;
+    transform: translate(-50%, -50%) rotate(var(--angle-home-hero-monster-dotted-ring));
+    pointer-events: none;
+  }
+
+  .home-hero-pancake-dotted-ring svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
   .home-hero-pancake-img {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     display: block;
     width: auto;
     height: auto;

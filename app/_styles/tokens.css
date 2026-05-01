@@ -154,6 +154,13 @@
     --size-home-hero-monster-ellipse-width: calc(var(--size-home-hero-monster-max-width) * 11823 / 8000);
 
     /*
+     * Inner dashed orbit: Figma hero `428:14900` — vector `428:14903` (“Ellipse 10”), smallest
+     * dotted concentric vs `428:14902`. Local size 414.465×404.127; monster frame `428:14920` = 160².
+     */
+    --size-home-hero-monster-dotted-ring-width: calc(var(--size-home-hero-monster-max-width) * 82893 / 32000);
+    --angle-home-hero-monster-dotted-ring: -27.159241212372507deg;
+
+    /*
      * Halo is larger than the 160² inner frame and is absolutely centered in it, so the
      * cream extends above the frame. Margin-top = ellipse half − frame half aligns the
      * visual top of the ellipse with the column top (same row as H1 / Tristan’s red line).
