@@ -144,6 +144,9 @@
     --spacing-home-hero-padding-top-mobile: var(--spacing-xxl);
     --spacing-home-hero-padding-top: calc(5 * var(--spacing-xxl));
 
+    /* Home hero pancake stack (design kit default width 200px; scale via spacing grid) */
+    --size-home-hero-pancake-stack-width: calc(10 * var(--spacing-xxl));
+
     /* Home hero (Figma desktop): subtitle ~22.62px = 16 × 1.414 */
     --font-size-home-hero-subtitle: calc(var(--font-size-base) * 1.414);
     --line-height-home-hero-subtitle: 32px;
