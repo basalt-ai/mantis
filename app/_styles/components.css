@@ -412,7 +412,7 @@
     color: var(--text);
     font-size: clamp(2rem, 5.5vw, 4rem);
     line-height: 1.05;
-    margin: 0 0 var(--spacing-lg) 0;
+    margin: 0 0 var(--spacing-home-hero-after-title) 0;
   }
 
   @media (min-width: 1024px) {
@@ -423,7 +423,7 @@
   }
 
   .home-hero .home-hero-body {
-    margin: 0 0 var(--spacing-xl) 0;
+    margin: 0 0 var(--spacing-home-hero-after-subtitle) 0;
     max-width: 100%;
     font-family: var(--font-body);
     font-size: var(--font-size-home-hero-subtitle);

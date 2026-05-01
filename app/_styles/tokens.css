@@ -136,6 +136,10 @@
     --font-size-body-small: var(--font-scale-min-1);
     --font-size-eyebrow: var(--font-scale-min-1);
 
+    /* Home hero vertical rhythm (text stack: title → subtitle → CTA) */
+    --spacing-home-hero-after-title: calc(2 * var(--spacing-xl));
+    --spacing-home-hero-after-subtitle: calc(2 * var(--spacing-xxl));
+
     /* Home hero (Figma desktop): subtitle ~22.62px = 16 × 1.414 */
     --font-size-home-hero-subtitle: calc(var(--font-size-base) * 1.414);
     --line-height-home-hero-subtitle: 32px;
