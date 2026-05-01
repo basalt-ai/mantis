@@ -166,9 +166,11 @@
      * • Orbit 1 (Ellipse 10 / `428:14903`): `ellipse × (O₁/160) × (8000/11823)` = `ellipse × (O₁/ellipse_Figma)`
      *   with our tokens `ellipse = max×11823/8000`, `max = 160` — cream `428:16771` untouched.
      * • Orbits 2–6: `orbit₁ × (Oᵢ/O₁)` (Figma node widths vs Ellipse 10). Rotations: CSS = −`node.rotation` (orbit 1 Dev `27.159deg`).
+     * • `--ratio-home-hero-dotted-orbits` scales all six rings together (ellipse + mascot unchanged). Tuned so orbit 2 nests ~just right of the “r” in “cofounder” on desktop.
      */
+    --ratio-home-hero-dotted-orbits: 1.11;
     --size-home-hero-monster-dotted-ring-width: calc(
-      var(--size-home-hero-monster-ellipse-width) * 169765 * 8000 / (65536 * 11823)
+      var(--size-home-hero-monster-ellipse-width) * 169765 * 8000 / (65536 * 11823) * var(--ratio-home-hero-dotted-orbits)
     );
     --angle-home-hero-monster-dotted-ring: 27.159deg;
 
