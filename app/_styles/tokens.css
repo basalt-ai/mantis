@@ -144,8 +144,8 @@
     --spacing-home-hero-padding-top-mobile: var(--spacing-xxl);
     --spacing-home-hero-padding-top: calc(5 * var(--spacing-xxl));
 
-    /* Home hero mascot raster (`/pancake-monster.png`); max display width on desktop */
-    --size-home-hero-monster-max-width: calc(13 * var(--spacing-xxl));
+    /* Home hero mascot (`/pancake-monster.png`): Figma frame 428:14920 “pancake monster” 160×160 */
+    --size-home-hero-monster-max-width: calc(10 * var(--spacing-xl));
     /* Push ellipse + mascot slightly below vertical center (Figma) */
     --spacing-home-hero-monster-drop: calc(2 * var(--spacing-xxl));
 

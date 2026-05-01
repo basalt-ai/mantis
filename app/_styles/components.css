@@ -442,7 +442,8 @@
   }
 
   /**
-   * Hero right column: Figma pancake monster + soft ellipse (stacked rasters).
+   * Hero right column: Figma pancake monster + ellipse (rasters).
+   * Monster frame `428:14920` = 160×160; ellipse width tracks artboard ratio 946/496.
    */
   .home-hero-pancake {
     position: relative;
@@ -503,6 +504,7 @@
     width: auto;
     height: auto;
     max-width: var(--size-home-hero-monster-max-width);
+    max-height: var(--size-home-hero-monster-max-width);
     object-fit: contain;
   }
 }
