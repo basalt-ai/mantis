@@ -384,7 +384,8 @@
   }
 
   /**
-   * Home hero (/) — Figma desktop: H1 Aeonik 64/64/500/-1.28px; subtitle Aeonik Fono.
+   * Home hero (/) — Figma desktop: H1 uses Aeonik TRIAL (--font-aeonik via --font-display).
+   * Default `*` body font is Aeonik Fono; it must stay in @layer semantic so this rule wins.
    */
   .home-hero h1.heading {
     font-family: var(--font-display);
