@@ -1,5 +1,3 @@
-import { LandingPage } from "@/components/shared/LandingPage";
-
 export default function Home() {
-  return <LandingPage />;
+  return <main className="min-h-screen" />;
 }

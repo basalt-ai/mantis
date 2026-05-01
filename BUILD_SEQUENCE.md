@@ -14,7 +14,7 @@ For each phase:
 6. Review the preview deploy.
 7. Approve → run the next phase. Reject → reply in chat with what to fix; Cursor iterates in the same branch.
 
-**Do not skip phases.** Phase 1's strip is what makes Phase 2's extraction trustworthy. Phase 2's tokens are what makes Phases 3–6 fast and consistent.
+**Do not skip phases.** Phase 1's strip is what makes Phase 2's extraction trustworthy. Phase 2's tokens are what makes Phases 3–7 fast and consistent.
 
 **Before Phase 1:** drop `AGENTS.md` and this `BUILD_SEQUENCE.md` into the repo root and commit on a fresh branch (e.g. `setup/agent-context`). Cursor will read `AGENTS.md` on every prompt automatically.
 
@@ -90,27 +90,32 @@ This phase has two stages. Do them in order. **Stop between them for Tristan's r
 
 ## Stage B — Strip (only after Tristan approves Stage A)
 
-1. Delete (use `rm` or `git rm` — **not** comment out, **not** rename) every file listed under DECOMMISSION in AUDIT.md.
+1. Delete (use `rm` or `git rm` — **not** comment out, **not** rename) every file listed under DECOMMISSION in `AUDIT.md`.
 
 2. In the Tailwind config file, remove all customizations under `theme.extend` (colors, spacing, fontFamily, borderRadius, etc.). Leave the file with the bare plumbing required for Tailwind to run.
 
-3. In the global CSS file (globals.css or equivalent), remove all custom design tokens and old utility classes. Leave only the Tailwind directives (`@tailwind base/components/utilities` for v3, or `@import "tailwindcss"` for v4) and any required CSS reset.
+3. In the global CSS file (`app/globals.css`), remove all custom design tokens and old utility classes. Leave only the Tailwind directives (`@tailwind base/components/utilities` for v3, or `@import "tailwindcss"` for v4) and any required CSS reset.
 
-4. Empty out the page bodies for `/`, `/pricing`, `/build-in-public`. Leave the file shells with a placeholder JSX like `<main className="min-h-screen" />`. Do not delete the route files — only their content.
+4. Empty out the page bodies for `/`, `/pricing`, `/build-in-public`, and **`/signup`**. Each route file stays; content becomes a placeholder shell: `<main className="min-h-screen" />`. **Temporary:** `/signup` will not render `SignupForm` on the preview until Phase 4 remounts it — the behavior layer (`components/shared/SignupForm.tsx`, `app/api/signup/*`, `app/api/referral/*`) stays fully intact on disk.
 
-5. **Do NOT touch `app/signup/`** in any way during this stage. Form, fields, validation, onSubmit, API route — all stays.
+5. **Do NOT** modify `components/shared/SignupForm.tsx`, `app/api/signup/route.ts`, or `app/api/referral/*` during this stage.
 
-6. Confirm the Google Analytics setup files identified in AUDIT.md as KEEP are still present and unmodified.
+6. Remove `themes/neo-brutalism.css` (delete file) and remove the `theme-neo-brutalism` class from `<body>` in `app/layout.tsx`. `/signup` uses the same placeholder shell as other routes until Phase 4 (the old `theme-neo-brutalism` class on the page is not required for Stage B).
 
-7. Run the dev server (`next dev`) and confirm the site builds without errors. Pages will appear visually empty — that is the expected outcome of this phase.
+7. **Keep `next.config.mjs` redirects** as-is (do not delete redirect rules).
 
-8. Commit Stage B. Push the branch. Open a Vercel preview deploy.
+8. Confirm the Google Tag Manager bootstrap in `app/layout.tsx` (`<script dangerouslySetInnerHTML>` + `<noscript>` iframe) is **byte-identical** to pre-strip (paste `git diff` of `app/layout.tsx` for Tristan).
 
-9. Update PROGRESS.md — check off Phase 1.
+9. Run the dev server (`next dev`) and confirm the site builds without errors. Marketing routes will appear visually empty — expected.
 
-10. Post in chat:
+10. Commit Stage B. Push the branch. Open a Vercel preview deploy.
+
+11. Update `PROGRESS.md` — check off Phase 1.
+
+12. Post in chat:
     - Total files deleted (count + brief categories)
-    - Confirmation that GA files and `/signup` are untouched
+    - Confirmation that GTM blocks are unchanged and behavior-layer signup files are untouched
+    - `git diff` of `app/layout.tsx` (for GTM verification)
     - Preview URL
     - "Phase 1 complete. Repo is a clean shell. Ready for Phase 2 on your green-light."
 
@@ -124,14 +129,14 @@ This phase has two stages. Do them in order. **Stop between them for Tristan's r
 - [ ] `AGENTS.md` "Stack" section updated with confirmed facts (no more "assumed")
 - [ ] `PROGRESS.md` created with 7 phases
 - [ ] Every DECOMMISSION file is actually deleted (verify in `git diff`)
-- [ ] `/signup` folder untouched (verify in `git diff`)
-- [ ] GA setup files untouched
+- [ ] `SignupForm`, `app/api/signup`, and `app/api/referral` untouched (verify in `git diff`)
+- [ ] GTM bootstrap in `app/layout.tsx` byte-identical to pre-strip (verify via `git diff`)
 - [ ] `next dev` runs without errors
 - [ ] Preview deploy renders empty pages without crashing
 
 ### Stop
 
-Open the preview. Spot check the signup form still works (try submitting). Approve before Phase 2.
+Open the preview. Marketing pages (including `/signup` shell) are empty until Phases 3–6. Approve before Phase 2.
 
 ---
 
@@ -157,7 +162,7 @@ Replace the two `[...]` placeholders in the prompt below before pasting.
 
 You are starting Phase 2 of the Pancake landing rebuild. Read `AGENTS.md` and `AUDIT.md` fully before doing anything.
 
-Goal: install required tooling, then extract the Figma design system PERFECTLY into the codebase. Do not rebuild any pages yet — that's Phase 3+.
+Goal: install required tooling, then extract the Figma design system PERFECTLY into the codebase. Do not rebuild any pages yet — that's Phase 3 onward.
 
 ## Step 1 — Install the Figma MCP
 
@@ -268,7 +273,7 @@ All future GSAP imports must come from `@/lib/gsap`, never from `gsap` directly.
 - Branch: `phase-2-design-system`
 - Multiple commits acceptable (suggested: one for MCP+packages, one for tokens, one for fonts+logos+favicon, one for GSAP setup)
 - Push, open Vercel preview, paste preview URL in chat
-- Do NOT rebuild any pages — that's Phase 3+
+- Do NOT rebuild any pages — that's Phase 3 onward
 
 ## Output to Tristan
 
@@ -354,7 +359,7 @@ v3 homepage frame URL in Figma: `[PASTE V3 HOMEPAGE FRAME URL HERE]`
 
 - Branch: `phase-3-homepage`
 - Commit per section (descriptive commit messages: "feat(home): hero section", "feat(home): hero animations", etc.)
-- Do not touch other routes, AGENTS.md, AUDIT.md, `/signup`, GA, or `lib/gsap.ts` (unless adding a new GSAP plugin import — flag if so, do not install without asking)
+- Do not touch other routes' **page implementations** except `/` (homepage), AGENTS.md, AUDIT.md, **`components/shared/SignupForm.tsx`**, **signup/referral API routes**, GA, or `lib/gsap.ts` (unless adding a new GSAP plugin import — flag if so, do not install without asking)
 - Push at the end of the page, open Vercel preview, paste URL in chat
 
 ## Output to Tristan
@@ -378,8 +383,8 @@ v3 homepage frame URL in Figma: `[PASTE V3 HOMEPAGE FRAME URL HERE]`
 - [ ] Animations match Figma motion specs
 - [ ] `prefers-reduced-motion` respected for non-essential motion
 - [ ] No console errors, no hydration warnings
-- [ ] GA integration still untouched (`git diff`)
-- [ ] `/signup` untouched (`git diff`)
+- [ ] GA / GTM integration still untouched in `app/layout.tsx` (`git diff` for GTM blocks empty)
+- [ ] `SignupForm` + signup/referral API routes untouched (`git diff`)
 
 ### Stop
 
@@ -387,84 +392,9 @@ Open the preview side-by-side with Figma. Resize the browser through the four br
 
 ---
 
-## Phase 4: Rebuild /pricing
+## Phase 4: Rebuild `/signup` (visual only)
 
-**Branch:** `phase-4-pricing`
-
-**Goal:** Same as Phase 3, applied to `/pricing`.
-
-### Prompt
-
----
-
-Phase 4: rebuild `/pricing`. Read `AGENTS.md` and `AUDIT.md`. Apply the same approach as Phase 3 — section by section, design tokens only, mobile-first, GSAP via `@/lib/gsap`, copy from Figma verbatim.
-
-## Inputs
-
-v3 `/pricing` frame URL in Figma: `[PASTE V3 PRICING FRAME URL HERE]`
-
-## Approach
-
-Same as Phase 3 (sections → `components/sections/pricing/[Name].tsx`, assemble in `app/pricing/page.tsx`).
-
-If pricing has interactive elements (toggle monthly/annual, plan comparison, FAQ accordion), implement with React state. Keep it simple — `useState` and Tailwind. No new dependencies unless explicitly required by the design.
-
-## Constraints + Output
-
-Same as Phase 3. Branch `phase-4-pricing`. Commit per section. Push, preview, post URL.
-
-**Stop.** Do not start Phase 5.
-
----
-
-### Acceptance criteria
-
-Same as Phase 3, applied to `/pricing`. Plus:
-- [ ] Interactive elements (if any) work as Figma's prototype intends
-
-### Stop
-
-Review preview against Figma. Approve before Phase 5.
-
----
-
-## Phase 5: Rebuild /build-in-public
-
-**Branch:** `phase-5-build-in-public`
-
-**Goal:** Same as Phases 3–4, applied to `/build-in-public`.
-
-### Prompt
-
----
-
-Phase 5: rebuild `/build-in-public`. Same approach as Phases 3–4.
-
-## Inputs
-
-v3 `/build-in-public` frame URL in Figma: `[PASTE V3 BUILD-IN-PUBLIC FRAME URL HERE]`
-
-## Approach + Constraints + Output
-
-Same as Phases 3–4. Branch `phase-5-build-in-public`. Push, preview, post URL.
-
-**Stop.** Do not start Phase 6.
-
----
-
-### Acceptance criteria
-
-Same as Phase 3, applied to `/build-in-public`.
-
-### Stop
-
-Review preview. Approve before Phase 6.
-
----
-
-## Phase 6: Rebuild /signup (visual only)
-
-**Branch:** `phase-6-signup-visual`
+**Branch:** `phase-4-signup-visual`
 
 **Goal:** Visually refresh `/signup` to match v3 Figma. **Form behavior must remain byte-identical.**
 
@@ -474,7 +404,7 @@ This phase is the highest-risk one. The signup form is wired to product. Cursor 
 
 ---
 
-Phase 6: visually refresh `/signup`. **CRITICAL: this is visual only.** The form's field list, names, types, validation, onSubmit handler, and any signup API route MUST remain byte-identical.
+Phase 4: visually refresh `/signup`. **CRITICAL: this is visual only.** The form's field list, names, types, validation, onSubmit handler, and any signup API route MUST remain byte-identical.
 
 Read `AGENTS.md` fully. Re-read the "Hard rules" section about `/signup`. Read `AUDIT.md` to identify all files in the signup behavior layer.
 
@@ -505,7 +435,7 @@ v3 `/signup` frame URL in Figma: `[PASTE V3 SIGNUP FRAME URL HERE]`
 
 ## Constraints
 
-- Branch: `phase-6-signup-visual`
+- Branch: `phase-4-signup-visual`
 - No new form-handling libraries
 - No changes to API routes
 - No changes to environment variables
@@ -515,7 +445,7 @@ v3 `/signup` frame URL in Figma: `[PASTE V3 SIGNUP FRAME URL HERE]`
 - Preview URL
 - `git diff` of the form behavior layer (the part that should be unchanged) — paste it in chat so Tristan can verify
 - Network request screenshot or description (request URL + payload structure) confirming submission still works
-- "Phase 6 complete. `/signup` form behavior verified unchanged. Ready for Phase 7."
+- "Phase 4 complete. `/signup` form behavior verified unchanged. Ready for Phase 5."
 
 **Stop.**
 
@@ -532,6 +462,81 @@ v3 `/signup` frame URL in Figma: `[PASTE V3 SIGNUP FRAME URL HERE]`
 ### Stop
 
 **Manually submit the signup form on the preview deploy.** Approve only if it submits correctly and lands in the same place as before.
+
+---
+
+## Phase 5: Rebuild `/pricing`
+
+**Branch:** `phase-5-pricing`
+
+**Goal:** Same as Phase 3, applied to `/pricing`.
+
+### Prompt
+
+---
+
+Phase 5: rebuild `/pricing`. Read `AGENTS.md` and `AUDIT.md`. Apply the same approach as Phase 3 — section by section, design tokens only, mobile-first, GSAP via `@/lib/gsap`, copy from Figma verbatim.
+
+## Inputs
+
+v3 `/pricing` frame URL in Figma: `[PASTE V3 PRICING FRAME URL HERE]`
+
+## Approach
+
+Same as Phase 3 (sections → `components/sections/pricing/[Name].tsx`, assemble in `app/pricing/page.tsx`).
+
+If pricing has interactive elements (toggle monthly/annual, plan comparison, FAQ accordion), implement with React state. Keep it simple — `useState` and Tailwind. No new dependencies unless explicitly required by the design.
+
+## Constraints + Output
+
+Same as Phase 3. Branch `phase-5-pricing`. Commit per section. Push, preview, post URL.
+
+**Stop.** Do not start Phase 6.
+
+---
+
+### Acceptance criteria
+
+Same as Phase 3, applied to `/pricing`. Plus:
+- [ ] Interactive elements (if any) work as Figma's prototype intends
+
+### Stop
+
+Review preview against Figma. Approve before Phase 6.
+
+---
+
+## Phase 6: Rebuild `/build-in-public`
+
+**Branch:** `phase-6-build-in-public`
+
+**Goal:** Same as Phases 3 and 5, applied to `/build-in-public`. Reuse `lib/metrics.ts` and `components/metrics/MetricsDashboard.tsx` for live metrics unless Figma dictates a different structure.
+
+### Prompt
+
+---
+
+Phase 6: rebuild `/build-in-public`. Same approach as Phases 3 and 5.
+
+## Inputs
+
+v3 `/build-in-public` frame URL in Figma: `[PASTE V3 BUILD-IN-PUBLIC FRAME URL HERE]`
+
+## Approach + Constraints + Output
+
+Same as Phases 3 and 5. Branch `phase-6-build-in-public`. Push, preview, post URL.
+
+**Stop.** Do not start Phase 7.
+
+---
+
+### Acceptance criteria
+
+Same as Phase 3, applied to `/build-in-public`.
+
+### Stop
+
+Review preview. Approve before Phase 7.
 
 ---
 
@@ -637,7 +642,7 @@ If anything is broken, the previous production deployment can be promoted from V
 ## Files Cursor maintains across phases
 
 - `AGENTS.md` — project rules, updated only in Phase 1 (Stack section)
-- `BUILD_SEQUENCE.md` — this file, never modified by Cursor
+- `BUILD_SEQUENCE.md` — phase plan; update when the phase order or prompts change (Tristan-approved)
 - `AUDIT.md` — created in Phase 1, referenced throughout
 - `PROGRESS.md` — created in Phase 1, checkbox updated at end of each phase
 - `tokens.css` / `@theme` block — written in Phase 2

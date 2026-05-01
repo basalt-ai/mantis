@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { DM_Sans, Lato, Space_Grotesk, Space_Mono } from "next/font/google";
-import "../themes/neo-brutalism.css";
 import "./globals.css";
 
 const grotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space-grotesk", display: "swap" });
@@ -37,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" style={{ backgroundColor: "var(--bg, #fffef8)" }}>
+    <html lang="en">
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -50,13 +49,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         />
       </head>
       <body
-        className={`theme-neo-brutalism ${grotesk.variable} ${dmSans.variable} ${lato.variable} ${spaceMono.variable}`}
-        style={{
-          margin: 0,
-          backgroundColor: "var(--bg, #fffef8)",
-          color: "var(--text, #0a0a0a)",
-          fontFamily: "var(--font-body, ui-sans-serif)",
-        }}
+        className={`${grotesk.variable} ${dmSans.variable} ${lato.variable} ${spaceMono.variable}`}
+        style={{ margin: 0 }}
       >
         <noscript>
           <iframe
