@@ -4,7 +4,7 @@
     font-family: var(--font-body);
     font-size: var(--font-size-body-regular);
     font-style: normal;
-    font-weight: var(--font-semibold);
+    font-weight: var(--font-normal);
     line-height: var(--line-height-nav-primary-link);
   }
 
@@ -24,6 +24,8 @@
     border-radius: var(--button-radius);
     font-size: var(--font-size-body-regular);
     font-weight: var(--font-heavy);
+    font-style: normal;
+    font-synthesis: none;
     cursor: pointer;
     corner-shape: squircle;
   }
@@ -383,6 +385,22 @@
     --page-section-background-color: var(--alt-surface);
   }
 
+  .home-hero-text-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+  }
+
+  .home-hero-cta-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin: 0;
+  }
+
   /**
    * Home hero (/) — Figma desktop: H1 uses Aeonik TRIAL (--font-aeonik via --font-display).
    * Default `*` body font is Aeonik Fono; it must stay in @layer semantic so this rule wins.
@@ -394,6 +412,7 @@
     color: var(--text);
     font-size: clamp(2rem, 5.5vw, 4rem);
     line-height: 1.05;
+    margin: 0 0 var(--spacing-lg) 0;
   }
 
   @media (min-width: 1024px) {
@@ -404,7 +423,7 @@
   }
 
   .home-hero .home-hero-body {
-    margin: 0;
+    margin: 0 0 var(--spacing-xl) 0;
     max-width: 100%;
     font-family: var(--font-body);
     font-size: var(--font-size-home-hero-subtitle);

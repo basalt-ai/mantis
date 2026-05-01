@@ -23,10 +23,10 @@ export function HomeHero() {
         className={`${HOME_PAGE_CONTAINER_CLASS} grid grid-cols-1 pt-[var(--spacing-xl)] pb-[var(--spacing-xxl)] lg:grid-cols-[minmax(0,9fr)_minmax(0,3fr)] lg:gap-x-[var(--spacing-xxl)] lg:pt-[var(--spacing-xxl)] lg:pb-[var(--spacing-xxl)]`}
         style={{ rowGap: "var(--spacing-xl)" }}
       >
-        <div className="relative z-[1] flex min-w-0 flex-col lg:pr-[var(--spacing-md)]" style={{ gap: "var(--spacing-xl)" }}>
+        <div className="home-hero-text-stack relative z-[1] lg:pr-[var(--spacing-md)]">
           <H1 className="whitespace-pre-line">{HERO_TITLE}</H1>
           <p className="home-hero-body whitespace-pre-line">{HERO_SUB}</p>
-          <div className="flex flex-row flex-wrap items-center" style={{ gap: "var(--spacing-md)" }}>
+          <div className="home-hero-cta-row">
             <Link
               href="/signup"
               className="button inline-flex w-fit shrink-0 items-center justify-center no-underline"

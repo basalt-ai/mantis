@@ -145,6 +145,7 @@
     --line-height-nav-primary-link: 40px;
 
     /* Font weights */
+    --font-normal: 400;
     --font-semibold: 500;
     --font-heavy: 600;
     --font-bold: 800;
