@@ -30,9 +30,9 @@ export function HomeNav() {
           <img
             src="/pancake-logo.svg"
             alt=""
-            className="block h-[var(--control-size-sm)] w-auto"
-            width={142}
-            height={40}
+            className="block h-[var(--size-home-nav-logo-height)] w-auto"
+            width={156}
+            height={44}
             decoding="async"
             fetchPriority="high"
           />

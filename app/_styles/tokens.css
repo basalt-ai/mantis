@@ -149,6 +149,9 @@
     --line-height-home-hero-subtitle: 32px;
     --line-height-home-hero-cta-note: 24px;
 
+    /* Home nav wordmark — slightly taller than control-sm for upper-left presence */
+    --size-home-nav-logo-height: calc(var(--control-size-sm) + var(--spacing-sm));
+
     /* Home nav primary links (Figma: Product / Resources / Pricing) */
     --line-height-nav-primary-link: 40px;
 
