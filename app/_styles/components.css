@@ -372,4 +372,34 @@
   .page-section[data-variant="alt"] {
     --page-section-background-color: var(--alt-surface);
   }
+
+  /**
+   * Home hero (/) — typography scoped so global `h1.heading` / body-large tokens
+   * do not blow up the marketing frame (Figma v3 desktop 428:14886).
+   */
+  .home-hero h1.heading {
+    font-size: var(--font-scale-3);
+    line-height: var(--line-height-home-hero-title);
+    letter-spacing: -0.64px;
+  }
+
+  .home-hero .home-hero-body {
+    margin: 0;
+    max-width: 100%;
+    color: var(--subtle-text);
+    font-size: var(--font-size-body-regular);
+    line-height: var(--line-height-home-hero-body);
+  }
+
+  @media (min-width: 1024px) {
+    .home-hero h1.heading {
+      font-size: var(--font-scale-5);
+      letter-spacing: -0.96px;
+    }
+
+    .home-hero .home-hero-body {
+      font-size: var(--font-size-home-hero-body);
+      max-width: none;
+    }
+  }
 }

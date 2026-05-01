@@ -132,6 +132,11 @@
     --font-size-body-small: var(--font-scale-min-1);
     --font-size-eyebrow: var(--font-scale-min-1);
 
+    /* Home hero marketing (Figma v3 desktop node 428:14886 — MCP unavailable; sizes align to modular scale ~49px title / 18px body) */
+    --font-size-home-hero-body: calc(var(--font-scale-0) * 1.125);
+    --line-height-home-hero-title: 1.06;
+    --line-height-home-hero-body: 1.44;
+
     /* Font weights */
     --font-semibold: 500;
     --font-heavy: 600;
