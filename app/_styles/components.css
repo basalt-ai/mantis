@@ -522,14 +522,15 @@
 
   /**
    * Dotted orbits 1–6: Figma `428:14903` … `428:14909` — MCP SVG paths. Width: orbit 1 from cream token;
-   * 2–6 from orbit 1 × (Oᵢ/O₁). Stroke `var(--text)`, dash `0.578125 6.9375`.
+   * 2–6 from orbit 1 × (Oᵢ/O₁); each ring gains `--size-home-hero-orbit-radius-add` per side (2× on width).
+   * Cream ellipse uses its own token — not this bump. Stroke `var(--text)`, dash `0.578125 6.9375`.
    */
   .home-hero-pancake-orbit {
     position: absolute;
     left: 50%;
     top: 50%;
     z-index: 1;
-    width: var(--orbit-w);
+    width: calc(var(--orbit-w) + 2 * var(--size-home-hero-orbit-radius-add));
     height: auto;
     max-width: none;
     transform: translate(-50%, -50%) rotate(var(--orbit-a));

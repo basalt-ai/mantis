@@ -188,6 +188,9 @@
       var(--size-home-hero-monster-dotted-ring-width) * 2711963235409 / 778550001398
     );
 
+    /* +9 mm geometric radius on each dotted orbit (layout width += 2×); cream ellipse unchanged */
+    --size-home-hero-orbit-radius-add: 9mm;
+
     --angle-home-hero-monster-orbit-2: 31.50293043038189deg;
     --angle-home-hero-monster-orbit-3: 39.229604184027835deg;
     --angle-home-hero-monster-orbit-4: 42.572312193102164deg;
