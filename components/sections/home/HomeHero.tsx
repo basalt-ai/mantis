@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import { HOME_PAGE_CONTAINER_CLASS } from "@/components/sections/home/home-layout";
-import { HomeHeroOrbitCluster } from "@/components/sections/home/HomeHeroOrbitCluster";
 import { H1 } from "@/components/ui/Headings";
 
 /**
@@ -42,12 +41,8 @@ export function HomeHero() {
           </div>
         </div>
 
-        <div
-          className="pointer-events-none relative -mx-[var(--spacing-xxl)] mt-[var(--spacing-md)] flex min-h-[min(72vw,200px)] items-center justify-center select-none sm:min-h-[min(64vw,220px)] lg:mx-0 lg:mt-0 lg:min-h-[14rem]"
-          aria-hidden
-        >
-          <HomeHeroOrbitCluster />
-        </div>
+        {/* Illustration column: stripped for step-by-step rebuild (no SVG / stack / glow). */}
+        <div className="hidden min-h-0 select-none lg:block" aria-hidden />
       </div>
     </section>
   );
