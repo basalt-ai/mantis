@@ -33,6 +33,20 @@ function ToastCloseIcon() {
   );
 }
 
+function CheckIcon({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M20 6L9 17L4 12"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export default function KitTestPage() {
   return (
     <main style={{ minHeight: "100vh" }}>
@@ -62,6 +76,36 @@ export default function KitTestPage() {
             <Button variant="outline">Outline</Button>
             <Button variant="negative">Negative</Button>
             <Button variant="ghost">Ghost</Button>
+          </div>
+          <H3>Icon-only (sizes × variants)</H3>
+          <p style={{ color: "var(--subtle-text)", fontSize: "var(--font-size-body-small)", marginTop: "calc(-1 * var(--spacing-sm))" }}>
+            Square control per size; centered icon. Use <code>aria-label</code> for accessibility.
+          </p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--spacing-lg)", alignItems: "center" }}>
+            <Button iconOnly size="sm" variant="brand" aria-label="Approve (sm brand)">
+              <CheckIcon size={16} />
+            </Button>
+            <Button iconOnly variant="brand" aria-label="Approve (md brand)">
+              <CheckIcon size={18} />
+            </Button>
+            <Button iconOnly size="lg" variant="brand" aria-label="Approve (lg brand)">
+              <CheckIcon size={22} />
+            </Button>
+            <Button iconOnly variant="subtle" aria-label="Approve (subtle)">
+              <CheckIcon />
+            </Button>
+            <Button iconOnly variant="alternative" aria-label="Approve (alternative)">
+              <CheckIcon />
+            </Button>
+            <Button iconOnly variant="outline" aria-label="Approve (outline)">
+              <CheckIcon />
+            </Button>
+            <Button iconOnly variant="negative" aria-label="Reject (negative)">
+              <ToastCloseIcon />
+            </Button>
+            <Button iconOnly variant="ghost" aria-label="More (ghost)">
+              <CheckIcon />
+            </Button>
           </div>
         </div>
       </PageSection>
