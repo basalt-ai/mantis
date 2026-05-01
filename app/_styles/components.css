@@ -325,6 +325,7 @@
   h2.heading,
   h3.heading,
   h4.heading {
+    font-family: var(--font-display);
     font-weight: var(--font-semibold);
   }
 
@@ -374,32 +375,40 @@
   }
 
   /**
-   * Home hero (/) — typography scoped so global `h1.heading` / body-large tokens
-   * do not blow up the marketing frame (Figma v3 desktop 428:14886).
+   * Home hero (/) — Figma desktop: H1 Aeonik 64/64/500/-1.28px; subtitle Aeonik Fono.
    */
   .home-hero h1.heading {
-    font-size: var(--font-scale-3);
-    line-height: var(--line-height-home-hero-title);
-    letter-spacing: -0.64px;
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -1.28px;
+    color: var(--text);
+    font-size: clamp(2rem, 5.5vw, 4rem);
+    line-height: 1.05;
+  }
+
+  @media (min-width: 1024px) {
+    .home-hero h1.heading {
+      font-size: 64px;
+      line-height: 64px;
+    }
   }
 
   .home-hero .home-hero-body {
     margin: 0;
     max-width: 100%;
-    color: var(--subtle-text);
-    font-size: var(--font-size-body-regular);
-    line-height: var(--line-height-home-hero-body);
+    font-family: var(--font-body);
+    font-size: var(--font-size-home-hero-subtitle);
+    font-weight: 400;
+    line-height: var(--line-height-home-hero-subtitle);
+    color: var(--text);
   }
 
-  @media (min-width: 1024px) {
-    .home-hero h1.heading {
-      font-size: var(--font-scale-5);
-      letter-spacing: -0.96px;
-    }
-
-    .home-hero .home-hero-body {
-      font-size: var(--font-size-home-hero-body);
-      max-width: none;
-    }
+  .home-hero .home-hero-cta-note {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    font-weight: 400;
+    line-height: var(--line-height-home-hero-cta-note);
+    color: var(--subtle-text);
   }
 }

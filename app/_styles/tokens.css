@@ -72,6 +72,10 @@
 
 @layer semantic {
   :root {
+    /* Font stacks (Next `localFont` sets --font-aeonik / --font-aeonik-fono on <body>) */
+    --font-display: var(--font-aeonik), system-ui, -apple-system, sans-serif;
+    --font-body: var(--font-aeonik-fono), ui-monospace, monospace;
+
     /* Text Colors */
     --text: var(--palette-chrome-100);
     --subtle-text: var(--palette-chrome-80);
@@ -132,10 +136,10 @@
     --font-size-body-small: var(--font-scale-min-1);
     --font-size-eyebrow: var(--font-scale-min-1);
 
-    /* Home hero marketing (Figma v3 desktop node 428:14886 — MCP unavailable; sizes align to modular scale ~49px title / 18px body) */
-    --font-size-home-hero-body: calc(var(--font-scale-0) * 1.125);
-    --line-height-home-hero-title: 1.06;
-    --line-height-home-hero-body: 1.44;
+    /* Home hero (Figma desktop): subtitle ~22.62px = 16 × 1.414 */
+    --font-size-home-hero-subtitle: calc(var(--font-size-base) * 1.414);
+    --line-height-home-hero-subtitle: 32px;
+    --line-height-home-hero-cta-note: 24px;
 
     /* Font weights */
     --font-semibold: 500;
