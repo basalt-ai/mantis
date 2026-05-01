@@ -43,15 +43,9 @@ export function HomeHero() {
         </div>
 
         <div
-          className="pointer-events-none relative -mx-[var(--spacing-xxl)] mt-[var(--spacing-md)] flex min-h-[min(72vw,240px)] items-center justify-center select-none sm:min-h-[min(64vw,260px)] lg:mx-0 lg:mt-0 lg:min-h-[18rem]"
+          className="pointer-events-none relative -mx-[var(--spacing-xxl)] mt-[var(--spacing-md)] flex min-h-[min(72vw,200px)] items-center justify-center select-none sm:min-h-[min(64vw,220px)] lg:mx-0 lg:mt-0 lg:min-h-[14rem]"
           aria-hidden
         >
-          <div
-            className="absolute inset-0 left-1/2 top-1/2 h-[min(100%,20rem)] w-[min(100%,20rem)] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-[0.2] lg:h-[min(100%,22rem)] lg:w-[min(100%,22rem)]"
-            style={{
-              background: "radial-gradient(circle at 42% 38%, var(--weak-branded-surface), transparent 65%)",
-            }}
-          />
           <HomeHeroOrbitCluster />
         </div>
       </div>
