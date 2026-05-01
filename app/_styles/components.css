@@ -63,4 +63,60 @@
   .button[data-variant="ghost"]:hover {
     --button-background-color: var(--weak-branded-surface);
   }
+
+  .badge {
+    --badge-padding: var(--spacing-xs) var(--spacing-md);
+    --badge-background-color: var(--surface);
+    --badge-border-color: var(--stroke);
+    --badge-radius: var(--radius-sm);
+
+    display: inline-flex;
+    align-items: center;
+    padding: var(--badge-padding);
+    background-color: var(--badge-background-color);
+    border: 1px solid var(--badge-border-color);
+    border-radius: var(--badge-radius);
+    color: var(--text);
+    font-size: var(--font-size-eyebrow);
+    font-weight: var(--font-semibold);
+    letter-spacing: 0.453px;
+    text-transform: uppercase;
+    corner-shape: squircle;
+  }
+
+  .badge[data-variant="inverted"] {
+    --badge-background-color: var(--inverted-surface);
+    --badge-border-color: var(--inverted-surface);
+    color: var(--text-on-inverted-surface);
+  }
+
+  .badge[data-variant="brand"] {
+    --badge-background-color: var(--strong-branded-surface);
+    --badge-border-color: var(--strong-branded-surface);
+  }
+
+  .badge[data-variant="brand-alt-1"] {
+    --badge-background-color: var(--alt-strong-branded-surface-01);
+    --badge-border-color: var(--alt-strong-branded-surface-01);
+  }
+
+  .badge[data-variant="brand-alt-2"] {
+    --badge-background-color: var(--alt-strong-branded-surface-02);
+    --badge-border-color: var(--alt-strong-branded-surface-02);
+  }
+
+  .badge[data-variant="success"] {
+    --badge-background-color: var(--positive-surface);
+    --badge-border-color: var(--positive-surface);
+  }
+
+  .badge[data-variant="warning"] {
+    --badge-background-color: var(--warning-surface);
+    --badge-border-color: var(--warning-surface);
+  }
+
+  .badge[data-variant="negative"] {
+    --badge-background-color: var(--negative-surface);
+    --badge-border-color: var(--negative-surface);
+  }
 }
