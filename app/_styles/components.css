@@ -35,6 +35,17 @@
     --button-height: var(--control-size-lg);
   }
 
+  .button[data-icon-only] {
+    --button-padding: 0;
+    padding: 0;
+    width: var(--button-height);
+    min-width: var(--button-height);
+    max-width: var(--button-height);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .button[data-variant="subtle"] {
     --button-background-color: var(--elevated-surface);
     --button-border-color: var(--stroke);
