@@ -467,4 +467,10 @@
     max-width: var(--size-home-hero-monster-max-width);
     object-fit: contain;
   }
+
+  @media (min-width: 1024px) {
+    .home-hero-pancake-img {
+      transform: translateY(calc(-1 * var(--spacing-home-hero-monster-lift)));
+    }
+  }
 }
