@@ -25,7 +25,11 @@ export function HomeNav() {
       }}
     >
       <div className={`flex items-center justify-between gap-[var(--spacing-md)] ${HOME_PAGE_CONTAINER_CLASS}`}>
-        <Link href="/" className="inline-flex shrink-0 items-center no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" aria-label="Pancake home">
+        <Link
+          href="/"
+          className="home-nav-logo-link inline-flex shrink-0 items-center no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          aria-label="Pancake home"
+        >
           {/* eslint-disable-next-line @next/next/no-img-element -- vector logo; next/image SVG tradeoffs */}
           <img
             src="/pancake-logo.svg"
@@ -38,7 +42,7 @@ export function HomeNav() {
           />
         </Link>
 
-        <div className="flex items-center justify-end" style={{ gap: "calc(2 * var(--spacing-xl))" }}>
+        <div className="home-nav-end flex items-center justify-end" style={{ gap: "calc(2 * var(--spacing-xl))" }}>
           <div className="flex lg:hidden">
             <Button type="button" iconOnly size="lg" variant="ghost" aria-label="Menu">
               <MenuIcon />

@@ -136,6 +136,14 @@
     --font-size-body-small: var(--font-scale-min-1);
     --font-size-eyebrow: var(--font-scale-min-1);
 
+    /*
+     * Home `/`: wider horizontal gutter + coordinated nav/hero shifts (lg).
+     * Logo nudges right, Product/Resources/Pricing nudge left; hero copy follows logo; mascot follows links.
+     */
+    --spacing-home-page-inline: calc(var(--spacing-xxl) + var(--spacing-xl));
+    --spacing-home-nav-logo-nudge-x: var(--spacing-md);
+    --spacing-home-nav-links-nudge-x: var(--spacing-md);
+
     /* Home hero vertical rhythm (text stack: title → subtitle → CTA) */
     --spacing-home-hero-after-title: calc(2 * var(--spacing-xl));
     --spacing-home-hero-after-subtitle: calc(2 * var(--spacing-xxl));
