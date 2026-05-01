@@ -1,14 +1,15 @@
 /**
- * Hero orbit cluster — Figma v3 gesture: concentric dashed orbits, central
- * placeholder “planet”, small satellite dots + tiny pancake SVGs. Monster +
- * Notion pin are deferred (no assets yet).
+ * Hero orbit cluster — concentric dashed orbits + kit **Pancake stack** at center
+ * (`_design-kit/USAGE.md`: under `flat-3`, middle `angled-2`, top `top-1`) with
+ * small satellite dots. Orbit-positioned pancake imgs removed for now; Notion pin
+ * / monster raster deferred.
  */
 const ORBIT_RADII = [34, 48, 62, 76] as const;
 
 export function HomeHeroOrbitCluster() {
   return (
     <div
-      className="relative mx-auto aspect-square w-full max-w-[min(100%,20rem)] select-none lg:max-w-[22.5rem]"
+      className="home-hero-orbit-cluster relative mx-auto aspect-square w-full max-w-[min(100%,20rem)] select-none lg:max-w-[22.5rem]"
       aria-hidden
     >
       <svg
@@ -32,13 +33,21 @@ export function HomeHeroOrbitCluster() {
         ))}
       </svg>
 
-      <div
-        className="absolute left-1/2 top-1/2 z-[1] size-[5.5rem] -translate-x-1/2 -translate-y-1/2 rounded-full lg:size-[6.25rem]"
-        style={{
-          backgroundColor: "var(--alt-surface)",
-          border: "1px dashed var(--branded-stroke-01)",
-        }}
-      />
+      {/* Canonical stack: USAGE.md — brand / alt-1 / alt-2 map to SVG fills in `/pancake-svgs/`. */}
+      <div className="pancake-stack">
+        <div className="pancake" data-color="brand" data-stack-pos="under">
+          {/* eslint-disable-next-line @next/next/no-img-element -- local kit SVG */}
+          <img src="/pancake-svgs/flat-3.svg" alt="" />
+        </div>
+        <div className="pancake" data-color="alt-1" data-stack-pos="middle">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/pancake-svgs/angled-2.svg" alt="" />
+        </div>
+        <div className="pancake" data-color="alt-2" data-stack-pos="top">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/pancake-svgs/top-1.svg" alt="" />
+        </div>
+      </div>
 
       <span
         className="absolute left-[14%] top-[20%] z-[2] size-4 rounded-full lg:size-5"
@@ -59,31 +68,6 @@ export function HomeHeroOrbitCluster() {
       <span
         className="absolute right-[20%] top-[44%] z-[2] size-3 rounded-full"
         style={{ backgroundColor: "var(--palette-pink-20)" }}
-      />
-
-      {/* eslint-disable-next-line @next/next/no-img-element -- local SVG decorations */}
-      <img
-        src="/pancake-svgs/top-2.svg"
-        alt=""
-        className="pointer-events-none absolute left-[78%] top-[12%] z-[2] w-8 -translate-x-1/2 -translate-y-1/2 lg:w-9"
-        width={36}
-        height={36}
-      />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/pancake-svgs/flat-3.svg"
-        alt=""
-        className="pointer-events-none absolute left-[10%] top-[40%] z-[2] w-7 -translate-x-1/2 -translate-y-1/2 lg:w-8"
-        width={32}
-        height={32}
-      />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/pancake-svgs/angled-1.svg"
-        alt=""
-        className="pointer-events-none absolute bottom-[16%] right-[8%] z-[2] w-8 -translate-x-1/2 -translate-y-1/2 lg:w-9"
-        width={36}
-        height={36}
       />
     </div>
   );
