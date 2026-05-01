@@ -31,6 +31,7 @@ export function HomeNav() {
         }}
       >
         <Link href="/" className="inline-flex shrink-0 items-center no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" aria-label="Pancake home">
+          {/* eslint-disable-next-line @next/next/no-img-element -- vector logo; next/image SVG tradeoffs */}
           <img
             src="/pancake-logo.svg"
             alt=""
