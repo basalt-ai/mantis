@@ -28,7 +28,7 @@ Refinements (copy, perf, polish) come later. Don't pre-optimize.
 - **Tailwind CSS** `^3.4.15` with `tailwind.config.ts` and PostCSS (`postcss.config.mjs`); **not** v4 (no `@import "tailwindcss"` / `@theme` pipeline).
 - **TypeScript** `^5.6.3` with `tsconfig.json` (`strict`, path alias `@/*` → repo root).
 - **Package manager:** **npm** (`package-lock.json` at repo root; no `pnpm-lock.yaml` / `yarn.lock` / `bun.lockb`).
-- **GSAP:** **not installed yet** — Phase 2 adds `gsap` + `@gsap/react` per `BUILD_SEQUENCE.md`.
+- **GSAP:** `gsap` + `@gsap/react` installed; import from `@/lib/gsap` only (see `lib/gsap.ts`).
 - **Analytics:** **Google Tag Manager** container `GTM-M37BB9RG` — inline bootstrap `<script>` + `<noscript>` iframe in `app/layout.tsx` (not `@next/third-parties`, not `next/script`). **Preserve as-is;** do not reinstall or “migrate” unless Tristan asks.
 
 ---
