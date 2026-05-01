@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import { HOME_PAGE_CONTAINER_CLASS } from "@/components/sections/home/home-layout";
-import { PancakeSprite } from "@/components/sections/home/PancakeSprite";
 import { H1 } from "@/components/ui/Headings";
 
 /**
@@ -20,7 +19,6 @@ export function HomeHero() {
       className="home-hero relative w-full overflow-hidden"
       style={{ backgroundColor: "var(--surface)" }}
     >
-      <PancakeSprite />
       <div
         className={`${HOME_PAGE_CONTAINER_CLASS} grid grid-cols-1 pt-[var(--spacing-home-hero-padding-top-mobile)] pb-[var(--spacing-xxl)] lg:grid-cols-[minmax(0,9fr)_minmax(0,3fr)] lg:gap-x-[var(--spacing-xxl)] lg:pt-[var(--spacing-home-hero-padding-top)] lg:pb-[var(--spacing-xxl)]`}
         style={{ rowGap: "var(--spacing-xl)" }}
@@ -41,27 +39,17 @@ export function HomeHero() {
           </div>
         </div>
 
-        {/* Pancake stack — canonical kit recipe (`_design-kit/USAGE.md`); ellipses/glow deferred. */}
+        {/* Pancake monster mascot (Figma); ellipses / glow deferred. */}
         <div className="home-hero-pancake" aria-hidden>
-          <div className="home-hero-pancake-stack">
-            <div className="pancake-stack">
-              <div className="pancake" data-color="brand" data-stack-pos="under">
-                <svg className="pancake-shape" aria-hidden>
-                  <use href="#pancake-flat-3" />
-                </svg>
-              </div>
-              <div className="pancake" data-color="alt-1" data-stack-pos="middle">
-                <svg className="pancake-shape" aria-hidden>
-                  <use href="#pancake-angled-2" />
-                </svg>
-              </div>
-              <div className="pancake" data-color="alt-2" data-stack-pos="top">
-                <svg className="pancake-shape" aria-hidden>
-                  <use href="#pancake-top-1" />
-                </svg>
-              </div>
-            </div>
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element -- raster mascot; prefer SVG from Figma when available */}
+          <img
+            src="/pancake-monster.png"
+            alt=""
+            className="home-hero-pancake-img"
+            width={160}
+            height={166}
+            decoding="async"
+          />
         </div>
       </div>
     </section>
