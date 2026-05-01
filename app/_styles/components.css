@@ -521,8 +521,8 @@
   }
 
   /**
-   * Dotted orbits 1–6: Figma `428:14903` … `428:14909` — MCP SVG paths. Width: orbit 1 from cream token
-   * (includes `--ratio-home-hero-dotted-orbits`); 2–6 from orbit 1 × (Oᵢ/O₁). Stroke `var(--text)`, dash `0.578125 6.9375`.
+   * Dotted orbits 1–6: Figma `428:14903` … `428:14909` — MCP SVG paths. Width: orbit 1 from cream token;
+   * 2–6 from orbit 1 × (Oᵢ/O₁). Stroke `var(--text)`, dash `0.578125 6.9375`.
    */
   .home-hero-pancake-orbit {
     position: absolute;
