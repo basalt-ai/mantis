@@ -308,4 +308,36 @@
     --toast-background-color: var(--negative-surface);
     --toast-border-color: var(--negative-surface);
   }
+
+  .heading,
+  h1.heading,
+  h2.heading,
+  h3.heading,
+  h4.heading {
+    font-weight: var(--font-semibold);
+  }
+
+  h1.heading,
+  .heading[data-level="1"] {
+    font-size: var(--font-size-header-01);
+    letter-spacing: -1.28px;
+  }
+
+  h2.heading,
+  .heading[data-level="2"] {
+    font-size: var(--font-size-header-02);
+    letter-spacing: -0.905px;
+  }
+
+  h3.heading,
+  .heading[data-level="3"] {
+    font-size: var(--font-size-header-03);
+    letter-spacing: -0.64px;
+  }
+
+  h4.heading,
+  .heading[data-level="4"] {
+    font-size: var(--font-size-header-04);
+    letter-spacing: -0.452px;
+  }
 }
