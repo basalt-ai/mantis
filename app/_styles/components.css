@@ -119,4 +119,35 @@
     --badge-background-color: var(--negative-surface);
     --badge-border-color: var(--negative-surface);
   }
+
+  .card {
+    --card-padding: 0;
+    --card-background-color: var(--surface);
+    --card-border-color: var(--stroke);
+    --card-radius: var(--radius-lg);
+
+    display: flex;
+    flex-direction: column;
+    padding: var(--card-padding);
+    background-color: var(--card-background-color);
+    border: 1px solid var(--card-border-color);
+    border-radius: var(--card-radius);
+    color: var(--text);
+    corner-shape: squircle;
+  }
+
+  .card[data-variant="brand"] {
+    --card-background-color: var(--weak-branded-surface);
+    --card-border-color: var(--branded-stroke-01);
+  }
+
+  .card[data-variant="brand-alt-1"] {
+    --card-background-color: var(--alt-weak-branded-surface-01);
+    --card-border-color: var(--branded-stroke-02);
+  }
+
+  .card[data-variant="brand-alt-2"] {
+    --card-background-color: var(--alt-weak-branded-surface-02);
+    --card-border-color: var(--branded-stroke-03);
+  }
 }
