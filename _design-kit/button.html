@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Button — Pancake Design Kit</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    @layer component {
+      .button {
+        --button-padding: var(--spacing-md) var(--spacing-xl);
+        --button-background-color: var(--strong-branded-surface);
+        --button-border-color: var(--strong-branded-surface);
+        --button-radius: var(--radius-md);
+
+        --button-height: var(--control-size-md);
+
+        height: var(--button-height);
+        padding: var(--button-padding);
+        background-color: var(--button-background-color);
+        border: 1px solid var(--button-border-color);
+        color: var(--text);
+        border-radius: var(--button-radius);
+        font-size: var(--font-size-body-regular);
+        font-weight: var(--font-heavy);
+        cursor: pointer;
+        corner-shape: squircle;
+
+        &:hover {
+          background-opacity: 0.8;
+        }
+      }
+
+      /* Sizes */
+      .button[data-size="sm"] {
+        --button-padding: var(--spacing-sm) var(--spacing-lg);
+        --button-radius: var(--radius-sm);
+        --button-height: var(--control-size-sm);
+      }
+
+      .button[data-size="lg"] {
+        --button-padding: var(--spacing-lg) var(--spacing-xxl);
+        --button-radius: var(--radius-lg);
+        --button-height: var(--control-size-lg);
+      }
+
+      /* Variants */
+      .button[data-variant="subtle"] {
+        --button-background-color: var(--elevated-surface);
+        --button-border-color: var(--stroke);
+      }
+
+      .button[data-variant="alternative"] {
+        --button-background-color: var(--alt-strong-branded-surface-01);
+        --button-border-color: var(--alt-strong-branded-surface-01);
+      }
+
+      .button[data-variant="outline"] {
+        --button-background-color: transparent;
+        --button-border-color: var(--subtle-stroke);
+      }
+
+      .button[data-variant="negative"] {
+        --button-background-color: var(--negative-surface);
+        --button-border-color: var(--negative-surface);
+      }
+
+      .button[data-variant="ghost"] {
+        --button-background-color: transparent;
+        --button-border-color: transparent;
+
+        &:hover {
+          --button-background-color: var(--weak-branded-surface);
+        }
+      }
+    }
+
+    /* Demo page styles (not part of the kit) */
+    body {
+      padding: var(--spacing-xxl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xxl);
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .demo-title {
+      font-size: var(--font-size-header-03);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .demo-row {
+      display: flex;
+      gap: var(--spacing-lg);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <section>
+    <h2 class="demo-title">Sizes</h2>
+    <div class="demo-row">
+      <button class="button" data-size="sm">Small</button>
+      <button class="button">Medium</button>
+      <button class="button" data-size="lg">Large</button>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="demo-title">Variants</h2>
+    <div class="demo-row">
+      <button class="button">Brand</button>
+      <button class="button" data-variant="subtle">Subtle</button>
+      <button class="button" data-variant="alternative">Alternative</button>
+      <button class="button" data-variant="outline">Outline</button>
+      <button class="button" data-variant="negative">Negative</button>
+      <button class="button" data-variant="ghost">Ghost</button>
+    </div>
+  </section>
+</body>
+</html>

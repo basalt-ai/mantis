@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Headings — Pancake Design Kit</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    @layer component {
+      .heading,
+      h1.heading,
+      h2.heading,
+      h3.heading,
+      h4.heading {
+        font-weight: var(--font-semibold);
+      }
+
+      h1.heading,
+      .heading[data-level="1"] {
+        font-size: var(--font-size-header-01);
+        letter-spacing: -1.28px;
+      }
+
+      h2.heading,
+      .heading[data-level="2"] {
+        font-size: var(--font-size-header-02);
+        letter-spacing: -0.905px;
+      }
+
+      h3.heading,
+      .heading[data-level="3"] {
+        font-size: var(--font-size-header-03);
+        letter-spacing: -0.64px;
+      }
+
+      h4.heading,
+      .heading[data-level="4"] {
+        font-size: var(--font-size-header-04);
+        letter-spacing: -0.452px;
+      }
+    }
+
+    /* Demo page styles (not part of the kit) */
+    body {
+      padding: var(--spacing-xxl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xxl);
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .demo-section {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-lg);
+    }
+
+    .demo-label {
+      font-size: var(--font-size-eyebrow);
+      font-weight: var(--font-semibold);
+      letter-spacing: 0.453px;
+      text-transform: uppercase;
+      color: var(--subtle-text);
+    }
+  </style>
+</head>
+<body>
+  <section class="demo-section">
+    <span class="demo-label">Default on heading elements</span>
+    <h1 class="heading">Heading 1 — The quick brown fox</h1>
+    <h2 class="heading">Heading 2 — The quick brown fox</h2>
+    <h3 class="heading">Heading 3 — The quick brown fox</h3>
+    <h4 class="heading">Heading 4 — The quick brown fox</h4>
+  </section>
+
+  <section class="demo-section">
+    <span class="demo-label">Applied to non-heading elements</span>
+    <span class="heading" data-level="1">Span as Heading 1</span>
+    <span class="heading" data-level="2">Span as Heading 2</span>
+    <div class="heading" data-level="3">Div as Heading 3</div>
+    <p class="heading" data-level="4">Paragraph as Heading 4</p>
+  </section>
+</body>
+</html>

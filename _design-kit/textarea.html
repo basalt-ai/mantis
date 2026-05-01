@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>textarea — Pancake Design Kit</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    @layer component {
+      .textarea {
+        --textarea-padding: var(--spacing-md) var(--spacing-xl);
+        --textarea-border-color: var(--stroke);
+        --textarea-radius: var(--radius-md);
+
+        padding: var(--textarea-padding);
+        background-color: var(--surface);
+        border: 1px solid var(--textarea-border-color);
+        color: var(--text);
+        border-radius: var(--textarea-radius);
+        font-size: var(--font-size-body-regular);
+        outline-color: var(--textarea-border-color);
+        outline-width: 0px;
+
+        corner-shape: squircle;
+
+        &:focus {
+          --textarea-border-color: var(--interactive-text);
+        }
+
+        &:disabled {
+          --textarea-border-color: var(--subtle-stroke);
+          background-color: var(--alt-surface);
+          color: var(--disabled-text);
+          cursor: not-allowed;
+
+          &::placeholder {
+            color: var(--disabled-text);
+          }
+        }
+      }
+
+      .textarea::placeholder {
+        color: var(--subtle-text);
+      }
+
+      /* Sizes */
+      .textarea[data-size="sm"] {
+        --textarea-padding: var(--spacing-sm) var(--spacing-lg);
+        --textarea-radius: var(--radius-sm);
+      }
+
+      .textarea[data-size="lg"] {
+        --textarea-padding: var(--spacing-lg) var(--spacing-xxl);
+        --textarea-radius: var(--radius-lg);
+      }
+
+      /* States */
+      .textarea[data-err] {
+        --textarea-border-color: var(--negative-stroke);
+      }
+    }
+
+    /* Demo page styles (not part of the kit) */
+    body {
+      padding: var(--spacing-xxl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xxl);
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .demo-title {
+      font-size: var(--font-size-header-03);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .demo-row {
+      display: flex;
+      gap: var(--spacing-lg);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <section>
+    <h2 class="demo-title">Sizes</h2>
+    <div class="demo-row">
+      <textarea class="textarea" data-size="sm" placeholder="Small"></textarea>
+      <textarea class="textarea" placeholder="Medium"></textarea>
+      <textarea class="textarea" data-size="lg" placeholder="Large"></textarea>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="demo-title">States</h2>
+    <div class="demo-row">
+      <textarea class="textarea" placeholder="Default"></textarea>
+      <textarea class="textarea" data-err placeholder="Error"></textarea>
+      <textarea class="textarea" data-err value="invalid@"></textarea>
+      <textarea class="textarea" disabled placeholder="Disabled"></textarea>
+      <textarea class="textarea" disabled value="Disabled with value"></textarea>
+    </div>
+  </section>
+</body>
+</html>

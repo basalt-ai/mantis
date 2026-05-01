@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Card — Pancake Design Kit</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    @layer component {
+      .card {
+        --card-padding: 0;
+        --card-background-color: var(--surface);
+        --card-border-color: var(--stroke);
+        --card-radius: var(--radius-lg);
+
+        display: flex;
+        flex-direction: column;
+        padding: var(--card-padding);
+        background-color: var(--card-background-color);
+        border: 1px solid var(--card-border-color);
+        border-radius: var(--card-radius);
+        color: var(--text);
+        corner-shape: squircle;
+      }
+
+      /* Variants */
+      .card[data-variant="brand"] {
+        --card-background-color: var(--weak-branded-surface);
+        --card-border-color: var(--branded-stroke-01);
+      }
+
+      .card[data-variant="brand-alt-1"] {
+        --card-background-color: var(--alt-weak-branded-surface-01);
+        --card-border-color: var(--branded-stroke-02);
+      }
+
+      .card[data-variant="brand-alt-2"] {
+        --card-background-color: var(--alt-weak-branded-surface-02);
+        --card-border-color: var(--branded-stroke-03);
+      }
+    }
+
+    /* Demo page styles (not part of the kit) */
+    body {
+      padding: var(--spacing-xxl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xxl);
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .demo-title {
+      font-size: var(--font-size-header-03);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: var(--spacing-xl);
+    }
+
+    .demo-card-content {
+      padding: var(--spacing-xl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+
+    .demo-card-title {
+      font-size: var(--font-size-header-04);
+      font-weight: var(--font-heavy);
+    }
+
+    .demo-card-body {
+      font-size: var(--font-size-body-regular);
+      color: var(--subtle-text);
+    }
+  </style>
+</head>
+<body>
+  <section>
+    <h2 class="demo-title">Variants</h2>
+    <div class="demo-grid">
+      <div class="card">
+        <div class="demo-card-content">
+          <span class="demo-card-title">Outline</span>
+          <span class="demo-card-body">Default neutral border using the standard stroke color.</span>
+        </div>
+      </div>
+
+      <div class="card" data-variant="brand">
+        <div class="demo-card-content">
+          <span class="demo-card-title">Brand</span>
+          <span class="demo-card-body">Pink branded border for primary brand surfaces.</span>
+        </div>
+      </div>
+
+      <div class="card" data-variant="brand-alt-1">
+        <div class="demo-card-content">
+          <span class="demo-card-title">Brand Alt 1</span>
+          <span class="demo-card-body">Purple branded border for alternate brand surfaces.</span>
+        </div>
+      </div>
+
+      <div class="card" data-variant="brand-alt-2">
+        <div class="demo-card-content">
+          <span class="demo-card-title">Brand Alt 2</span>
+          <span class="demo-card-body">Yellow branded border for alternate brand surfaces.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="demo-title">Empty (no padding)</h2>
+    <div class="demo-grid">
+      <div class="card" style="height: 120px;"></div>
+      <div class="card" data-variant="brand" style="height: 120px;"></div>
+      <div class="card" data-variant="brand-alt-1" style="height: 120px;"></div>
+      <div class="card" data-variant="brand-alt-2" style="height: 120px;"></div>
+    </div>
+  </section>
+</body>
+</html>

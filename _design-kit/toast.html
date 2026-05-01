@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Toast — Pancake Design Kit</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    @layer component {
+      .toast {
+        --toast-padding: var(--spacing-md) var(--spacing-xl);
+        --toast-background-color: var(--surface);
+        --toast-border-color: var(--stroke);
+        --toast-radius: var(--radius-md);
+
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+        gap: var(--spacing-sm);
+        padding: var(--toast-padding);
+        background-color: var(--toast-background-color);
+        border: 1px solid var(--toast-border-color);
+        border-radius: var(--toast-radius);
+        color: var(--text);
+        corner-shape: squircle;
+      }
+
+      .toast-prefix,
+      .toast-close {
+        display: inline-flex;
+        align-items: center;
+        flex-shrink: 0;
+      }
+
+      .toast-body {
+        flex-grow: 1;
+        flex-shrink: 0;
+        text-align: start;
+        font-weight: var(--font-heavy);
+        font-size: var(--font-size-body-regular);
+      }
+
+      /* Variants */
+      .toast[data-variant="inverted"] {
+        --toast-background-color: var(--inverted-surface);
+        --toast-border-color: var(--inverted-surface);
+        color: var(--text-on-inverted-surface);
+      }
+
+      .toast[data-variant="success"] {
+        --toast-background-color: var(--positive-surface);
+        --toast-border-color: var(--positive-surface);
+      }
+
+      .toast[data-variant="warning"] {
+        --toast-background-color: var(--warning-surface);
+        --toast-border-color: var(--warning-surface);
+      }
+
+      .toast[data-variant="error"] {
+        --toast-background-color: var(--negative-surface);
+        --toast-border-color: var(--negative-surface);
+      }
+    }
+
+    /* Demo page styles (not part of the kit) */
+    body {
+      padding: var(--spacing-xxl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xxl);
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .demo-title {
+      font-size: var(--font-size-header-03);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .demo-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+      max-width: 480px;
+    }
+  </style>
+</head>
+<body>
+  <section>
+    <h2 class="demo-title">Variants</h2>
+    <div class="demo-stack">
+      <div class="toast">
+        <span class="toast-prefix" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" fill="currentColor"/></svg>
+        </span>
+        <span class="toast-body">Outline (default)</span>
+        <button class="toast-close" aria-label="Close">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M19.707 5.70703L13.4141 12L19.707 18.293L18.293 19.707L12 13.4141L5.70703 19.707L4.29297 18.293L10.5859 12L4.29297 5.70703L5.70703 4.29297L12 10.5859L18.293 4.29297L19.707 5.70703Z" fill="currentColor"/></svg>
+        </button>
+      </div>
+
+      <div class="toast" data-variant="inverted">
+        <span class="toast-prefix" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" fill="currentColor"/></svg>
+        </span>
+        <span class="toast-body">Inverted</span>
+        <button class="toast-close" aria-label="Close">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M19.707 5.70703L13.4141 12L19.707 18.293L18.293 19.707L12 13.4141L5.70703 19.707L4.29297 18.293L10.5859 12L4.29297 5.70703L5.70703 4.29297L12 10.5859L18.293 4.29297L19.707 5.70703Z" fill="currentColor"/></svg>
+        </button>
+      </div>
+
+      <div class="toast" data-variant="success">
+        <span class="toast-prefix" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" fill="currentColor"/></svg>
+        </span>
+        <span class="toast-body">Success</span>
+        <button class="toast-close" aria-label="Close">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M19.707 5.70703L13.4141 12L19.707 18.293L18.293 19.707L12 13.4141L5.70703 19.707L4.29297 18.293L10.5859 12L4.29297 5.70703L5.70703 4.29297L12 10.5859L18.293 4.29297L19.707 5.70703Z" fill="currentColor"/></svg>
+        </button>
+      </div>
+
+      <div class="toast" data-variant="warning">
+        <span class="toast-prefix" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" fill="currentColor"/></svg>
+        </span>
+        <span class="toast-body">Warning</span>
+        <button class="toast-close" aria-label="Close">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M19.707 5.70703L13.4141 12L19.707 18.293L18.293 19.707L12 13.4141L5.70703 19.707L4.29297 18.293L10.5859 12L4.29297 5.70703L5.70703 4.29297L12 10.5859L18.293 4.29297L19.707 5.70703Z" fill="currentColor"/></svg>
+        </button>
+      </div>
+
+      <div class="toast" data-variant="error">
+        <span class="toast-prefix" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" fill="currentColor"/></svg>
+        </span>
+        <span class="toast-body">Error</span>
+        <button class="toast-close" aria-label="Close">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M19.707 5.70703L13.4141 12L19.707 18.293L18.293 19.707L12 13.4141L5.70703 19.707L4.29297 18.293L10.5859 12L4.29297 5.70703L5.70703 4.29297L12 10.5859L18.293 4.29297L19.707 5.70703Z" fill="currentColor"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
