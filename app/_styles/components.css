@@ -340,4 +340,25 @@
     font-size: var(--font-size-header-04);
     letter-spacing: -0.452px;
   }
+
+  .page-section {
+    --page-section-padding: var(--spacing-md);
+    --page-section-background-color: var(--surface);
+
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: var(--page-section-padding);
+    background-color: var(--page-section-background-color);
+    color: var(--text);
+  }
+
+  .page-section-content {
+    width: 100%;
+    max-width: calc(100vw - var(--spacing-md) * 2);
+  }
+
+  .page-section[data-variant="alt"] {
+    --page-section-background-color: var(--alt-surface);
+  }
 }
