@@ -1,0 +1,160 @@
+/* Reference tokens */
+@layer reference {
+  :root {
+    /* Colors */
+    --palette-chrome-0: #FFFFFF;
+    --palette-chrome-10: #FFFCF8;
+    --palette-chrome-20: #FFF7EC;
+    --palette-chrome-30: #F7EDE5;
+    --palette-chrome-40: #EFE4DC;
+    --palette-chrome-50: #DDCFCD;
+    --palette-chrome-60: #BBA8AE;
+    --palette-chrome-70: #9A818F;
+    --palette-chrome-80: #85687C;
+    --palette-chrome-90: #6C4B65;
+    --palette-chrome-100: #2C002A;
+
+    --palette-pink-10: #FFD9DA;
+    --palette-pink-20: #FFBBC7;
+    --palette-pink-30: #FF7AA0;
+    --palette-pink-40: #E33A6A;
+
+    --palette-purple-10: #EFDDF1;
+    --palette-purple-20: #DEC3F5;
+    --palette-purple-30: #BA8BFF;
+    --palette-purple-40: #8D43FD;
+
+    --palette-yellow-10: #FFE9D1;
+    --palette-yellow-20: #FFDBB5;
+    --palette-yellow-30: #FFBD7A;
+    --palette-yellow-40: #F38F43;
+
+    --palette-orange-10: #FFDDBE;
+    --palette-orange-20: #FFA45F;
+    --palette-orange-30: #D43900;
+    --palette-orange-40: #B20000;
+
+    --palette-red-10: #FFD1C9;
+    --palette-red-20: #FF8080;
+    --palette-red-30: #E5002E;
+    --palette-red-40: #AD001A;
+
+    --palette-green-10: #68CEA7;
+    --palette-green-20: #68CEA7;
+    --palette-green-30: #037D48;
+    --palette-green-40: #00532F;
+
+    /* Typography */
+    --font-size-base: 16px;
+    --font-size-scale-factor: 1.414;
+    --font-scale-0: var(--font-size-base);
+    --font-scale-min-1: calc(var(--font-scale-0) / var(--font-size-scale-factor));
+    --font-scale-min-2: calc(var(--font-scale-min-1) / var(--font-size-scale-factor));
+    --font-scale-1: calc(var(--font-scale-0) * var(--font-size-scale-factor));
+    --font-scale-2: calc(var(--font-scale-1) * var(--font-size-scale-factor));
+    --font-scale-3: calc(var(--font-scale-2) * var(--font-size-scale-factor));
+    --font-scale-4: calc(var(--font-scale-3) * var(--font-size-scale-factor));
+    --font-scale-5: calc(var(--font-scale-4) * var(--font-size-scale-factor));
+    --font-scale-6: calc(var(--font-scale-5) * var(--font-size-scale-factor));
+    --font-scale-7: calc(var(--font-scale-6) * var(--font-size-scale-factor));
+    --font-scale-8: calc(var(--font-scale-7) * var(--font-size-scale-factor));
+    --font-scale-9: calc(var(--font-scale-8) * var(--font-size-scale-factor));
+
+    /* Spacing */
+    --spacing-xs: 2px;
+    --spacing-sm: 4px;
+    --spacing-md: 8px;
+    --spacing-lg: 12px;
+    --spacing-xl: 16px;
+    --spacing-xxl: 24px;
+  }
+}
+
+@layer semantic {
+  :root {
+    /* Text Colors */
+    --text: var(--palette-chrome-100);
+    --subtle-text: var(--palette-chrome-80);
+    --disabled-text: var(--palette-chrome-60);
+    --interactive-text: var(--palette-purple-40);
+    --positive-text: var(--palette-green-30);
+    --warning-text: var(--palette-orange-30);
+    --negative-text: var(--palette-red-30);
+    --text-on-inverted-surface: var(--palette-chrome-20);
+
+    /* Stroke Colors */
+    --stroke: var(--palette-chrome-50);
+    --subtle-stroke: var(--palette-chrome-40);
+    --strong-stroke: var(--palette-chrome-100);
+
+    --branded-stroke-01: var(--palette-pink-20);
+    --branded-stroke-02: var(--palette-purple-20);
+    --branded-stroke-03: var(--palette-yellow-20);
+
+    --positive-stroke: var(--palette-green-30);
+    --warning-stroke: var(--palette-orange-30);
+    --negative-stroke: var(--palette-red-30);
+
+    /* Surface Colors */
+    --surface: var(--palette-chrome-0);
+    --alt-surface: var(--palette-chrome-10);
+    --positive-surface: var(--palette-green-20);
+    --warning-surface: var(--palette-orange-20);
+    --negative-surface: var(--palette-red-20);
+    --elevated-surface: var(--palette-chrome-20);
+    --inverted-surface: var(--palette-chrome-100);
+    --weak-branded-surface: var(--palette-pink-10);
+    --strong-branded-surface: var(--palette-pink-30);
+    --alt-weak-branded-surface-01: var(--palette-purple-10);
+    --alt-strong-branded-surface-01: var(--palette-purple-30);
+    --alt-weak-branded-surface-02: var(--palette-yellow-10);
+    --alt-strong-branded-surface-02: var(--palette-yellow-30);
+
+    /* Control sizes */
+    --control-size-sm: 40px;
+    --control-size-md: 48px;
+    --control-size-lg: 56px;
+
+    /* Radii */
+    --radius-sm: 12px;
+    --radius-md: 18px;
+    --radius-lg: 24px;
+    --radius-xl: 32px;
+
+    /* Font sizes */
+    --font-size-header-01: var(--font-scale-4);
+    --font-size-header-02: var(--font-scale-3);
+    --font-size-header-03: var(--font-scale-2);
+    --font-size-header-04: var(--font-scale-1);
+
+    --font-size-body-large: var(--font-scale-4);
+    --font-size-body-regular: var(--font-scale-0);
+    --font-size-body-small: var(--font-scale-min-1);
+    --font-size-eyebrow: var(--font-scale-min-1);
+
+    /* Font weights */
+    --font-semibold: 500;
+    --font-heavy: 600;
+    --font-bold: 800;
+  }
+}
+
+@supports not (corner-shape: squircle) {
+  :root {
+    /* Override border radii tokens to render nicely with */
+    /* default border-radius shape */
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 18px;
+  }
+}
+
+/* Mobile */
+@media (min-width: 768px) {
+  :root {
+    --font-size-base: 16px;
+    --font-size-scale-factor: 1.25;
+  }
+}
