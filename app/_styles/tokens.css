@@ -145,7 +145,9 @@
     --spacing-home-hero-padding-top: calc(5 * var(--spacing-xxl));
 
     /* Home hero mascot raster (`/pancake-monster.png`); max display width on desktop */
-    --size-home-hero-monster-max-width: calc(12 * var(--spacing-xxl));
+    --size-home-hero-monster-max-width: calc(13 * var(--spacing-xxl));
+    /* Push ellipse + mascot slightly below vertical center (Figma) */
+    --spacing-home-hero-monster-drop: calc(2 * var(--spacing-xxl));
 
     /* Home hero (Figma desktop): subtitle ~22.62px = 16 × 1.414 */
     --font-size-home-hero-subtitle: calc(var(--font-size-base) * 1.414);

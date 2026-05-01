@@ -442,7 +442,7 @@
   }
 
   /**
-   * Hero right column: Figma “pancake monster” raster (`/pancake-monster.png`).
+   * Hero right column: Figma pancake monster + soft ellipse (stacked rasters).
    */
   .home-hero-pancake {
     position: relative;
@@ -457,13 +457,49 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      /* Grid default stretch makes this column as tall as the copy; centering hid the lift. */
-      align-self: start;
+      justify-content: center;
+      width: 100%;
     }
   }
 
+  .home-hero-pancake-stack {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  @media (min-width: 1024px) {
+    .home-hero-pancake-stack {
+      margin-top: var(--spacing-home-hero-monster-drop);
+    }
+  }
+
+  .home-hero-pancake-stack-inner {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+  }
+
+  /**
+   * Ellipse artboard 946×946, character 496×512 — width tracks character box (946/496).
+   */
+  .home-hero-pancake-ellipse {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 0;
+    width: calc(100% * 946 / 496);
+    height: auto;
+    max-width: none;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    object-fit: contain;
+  }
+
   .home-hero-pancake-img {
+    position: relative;
+    z-index: 1;
+    display: block;
     width: auto;
     height: auto;
     max-width: var(--size-home-hero-monster-max-width);

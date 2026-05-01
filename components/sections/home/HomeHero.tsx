@@ -39,17 +39,30 @@ export function HomeHero() {
           </div>
         </div>
 
-        {/* Pancake monster mascot (Figma); ellipses / glow deferred. */}
+        {/* HQ mascot + ellipse glow — Figma exports; centered in column, nudged down via token. */}
         <div className="home-hero-pancake" aria-hidden>
-          {/* eslint-disable-next-line @next/next/no-img-element -- raster mascot; prefer SVG from Figma when available */}
-          <img
-            src="/pancake-monster.png"
-            alt=""
-            className="home-hero-pancake-img"
-            width={160}
-            height={166}
-            decoding="async"
-          />
+          <div className="home-hero-pancake-stack">
+            <div className="home-hero-pancake-stack-inner">
+              {/* eslint-disable-next-line @next/next/no-img-element -- Figma-export rasters */}
+              <img
+                className="home-hero-pancake-ellipse"
+                src="/home-hero-monster-ellipse.png"
+                alt=""
+                width={946}
+                height={946}
+                decoding="async"
+              />
+              {/* eslint-disable-next-line @next/next/no-img-element -- Figma-export rasters */}
+              <img
+                className="home-hero-pancake-img"
+                src="/pancake-monster.png"
+                alt=""
+                width={496}
+                height={512}
+                decoding="async"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </section>
