@@ -22,13 +22,14 @@ Refinements (copy, perf, polish) come later. Don't pre-optimize.
 
 ---
 
-## Stack (existing — confirm during Phase 1 audit)
+## Stack (confirmed in Phase 1 Stage A)
 
-- Next.js on Vercel
-- Tailwind CSS (assumed — confirm v3 vs v4)
-- TypeScript (assumed)
-- GSAP for animations (to add: `gsap` + `@gsap/react`)
-- Google Analytics — **already configured. Preserve, do not reinstall.**
+- **Next.js** `14.2.18` on Vercel (per `package.json`); **App Router** (`app/` present; no `pages/` router directory).
+- **Tailwind CSS** `^3.4.15` with `tailwind.config.ts` and PostCSS (`postcss.config.mjs`); **not** v4 (no `@import "tailwindcss"` / `@theme` pipeline).
+- **TypeScript** `^5.6.3` with `tsconfig.json` (`strict`, path alias `@/*` → repo root).
+- **Package manager:** **npm** (`package-lock.json` at repo root; no `pnpm-lock.yaml` / `yarn.lock` / `bun.lockb`).
+- **GSAP:** **not installed yet** — Phase 2 adds `gsap` + `@gsap/react` per `BUILD_SEQUENCE.md`.
+- **Analytics:** **Google Tag Manager** container `GTM-M37BB9RG` — inline bootstrap `<script>` + `<noscript>` iframe in `app/layout.tsx` (not `@next/third-parties`, not `next/script`). **Preserve as-is;** do not reinstall or “migrate” unless Tristan asks.
 
 ---
 

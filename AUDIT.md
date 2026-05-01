@@ -1,0 +1,87 @@
+# Phase 1 Stage A — Repository audit
+
+Inventory for the Pancake landing rebuild. **Stage B** deletes or strips everything listed under **DECOMMISSION** (per `BUILD_SEQUENCE.md`), except where a note says otherwise. **REPLACE** is awareness only — no edits in Phase 1.
+
+---
+
+## KEEP — preserve as-is (paths relative to repo root)
+
+| Path | Reason |
+|------|--------|
+| `package.json` | Project manifest; dependencies evolve in later phases. |
+| `package-lock.json` | npm lockfile; reproducible installs. |
+| `next.config.mjs` | Next.js config (dev webpack cache, redirects). |
+| `tsconfig.json` | TypeScript / `@/*` paths. |
+| `postcss.config.mjs` | Tailwind + Autoprefixer pipeline. |
+| `.eslintrc.json` | Lint config. |
+| `.gitignore` | Ignore rules. |
+| `next-env.d.ts` | Next.js TypeScript ambient types. |
+| `app/layout.tsx` | Root layout, **Google Tag Manager** (`GTM-M37BB9RG`), `next/font/google` (Space Grotesk, DM Sans, Lato, Space Mono), metadata icons — **do not change GTM snippet in Phase 1 Stage B** (verify unchanged end-to-end). |
+| `app/globals.css` | File stays; Stage B strips old hardcoded flash color and non-plumbing layers per `BUILD_SEQUENCE.md`. |
+| `app/error.tsx`, `app/global-error.tsx`, `app/not-found.tsx` | App Router error boundaries / 404. |
+| `app/favicon.ico` | App Router favicon asset. |
+| `app/signup/page.tsx` | **Sacred** — signup route; Stage B must not modify (per `AGENTS.md` / `BUILD_SEQUENCE.md`). |
+| `app/api/signup/route.ts` | Signup API — **sacred** behavior. |
+| `app/api/referral/generate/route.ts`, `app/api/referral/invite/route.ts` | Referral APIs used by signup flow — keep. |
+| `components/shared/SignupForm.tsx` | Client form + `/api/signup` wiring — **sacred** behavior. |
+| `components/shared/Nav.tsx` | Still imported by `app/signup/page.tsx` (and `/booked`, `/booth`); keep until Phase 3+ replaces nav globally. |
+| `components/shared/Footer.tsx` | Still imported by `app/signup/page.tsx` (and `/booked`); keep. |
+| `components/shared/PancakeLogo.tsx` | Used by `Nav` (hence signup); keep with wordmark asset until v3 nav. |
+| `components/shared/BasaltOfficialLogo.tsx` | Used by `app/booth/page.tsx`. |
+| `components/shared/FlappyBird.tsx` | Used by `app/booked/page.tsx`. |
+| `lib/copy.ts` | Signup + `Nav`/`SignupForm` import `hero` / `signup` strings; **cannot delete in Stage B** without editing `/signup` or shared components. |
+| `lib/airtable.ts`, `lib/loops.ts` | Backend integration for signup + referral routes. |
+| `lib/booth-url.ts` | Booth QR helpers for `app/booth/`. |
+| `scripts/predev-cache.mjs`, `scripts/clean-build-cache.mjs` | Dev / cache hygiene used by npm scripts. |
+| `app/booth/*`, `app/booked/*` | Out of v3 landing scope but live routes; untouched unless Tristan scopes them into strip. |
+| `public/favicon-32x32.png`, `public/apple-touch-icon.png` | Referenced in `app/layout.tsx` `metadata.icons`. |
+| `public/basalt-logo.svg` | `BasaltOfficialLogo` / booth. |
+| `public/pancake-wordmark.png` | `PancakeLogo` / nav. |
+
+**Not present (no action):** `middleware.ts`, `vercel.json`, `.env*` in repo, project-root `README.md`.
+
+---
+
+## DECOMMISSION — remove in Stage B (delete `git rm` or strip as noted)
+
+| Path | Reason |
+|------|--------|
+| `tailwind.config.ts` → `theme.extend` | Maps old CSS variables (`--bg`, `--text`, etc.) into Tailwind; strip to bare Tailwind config (keep file + `content` paths). |
+| `themes/neo-brutalism.css` | Legacy neo-brutalism design tokens + `.brut-border` / `.brut-lift` utilities. **Stage B note:** `app/signup/page.tsx` uses class `theme-neo-brutalism`; `app/layout.tsx` imports this file and applies `theme-neo-brutalism` on `<body>`. Per “do not touch `app/signup/`”, relocate the **minimal** `:root` / `.theme-neo-brutalism` variables signup still needs into `app/globals.css` (or a tiny new file imported only from `layout.tsx`) **without editing** `app/signup/page.tsx`, then remove `themes/neo-brutalism.css` and the `../themes/neo-brutalism.css` import. |
+| `app/layout.tsx` inline styles on `<html>` / `<body>` | Hardcoded `var(--bg, #fffef8)` etc. tied to old theme — clean when tokens are reset (layout file **stays**; trim old fallbacks as part of strip). |
+| `components/shared/LandingPage.tsx` | OpenClaw-era homepage assembly; removed once `app/page.tsx` is a shell. |
+| `components/shared/Hero.tsx` | Marketing hero (OpenClaw copy, old spacing/colors). |
+| `components/shared/FinalCTA.tsx` | Homepage CTA section. |
+| `components/shared/ItLearns.tsx` | Homepage section. |
+| `components/shared/OrgChart.tsx` | Homepage org chart. |
+| `components/shared/SlackUI.tsx` | Homepage Slack mock + avatars. |
+| `components/shared/SafeCompliant.tsx` | Homepage section. |
+| `components/shared/StackIntegrations.tsx` | Homepage integrations grid. |
+| `components/shared/TalkToHuman.tsx` | Homepage section. |
+| `components/shared/GranolaMark.tsx` | Only used by `StackIntegrations`. |
+| `components/shared/MantisLogo.tsx` | **Orphan** — not imported anywhere. |
+| `components/metrics/MetricsDashboard.tsx` | Only used by `app/build-in-public/page.tsx`. |
+| `lib/metrics.ts` | Only consumed by build-in-public + metrics dashboard. |
+| `public/ceo-agent-avatar.png`, `public/you-avatar.png` | Used by `SlackUI.tsx` only. |
+| `public/granola-icon.png` | Used by `GranolaMark.tsx` only. |
+| `public/luma-visual.html`, `public/luma-visual.png` | Luma export tooling / asset; not referenced by app TSX. |
+| `public/pancake-icon.jpg`, `public/pancake-logo.jpg`, `public/pancake-mark.png` | **Unused** in TS/TSX scan — legacy marketing binaries. |
+| `scripts/screenshot-luma.sh` | Generates `luma-visual.png`; not part of Next runtime. |
+| `next.config.mjs` → `redirects` | Permanent redirects from removed theme slugs (`/neo-brutalism`, etc.) to `/` — optional to **review** in Stage B (may still be useful); listed here as **legacy marketing cruft** tied to old positioning. **Confirm with Tristan** before deleting redirect rules. |
+
+---
+
+## REPLACE — v3 will reintroduce; do not edit in Phase 1
+
+| Path | Reason |
+|------|--------|
+| `app/page.tsx` | Homepage — rebuild in Phase 3 from Figma. |
+| `app/pricing/page.tsx` | Pricing — rebuild in Phase 4. |
+| `app/build-in-public/page.tsx` | Build in public — rebuild in Phase 5. |
+| `app/signup/page.tsx` | **Visual** refresh in Phase 6 only; form/API unchanged. |
+| `components/shared/Nav.tsx`, `components/shared/Footer.tsx` | Will be restyled / possibly restructured in Phases 3–6 while keeping routes used by signup working. |
+| `lib/copy.ts` | Marketing strings will be superseded by Figma copy as pages are rebuilt; signup-related keys trimmed or inlined in Phase 6 as needed. |
+| `app/layout.tsx` (fonts, metadata, non-GTM layout) | Base layout will adopt Phase 2 tokens + fonts; **GTM block stays byte-identical** per `AGENTS.md`. |
+| `app/globals.css` | Becomes token plumbing + Tailwind entry after Phase 2. |
+| `tailwind.config.ts` | Becomes token bridge for v3 if still on Tailwind v3. |
+| `public/favicon-32x32.png`, `public/apple-touch-icon.png`, `app/favicon.ico` | Likely superseded by Phase 2 favicon export from Figma (coordinate replacement). |
