@@ -397,7 +397,7 @@
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--spacing-md);
+    gap: var(--spacing-xxl);
     margin: 0;
   }
 
