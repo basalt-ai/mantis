@@ -1,7 +1,7 @@
 /**
  * Hero dotted orbits — Figma `428:14900` (`hero`).
  * Ordered **outer → inner** (paint back → front). Paths, viewBoxes, opacities from Figma MCP SVG exports.
- * **Widths:** `tokens.css` — orbit 1 from cream `428:16771`; orbits 2–6 = orbit 1 × (Oᵢ/O₁); layout adds `2×--size-home-hero-orbit-radius-add` to each ring width (ellipse unchanged). Angles: −`node.rotation`.
+ * **Widths:** `tokens.css` — orbit 1 from cream `428:16771`; orbits 2–6 = orbit 1 × (Oᵢ/O₁). Angles: −`node.rotation`.
  */
 export type HomeHeroOrbitLayer = {
   readonly orbit: 1 | 2 | 3 | 4 | 5 | 6;
