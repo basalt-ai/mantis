@@ -70,10 +70,9 @@ const CHIP_ARROW_SY = V_PATH_INNER_H / CHIP_ARROW_VB_H;
 /**
  * Org wires — Figma `428:14926`.
  * - **Engineering (213):** MCP `d` + metadata `translate`/`scale` — near-uniform scale, matches Figma.
- * - **Growth (211) / Operations (215):** MCP paths sit in tall local viewBoxes stretched into wide
- *   frame boxes (`~509×171` / `~146×157`); that anisotropic scale + `nonScalingStroke` skews the
- *   stroke vs geometry. Stage-space cubics restore the layout; flow nodes sit on the same Bézier
- *   via `cubicPoint` samples (engineering nodes stay in the wire `<g>` in **local** space).
+ * - **Growth / Operations:** stage cubics (Vector 211/215 bbox stretch is unusable in SVG). Operations
+ *   path is painted **before** Engineering so their crossing reads as “behind” the middle wire.
+ * Flow nodes use `cubicPoint` on each wire’s `cubic` (must stay in sync with the `d` string).
  */
 type OrgWireFrame = { x: number; y: number; w: number; h: number };
 
@@ -97,20 +96,20 @@ function orgWireTransform(frame: OrgWireFrame, vbW: number, vbH: number): string
   return `translate(${frame.x} ${frame.y}) scale(${sx} ${sy})`;
 }
 
-/** Stage cubic — monster hub toward Growth (Figma intent; stable vs Vector 211 bbox stretch). */
+/** Stage cubic — Growth: bas-gauche du monster, S vers la gauche puis redescente vers le haut du bloc (côté gauche). */
 const ORG_WIRE_GROWTH: { dataNodeId: string; pathIdSuffix: string; d: string; cubic: Cubic } = {
   dataNodeId: "428:14927",
   pathIdSuffix: "growth",
-  d: "M 672 118 C 672 200 520 240 184 290",
-  cubic: { x0: 672, y0: 118, x1: 672, y1: 200, x2: 520, y2: 240, x3: 184, y3: 290 },
+  d: "M 622 126 C 468 108 328 268 158 290",
+  cubic: { x0: 622, y0: 126, x1: 468, y1: 108, x2: 328, y2: 268, x3: 158, y3: 290 },
 };
 
-/** Stage cubic — hub toward Operations. */
+/** Stage cubic — Operations: bas-droite, boucle vers la droite puis retour sous le fil Engineering (dessiné avant, donc derrière). */
 const ORG_WIRE_OPERATIONS: { dataNodeId: string; pathIdSuffix: string; d: string; cubic: Cubic } = {
   dataNodeId: "428:14928",
   pathIdSuffix: "operations",
-  d: "M 672 118 C 672 200 820 230 952 264",
-  cubic: { x0: 672, y0: 118, x1: 672, y1: 200, x2: 820, y2: 230, x3: 952, y3: 264 },
+  d: "M 724 126 C 892 168 598 272 952 264",
+  cubic: { x0: 724, y0: 126, x1: 892, y1: 168, x2: 598, y2: 272, x3: 952, y3: 264 },
 };
 
 /** Figma Vector 213 — MCP SVG `d` + `get_metadata` frame. */
@@ -154,6 +153,12 @@ export function HomeOrgDiagram() {
             d={ORG_WIRE_GROWTH.d}
             data-node-id={ORG_WIRE_GROWTH.dataNodeId}
           />
+          <path
+            id={`${orgWireUid}-operations`}
+            className="home-org-diagram__wire"
+            d={ORG_WIRE_OPERATIONS.d}
+            data-node-id={ORG_WIRE_OPERATIONS.dataNodeId}
+          />
           <g
             data-node-id={ORG_WIRE_ENGINEERING.dataNodeId}
             transform={orgWireTransform(ORG_WIRE_ENGINEERING.frame, ORG_WIRE_ENGINEERING.vbW, ORG_WIRE_ENGINEERING.vbH)}
@@ -178,12 +183,6 @@ export function HomeOrgDiagram() {
               );
             })}
           </g>
-          <path
-            id={`${orgWireUid}-operations`}
-            className="home-org-diagram__wire"
-            d={ORG_WIRE_OPERATIONS.d}
-            data-node-id={ORG_WIRE_OPERATIONS.dataNodeId}
-          />
           <g className="home-org-diagram__flow-nodes" aria-hidden>
             {ORG_FLOW_T_SAMPLES.flatMap((t, i) => {
               const g = cubicPoint(t, ORG_WIRE_GROWTH.cubic);
