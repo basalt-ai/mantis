@@ -88,13 +88,28 @@ export function HomeOrgDiagram() {
         </svg>
 
         <div className="home-org-diagram__you-chip home-org-diagram__abs" data-node-id="596:1685">
-          <p className="home-org-diagram__chip-title">You</p>
-          <p className="home-org-diagram__chip-sub">The founder</p>
+          <svg
+            className="home-org-diagram__chip-svg"
+            viewBox="0 0 101 55"
+            width={101}
+            height={55}
+            role="img"
+            aria-labelledby="home-org-diagram-you-svg-title"
+          >
+            <title id="home-org-diagram-you-svg-title">You, the founder</title>
+            <rect className="home-org-diagram__chip-svg-bg" width="101" height="55" rx="12" />
+            <text x="85" y="22" textAnchor="end" className="home-org-diagram__chip-svg-text">
+              <tspan className="home-org-diagram__chip-svg-title">You</tspan>
+              <tspan className="home-org-diagram__chip-svg-sub" x="85" dy="24">
+                The founder
+              </tspan>
+            </text>
+          </svg>
         </div>
 
         <div className="home-org-diagram__pancake-chip home-org-diagram__abs" data-node-id="428:14941">
-          <p className="home-org-diagram__chip-title">Pancake</p>
-          <p className="home-org-diagram__chip-sub">Your co-founder</p>
+          <p className="home-org-diagram__chip-title home-org-diagram__chip-title--inverted">Pancake</p>
+          <p className="home-org-diagram__chip-sub home-org-diagram__chip-sub--inverted">Your co-founder</p>
         </div>
 
         <div className="home-org-diagram__you-avatar home-org-diagram__abs" aria-hidden>

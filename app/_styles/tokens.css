@@ -85,6 +85,8 @@
     --warning-text: var(--palette-orange-30);
     --negative-text: var(--palette-red-30);
     --text-on-inverted-surface: var(--palette-chrome-20);
+    /* Figma inverted chips — secondary line on dark surface (e.g. org diagram) */
+    --subtle-text-on-inverted-surface: var(--palette-chrome-50);
 
     /* Stroke Colors */
     --stroke: var(--palette-chrome-50);
