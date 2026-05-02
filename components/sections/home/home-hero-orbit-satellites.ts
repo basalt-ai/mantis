@@ -4,8 +4,7 @@
  * Positions are **center offsets from the `pancake monster` frame** (`428:14920`, 160×160 in Figma),
  * in the same px space as `--size-home-hero-monster-max-width` (160 at default scale).
  * `dx`/`dy` = satellite bounding-box center minus monster frame center (from `absoluteBoundingBox`).
- * `rotationFigmaPluginDeg` = Figma Plugin `INSTANCE.rotation` (degrees). CSS uses **−** this value,
- * same sign rule as dotted orbits (`tokens.css`: CSS angle = −ellipse `rotation`).
+ * `rotationFigmaPluginDeg` = Figma Plugin `INSTANCE.rotation` (degrees). CSS uses **−** this value on `.home-hero-orbit-satellite-rot` (same sign rule as dotted orbits). Outer `.home-hero-orbit-satellite` only translates — matches Figma MCP codegen (position frame, then rotate child).
  *
  * Orbit assignment follows Figma layer order + distance check: there is **no** satellite on orbit 5 in this file.
  * SVG assets: `public/home-hero-orbit-satellite-{node}.svg` with **hyphens** (Figma `428:14904` → `428-14904`).

@@ -95,19 +95,27 @@ export function HomeHero() {
                     {
                       "--sat-dx": `calc(var(--size-home-hero-monster-max-width) * ${s.dxFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
                       "--sat-dy": `calc(var(--size-home-hero-monster-max-width) * ${s.dyFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
-                      "--sat-rot": `${homeHeroOrbitSatelliteCssRotationDeg(s.rotationFigmaPluginDeg)}deg`,
                       width: `calc(var(--size-home-hero-monster-max-width) * ${s.widthFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
                       height: `calc(var(--size-home-hero-monster-max-width) * ${s.heightFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
                     } as CSSProperties
                   }
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element -- Figma SVG export */}
-                  <img
-                    className="home-hero-orbit-satellite-img"
-                    src={homeHeroOrbitSatelliteSrc(s.figmaNode)}
-                    alt=""
-                    decoding="async"
-                  />
+                  <div
+                    className="home-hero-orbit-satellite-rot"
+                    style={
+                      {
+                        "--sat-rot": `${homeHeroOrbitSatelliteCssRotationDeg(s.rotationFigmaPluginDeg)}deg`,
+                      } as CSSProperties
+                    }
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element -- Figma SVG export */}
+                    <img
+                      className="home-hero-orbit-satellite-img"
+                      src={homeHeroOrbitSatelliteSrc(s.figmaNode)}
+                      alt=""
+                      decoding="async"
+                    />
+                  </div>
                 </div>
               ))}
               {/* eslint-disable-next-line @next/next/no-img-element -- Figma-export rasters */}
@@ -129,19 +137,27 @@ export function HomeHero() {
                     {
                       "--sat-dx": `calc(var(--size-home-hero-monster-max-width) * ${s.dxFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
                       "--sat-dy": `calc(var(--size-home-hero-monster-max-width) * ${s.dyFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
-                      "--sat-rot": `${homeHeroOrbitSatelliteCssRotationDeg(s.rotationFigmaPluginDeg)}deg`,
                       width: `calc(var(--size-home-hero-monster-max-width) * ${s.widthFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
                       height: `calc(var(--size-home-hero-monster-max-width) * ${s.heightFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
                     } as CSSProperties
                   }
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element -- Figma SVG export */}
-                  <img
-                    className="home-hero-orbit-satellite-img"
-                    src={homeHeroOrbitSatelliteSrc(s.figmaNode)}
-                    alt=""
-                    decoding="async"
-                  />
+                  <div
+                    className="home-hero-orbit-satellite-rot"
+                    style={
+                      {
+                        "--sat-rot": `${homeHeroOrbitSatelliteCssRotationDeg(s.rotationFigmaPluginDeg)}deg`,
+                      } as CSSProperties
+                    }
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element -- Figma SVG export */}
+                    <img
+                      className="home-hero-orbit-satellite-img"
+                      src={homeHeroOrbitSatelliteSrc(s.figmaNode)}
+                      alt=""
+                      decoding="async"
+                    />
+                  </div>
                 </div>
               ))}
             </div>
