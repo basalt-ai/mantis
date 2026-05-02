@@ -1,3 +1,9 @@
+/**
+ * Home page sections below the hero (`/`). Illustrations are PNGs in `public/home-landing-*.png`.
+ * Regenerate them from Figma (Images API @2×, not MCP screenshots):
+ *   FIGMA_ACCESS_TOKEN=… npm run figma:export-landing
+ */
+
 import Link from "next/link";
 
 import { HOME_PAGE_CONTAINER_CLASS } from "@/components/sections/home/home-layout";

@@ -619,8 +619,8 @@
   }
 
   /**
-   * Home landing below hero — Figma `428:14366` (`-> V0.3`). Rasters from Figma MCP screenshots
-   * (`/public/home-landing-*.png`). Does not modify `.home-hero` rules above.
+   * Home landing below hero — Figma `428:14366` (`-> V0.3`). Rasters: `public/home-landing-*.png`
+   * (regenerate with `npm run figma:export-landing` + `FIGMA_ACCESS_TOKEN`). Does not modify `.home-hero`.
    */
   .home-landing {
     width: 100%;
