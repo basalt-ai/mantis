@@ -7,7 +7,7 @@
  * `rotationDeg` = INSTANCE `rotation` from Figma (Plugin API).
  *
  * Orbit assignment follows Figma layer order + distance check: there is **no** satellite on orbit 5 in this file.
- * SVGs: `public/home-hero-orbit-satellite-{figmaNode}.svg` — exported via Plugin `exportAsync({ format: 'SVG' })`.
+ * SVG assets: `public/home-hero-orbit-satellite-{node}.svg` with **hyphens** (Figma `428:14904` → `428-14904`).
  */
 export type HomeHeroOrbitSatelliteLayer = "behindMascot" | "frontOfMascot";
 
@@ -80,5 +80,6 @@ export const HOME_HERO_ORBIT_SATELLITES: readonly HomeHeroOrbitSatellite[] = [
 ] as const;
 
 export function homeHeroOrbitSatelliteSrc(figmaNode: HomeHeroOrbitSatellite["figmaNode"]): string {
-  return `/home-hero-orbit-satellite-${figmaNode}.svg`;
+  const slug = figmaNode.replace(/:/g, "-");
+  return `/home-hero-orbit-satellite-${slug}.svg`;
 }
