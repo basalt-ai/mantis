@@ -67,8 +67,92 @@ const V264_INNER_OFFSET_Y = (V264_WRAPPER.h - V_PATH_INNER_H) / 2;
 const CHIP_ARROW_SX = V_PATH_INNER_W / CHIP_ARROW_VB_W;
 const CHIP_ARROW_SY = V_PATH_INNER_H / CHIP_ARROW_VB_H;
 
+/**
+ * Curved dotted wires — Figma Frame `428:14926`, MCP SVG `d` + `get_metadata` frame x/y/w/h.
+ * `pathLength={1}` keeps stroke-dash / motion math normalized for a future GSAP `MotionPathPlugin` pass.
+ * Flow-node `cx`/`cy` are in **stage** space (same 1136×706 viewBox) so dots stay round under the
+ * anisotropic `scale` used to map each vector’s local viewBox onto the frame.
+ */
+type OrgWireFrame = { x: number; y: number; w: number; h: number };
+
+type OrgMonsterWire = {
+  dataNodeId: string;
+  pathIdSuffix: string;
+  vbW: number;
+  vbH: number;
+  d: string;
+  frame: OrgWireFrame;
+  /** Local viewBox coords along the curve — mapped to stage on render for round flow nodes. */
+  flowLocal: ReadonlyArray<{ lx: number; ly: number }>;
+};
+
+function orgWireTransform(frame: OrgWireFrame, vbW: number, vbH: number): string {
+  const sx = frame.w / vbW;
+  const sy = frame.h / vbH;
+  return `translate(${frame.x} ${frame.y}) scale(${sx} ${sy})`;
+}
+
+function orgWireStagePoint(frame: OrgWireFrame, vbW: number, vbH: number, lx: number, ly: number): { cx: number; cy: number } {
+  return {
+    cx: frame.x + (lx / vbW) * frame.w,
+    cy: frame.y + (ly / vbH) * frame.h,
+  };
+}
+
+/** Vector 210 — dotted curve between founder / Pancake chips (not monster→dept). */
+const ORG_CHIP_WIRE_V210 = {
+  dataNodeId: "428:14936",
+  vbW: 18.134,
+  vbH: 121.501,
+  d: "M6.00034 1.50035C22.0003 35.5004 19.5003 83.0004 1.50034 120",
+  frame: { x: 492.5, y: 36.99994659423828, w: 118.5, h: 15.134703636169434 },
+} as const;
+
+const ORG_MONSTER_WIRES: readonly OrgMonsterWire[] = [
+  {
+    dataNodeId: "428:14927",
+    pathIdSuffix: "growth",
+    vbW: 174,
+    vbH: 511.538,
+    d: "M172.5 510C31.0004 520.5 169.5 46.5004 1.50037 1.50037",
+    frame: { x: 206, y: 284, w: 508.67185943172194, h: 171.00009024587575 },
+    flowLocal: [
+      { lx: 150, ly: 430 },
+      { lx: 72, ly: 210 },
+      { lx: 18, ly: 40 },
+    ],
+  },
+  {
+    dataNodeId: "428:14937",
+    pathIdSuffix: "engineering",
+    vbW: 177.412,
+    vbH: 209,
+    d: "M152.086 1.5C255.086 104.5 -9.91415 143.5 1.58568 207.5",
+    frame: { x: 574.1351928710938, y: 102, w: 174.69086593814586, h: 206.0001297062929 },
+    flowLocal: [
+      { lx: 138, ly: 28 },
+      { lx: 78, ly: 108 },
+      { lx: 12, ly: 198 },
+    ],
+  },
+  {
+    dataNodeId: "428:14928",
+    pathIdSuffix: "operations",
+    vbW: 160.501,
+    vbH: 149.501,
+    d: "M159 148C138.5 92.0004 46.0004 21.0004 1.50038 1.50038",
+    frame: { x: 877.5, y: 248.5, w: 146.49999851030066, h: 157.50002806622547 },
+    flowLocal: [
+      { lx: 132, ly: 118 },
+      { lx: 72, ly: 52 },
+      { lx: 14, ly: 14 },
+    ],
+  },
+];
+
 export function HomeOrgDiagram() {
   const founderClipId = useId().replace(/:/g, "");
+  const orgWireUid = useId().replace(/:/g, "");
 
   return (
     <div className="home-org-diagram">
@@ -80,34 +164,41 @@ export function HomeOrgDiagram() {
           aria-hidden
           focusable="false"
         >
-          <path
-            className="home-org-diagram__wire"
-            d="M 488 64 L 608 64"
-            fill="none"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-          <path
-            className="home-org-diagram__wire"
-            d="M 672 118 C 672 200 520 240 184 290"
-            fill="none"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-          <path
-            className="home-org-diagram__wire"
-            d="M 672 118 C 672 210 672 260 568 320"
-            fill="none"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-          <path
-            className="home-org-diagram__wire"
-            d="M 672 118 C 672 200 820 230 952 264"
-            fill="none"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
+          <g data-node-id={ORG_CHIP_WIRE_V210.dataNodeId} transform={orgWireTransform(ORG_CHIP_WIRE_V210.frame, ORG_CHIP_WIRE_V210.vbW, ORG_CHIP_WIRE_V210.vbH)}>
+            <path
+              id={`${orgWireUid}-chip`}
+              className="home-org-diagram__wire"
+              d={ORG_CHIP_WIRE_V210.d}
+              pathLength={1}
+            />
+          </g>
+          {ORG_MONSTER_WIRES.map((wire) => (
+            <g key={wire.dataNodeId} data-node-id={wire.dataNodeId} transform={orgWireTransform(wire.frame, wire.vbW, wire.vbH)}>
+              <path
+                id={`${orgWireUid}-${wire.pathIdSuffix}`}
+                className="home-org-diagram__wire"
+                d={wire.d}
+                pathLength={1}
+              />
+            </g>
+          ))}
+          <g className="home-org-diagram__flow-nodes" aria-hidden>
+            {ORG_MONSTER_WIRES.flatMap((wire) =>
+              wire.flowLocal.map((pt, i) => {
+                const { cx, cy } = orgWireStagePoint(wire.frame, wire.vbW, wire.vbH, pt.lx, pt.ly);
+                return (
+                  <circle
+                    key={`${wire.dataNodeId}-${i}`}
+                    className="home-org-diagram__flow-node"
+                    data-wire={wire.pathIdSuffix}
+                    cx={cx}
+                    cy={cy}
+                    r={4}
+                  />
+                );
+              }),
+            )}
+          </g>
         </svg>
 
         <div

@@ -736,8 +736,17 @@
   .home-org-diagram__wire {
     fill: none;
     stroke: var(--palette-chrome-70);
-    stroke-dasharray: 2 12;
+    stroke-width: 3;
+    stroke-dasharray: 1 12;
     stroke-linecap: round;
+  }
+
+  .home-org-diagram__flow-nodes {
+    pointer-events: none;
+  }
+
+  .home-org-diagram__flow-node {
+    fill: var(--palette-chrome-70);
   }
 
   .home-org-diagram__chip-arrow-path {
