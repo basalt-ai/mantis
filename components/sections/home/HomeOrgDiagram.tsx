@@ -98,9 +98,11 @@ export function HomeOrgDiagram() {
           >
             <title id="home-org-diagram-you-svg-title">You, the founder</title>
             <rect className="home-org-diagram__chip-svg-bg" width="101" height="55" rx="12" />
-            <text x="85" y="22" textAnchor="end" className="home-org-diagram__chip-svg-text">
-              <tspan className="home-org-diagram__chip-svg-title">You</tspan>
-              <tspan className="home-org-diagram__chip-svg-sub" x="85" dy="24">
+            <text className="home-org-diagram__chip-svg-text">
+              <tspan x="16" y="21" className="home-org-diagram__chip-svg-title">
+                You
+              </tspan>
+              <tspan x="16" y="36" className="home-org-diagram__chip-svg-sub">
                 The founder
               </tspan>
             </text>
