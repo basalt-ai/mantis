@@ -69,9 +69,10 @@ const CHIP_ARROW_SY = V_PATH_INNER_H / CHIP_ARROW_VB_H;
 
 /**
  * Curved dotted wires — Figma Frame `428:14926`, MCP SVG `d` + `get_metadata` frame x/y/w/h.
- * `pathLength={1}` keeps stroke-dash / motion math normalized for a future GSAP `MotionPathPlugin` pass.
- * Flow-node `cx`/`cy` are in **stage** space (same 1136×706 viewBox) so dots stay round under the
- * anisotropic `scale` used to map each vector’s local viewBox onto the frame.
+ * `vectorEffect="nonScalingStroke"` keeps round caps / dash rhythm readable under anisotropic `scale`.
+ * Chip→chip link stays a simple stage-space segment (Vector 210 in Figma is a vertical curve squashed
+ * into a short strip — rendering it with that bbox makes an unreadable smear).
+ * Flow-node `cx`/`cy` are in **stage** space so circles stay round.
  */
 type OrgWireFrame = { x: number; y: number; w: number; h: number };
 
@@ -98,15 +99,6 @@ function orgWireStagePoint(frame: OrgWireFrame, vbW: number, vbH: number, lx: nu
     cy: frame.y + (ly / vbH) * frame.h,
   };
 }
-
-/** Vector 210 — dotted curve between founder / Pancake chips (not monster→dept). */
-const ORG_CHIP_WIRE_V210 = {
-  dataNodeId: "428:14936",
-  vbW: 18.134,
-  vbH: 121.501,
-  d: "M6.00034 1.50035C22.0003 35.5004 19.5003 83.0004 1.50034 120",
-  frame: { x: 492.5, y: 36.99994659423828, w: 118.5, h: 15.134703636169434 },
-} as const;
 
 const ORG_MONSTER_WIRES: readonly OrgMonsterWire[] = [
   {
@@ -164,21 +156,21 @@ export function HomeOrgDiagram() {
           aria-hidden
           focusable="false"
         >
-          <g data-node-id={ORG_CHIP_WIRE_V210.dataNodeId} transform={orgWireTransform(ORG_CHIP_WIRE_V210.frame, ORG_CHIP_WIRE_V210.vbW, ORG_CHIP_WIRE_V210.vbH)}>
-            <path
-              id={`${orgWireUid}-chip`}
-              className="home-org-diagram__wire"
-              d={ORG_CHIP_WIRE_V210.d}
-              pathLength={1}
-            />
-          </g>
+          {/* Figma Vector 210 is authored in a tall local box then squashed; draw a flat dotted link in stage space instead. */}
+          <path
+            id={`${orgWireUid}-chip`}
+            className="home-org-diagram__wire"
+            d="M 488 64 L 608 64"
+            data-node-id="428:14936"
+            vectorEffect="nonScalingStroke"
+          />
           {ORG_MONSTER_WIRES.map((wire) => (
             <g key={wire.dataNodeId} data-node-id={wire.dataNodeId} transform={orgWireTransform(wire.frame, wire.vbW, wire.vbH)}>
               <path
                 id={`${orgWireUid}-${wire.pathIdSuffix}`}
                 className="home-org-diagram__wire"
                 d={wire.d}
-                pathLength={1}
+                vectorEffect="nonScalingStroke"
               />
             </g>
           ))}
