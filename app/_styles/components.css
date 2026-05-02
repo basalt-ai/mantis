@@ -723,7 +723,14 @@
     height: 100%;
     overflow: visible;
     pointer-events: none;
+  }
+
+  .home-org-diagram__svg--wires {
     z-index: 1;
+  }
+
+  .home-org-diagram__svg--chip-arrows {
+    z-index: 2;
   }
 
   .home-org-diagram__wire {
@@ -731,6 +738,14 @@
     stroke: var(--palette-chrome-70);
     stroke-dasharray: 2 12;
     stroke-linecap: round;
+  }
+
+  .home-org-diagram__chip-arrow-path {
+    fill: none;
+    stroke: var(--palette-chrome-70);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
   .home-org-diagram__you-chip {
