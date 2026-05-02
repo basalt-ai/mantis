@@ -68,11 +68,11 @@ const CHIP_ARROW_SX = V_PATH_INNER_W / CHIP_ARROW_VB_W;
 const CHIP_ARROW_SY = V_PATH_INNER_H / CHIP_ARROW_VB_H;
 
 /**
- * Org wires — Figma `428:14926`.
- * - **Engineering (213):** MCP `d` + metadata `translate`/`scale` — near-uniform scale, matches Figma.
- * - **Growth / Operations:** stage cubics (Vector 211/215 bbox stretch is unusable in SVG). Operations
- *   path is painted **before** Engineering so their crossing reads as “behind” the middle wire.
- * Flow nodes use `cubicPoint` on each wire’s `cubic` (must stay in sync with the `d` string).
+ * Org wires — Figma `428:14926` (`get_design_context` MCP SVG + `get_metadata` frame).
+ * Growth (211), Engineering (213), Operations (215) share the same pattern: path `d` in local
+ * viewBox + `translate`/`scale` onto the 1136×706 stage. Flow nodes are sampled in **local**
+ * space then mapped to stage so circles stay round (same transform as the path).
+ * Paint order: Vector 211 → 215 → 213 (matches Figma sibling order so Ops passes under Eng).
  */
 type OrgWireFrame = { x: number; y: number; w: number; h: number };
 
@@ -96,32 +96,63 @@ function orgWireTransform(frame: OrgWireFrame, vbW: number, vbH: number): string
   return `translate(${frame.x} ${frame.y}) scale(${sx} ${sy})`;
 }
 
-/** Stage cubic — Growth: bas-gauche du monster, S vers la gauche puis redescente vers le haut du bloc (côté gauche). */
-const ORG_WIRE_GROWTH: { dataNodeId: string; pathIdSuffix: string; d: string; cubic: Cubic } = {
+/** Map local wire coordinates (same space as `d`) to Frame 76 stage pixels. */
+function orgWireStagePoint(frame: OrgWireFrame, vbW: number, vbH: number, lx: number, ly: number): { cx: number; cy: number } {
+  return {
+    cx: frame.x + (lx / vbW) * frame.w,
+    cy: frame.y + (ly / vbH) * frame.h,
+  };
+}
+
+type OrgTransformedWire = {
+  dataNodeId: string;
+  pathIdSuffix: string;
+  vbW: number;
+  vbH: number;
+  d: string;
+  frame: OrgWireFrame;
+  cubic: Cubic;
+  /** Figma export uses uniform-ish stroke; keep non-scaling only where scale ≈ 1. */
+  vectorStroke: boolean;
+};
+
+/** Vector 211 — MCP asset + metadata. */
+const ORG_WIRE_GROWTH: OrgTransformedWire = {
   dataNodeId: "428:14927",
   pathIdSuffix: "growth",
-  d: "M 622 126 C 468 108 328 268 158 290",
-  cubic: { x0: 622, y0: 126, x1: 468, y1: 108, x2: 328, y2: 268, x3: 158, y3: 290 },
+  vbW: 174,
+  vbH: 511.538,
+  d: "M172.5 510C31.0004 520.5 169.5 46.5004 1.50037 1.50037",
+  frame: { x: 206, y: 284, w: 508.67185943172194, h: 171.00009024587575 },
+  cubic: { x0: 172.5, y0: 510, x1: 31.0004, y1: 520.5, x2: 169.5, y2: 46.5004, x3: 1.50037, y3: 1.50037 },
+  vectorStroke: false,
 };
 
-/** Stage cubic — Operations: bas-droite, boucle vers la droite puis retour sous le fil Engineering (dessiné avant, donc derrière). */
-const ORG_WIRE_OPERATIONS: { dataNodeId: string; pathIdSuffix: string; d: string; cubic: Cubic } = {
+/** Vector 215 — MCP asset + metadata. */
+const ORG_WIRE_OPERATIONS: OrgTransformedWire = {
   dataNodeId: "428:14928",
   pathIdSuffix: "operations",
-  d: "M 724 126 C 892 168 598 272 952 264",
-  cubic: { x0: 724, y0: 126, x1: 892, y1: 168, x2: 598, y2: 272, x3: 952, y3: 264 },
+  vbW: 160.501,
+  vbH: 149.501,
+  d: "M159 148C138.5 92.0004 46.0004 21.0004 1.50038 1.50038",
+  frame: { x: 877.5, y: 248.5, w: 146.49999851030066, h: 157.50002806622547 },
+  cubic: { x0: 159, y0: 148, x1: 138.5, y1: 92.0004, x2: 46.0004, y2: 21.0004, x3: 1.50038, y3: 1.50038 },
+  vectorStroke: false,
 };
 
-/** Figma Vector 213 — MCP SVG `d` + `get_metadata` frame. */
-const ORG_WIRE_ENGINEERING = {
+/** Vector 213 — MCP asset + metadata. */
+const ORG_WIRE_ENGINEERING: OrgTransformedWire = {
   dataNodeId: "428:14937",
   pathIdSuffix: "engineering",
   vbW: 177.412,
   vbH: 209,
   d: "M152.086 1.5C255.086 104.5 -9.91415 143.5 1.58568 207.5",
-  frame: { x: 574.1351928710938, y: 102, w: 174.69086593814586, h: 206.0001297062929 } satisfies OrgWireFrame,
-  cubic: { x0: 152.086, y0: 1.5, x1: 255.086, y1: 104.5, x2: -9.91415, y2: 143.5, x3: 1.58568, y3: 207.5 } satisfies Cubic,
-} as const;
+  frame: { x: 574.1351928710938, y: 102, w: 174.69086593814586, h: 206.0001297062929 },
+  cubic: { x0: 152.086, y0: 1.5, x1: 255.086, y1: 104.5, x2: -9.91415, y2: 143.5, x3: 1.58568, y3: 207.5 },
+  vectorStroke: true,
+};
+
+const ORG_WIRES_PAINT_ORDER: readonly OrgTransformedWire[] = [ORG_WIRE_GROWTH, ORG_WIRE_OPERATIONS, ORG_WIRE_ENGINEERING];
 
 const ORG_FLOW_T_SAMPLES = [0.22, 0.52, 0.78] as const;
 
@@ -147,65 +178,37 @@ export function HomeOrgDiagram() {
             data-node-id="428:14936"
             vectorEffect="nonScalingStroke"
           />
-          <path
-            id={`${orgWireUid}-growth`}
-            className="home-org-diagram__wire"
-            d={ORG_WIRE_GROWTH.d}
-            data-node-id={ORG_WIRE_GROWTH.dataNodeId}
-          />
-          <path
-            id={`${orgWireUid}-operations`}
-            className="home-org-diagram__wire"
-            d={ORG_WIRE_OPERATIONS.d}
-            data-node-id={ORG_WIRE_OPERATIONS.dataNodeId}
-          />
-          <g
-            data-node-id={ORG_WIRE_ENGINEERING.dataNodeId}
-            transform={orgWireTransform(ORG_WIRE_ENGINEERING.frame, ORG_WIRE_ENGINEERING.vbW, ORG_WIRE_ENGINEERING.vbH)}
-          >
-            <path
-              id={`${orgWireUid}-engineering`}
-              className="home-org-diagram__wire"
-              d={ORG_WIRE_ENGINEERING.d}
-              vectorEffect="nonScalingStroke"
-            />
-            {ORG_FLOW_T_SAMPLES.map((t, i) => {
-              const p = cubicPoint(t, ORG_WIRE_ENGINEERING.cubic);
-              return (
-                <circle
-                  key={`${ORG_WIRE_ENGINEERING.dataNodeId}-${i}`}
-                  className="home-org-diagram__flow-node"
-                  data-wire={ORG_WIRE_ENGINEERING.pathIdSuffix}
-                  cx={p.x}
-                  cy={p.y}
-                  r={4}
-                />
-              );
-            })}
-          </g>
+          {ORG_WIRES_PAINT_ORDER.map((wire) => (
+            <g
+              key={wire.dataNodeId}
+              data-node-id={wire.dataNodeId}
+              transform={orgWireTransform(wire.frame, wire.vbW, wire.vbH)}
+            >
+              <path
+                id={`${orgWireUid}-${wire.pathIdSuffix}`}
+                className="home-org-diagram__wire"
+                d={wire.d}
+                vectorEffect={wire.vectorStroke ? "nonScalingStroke" : undefined}
+              />
+            </g>
+          ))}
           <g className="home-org-diagram__flow-nodes" aria-hidden>
-            {ORG_FLOW_T_SAMPLES.flatMap((t, i) => {
-              const g = cubicPoint(t, ORG_WIRE_GROWTH.cubic);
-              const o = cubicPoint(t, ORG_WIRE_OPERATIONS.cubic);
-              return [
-                <circle
-                  key={`${ORG_WIRE_GROWTH.dataNodeId}-${i}`}
-                  className="home-org-diagram__flow-node"
-                  data-wire={ORG_WIRE_GROWTH.pathIdSuffix}
-                  cx={g.x}
-                  cy={g.y}
-                  r={4}
-                />,
-                <circle
-                  key={`${ORG_WIRE_OPERATIONS.dataNodeId}-${i}`}
-                  className="home-org-diagram__flow-node"
-                  data-wire={ORG_WIRE_OPERATIONS.pathIdSuffix}
-                  cx={o.x}
-                  cy={o.y}
-                  r={4}
-                />,
-              ];
-            })}
+            {ORG_FLOW_T_SAMPLES.flatMap((t, i) =>
+              ORG_WIRES_PAINT_ORDER.map((wire) => {
+                const p = cubicPoint(t, wire.cubic);
+                const s = orgWireStagePoint(wire.frame, wire.vbW, wire.vbH, p.x, p.y);
+                return (
+                  <circle
+                    key={`${wire.dataNodeId}-${i}`}
+                    className="home-org-diagram__flow-node"
+                    data-wire={wire.pathIdSuffix}
+                    cx={s.cx}
+                    cy={s.cy}
+                    r={4}
+                  />
+                );
+              }))
+            }
           </g>
         </svg>
 
