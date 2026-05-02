@@ -730,7 +730,7 @@
   }
 
   .home-org-diagram__svg--chip-arrows {
-    z-index: 2;
+    z-index: 3;
   }
 
   .home-org-diagram__wire {
@@ -755,7 +755,9 @@
     aspect-ratio: 101 / 55;
     padding: 0;
     background: none;
-    z-index: 3;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
   }
 
   .home-org-diagram__you-chip .home-org-diagram__chip-svg--bg {
@@ -772,7 +774,8 @@
     z-index: 1;
     box-sizing: border-box;
     width: 100%;
-    height: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
     padding: 0 var(--spacing-xl);
     display: flex;
     flex-direction: column;
@@ -787,10 +790,11 @@
     width: calc(125 / 1136 * 100%);
     aspect-ratio: 125 / 55;
     padding: 0;
-    display: block;
+    display: flex;
+    flex-direction: column;
     border-radius: var(--radius-sm);
     background-color: var(--inverted-surface);
-    z-index: 3;
+    z-index: 2;
   }
 
   .home-org-diagram__chip-svg-bg {
@@ -837,7 +841,7 @@
     align-items: center;
     justify-content: center;
     gap: 9.25%;
-    z-index: 2;
+    z-index: 4;
   }
 
   .home-org-diagram__you-eye {
@@ -856,7 +860,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2;
+    z-index: 4;
   }
 
   .home-org-diagram__monster-img {
@@ -877,7 +881,7 @@
     border-width: 1px;
     border-style: solid;
     overflow: hidden;
-    z-index: 4;
+    z-index: 5;
   }
 
   .home-org-diagram__dept--growth {

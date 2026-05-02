@@ -55,6 +55,16 @@ const CHIP_ARROW_VB_H = 24.8505;
 const CHIP_ARROW_CX = CHIP_ARROW_VB_W / 2;
 const CHIP_ARROW_CY = CHIP_ARROW_VB_H / 2;
 
+/** Figma `get_design_context` wrapper frames (Vector 264 / 265), not Dev metadata bbox. */
+const V264_WRAPPER = { x: 744, y: 22.53125, w: 58.07, h: 32.288 };
+const V265_WRAPPER = { x: 312.96, y: 77.82, w: 54.87, h: 22.85 };
+const V_PATH_INNER_W = 54.86962890625;
+const V_PATH_INNER_H = 22.850130081176758;
+const V264_INNER_OFFSET_X = (V264_WRAPPER.w - V_PATH_INNER_W) / 2;
+const V264_INNER_OFFSET_Y = (V264_WRAPPER.h - V_PATH_INNER_H) / 2;
+const CHIP_ARROW_SX = V_PATH_INNER_W / CHIP_ARROW_VB_W;
+const CHIP_ARROW_SY = V_PATH_INNER_H / CHIP_ARROW_VB_H;
+
 export function HomeOrgDiagram() {
   return (
     <div className="home-org-diagram">
@@ -96,30 +106,6 @@ export function HomeOrgDiagram() {
           />
         </svg>
 
-        <svg
-          className="home-org-diagram__svg home-org-diagram__svg--chip-arrows"
-          viewBox="0 0 1136 706"
-          preserveAspectRatio="xMidYMid meet"
-          aria-hidden
-          focusable="false"
-        >
-          {/* Figma Vector 264 / 265 — path `d` from MCP SVG asset; placement from get_metadata. */}
-          <g transform="translate(748.08349609375 22.53125)">
-            <g
-              transform={`scale(${58.069882756178686 / CHIP_ARROW_VB_W} ${32.28807110419939 / CHIP_ARROW_VB_H}) rotate(10.29 ${CHIP_ARROW_CX} ${CHIP_ARROW_CY})`}
-            >
-              <path className="home-org-diagram__chip-arrow-path" d={CHIP_CONNECTOR_PATH_D} />
-            </g>
-          </g>
-          <g transform="translate(367.83245849609375 100.675048828125)">
-            <g
-              transform={`scale(${54.86962890625 / CHIP_ARROW_VB_W} ${22.850130081176758 / CHIP_ARROW_VB_H}) rotate(180 ${CHIP_ARROW_CX} ${CHIP_ARROW_CY})`}
-            >
-              <path className="home-org-diagram__chip-arrow-path" d={CHIP_CONNECTOR_PATH_D} />
-            </g>
-          </g>
-        </svg>
-
         <div
           className="home-org-diagram__you-chip home-org-diagram__abs"
           data-node-id="596:1685"
@@ -149,6 +135,26 @@ export function HomeOrgDiagram() {
             </p>
           </div>
         </div>
+
+        <svg
+          className="home-org-diagram__svg home-org-diagram__svg--chip-arrows"
+          viewBox="0 0 1136 706"
+          preserveAspectRatio="xMidYMid meet"
+          aria-hidden
+          focusable="false"
+        >
+          {/* Vector 264 / 265 — `d` from MCP SVG; wrapper x/y from get_design_context (not metadata bbox). */}
+          <g transform={`translate(${V264_WRAPPER.x} ${V264_WRAPPER.y}) translate(${V264_INNER_OFFSET_X} ${V264_INNER_OFFSET_Y})`}>
+            <g transform={`scale(${CHIP_ARROW_SX} ${CHIP_ARROW_SY}) rotate(10.29 ${CHIP_ARROW_CX} ${CHIP_ARROW_CY})`}>
+              <path className="home-org-diagram__chip-arrow-path" d={CHIP_CONNECTOR_PATH_D} />
+            </g>
+          </g>
+          <g transform={`translate(${V265_WRAPPER.x} ${V265_WRAPPER.y})`}>
+            <g transform={`scale(${CHIP_ARROW_SX} ${CHIP_ARROW_SY}) rotate(180 ${CHIP_ARROW_CX} ${CHIP_ARROW_CY})`}>
+              <path className="home-org-diagram__chip-arrow-path" d={CHIP_CONNECTOR_PATH_D} />
+            </g>
+          </g>
+        </svg>
 
         <div className="home-org-diagram__you-avatar home-org-diagram__abs" aria-hidden>
           <span className="home-org-diagram__you-eye" />
