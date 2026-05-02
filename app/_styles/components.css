@@ -619,8 +619,8 @@
   }
 
   /**
-   * Home landing below hero — Figma `428:14366` (`-> V0.3`). Rasters: `public/home-landing-*.png`
-   * (regenerate with `npm run figma:export-landing` + `FIGMA_ACCESS_TOKEN`). Does not modify `.home-hero`.
+   * Home landing below hero — Figma `428:14366` (`-> V0.3`). Org block `428:14926` = `HomeOrgDiagram` (HTML).
+   * Other rasters: `public/home-landing-*.png` (`npm run figma:export-landing` + token). Does not modify `.home-hero`.
    */
   .home-landing {
     width: 100%;
@@ -695,6 +695,247 @@
 
   .home-landing-section__img--rounded {
     border-radius: var(--radius-lg);
+  }
+
+  /**
+   * Org diagram — Figma `428:14926` (1136×706). Tokens from MCP variable defs + design context.
+   */
+  .home-org-diagram {
+    width: 100%;
+    max-width: calc(71 * var(--spacing-xl));
+  }
+
+  .home-org-diagram__stage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1136 / 706;
+  }
+
+  .home-org-diagram__abs {
+    position: absolute;
+    box-sizing: border-box;
+  }
+
+  .home-org-diagram__svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .home-org-diagram__wire {
+    fill: none;
+    stroke: var(--palette-chrome-70);
+    stroke-dasharray: 2 12;
+    stroke-linecap: round;
+  }
+
+  .home-org-diagram__you-chip {
+    left: calc(212 / 1136 * 100%);
+    top: calc(70 / 706 * 100%);
+    width: calc(101 / 1136 * 100%);
+    min-height: calc(55 / 706 * 100%);
+    padding: var(--spacing-md) var(--spacing-xl) var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0;
+    border-radius: var(--radius-sm);
+    background-color: var(--inverted-surface);
+    color: var(--text-on-inverted-surface);
+    z-index: 3;
+  }
+
+  .home-org-diagram__pancake-chip {
+    left: calc(800 / 1136 * 100%);
+    top: calc(8 / 706 * 100%);
+    width: calc(125 / 1136 * 100%);
+    min-height: calc(55 / 706 * 100%);
+    padding: var(--spacing-md) var(--spacing-xl) var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0;
+    border-radius: var(--radius-sm);
+    background-color: var(--inverted-surface);
+    color: var(--text-on-inverted-surface);
+    z-index: 3;
+  }
+
+  .home-org-diagram__chip-title {
+    margin: 0;
+    width: 100%;
+    text-align: right;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    line-height: 24px;
+    font-weight: var(--font-bold);
+  }
+
+  .home-org-diagram__chip-sub {
+    margin: 0;
+    width: 100%;
+    text-align: right;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-small);
+    line-height: 18.112px;
+    font-weight: var(--font-normal);
+    color: var(--palette-chrome-50);
+  }
+
+  .home-org-diagram__you-avatar {
+    left: calc(380 / 1136 * 100%);
+    top: calc(10 / 706 * 100%);
+    width: calc(108 / 1136 * 100%);
+    height: calc(108 / 706 * 100%);
+    border-radius: 50%;
+    background-color: var(--palette-purple-20);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9.25%;
+    z-index: 2;
+  }
+
+  .home-org-diagram__you-eye {
+    display: block;
+    width: 9.25%;
+    height: 20.37%;
+    border-radius: 999px;
+    background-color: var(--palette-chrome-100);
+  }
+
+  .home-org-diagram__monster {
+    left: calc(608 / 1136 * 100%);
+    top: 0;
+    width: calc(128 / 1136 * 100%);
+    height: calc(128 / 706 * 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+  }
+
+  .home-org-diagram__monster-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .home-org-diagram__dept {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xxl);
+    width: calc(368 / 1136 * 100%);
+    height: calc(332 / 706 * 100%);
+    padding: calc(2 * var(--spacing-xl));
+    border-radius: var(--radius-xl);
+    border-width: 1px;
+    border-style: solid;
+    overflow: hidden;
+    z-index: 4;
+  }
+
+  .home-org-diagram__dept--growth {
+    left: 0;
+    top: calc(290 / 706 * 100%);
+    background-color: var(--alt-weak-branded-surface-02);
+    border-color: var(--branded-stroke-03);
+  }
+
+  .home-org-diagram__dept--engineering {
+    left: calc(384 / 1136 * 100%);
+    top: calc(320 / 706 * 100%);
+    background-color: var(--alt-weak-branded-surface-01);
+    border-color: var(--branded-stroke-02);
+  }
+
+  .home-org-diagram__dept--operations {
+    left: calc(768 / 1136 * 100%);
+    top: calc(264 / 706 * 100%);
+    background-color: var(--weak-branded-surface);
+    border-color: var(--branded-stroke-01);
+  }
+
+  .home-org-diagram__dept-title {
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: var(--font-size-header-04);
+    line-height: 28px;
+    letter-spacing: -0.2262px;
+    font-weight: var(--font-semibold);
+    color: var(--text);
+  }
+
+  .home-org-diagram__rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .home-org-diagram__row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-xl);
+    width: 100%;
+    min-height: calc(3 * var(--spacing-xl));
+    padding: var(--spacing-lg) var(--spacing-xl);
+    box-sizing: border-box;
+    border-radius: var(--radius-sm);
+    border-width: 1px;
+    border-style: solid;
+    background-color: var(--elevated-surface);
+  }
+
+  .home-org-diagram__dept--growth .home-org-diagram__row {
+    border-color: var(--branded-stroke-03);
+  }
+
+  .home-org-diagram__dept--engineering .home-org-diagram__row {
+    border-color: var(--branded-stroke-02);
+  }
+
+  .home-org-diagram__dept--operations .home-org-diagram__row {
+    border-color: var(--branded-stroke-01);
+  }
+
+  .home-org-diagram__dot {
+    flex-shrink: 0;
+    width: var(--spacing-lg);
+    height: var(--spacing-lg);
+    border-radius: 50%;
+  }
+
+  .home-org-diagram__dot--positive {
+    background-color: var(--positive-text);
+  }
+
+  .home-org-diagram__dot--warning {
+    background-color: var(--warning-text);
+  }
+
+  .home-org-diagram__dot--negative {
+    background-color: var(--negative-text);
+  }
+
+  .home-org-diagram__row-label {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    line-height: 24px;
+    font-weight: var(--font-normal);
+    color: var(--text);
   }
 
   .home-landing-section__caption {

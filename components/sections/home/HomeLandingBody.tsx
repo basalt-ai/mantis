@@ -1,12 +1,12 @@
 /**
- * Home page sections below the hero (`/`). Illustrations are PNGs in `public/home-landing-*.png`.
- * Regenerate them from Figma (Images API @2×, not MCP screenshots):
- *   FIGMA_ACCESS_TOKEN=… npm run figma:export-landing
+ * Home page sections below the hero (`/`). Most illustrations are PNGs in `public/home-landing-*.png`
+ * (regenerate: `FIGMA_ACCESS_TOKEN=… npm run figma:export-landing`). Org diagram is HTML (`HomeOrgDiagram`).
  */
 
 import Link from "next/link";
 
 import { HOME_PAGE_CONTAINER_CLASS } from "@/components/sections/home/home-layout";
+import { HomeOrgDiagram } from "@/components/sections/home/HomeOrgDiagram";
 import { H2, H3 } from "@/components/ui/Headings";
 
 /** Figma `428:15162` — U+2028 line break before “company”. */
@@ -44,16 +44,7 @@ export function HomeLandingBody() {
             <p className="home-landing-section__lede text-center">Even when you’re asleep</p>
           </header>
           <div className="home-landing-section__figure">
-            {/* eslint-disable-next-line @next/next/no-img-element -- Figma raster export (MCP screenshot) */}
-            <img
-              className="home-landing-section__img"
-              src="/home-landing-org-diagram.png"
-              alt=""
-              width={1024}
-              height={637}
-              decoding="async"
-              loading="lazy"
-            />
+            <HomeOrgDiagram />
           </div>
         </div>
       </section>

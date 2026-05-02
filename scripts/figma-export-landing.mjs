@@ -19,9 +19,8 @@ const FILE_KEY = "fr8NgOCTUxsEbrMEJA3YKu";
 const SCALE = 2;
 const FORMAT = "png";
 
-/** Figma node ids (use hyphen form in query). */
+/** Figma node ids (use hyphen form in query). Org diagram `428:14926` is HTML (`HomeOrgDiagram`); not exported here. */
 const ASSETS = [
-  { id: "428-14926", out: "home-landing-org-diagram.png" },
   { id: "428-15020", out: "home-landing-integrations-art.png" },
   { id: "428-15124", out: "home-landing-slack-screenshot.png" },
   { id: "428-15129", out: "home-landing-control-ui.png" },
