@@ -584,7 +584,7 @@
   }
 
   /**
-   * Orbit satellite pancakes — Figma `428:14900` INSTANCE PNG @2×; position = monster-center + (dx,dy) scaled with `--size-home-hero-monster-max-width` / 160.
+   * Orbit satellite pancakes — Figma `428:14900` INSTANCE PNG @2× (bundled via `home-hero-orbit-satellites.ts` imports); position = monster-center + (dx,dy) scaled with `--size-home-hero-monster-max-width` / 160.
    * Rotation: −`INSTANCE.rotation` (Plugin) on `.home-hero-orbit-satellite-rot`. PNG preserves skewed fills; flattened SVG + rotate did not match the canvas.
    */
   .home-hero-orbit-satellite {

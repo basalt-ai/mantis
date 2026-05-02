@@ -7,8 +7,14 @@
  * `rotationFigmaPluginDeg` = Figma Plugin `INSTANCE.rotation` (degrees). CSS uses **−** this value on `.home-hero-orbit-satellite-rot` (same sign rule as dotted orbits). Outer `.home-hero-orbit-satellite` only translates — matches Figma MCP codegen (position frame, then rotate child).
  *
  * Orbit assignment follows Figma layer order + distance check: there is **no** satellite on orbit 5 in this file.
- * Raster assets: `public/home-hero-orbit-satellite-{slug}.png` — Figma Plugin `exportAsync` PNG @2× (preserves skew vs flattened SVG).
+ * Raster assets: co-located PNGs under `orbit-satellite-raster/` — imported so Next emits `/_next/static/media/…` (avoids stale or missing `public/` URLs on previews).
  */
+import raster42814904 from "./orbit-satellite-raster/home-hero-orbit-satellite-428-14904.png";
+import raster42814907 from "./orbit-satellite-raster/home-hero-orbit-satellite-428-14907.png";
+import raster42814911 from "./orbit-satellite-raster/home-hero-orbit-satellite-428-14911.png";
+import raster42814921 from "./orbit-satellite-raster/home-hero-orbit-satellite-428-14921.png";
+import raster42816755 from "./orbit-satellite-raster/home-hero-orbit-satellite-428-16755.png";
+
 export type HomeHeroOrbitSatelliteLayer = "behindMascot" | "frontOfMascot";
 
 export type HomeHeroOrbitSatellite = {
@@ -79,9 +85,16 @@ export const HOME_HERO_ORBIT_SATELLITES: readonly HomeHeroOrbitSatellite[] = [
   },
 ] as const;
 
+const HOME_HERO_ORBIT_SATELLITE_SRC: Record<HomeHeroOrbitSatellite["figmaNode"], string> = {
+  "428:14904": raster42814904.src,
+  "428:14907": raster42814907.src,
+  "428:14911": raster42814911.src,
+  "428:14921": raster42814921.src,
+  "428:16755": raster42816755.src,
+};
+
 export function homeHeroOrbitSatelliteSrc(figmaNode: HomeHeroOrbitSatellite["figmaNode"]): string {
-  const slug = figmaNode.replace(/:/g, "-");
-  return `/home-hero-orbit-satellite-${slug}.png`;
+  return HOME_HERO_ORBIT_SATELLITE_SRC[figmaNode];
 }
 
 /** Same convention as dotted orbits: CSS `rotate(−figmaPluginRotation)`. */
