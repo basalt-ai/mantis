@@ -4,7 +4,8 @@
  * Positions are **center offsets from the `pancake monster` frame** (`428:14920`, 160×160 in Figma),
  * in the same px space as `--size-home-hero-monster-max-width` (160 at default scale).
  * `dx`/`dy` = satellite bounding-box center minus monster frame center (from `absoluteBoundingBox`).
- * `rotationDeg` = INSTANCE `rotation` from Figma (Plugin API).
+ * `rotationFigmaPluginDeg` = Figma Plugin `INSTANCE.rotation` (degrees). CSS uses **−** this value,
+ * same sign rule as dotted orbits (`tokens.css`: CSS angle = −ellipse `rotation`).
  *
  * Orbit assignment follows Figma layer order + distance check: there is **no** satellite on orbit 5 in this file.
  * SVG assets: `public/home-hero-orbit-satellite-{node}.svg` with **hyphens** (Figma `428:14904` → `428-14904`).
@@ -17,7 +18,7 @@ export type HomeHeroOrbitSatellite = {
   readonly orbit: 1 | 2 | 3 | 4 | 6;
   readonly dxFigma: number;
   readonly dyFigma: number;
-  readonly rotationDeg: number;
+  readonly rotationFigmaPluginDeg: number;
   readonly widthFigma: number;
   readonly heightFigma: number;
   readonly layer: HomeHeroOrbitSatelliteLayer;
@@ -32,7 +33,7 @@ export const HOME_HERO_ORBIT_SATELLITES: readonly HomeHeroOrbitSatellite[] = [
     orbit: 1,
     dxFigma: -156,
     dyFigma: -139,
-    rotationDeg: 0,
+    rotationFigmaPluginDeg: 0,
     widthFigma: 32,
     heightFigma: 32,
     layer: "behindMascot",
@@ -42,7 +43,7 @@ export const HOME_HERO_ORBIT_SATELLITES: readonly HomeHeroOrbitSatellite[] = [
     orbit: 4,
     dxFigma: 415.2674874448248,
     dyFigma: -138.73253554179826,
-    rotationDeg: 111.2654685992506,
+    rotationFigmaPluginDeg: 111.2654685992506,
     widthFigma: 34,
     heightFigma: 34,
     layer: "behindMascot",
@@ -52,7 +53,7 @@ export const HOME_HERO_ORBIT_SATELLITES: readonly HomeHeroOrbitSatellite[] = [
     orbit: 6,
     dxFigma: -615.5639871583408,
     dyFigma: 358.4359562268801,
-    rotationDeg: -32.467800351709045,
+    rotationFigmaPluginDeg: -32.467800351709045,
     widthFigma: 67,
     heightFigma: 41,
     layer: "behindMascot",
@@ -62,7 +63,7 @@ export const HOME_HERO_ORBIT_SATELLITES: readonly HomeHeroOrbitSatellite[] = [
     orbit: 3,
     dxFigma: -287.0000338554382,
     dyFigma: 199.99997282028202,
-    rotationDeg: -19.975237597657962,
+    rotationFigmaPluginDeg: -19.975237597657962,
     widthFigma: 41,
     heightFigma: 41,
     layer: "frontOfMascot",
@@ -72,7 +73,7 @@ export const HOME_HERO_ORBIT_SATELLITES: readonly HomeHeroOrbitSatellite[] = [
     orbit: 2,
     dxFigma: 197.12269846466364,
     dyFigma: 176.8178436716553,
-    rotationDeg: -122.48285820384838,
+    rotationFigmaPluginDeg: -122.48285820384838,
     widthFigma: 88,
     heightFigma: 88,
     layer: "frontOfMascot",
@@ -82,4 +83,9 @@ export const HOME_HERO_ORBIT_SATELLITES: readonly HomeHeroOrbitSatellite[] = [
 export function homeHeroOrbitSatelliteSrc(figmaNode: HomeHeroOrbitSatellite["figmaNode"]): string {
   const slug = figmaNode.replace(/:/g, "-");
   return `/home-hero-orbit-satellite-${slug}.svg`;
+}
+
+/** Same convention as dotted orbits: CSS `rotate(−figmaPluginRotation)`. */
+export function homeHeroOrbitSatelliteCssRotationDeg(rotationFigmaPluginDeg: number): number {
+  return -rotationFigmaPluginDeg;
 }

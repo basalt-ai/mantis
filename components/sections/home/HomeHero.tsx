@@ -6,6 +6,7 @@ import { HOME_HERO_ORBIT_LAYERS_OUTER_TO_INNER } from "@/components/sections/hom
 import {
   HOME_HERO_MONSTER_FIGMA_PX,
   HOME_HERO_ORBIT_SATELLITES,
+  homeHeroOrbitSatelliteCssRotationDeg,
   homeHeroOrbitSatelliteSrc,
 } from "@/components/sections/home/home-hero-orbit-satellites";
 import { H1 } from "@/components/ui/Headings";
@@ -94,7 +95,7 @@ export function HomeHero() {
                     {
                       "--sat-dx": `calc(var(--size-home-hero-monster-max-width) * ${s.dxFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
                       "--sat-dy": `calc(var(--size-home-hero-monster-max-width) * ${s.dyFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
-                      "--sat-rot": `${s.rotationDeg}deg`,
+                      "--sat-rot": `${homeHeroOrbitSatelliteCssRotationDeg(s.rotationFigmaPluginDeg)}deg`,
                       width: `calc(var(--size-home-hero-monster-max-width) * ${s.widthFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
                       height: `calc(var(--size-home-hero-monster-max-width) * ${s.heightFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
                     } as CSSProperties
@@ -128,7 +129,7 @@ export function HomeHero() {
                     {
                       "--sat-dx": `calc(var(--size-home-hero-monster-max-width) * ${s.dxFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
                       "--sat-dy": `calc(var(--size-home-hero-monster-max-width) * ${s.dyFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
-                      "--sat-rot": `${s.rotationDeg}deg`,
+                      "--sat-rot": `${homeHeroOrbitSatelliteCssRotationDeg(s.rotationFigmaPluginDeg)}deg`,
                       width: `calc(var(--size-home-hero-monster-max-width) * ${s.widthFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
                       height: `calc(var(--size-home-hero-monster-max-width) * ${s.heightFigma} / ${HOME_HERO_MONSTER_FIGMA_PX})`,
                     } as CSSProperties
