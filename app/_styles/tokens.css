@@ -217,6 +217,22 @@
     /* Home nav primary links (Figma: Product / Resources / Pricing) */
     --line-height-nav-primary-link: 40px;
 
+    /*
+     * Home landing below hero — Figma `428:14366` (`-> V0.3`), desktop vs 1920px canvas.
+     * Section titles use ~45.23px; ledes ~24px; centered heading block width 752px.
+     */
+    --font-size-home-landing-section-title: calc(4523 * var(--font-size-base) / 1000);
+    --line-height-home-landing-section-title: 52px;
+    --font-size-home-landing-section-lede: calc(24 * var(--font-size-base) / 16);
+    --line-height-home-landing-section-lede: 32px;
+    --width-home-landing-heading: calc(752 / 16 * 1rem);
+    --width-home-landing-narrow-copy: calc(368 / 16 * 1rem);
+    --spacing-home-landing-section-y: calc(6 * var(--spacing-xl));
+    --spacing-home-landing-header-to-media: calc(4 * var(--spacing-xl));
+    --spacing-home-landing-section-gap: calc(5 * var(--spacing-xxl));
+    --font-size-home-landing-closing-title: calc(64 * var(--font-size-base) / 16);
+    --line-height-home-landing-closing-title: 64px;
+
     /* Font weights */
     --font-normal: 400;
     --font-semibold: 500;

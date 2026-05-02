@@ -617,4 +617,252 @@
     height: 100%;
     object-fit: contain;
   }
+
+  /**
+   * Home landing below hero — Figma `428:14366` (`-> V0.3`). Rasters from Figma MCP screenshots
+   * (`/public/home-landing-*.png`). Does not modify `.home-hero` rules above.
+   */
+  .home-landing {
+    width: 100%;
+  }
+
+  .home-landing-section {
+    width: 100%;
+    padding-top: var(--spacing-home-landing-section-y);
+    padding-bottom: var(--spacing-home-landing-section-y);
+    background-color: var(--surface);
+    color: var(--text);
+  }
+
+  .home-landing-section--alt {
+    background-color: var(--alt-surface);
+  }
+
+  .home-landing-section__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-home-landing-header-to-media);
+  }
+
+  .home-landing-section__inner--closing {
+    gap: var(--spacing-home-hero-after-title);
+  }
+
+  .home-landing-section__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xl);
+    max-width: var(--width-home-landing-heading);
+    width: 100%;
+    text-align: center;
+  }
+
+  .home-landing-section__title {
+    margin: 0;
+    font-size: var(--font-size-home-landing-section-title);
+    line-height: var(--line-height-home-landing-section-title);
+    letter-spacing: -0.9px;
+    font-weight: var(--font-semibold);
+  }
+
+  .home-landing-section__lede {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-home-landing-section-lede);
+    line-height: var(--line-height-home-landing-section-lede);
+    font-weight: var(--font-normal);
+    color: var(--text);
+  }
+
+  .home-landing-section__lede--closing {
+    max-width: var(--width-home-landing-heading);
+  }
+
+  .home-landing-section__figure {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .home-landing-section__img {
+    display: block;
+    width: 100%;
+    max-width: calc(71 * var(--spacing-xl));
+    height: auto;
+  }
+
+  .home-landing-section__img--rounded {
+    border-radius: var(--radius-lg);
+  }
+
+  .home-landing-section__caption {
+    margin: 0;
+    max-width: var(--width-home-landing-narrow-copy);
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    line-height: var(--line-height-home-landing-section-lede);
+    font-weight: var(--font-normal);
+    color: var(--text);
+  }
+
+  .home-landing-features {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-home-landing-section-gap);
+    align-items: start;
+    justify-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .home-landing-features {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: calc(3 * var(--spacing-xxl));
+      justify-items: stretch;
+    }
+  }
+
+  .home-landing-feature-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    max-width: var(--width-home-landing-narrow-copy);
+    width: 100%;
+    text-align: center;
+  }
+
+  @media (min-width: 1024px) {
+    .home-landing-feature-card {
+      max-width: none;
+      text-align: left;
+    }
+  }
+
+  .home-landing-feature-card__eyebrow {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-small);
+    font-weight: var(--font-semibold);
+    color: var(--subtle-text);
+  }
+
+  .home-landing-feature-card__title {
+    margin: 0;
+    font-size: var(--font-size-header-03);
+    letter-spacing: -0.64px;
+    font-weight: var(--font-semibold);
+  }
+
+  .home-landing-feature-card__body {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    line-height: var(--line-height-home-landing-section-lede);
+    font-weight: var(--font-normal);
+    color: var(--text);
+  }
+
+  .home-landing-testimonials {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xxl);
+  }
+
+  @media (min-width: 1024px) {
+    .home-landing-testimonials {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: calc(3 * var(--spacing-xl));
+    }
+  }
+
+  .home-landing-testimonial {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+    padding: var(--spacing-xxl);
+    border: 1px solid var(--stroke);
+    border-radius: var(--radius-lg);
+    background-color: var(--surface);
+    corner-shape: squircle;
+  }
+
+  .home-landing-testimonial__quote {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    line-height: var(--line-height-home-landing-section-lede);
+    font-weight: var(--font-normal);
+    color: var(--text);
+  }
+
+  .home-landing-testimonial__meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .home-landing-testimonial__name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--font-size-body-regular);
+    font-weight: var(--font-semibold);
+    color: var(--text);
+  }
+
+  .home-landing-testimonial__handle {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-small);
+    font-weight: var(--font-normal);
+    color: var(--subtle-text);
+  }
+
+  .home-landing-testimonial__stats {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-small);
+    font-weight: var(--font-normal);
+    color: var(--subtle-text);
+  }
+
+  .home-landing-testimonial__via {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-small);
+    font-weight: var(--font-semibold);
+    color: var(--text);
+  }
+
+  .home-landing-section__closing-title {
+    margin: 0;
+    max-width: var(--width-home-landing-heading);
+    font-family: var(--font-display);
+    font-weight: var(--font-semibold);
+    font-size: var(--font-size-home-landing-closing-title);
+    line-height: var(--line-height-home-landing-closing-title);
+    letter-spacing: -1.28px;
+    color: var(--text);
+  }
+
+  .home-landing-closing-cta {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xxl);
+  }
+
+  .home-landing-closing-cta__note {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    font-weight: var(--font-normal);
+    line-height: var(--line-height-home-hero-cta-note);
+    color: var(--text);
+  }
 }
