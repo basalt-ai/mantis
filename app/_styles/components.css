@@ -737,9 +737,33 @@
     left: calc(212 / 1136 * 100%);
     top: calc(70 / 706 * 100%);
     width: calc(101 / 1136 * 100%);
+    aspect-ratio: 101 / 55;
     padding: 0;
     background: none;
     z-index: 3;
+  }
+
+  .home-org-diagram__you-chip .home-org-diagram__chip-svg--bg {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .home-org-diagram__you-chip-copy {
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    padding: var(--spacing-md) var(--spacing-xl) var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0;
   }
 
   .home-org-diagram__pancake-chip {
@@ -757,32 +781,8 @@
     z-index: 3;
   }
 
-  .home-org-diagram__chip-svg {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
   .home-org-diagram__chip-svg-bg {
     fill: var(--inverted-surface);
-  }
-
-  .home-org-diagram__chip-svg-text {
-    font-family: var(--font-body);
-  }
-
-  .home-org-diagram__chip-svg-text .home-org-diagram__chip-svg-title {
-    fill: var(--text-on-inverted-surface);
-    font-size: var(--font-size-body-regular);
-    font-style: normal;
-    font-weight: 700;
-  }
-
-  .home-org-diagram__chip-svg-text .home-org-diagram__chip-svg-sub {
-    fill: var(--subtle-text-on-inverted-surface);
-    font-size: calc(11.32 / 16 * var(--font-size-base));
-    font-style: normal;
-    font-weight: var(--font-normal);
   }
 
   .home-org-diagram__chip-title--inverted {
@@ -808,6 +808,9 @@
     font-weight: var(--font-normal);
     line-height: 18.112px;
     color: var(--subtle-text-on-inverted-surface);
+  }
+
+  .home-org-diagram__chip-sub--inverted.home-org-diagram__chip-sub--nowrap {
     white-space: nowrap;
   }
 

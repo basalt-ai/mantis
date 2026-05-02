@@ -87,31 +87,32 @@ export function HomeOrgDiagram() {
           />
         </svg>
 
-        <div className="home-org-diagram__you-chip home-org-diagram__abs" data-node-id="596:1685">
+        <div
+          className="home-org-diagram__you-chip home-org-diagram__abs"
+          data-node-id="596:1685"
+          aria-label="You, the founder"
+        >
           <svg
-            className="home-org-diagram__chip-svg"
+            className="home-org-diagram__chip-svg--bg"
             viewBox="0 0 101 55"
             width={101}
             height={55}
-            role="img"
-            aria-labelledby="home-org-diagram-you-svg-title"
+            aria-hidden
+            focusable="false"
           >
-            <title id="home-org-diagram-you-svg-title">You, the founder</title>
             <rect className="home-org-diagram__chip-svg-bg" width="101" height="55" rx="12" />
-            <text className="home-org-diagram__chip-svg-text">
-              <tspan x="16" y="21" className="home-org-diagram__chip-svg-title">
-                You
-              </tspan>
-              <tspan x="16" y="36" className="home-org-diagram__chip-svg-sub">
-                The founder
-              </tspan>
-            </text>
           </svg>
+          <div className="home-org-diagram__you-chip-copy">
+            <p className="home-org-diagram__chip-title home-org-diagram__chip-title--inverted">You</p>
+            <p className="home-org-diagram__chip-sub home-org-diagram__chip-sub--inverted">The founder</p>
+          </div>
         </div>
 
         <div className="home-org-diagram__pancake-chip home-org-diagram__abs" data-node-id="428:14941">
           <p className="home-org-diagram__chip-title home-org-diagram__chip-title--inverted">Pancake</p>
-          <p className="home-org-diagram__chip-sub home-org-diagram__chip-sub--inverted">Your co-founder</p>
+          <p className="home-org-diagram__chip-sub home-org-diagram__chip-sub--inverted home-org-diagram__chip-sub--nowrap">
+            Your co-founder
+          </p>
         </div>
 
         <div className="home-org-diagram__you-avatar home-org-diagram__abs" aria-hidden>
