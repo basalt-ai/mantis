@@ -7,7 +7,7 @@
  * `rotationFigmaPluginDeg` = Figma Plugin `INSTANCE.rotation` (degrees). CSS uses **−** this value on `.home-hero-orbit-satellite-rot` (same sign rule as dotted orbits). Outer `.home-hero-orbit-satellite` only translates — matches Figma MCP codegen (position frame, then rotate child).
  *
  * Orbit assignment follows Figma layer order + distance check: there is **no** satellite on orbit 5 in this file.
- * SVG assets: `public/home-hero-orbit-satellite-{node}.svg` with **hyphens** (Figma `428:14904` → `428-14904`).
+ * Raster assets: `public/home-hero-orbit-satellite-{slug}.png` — Figma Plugin `exportAsync` PNG @2× (preserves skew vs flattened SVG).
  */
 export type HomeHeroOrbitSatelliteLayer = "behindMascot" | "frontOfMascot";
 
@@ -81,7 +81,7 @@ export const HOME_HERO_ORBIT_SATELLITES: readonly HomeHeroOrbitSatellite[] = [
 
 export function homeHeroOrbitSatelliteSrc(figmaNode: HomeHeroOrbitSatellite["figmaNode"]): string {
   const slug = figmaNode.replace(/:/g, "-");
-  return `/home-hero-orbit-satellite-${slug}.svg`;
+  return `/home-hero-orbit-satellite-${slug}.png`;
 }
 
 /** Same convention as dotted orbits: CSS `rotate(−figmaPluginRotation)`. */

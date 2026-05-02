@@ -108,7 +108,7 @@ export function HomeHero() {
                       } as CSSProperties
                     }
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element -- Figma SVG export */}
+                    {/* eslint-disable-next-line @next/next/no-img-element -- Figma PNG @2x (skew-accurate vs SVG export) */}
                     <img
                       className="home-hero-orbit-satellite-img"
                       src={homeHeroOrbitSatelliteSrc(s.figmaNode)}
@@ -150,7 +150,7 @@ export function HomeHero() {
                       } as CSSProperties
                     }
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element -- Figma SVG export */}
+                    {/* eslint-disable-next-line @next/next/no-img-element -- Figma PNG @2x (skew-accurate vs SVG export) */}
                     <img
                       className="home-hero-orbit-satellite-img"
                       src={homeHeroOrbitSatelliteSrc(s.figmaNode)}
