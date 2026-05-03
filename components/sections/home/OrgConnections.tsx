@@ -2,13 +2,15 @@
 
 /**
  * Org diagram wires — Figma `428:14926` (`get_design_context` MCP).
- * • Monster → Growth / Engineering / Operations: paths static (CSS dash); looping dot motion only (GSAP).
- * • Founder → Pancake (Vector 210): static.
+ * • Monster → Growth / Engineering / Operations + Founder → Pancake: static dashed paths;
+ *   each wire gets an independent random “traffic” of balls (count, radius, speed, ease, direction, segment).
  */
 
 import { useRef } from "react";
 
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
+
+const SVG_NS = "http://www.w3.org/2000/svg";
 
 type OrgWireFrame = { x: number; y: number; w: number; h: number };
 
@@ -67,6 +69,9 @@ const ORG_WIRE_FOUNDER_PANCAKE: OrgTransformedWire = {
   transformMode: "vector210",
 };
 
+/** All wires that carry chaotic ball traffic (depts + human↔Pancake). */
+const ORG_WIRES_WITH_BALLS: readonly OrgTransformedWire[] = [...ORG_DEPT_WIRES, ORG_WIRE_FOUNDER_PANCAKE];
+
 function orgWireTransform(frame: OrgWireFrame, vbW: number, vbH: number): string {
   const sx = frame.w / vbW;
   const sy = frame.h / vbH;
@@ -97,34 +102,35 @@ function orgWireGroupTransform(wire: OrgTransformedWire): string {
   return orgWireTransform(wire.frame, wire.vbW, wire.vbH);
 }
 
-const DOT_FOUNDER_PANCAKE = { "data-node-id": "428:16765" as const, cx: 506, cy: 28, r: 6 };
-
-/** ViewBox-space radius — one size for all dept trail “balls” (Growth 1, Engineering 3, Operations 2). */
-const DEPT_TRAIL_DOT_RADIUS = 6;
-
-type DeptDotDef = { readonly "data-node-id": string; readonly figmaCx: number; readonly figmaCy: number };
-
-const DEPT_DOTS: Record<string, readonly DeptDotDef[]> = {
-  "428:14927": [{ "data-node-id": "428:16779", figmaCx: 330, figmaCy: 201 }],
+/** Figma stage coords for reduced-motion fallback (approx. along each wire). */
+const REDUCED_FALLBACK_BY_WIRE: Record<string, readonly { cx: number; cy: number }[]> = {
+  "428:14927": [{ cx: 330, cy: 201 }],
   "428:14937": [
-    { "data-node-id": "428:16781", figmaCx: 526, figmaCy: 187 },
-    { "data-node-id": "428:16787", figmaCx: 656, figmaCy: 173 },
-    { "data-node-id": "428:16789", figmaCx: 602, figmaCy: 266 },
+    { cx: 526, cy: 187 },
+    { cx: 656, cy: 173 },
+    { cx: 602, cy: 266 },
   ],
   "428:14928": [
-    { "data-node-id": "428:16783", figmaCx: 724, figmaCy: 192 },
-    { "data-node-id": "428:16793", figmaCx: 828, figmaCy: 173 },
+    { cx: 724, cy: 192 },
+    { cx: 828, cy: 173 },
   ],
+  "428:14936": [{ cx: 506, cy: 28 }],
 };
 
-/** Normalized path progress between consecutive balls (Engineering train). */
-const DOT_CLUSTER_GAP = 0.1;
-const TRIP_DURATION = 2.5;
-const PAUSE_AT_BLOCK = 0.35;
-const PAUSE_AT_MONSTER = 0.3;
-const FADE_IN = 0.2;
-const FADE_OUT = 0.25;
-const CYCLE_STAGGER = 0.5;
+const BALL_R_MIN = 3.2;
+const BALL_R_MAX = 7.8;
+const DEPT_BALL_COUNT_MIN = 4;
+const DEPT_BALL_COUNT_MAX = 11;
+const FOUNDER_BALL_COUNT_MIN = 2;
+const FOUNDER_BALL_COUNT_MAX = 7;
+const DURATION_MIN = 1.05;
+const DURATION_MAX = 6.2;
+
+const EASE_POOL = ["none", "power1.inOut", "power2.inOut", "sine.inOut", "power1.out", "power1.in", "power2.out"] as const;
+
+function readDashPatternFromDom(path: SVGPathElement): string {
+  return getComputedStyle(path).strokeDasharray || "1 12";
+}
 
 function stagePointToPathLocal(path: SVGPathElement, root: SVGSVGElement, x: number, y: number): { x: number; y: number } {
   const p = root.createSVGPoint();
@@ -136,79 +142,178 @@ function stagePointToPathLocal(path: SVGPathElement, root: SVGSVGElement, x: num
   return p.matrixTransform(pathCtm.inverse().multiply(rootCtm));
 }
 
-function setDotsAlongPath(
+function clearBallRoot(root: SVGGElement): void {
+  while (root.firstChild) root.removeChild(root.firstChild);
+}
+
+function createTrailCircle(r: number): SVGCircleElement {
+  const c = document.createElementNS(SVG_NS, "circle");
+  c.setAttribute("class", "home-org-diagram__flow-node home-org-diagram__flow-node--trail");
+  c.setAttribute("vectorEffect", "nonScalingStroke");
+  c.setAttribute("r", String(r));
+  c.setAttribute("cx", "0");
+  c.setAttribute("cy", "0");
+  return c;
+}
+
+function rand(rng: () => number, min: number, max: number): number {
+  return min + rng() * (max - min);
+}
+
+function randInt(rng: () => number, min: number, max: number): number {
+  return min + Math.floor(rng() * (max - min + 1));
+}
+
+function pickEase(rng: () => number): string {
+  return EASE_POOL[Math.floor(rng() * EASE_POOL.length)] ?? "sine.inOut";
+}
+
+type BallMotionSpec = {
+  r: number;
+  duration: number;
+  ease: string;
+  yoyo: boolean;
+  /** When false, progress 1→0 is used on the path (opposite sense to forward). */
+  forward: boolean;
+  delay: number;
+  /** If true, oscillate only between segA and segB on the wire (shuttle). */
+  shuttle: boolean;
+  segA: number;
+  segB: number;
+  /** Initial normalized position along active segment. */
+  startU: number;
+};
+
+function buildRandomSpecs(rng: () => number, count: number): BallMotionSpec[] {
+  const specs: BallMotionSpec[] = [];
+  for (let i = 0; i < count; i++) {
+    const shuttle = rng() < 0.38;
+    let segA = 0;
+    let segB = 1;
+    if (shuttle) {
+      segA = rand(rng, 0, 0.55);
+      segB = Math.min(1, segA + rand(rng, 0.22, 0.75));
+      if (segB - segA < 0.12) segB = Math.min(1, segA + 0.35);
+    }
+    specs.push({
+      r: rand(rng, BALL_R_MIN, BALL_R_MAX),
+      duration: rand(rng, DURATION_MIN, DURATION_MAX),
+      ease: pickEase(rng),
+      yoyo: rng() < 0.62,
+      forward: rng() < 0.52,
+      delay: rand(rng, 0, 2.4),
+      shuttle,
+      segA,
+      segB,
+      startU: rand(rng, 0, 1),
+    });
+  }
+  return specs;
+}
+
+function placeBallOnPath(
   path: SVGPathElement,
-  circles: SVGCircleElement[],
   pathLen: number,
-  progress: number,
-  clusterGap: number,
+  u: number,
+  forward: boolean,
+  shuttle: boolean,
+  segA: number,
+  segB: number,
+  circle: SVGCircleElement,
 ): void {
-  circles.forEach((dot, i) => {
-    const localP = gsap.utils.clamp(0, 1, progress - i * clusterGap);
-    const pt = path.getPointAtLength(localP * pathLen);
-    dot.setAttribute("cx", String(pt.x));
-    dot.setAttribute("cy", String(pt.y));
-  });
+  let t = u;
+  if (shuttle) {
+    t = segA + (segB - segA) * t;
+  }
+  t = gsap.utils.clamp(0, 1, t);
+  const along = forward ? t : 1 - t;
+  const pt = path.getPointAtLength(along * pathLen);
+  circle.setAttribute("cx", String(pt.x));
+  circle.setAttribute("cy", String(pt.y));
 }
 
-function applyFigmaDotPositionsLocal(
+function startChaoticWire(path: SVGPathElement, ballRoot: SVGGElement, wireId: string, rng: () => number): gsap.core.Tween[] {
+  const pathLen = path.getTotalLength();
+  const isFounder = wireId === ORG_WIRE_FOUNDER_PANCAKE.dataNodeId;
+  const nMin = isFounder ? FOUNDER_BALL_COUNT_MIN : DEPT_BALL_COUNT_MIN;
+  const nMax = isFounder ? FOUNDER_BALL_COUNT_MAX : DEPT_BALL_COUNT_MAX;
+  const count = randInt(rng, nMin, nMax);
+  const specs = buildRandomSpecs(rng, count);
+  const tweens: gsap.core.Tween[] = [];
+
+  clearBallRoot(ballRoot);
+
+  specs.forEach((spec) => {
+    const circle = createTrailCircle(spec.r);
+    ballRoot.appendChild(circle);
+    gsap.set(circle, { opacity: rand(rng, 0.75, 1) });
+
+    const proxy = { u: spec.startU };
+    const tick = () => {
+      placeBallOnPath(path, pathLen, proxy.u, spec.forward, spec.shuttle, spec.segA, spec.segB, circle);
+    };
+
+    const tw = gsap.fromTo(
+      proxy,
+      { u: spec.startU },
+      {
+        u: 1,
+        duration: spec.duration,
+        ease: spec.ease,
+        repeat: -1,
+        yoyo: spec.yoyo,
+        delay: spec.delay,
+        immediateRender: true,
+        onUpdate: tick,
+      },
+    );
+
+    tick();
+
+    if (rng() < 0.32) {
+      const breathe = gsap.to(circle, {
+        opacity: rand(rng, 0.45, 0.92),
+        duration: rand(rng, 0.55, 1.9),
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        delay: rand(rng, 0, 1.2),
+      });
+      tweens.push(breathe);
+    }
+
+    tweens.push(tw);
+  });
+
+  return tweens;
+}
+
+function mountReducedMotionBalls(
   path: SVGPathElement,
-  root: SVGSVGElement,
-  circles: SVGCircleElement[],
-  defs: readonly DeptDotDef[],
+  ballRoot: SVGGElement,
+  svg: SVGSVGElement,
+  wireId: string,
+  dashRestore: string,
 ): void {
-  defs.forEach((d, i) => {
-    const loc = stagePointToPathLocal(path, root, d.figmaCx, d.figmaCy);
-    circles[i]?.setAttribute("cx", String(loc.x));
-    circles[i]?.setAttribute("cy", String(loc.y));
+  clearBallRoot(ballRoot);
+  path.setAttribute("stroke-dasharray", dashRestore);
+  path.setAttribute("stroke-dashoffset", "0");
+
+  const fallbacks = REDUCED_FALLBACK_BY_WIRE[wireId] ?? [{ cx: 0, cy: 0 }];
+  const r = (BALL_R_MIN + BALL_R_MAX) / 2;
+
+  fallbacks.forEach((pt) => {
+    const loc = stagePointToPathLocal(path, svg, pt.cx, pt.cy);
+    const circle = createTrailCircle(r);
+    circle.setAttribute("cx", String(loc.x));
+    circle.setAttribute("cy", String(loc.y));
+    ballRoot.appendChild(circle);
   });
-}
-
-function readDashPatternFromDom(path: SVGPathElement): string {
-  return getComputedStyle(path).strokeDasharray || "1 12";
-}
-
-function buildDeptLoopTimeline(path: SVGPathElement, circles: SVGCircleElement[]): gsap.core.Timeline {
-  const len = path.getTotalLength();
-  const forward = { p: 0 };
-  const back = { p: 1 };
-  const tl = gsap.timeline({ repeat: -1, defaults: { ease: "power1.inOut" } });
-
-  tl.call(() => setDotsAlongPath(path, circles, len, 0, DOT_CLUSTER_GAP));
-  tl.set(circles, { opacity: 0 });
-  tl.to(circles, { opacity: 1, duration: FADE_IN, stagger: 0.03 });
-  tl.fromTo(
-    forward,
-    { p: 0 },
-    {
-      p: 1,
-      duration: TRIP_DURATION,
-      onUpdate: () => setDotsAlongPath(path, circles, len, forward.p, DOT_CLUSTER_GAP),
-    },
-  );
-  tl.to(circles, { opacity: 0, duration: FADE_OUT, stagger: 0.02 });
-  tl.to({}, { duration: PAUSE_AT_BLOCK });
-  tl.call(() => setDotsAlongPath(path, circles, len, 1, DOT_CLUSTER_GAP));
-  tl.set(circles, { opacity: 0 });
-  tl.to(circles, { opacity: 1, duration: FADE_IN, stagger: 0.03 });
-  tl.fromTo(
-    back,
-    { p: 1 },
-    {
-      p: 0,
-      duration: TRIP_DURATION,
-      onUpdate: () => setDotsAlongPath(path, circles, len, back.p, DOT_CLUSTER_GAP),
-    },
-  );
-  tl.to(circles, { opacity: 0, duration: FADE_OUT, stagger: 0.02 });
-  tl.to({}, { duration: PAUSE_AT_MONSTER });
-
-  return tl;
 }
 
 export function OrgConnections() {
   const rootRef = useRef<SVGSVGElement>(null);
-  const loopTimelinesRef = useRef<gsap.core.Timeline[]>([]);
+  const ballTweensRef = useRef<gsap.core.Tween[]>([]);
 
   useGSAP(
     () => {
@@ -217,55 +322,55 @@ export function OrgConnections() {
 
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-      const deptCtx = ORG_DEPT_WIRES.map((wire) => {
+      const wireCtx = ORG_WIRES_WITH_BALLS.map((wire) => {
         const g = svg.querySelector<SVGGElement>(`g[data-node-id="${wire.dataNodeId}"]`);
         const path = g?.querySelector<SVGPathElement>("path.home-org-diagram__wire") ?? null;
-        const defs = DEPT_DOTS[wire.dataNodeId] ?? [];
-        const circles = defs
-          .map((d) => g?.querySelector<SVGCircleElement>(`circle[data-node-id="${d["data-node-id"]}"]`) ?? null)
-          .filter(Boolean) as SVGCircleElement[];
-        return { path, circles, defs };
-      }).filter((c): c is { path: SVGPathElement; circles: SVGCircleElement[]; defs: readonly DeptDotDef[] } => Boolean(c.path && c.circles.length > 0));
-
-      if (deptCtx.length === 0) return;
-
-      if (reduced) {
-        const dashRestore = readDashPatternFromDom(deptCtx[0]!.path);
-        deptCtx.forEach(({ path, circles, defs }) => {
-          applyFigmaDotPositionsLocal(path, svg, circles, defs);
-          gsap.set(circles, { opacity: 1 });
-          path.setAttribute("stroke-dasharray", dashRestore);
-          path.setAttribute("stroke-dashoffset", "0");
-        });
-        return;
-      }
-
-      gsap.set(
-        deptCtx.flatMap((c) => c.circles),
-        { opacity: 0 },
+        const ballRoot = g?.querySelector<SVGGElement>("[data-org-ball-root]") ?? null;
+        return { wireId: wire.dataNodeId, path, ballRoot };
+      }).filter((c): c is { wireId: string; path: SVGPathElement; ballRoot: SVGGElement } =>
+        Boolean(c.path && c.ballRoot),
       );
 
-      const st = ScrollTrigger.create({
+      if (wireCtx.length === 0) return;
+
+      const dashRestore = readDashPatternFromDom(wireCtx[0]!.path);
+
+      const cleanup = () => {
+        st?.kill();
+        ballTweensRef.current.forEach((t) => t.kill());
+        ballTweensRef.current = [];
+        wireCtx.forEach(({ ballRoot }) => {
+          gsap.killTweensOf(ballRoot.querySelectorAll("circle"));
+          clearBallRoot(ballRoot);
+        });
+      };
+
+      let st: ScrollTrigger | undefined;
+
+      if (reduced) {
+        wireCtx.forEach(({ path, ballRoot, wireId }) => {
+          mountReducedMotionBalls(path, ballRoot, svg, wireId, dashRestore);
+        });
+        return cleanup;
+      }
+
+      st = ScrollTrigger.create({
         trigger: svg,
         start: "top 80%",
         once: true,
         onEnter: () => {
-          loopTimelinesRef.current.forEach((t) => t.kill());
-          loopTimelinesRef.current = [];
-          deptCtx.forEach(({ path, circles }, i) => {
-            const lt = buildDeptLoopTimeline(path, circles);
-            lt.delay(i * CYCLE_STAGGER);
-            loopTimelinesRef.current.push(lt);
-            lt.play(0);
+          ballTweensRef.current.forEach((t) => t.kill());
+          ballTweensRef.current = [];
+          const rng = () => Math.random();
+
+          wireCtx.forEach(({ path, ballRoot, wireId }) => {
+            const tweens = startChaoticWire(path, ballRoot, wireId, rng);
+            ballTweensRef.current.push(...tweens);
           });
         },
       });
 
-      return () => {
-        st.kill();
-        loopTimelinesRef.current.forEach((t) => t.kill());
-        loopTimelinesRef.current = [];
-      };
+      return cleanup;
     },
     { scope: rootRef },
   );
@@ -286,17 +391,7 @@ export function OrgConnections() {
             d={wire.d}
             vectorEffect={wire.vectorStroke ? "nonScalingStroke" : undefined}
           />
-          {(DEPT_DOTS[wire.dataNodeId] ?? []).map((d) => (
-            <circle
-              key={d["data-node-id"]}
-              className="home-org-diagram__flow-node home-org-diagram__flow-node--trail"
-              data-node-id={d["data-node-id"]}
-              r={DEPT_TRAIL_DOT_RADIUS}
-              cx={0}
-              cy={0}
-              vectorEffect="nonScalingStroke"
-            />
-          ))}
+          <g data-org-ball-root aria-hidden />
         </g>
       ))}
       <g data-node-id={ORG_WIRE_FOUNDER_PANCAKE.dataNodeId} transform={orgWireGroupTransform(ORG_WIRE_FOUNDER_PANCAKE)}>
@@ -305,9 +400,7 @@ export function OrgConnections() {
           d={ORG_WIRE_FOUNDER_PANCAKE.d}
           vectorEffect={ORG_WIRE_FOUNDER_PANCAKE.vectorStroke ? "nonScalingStroke" : undefined}
         />
-      </g>
-      <g className="home-org-diagram__flow-nodes" aria-hidden>
-        <circle className="home-org-diagram__flow-node" {...DOT_FOUNDER_PANCAKE} />
+        <g data-org-ball-root aria-hidden />
       </g>
     </svg>
   );
