@@ -9,6 +9,7 @@
  * Orbit assignment follows Figma layer order + distance check: there is **no** satellite on orbit 5 in this file.
  * Raster assets: co-located PNGs under `orbit-satellite-raster/` — imported so Next emits `/_next/static/media/…` (avoids stale or missing `public/` URLs on previews).
  */
+import homeHeroMonsterEllipseRaster from "./orbit-satellite-raster/home-hero-monster-ellipse.png";
 import raster42814904 from "./orbit-satellite-raster/home-hero-orbit-satellite-428-14904.png";
 import raster42814907 from "./orbit-satellite-raster/home-hero-orbit-satellite-428-14907.png";
 import raster42814911 from "./orbit-satellite-raster/home-hero-orbit-satellite-428-14911.png";
@@ -31,6 +32,9 @@ export type HomeHeroOrbitSatellite = {
 
 /** Figma `428:14920` monster frame = 160px — same basis as `--size-home-hero-monster-max-width`. */
 export const HOME_HERO_MONSTER_FIGMA_PX = 160;
+
+/** Cream halo (`428:16771`) — same bundling as orbit satellites so it is not a separate late `public/` fetch. */
+export const HOME_HERO_MONSTER_ELLIPSE_SRC = homeHeroMonsterEllipseRaster.src;
 
 export const HOME_HERO_ORBIT_SATELLITES: readonly HomeHeroOrbitSatellite[] = [
   {

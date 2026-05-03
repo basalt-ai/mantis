@@ -4,6 +4,7 @@ import Link from "next/link";
 import { HOME_PAGE_CONTAINER_CLASS } from "@/components/sections/home/home-layout";
 import { HOME_HERO_ORBIT_LAYERS_OUTER_TO_INNER } from "@/components/sections/home/home-hero-orbit-layers";
 import {
+  HOME_HERO_MONSTER_ELLIPSE_SRC,
   HOME_HERO_MONSTER_FIGMA_PX,
   HOME_HERO_ORBIT_SATELLITES,
   homeHeroOrbitSatelliteCssRotationDeg,
@@ -55,11 +56,12 @@ export function HomeHero() {
               {/* eslint-disable-next-line @next/next/no-img-element -- Figma-export rasters */}
               <img
                 className="home-hero-pancake-ellipse"
-                src="/home-hero-monster-ellipse.png"
+                src={HOME_HERO_MONSTER_ELLIPSE_SRC}
                 alt=""
                 width={946}
                 height={946}
-                decoding="async"
+                decoding="sync"
+                fetchPriority="high"
               />
               {HOME_HERO_ORBIT_LAYERS_OUTER_TO_INNER.map((layer) => (
                 <div
