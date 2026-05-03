@@ -761,11 +761,12 @@
     fill: var(--palette-chrome-70);
   }
 
-  /** Dept wires — animated “balls”: uniform bead look (fill + highlight ring + soft shadow). */
+  /** Trail balls — same fill as static flow nodes; light ring + shadow for depth only. */
   .home-org-diagram__flow-node.home-org-diagram__flow-node--trail {
-    fill: var(--palette-chrome-80);
-    stroke: var(--palette-chrome-30);
+    fill: var(--palette-chrome-70);
+    stroke: var(--palette-chrome-50);
     stroke-width: 1.25px;
+    opacity: 1;
     filter: drop-shadow(0 1px 2px color-mix(in srgb, var(--palette-chrome-100) 16%, transparent));
   }
 

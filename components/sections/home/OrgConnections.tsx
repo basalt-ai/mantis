@@ -2,8 +2,9 @@
 
 /**
  * Org diagram wires — Figma `428:14926` (`get_design_context` MCP).
- * • Monster → Growth / Engineering / Operations + Founder → Pancake: static dashed paths;
- *   each wire gets an independent random “traffic” of balls (count, radius, speed, ease, direction, segment).
+ * • Monster ↔ Growth / Engineering / Operations + Founder ↔ Pancake: static dashed paths;
+ *   each wire: random count of balls (radius, duration, ease, delay); every ball runs the full wire end-to-end
+ *   (u 0→1→0 with yoyo), random direction (which anchor is “start” at u=0); no mid-line spawn or shuttle segments.
  */
 
 import { useRef } from "react";
@@ -123,10 +124,11 @@ const DEPT_BALL_COUNT_MIN = 4;
 const DEPT_BALL_COUNT_MAX = 11;
 const FOUNDER_BALL_COUNT_MIN = 2;
 const FOUNDER_BALL_COUNT_MAX = 7;
-const DURATION_MIN = 1.05;
-const DURATION_MAX = 6.2;
+/** One-way leg duration (s); yoyo doubles perceived period. Kept bounded so no ball reads as static. */
+const DURATION_MIN = 0.42;
+const DURATION_MAX = 1.35;
 
-const EASE_POOL = ["none", "power1.inOut", "power2.inOut", "sine.inOut", "power1.out", "power1.in", "power2.out"] as const;
+const EASE_POOL = ["none", "power1.inOut", "power2.inOut", "sine.inOut", "power1.out", "power2.out"] as const;
 
 function readDashPatternFromDom(path: SVGPathElement): string {
   return getComputedStyle(path).strokeDasharray || "1 12";
@@ -172,40 +174,20 @@ type BallMotionSpec = {
   r: number;
   duration: number;
   ease: string;
-  yoyo: boolean;
-  /** When false, progress 1→0 is used on the path (opposite sense to forward). */
+  /** Path tangent: u=0 at one anchor, u=1 at the other; `forward` picks which anchor is at u=0. */
   forward: boolean;
   delay: number;
-  /** If true, oscillate only between segA and segB on the wire (shuttle). */
-  shuttle: boolean;
-  segA: number;
-  segB: number;
-  /** Initial normalized position along active segment. */
-  startU: number;
 };
 
 function buildRandomSpecs(rng: () => number, count: number): BallMotionSpec[] {
   const specs: BallMotionSpec[] = [];
   for (let i = 0; i < count; i++) {
-    const shuttle = rng() < 0.38;
-    let segA = 0;
-    let segB = 1;
-    if (shuttle) {
-      segA = rand(rng, 0, 0.55);
-      segB = Math.min(1, segA + rand(rng, 0.22, 0.75));
-      if (segB - segA < 0.12) segB = Math.min(1, segA + 0.35);
-    }
     specs.push({
       r: rand(rng, BALL_R_MIN, BALL_R_MAX),
       duration: rand(rng, DURATION_MIN, DURATION_MAX),
       ease: pickEase(rng),
-      yoyo: rng() < 0.62,
-      forward: rng() < 0.52,
-      delay: rand(rng, 0, 2.4),
-      shuttle,
-      segA,
-      segB,
-      startU: rand(rng, 0, 1),
+      forward: rng() < 0.5,
+      delay: rand(rng, 0, 0.45),
     });
   }
   return specs;
@@ -216,16 +198,9 @@ function placeBallOnPath(
   pathLen: number,
   u: number,
   forward: boolean,
-  shuttle: boolean,
-  segA: number,
-  segB: number,
   circle: SVGCircleElement,
 ): void {
-  let t = u;
-  if (shuttle) {
-    t = segA + (segB - segA) * t;
-  }
-  t = gsap.utils.clamp(0, 1, t);
+  const t = gsap.utils.clamp(0, 1, u);
   const along = forward ? t : 1 - t;
   const pt = path.getPointAtLength(along * pathLen);
   circle.setAttribute("cx", String(pt.x));
@@ -245,23 +220,23 @@ function startChaoticWire(path: SVGPathElement, ballRoot: SVGGElement, wireId: s
 
   specs.forEach((spec) => {
     const circle = createTrailCircle(spec.r);
+    circle.setAttribute("opacity", "1");
     ballRoot.appendChild(circle);
-    gsap.set(circle, { opacity: rand(rng, 0.75, 1) });
 
-    const proxy = { u: spec.startU };
+    const proxy = { u: 0 };
     const tick = () => {
-      placeBallOnPath(path, pathLen, proxy.u, spec.forward, spec.shuttle, spec.segA, spec.segB, circle);
+      placeBallOnPath(path, pathLen, proxy.u, spec.forward, circle);
     };
 
     const tw = gsap.fromTo(
       proxy,
-      { u: spec.startU },
+      { u: 0 },
       {
         u: 1,
         duration: spec.duration,
         ease: spec.ease,
         repeat: -1,
-        yoyo: spec.yoyo,
+        yoyo: true,
         delay: spec.delay,
         immediateRender: true,
         onUpdate: tick,
@@ -269,19 +244,6 @@ function startChaoticWire(path: SVGPathElement, ballRoot: SVGGElement, wireId: s
     );
 
     tick();
-
-    if (rng() < 0.32) {
-      const breathe = gsap.to(circle, {
-        opacity: rand(rng, 0.45, 0.92),
-        duration: rand(rng, 0.55, 1.9),
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        delay: rand(rng, 0, 1.2),
-      });
-      tweens.push(breathe);
-    }
-
     tweens.push(tw);
   });
 
@@ -305,6 +267,7 @@ function mountReducedMotionBalls(
   fallbacks.forEach((pt) => {
     const loc = stagePointToPathLocal(path, svg, pt.cx, pt.cy);
     const circle = createTrailCircle(r);
+    circle.setAttribute("opacity", "1");
     circle.setAttribute("cx", String(loc.x));
     circle.setAttribute("cy", String(loc.y));
     ballRoot.appendChild(circle);
