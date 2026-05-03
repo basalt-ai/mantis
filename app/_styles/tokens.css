@@ -156,8 +156,8 @@
 
     /* Home hero layout frame (`428:14920` = 160²): ellipse, dotted orbits, satellite math — Figma scale */
     --size-home-hero-monster-max-width: calc(10 * var(--spacing-xl));
-    /* Interactive SVG mascot only — does not affect orbit / ellipse tokens */
-    --size-home-hero-monster-interactive-max-width: calc(var(--size-home-hero-monster-max-width) * 1.25);
+    /* Interactive SVG mascot only — does not affect orbit / ellipse tokens (+25% vs Figma, then +25%) */
+    --size-home-hero-monster-interactive-max-width: calc(var(--size-home-hero-monster-max-width) * 1.5625);
     /*
      * Cream halo: Figma hero `428:14900` — instance `428:16771` (“top”) is 236.46×236.46
      * behind `428:14920` (160×160). Do not use PNG canvas ratio (946/496); exports include
