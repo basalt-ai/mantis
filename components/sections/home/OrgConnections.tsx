@@ -124,9 +124,9 @@ const DEPT_BALL_COUNT_MIN = 4;
 const DEPT_BALL_COUNT_MAX = 11;
 const FOUNDER_BALL_COUNT_MIN = 2;
 const FOUNDER_BALL_COUNT_MAX = 7;
-/** One-way leg duration (s); yoyo doubles perceived period. Kept bounded so no ball reads as static. */
-const DURATION_MIN = 0.42;
-const DURATION_MAX = 1.35;
+/** One-way leg duration (s); yoyo doubles perceived round-trip. Tuned slower than the “too fast” pass. */
+const DURATION_MIN = 1.1;
+const DURATION_MAX = 2.85;
 
 const EASE_POOL = ["none", "power1.inOut", "power2.inOut", "sine.inOut", "power1.out", "power2.out"] as const;
 
