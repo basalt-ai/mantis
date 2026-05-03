@@ -99,24 +99,28 @@ function orgWireGroupTransform(wire: OrgTransformedWire): string {
 
 const DOT_FOUNDER_PANCAKE = { "data-node-id": "428:16765" as const, cx: 506, cy: 28, r: 6 };
 
-type DeptDotDef = { readonly "data-node-id": string; readonly r: number; readonly figmaCx: number; readonly figmaCy: number };
+/** ViewBox-space radius — one size for all dept trail “balls” (Growth 1, Engineering 3, Operations 2). */
+const DEPT_TRAIL_DOT_RADIUS = 6;
+
+type DeptDotDef = { readonly "data-node-id": string; readonly figmaCx: number; readonly figmaCy: number };
 
 const DEPT_DOTS: Record<string, readonly DeptDotDef[]> = {
-  "428:14927": [{ "data-node-id": "428:16779", r: 6, figmaCx: 330, figmaCy: 201 }],
+  "428:14927": [{ "data-node-id": "428:16779", figmaCx: 330, figmaCy: 201 }],
   "428:14937": [
-    { "data-node-id": "428:16781", r: 3, figmaCx: 526, figmaCy: 187 },
-    { "data-node-id": "428:16787", r: 4, figmaCx: 656, figmaCy: 173 },
-    { "data-node-id": "428:16789", r: 4, figmaCx: 602, figmaCy: 266 },
+    { "data-node-id": "428:16781", figmaCx: 526, figmaCy: 187 },
+    { "data-node-id": "428:16787", figmaCx: 656, figmaCy: 173 },
+    { "data-node-id": "428:16789", figmaCx: 602, figmaCy: 266 },
   ],
   "428:14928": [
-    { "data-node-id": "428:16783", r: 3, figmaCx: 724, figmaCy: 192 },
-    { "data-node-id": "428:16793", r: 6, figmaCx: 828, figmaCy: 173 },
+    { "data-node-id": "428:16783", figmaCx: 724, figmaCy: 192 },
+    { "data-node-id": "428:16793", figmaCx: 828, figmaCy: 173 },
   ],
 };
 
 const STAGE_DRAW_DURATION = 1.25;
 const STAGE_PATH_STAGGER = 0.15;
-const DOT_CLUSTER_GAP = 0.05;
+/** Normalized path progress between consecutive balls (Engineering train). */
+const DOT_CLUSTER_GAP = 0.1;
 const TRIP_DURATION = 2.5;
 const PAUSE_AT_BLOCK = 0.35;
 const PAUSE_AT_MONSTER = 0.3;
@@ -319,11 +323,12 @@ export function OrgConnections() {
           {(DEPT_DOTS[wire.dataNodeId] ?? []).map((d) => (
             <circle
               key={d["data-node-id"]}
-              className="home-org-diagram__flow-node"
+              className="home-org-diagram__flow-node home-org-diagram__flow-node--trail"
               data-node-id={d["data-node-id"]}
-              r={d.r}
+              r={DEPT_TRAIL_DOT_RADIUS}
               cx={0}
               cy={0}
+              vectorEffect="nonScalingStroke"
             />
           ))}
         </g>

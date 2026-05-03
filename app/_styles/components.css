@@ -761,6 +761,14 @@
     fill: var(--palette-chrome-70);
   }
 
+  /** Dept wires — animated “balls”: uniform bead look (fill + highlight ring + soft shadow). */
+  .home-org-diagram__flow-node.home-org-diagram__flow-node--trail {
+    fill: var(--palette-chrome-80);
+    stroke: var(--palette-chrome-30);
+    stroke-width: 1.25px;
+    filter: drop-shadow(0 1px 2px color-mix(in srgb, var(--palette-chrome-100) 16%, transparent));
+  }
+
   .home-org-diagram__chip-arrow-path {
     fill: none;
     stroke: var(--palette-chrome-70);
