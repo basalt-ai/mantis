@@ -2,7 +2,7 @@
 
 /**
  * Org diagram wires — Figma `428:14926` (`get_design_context` MCP).
- * • Monster → Growth / Engineering / Operations: scroll draw + looping dot motion (GSAP).
+ * • Monster → Growth / Engineering / Operations: paths static (CSS dash); looping dot motion only (GSAP).
  * • Founder → Pancake (Vector 210): static.
  */
 
@@ -117,8 +117,6 @@ const DEPT_DOTS: Record<string, readonly DeptDotDef[]> = {
   ],
 };
 
-const STAGE_DRAW_DURATION = 1.25;
-const STAGE_PATH_STAGGER = 0.15;
 /** Normalized path progress between consecutive balls (Engineering train). */
 const DOT_CLUSTER_GAP = 0.1;
 const TRIP_DURATION = 2.5;
@@ -231,9 +229,8 @@ export function OrgConnections() {
 
       if (deptCtx.length === 0) return;
 
-      const dashRestore = readDashPatternFromDom(deptCtx[0]!.path);
-
       if (reduced) {
+        const dashRestore = readDashPatternFromDom(deptCtx[0]!.path);
         deptCtx.forEach(({ path, circles, defs }) => {
           applyFigmaDotPositionsLocal(path, svg, circles, defs);
           gsap.set(circles, { opacity: 1 });
@@ -253,45 +250,14 @@ export function OrgConnections() {
         start: "top 80%",
         once: true,
         onEnter: () => {
-          const drawTl = gsap.timeline();
-
-          deptCtx.forEach(({ path }, index) => {
-            const pl = path.getTotalLength();
-            const pos = index * STAGE_PATH_STAGGER;
-
-            drawTl.fromTo(
-              path,
-              { strokeDashoffset: pl },
-              {
-                strokeDashoffset: 0,
-                duration: STAGE_DRAW_DURATION,
-                ease: "none",
-                immediateRender: false,
-                onStart: () => {
-                  path.setAttribute("stroke-dasharray", `${pl} ${pl}`);
-                  path.setAttribute("stroke-dashoffset", String(pl));
-                },
-                onComplete: () => {
-                  path.setAttribute("stroke-dasharray", dashRestore);
-                  path.setAttribute("stroke-dashoffset", "0");
-                },
-              },
-              pos,
-            );
+          loopTimelinesRef.current.forEach((t) => t.kill());
+          loopTimelinesRef.current = [];
+          deptCtx.forEach(({ path, circles }, i) => {
+            const lt = buildDeptLoopTimeline(path, circles);
+            lt.delay(i * CYCLE_STAGGER);
+            loopTimelinesRef.current.push(lt);
+            lt.play(0);
           });
-
-          drawTl.eventCallback("onComplete", () => {
-            loopTimelinesRef.current.forEach((t) => t.kill());
-            loopTimelinesRef.current = [];
-            deptCtx.forEach(({ path, circles }, i) => {
-              const lt = buildDeptLoopTimeline(path, circles);
-              lt.delay(i * CYCLE_STAGGER);
-              loopTimelinesRef.current.push(lt);
-              lt.play(0);
-            });
-          });
-
-          drawTl.play(0);
         },
       });
 
