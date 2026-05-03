@@ -68,6 +68,12 @@ export interface Weights {
 }
 
 export function computeWeights(dx: number, dy: number, distance: number): Weights {
+  // Before the first `mousemove`, `useCursorTracking` keeps `distance` at `Infinity`; with
+  // `dx === dy === 0` and `len === Infinity`, cardinal weights all become 0 → invalid paths.
+  if (!Number.isFinite(distance)) {
+    return { middle: 1, top: 0, bottom: 0, left: 0, right: 0 };
+  }
+
   const CENTER_DIST = 80;
   const centerWeight = Math.max(0, 1 - distance / CENTER_DIST);
 
