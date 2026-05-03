@@ -154,8 +154,8 @@
     --spacing-home-hero-padding-top-mobile: var(--spacing-xxl);
     --spacing-home-hero-padding-top: calc(5 * var(--spacing-xxl));
 
-    /* Home hero mascot: Figma `428:14920` = 160² — slightly above token scale (~+6%) for interactive SVG presence */
-    --size-home-hero-monster-max-width: calc(10.625 * var(--spacing-xl));
+    /* Home hero mascot: Figma `428:14920` = 160² — token = 10×`spacing-xl` +25% for hero presence */
+    --size-home-hero-monster-max-width: calc(12.5 * var(--spacing-xl));
     /*
      * Cream halo: Figma hero `428:14900` — instance `428:16771` (“top”) is 236.46×236.46
      * behind `428:14920` (160×160). Do not use PNG canvas ratio (946/496); exports include
