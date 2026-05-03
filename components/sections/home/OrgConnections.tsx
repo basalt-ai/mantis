@@ -24,7 +24,8 @@ const ORG_WIRE_GROWTH: OrgTransformedWire = {
   vbH: 511.538,
   d: "M172.5 510C31.0004 520.5 169.5 46.5004 1.50037 1.50037",
   frame: { x: 206, y: 113, w: 508.672, h: 171 },
-  vectorStroke: false,
+  /** Figma layout squashes a tall local path into a wide frame — uniform dash needs non-scaling stroke. */
+  vectorStroke: true,
 };
 
 /** Vector 215 — Figma `428:14928`; wrapper `left-[731px] top-[91px] w-[146.5px] h-[157.5px]`. */
