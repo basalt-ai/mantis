@@ -741,10 +741,6 @@
     z-index: 1;
   }
 
-  .home-org-diagram__svg--chip-link {
-    z-index: 0;
-  }
-
   .home-org-diagram__svg--chip-arrows {
     z-index: 2;
   }

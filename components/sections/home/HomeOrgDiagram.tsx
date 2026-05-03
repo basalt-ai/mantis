@@ -71,29 +71,11 @@ const CHIP_ARROW_SY = V_PATH_INNER_H / CHIP_ARROW_VB_H;
 
 export function HomeOrgDiagram() {
   const founderClipId = useId().replace(/:/g, "");
-  const orgWireUid = useId().replace(/:/g, "");
 
   return (
     <div className="home-org-diagram">
       <div className="home-org-diagram__stage">
         <OrgConnections />
-
-        <svg
-          className="home-org-diagram__svg home-org-diagram__svg--chip-link"
-          viewBox="0 0 1136 706"
-          preserveAspectRatio="xMidYMid meet"
-          aria-hidden
-          focusable="false"
-        >
-          {/* Figma Vector 210 — dotted link You avatar → Pancake (not part of monster→dept `OrgConnections`). */}
-          <path
-            id={`${orgWireUid}-chip`}
-            className="home-org-diagram__wire"
-            d="M 488 64 L 608 64"
-            data-node-id="428:14936"
-            vectorEffect="nonScalingStroke"
-          />
-        </svg>
 
         <div
           className="home-org-diagram__you-chip home-org-diagram__abs"
