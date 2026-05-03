@@ -2,9 +2,9 @@
 
 /**
  * Org diagram wires — Figma `428:14926` (`get_design_context` MCP).
- * • Monster ↔ Growth / Engineering / Operations + Founder ↔ Pancake: static dashed paths;
- *   each wire: random count of balls (radius, duration, ease, delay); every ball runs the full wire end-to-end
- *   (u 0→1→0 with yoyo), random direction (which anchor is “start” at u=0); no mid-line spawn or shuttle segments.
+ * • Five “elements”: You, Pancake (hub), Growth, Engineering, Operations.
+ * • Balls travel one full edge (u 0→1, no yoyo); on arrival they respawn from a random element’s departure
+ *   (random outgoing directed leg). Stroke-free trail dots.
  */
 
 import { useRef } from "react";
@@ -70,7 +70,7 @@ const ORG_WIRE_FOUNDER_PANCAKE: OrgTransformedWire = {
   transformMode: "vector210",
 };
 
-/** All wires that carry chaotic ball traffic (depts + human↔Pancake). */
+/** All wires that carry ball traffic (depts + human↔Pancake). */
 const ORG_WIRES_WITH_BALLS: readonly OrgTransformedWire[] = [...ORG_DEPT_WIRES, ORG_WIRE_FOUNDER_PANCAKE];
 
 function orgWireTransform(frame: OrgWireFrame, vbW: number, vbH: number): string {
@@ -120,15 +120,35 @@ const REDUCED_FALLBACK_BY_WIRE: Record<string, readonly { cx: number; cy: number
 
 const BALL_R_MIN = 3.2;
 const BALL_R_MAX = 7.8;
-const DEPT_BALL_COUNT_MIN = 4;
-const DEPT_BALL_COUNT_MAX = 11;
-const FOUNDER_BALL_COUNT_MIN = 2;
-const FOUNDER_BALL_COUNT_MAX = 7;
-/** One-way leg duration (s); yoyo doubles perceived round-trip. Tuned slower than the “too fast” pass. */
+const TOTAL_BALL_MIN = 18;
+const TOTAL_BALL_MAX = 26;
+/** One-way leg duration (s); no return tween — next leg respawns from a random element. */
 const DURATION_MIN = 1.1;
 const DURATION_MAX = 2.85;
+const LEG_DELAY_MAX = 0.35;
 
 const EASE_POOL = ["none", "power1.inOut", "power2.inOut", "sine.inOut", "power1.out", "power2.out"] as const;
+
+/** Diagram centres in stage / viewBox space (1136×706) — nearest path end picks semantic node. */
+const ANCHOR_IDS = ["you", "pancake", "growth", "engineering", "operations"] as const;
+type AnchorId = (typeof ANCHOR_IDS)[number];
+
+const ANCHORS: Record<AnchorId, { x: number; y: number }> = {
+  you: { x: 263, y: 98 },
+  pancake: { x: 672, y: 88 },
+  growth: { x: 184, y: 448 },
+  engineering: { x: 568, y: 486 },
+  operations: { x: 952, y: 430 },
+};
+
+type DirectedLeg = {
+  wireId: string;
+  path: SVGPathElement;
+  ballRoot: SVGGElement;
+  forward: boolean;
+  from: AnchorId;
+  to: AnchorId;
+};
 
 function readDashPatternFromDom(path: SVGPathElement): string {
   return getComputedStyle(path).strokeDasharray || "1 12";
@@ -151,7 +171,7 @@ function clearBallRoot(root: SVGGElement): void {
 function createTrailCircle(r: number): SVGCircleElement {
   const c = document.createElementNS(SVG_NS, "circle");
   c.setAttribute("class", "home-org-diagram__flow-node home-org-diagram__flow-node--trail");
-  c.setAttribute("vectorEffect", "nonScalingStroke");
+  c.setAttribute("data-org-trail-ball", "1");
   c.setAttribute("r", String(r));
   c.setAttribute("cx", "0");
   c.setAttribute("cy", "0");
@@ -170,27 +190,42 @@ function pickEase(rng: () => number): string {
   return EASE_POOL[Math.floor(rng() * EASE_POOL.length)] ?? "sine.inOut";
 }
 
-type BallMotionSpec = {
-  r: number;
-  duration: number;
-  ease: string;
-  /** Path tangent: u=0 at one anchor, u=1 at the other; `forward` picks which anchor is at u=0. */
-  forward: boolean;
-  delay: number;
-};
-
-function buildRandomSpecs(rng: () => number, count: number): BallMotionSpec[] {
-  const specs: BallMotionSpec[] = [];
-  for (let i = 0; i < count; i++) {
-    specs.push({
-      r: rand(rng, BALL_R_MIN, BALL_R_MAX),
-      duration: rand(rng, DURATION_MIN, DURATION_MAX),
-      ease: pickEase(rng),
-      forward: rng() < 0.5,
-      delay: rand(rng, 0, 0.45),
-    });
+function closestAnchorToPathPoint(path: SVGPathElement, svg: SVGSVGElement, px: number, py: number): AnchorId {
+  let best: AnchorId = "you";
+  let bestD = Infinity;
+  for (const id of ANCHOR_IDS) {
+    const a = ANCHORS[id];
+    const loc = stagePointToPathLocal(path, svg, a.x, a.y);
+    const d = (loc.x - px) ** 2 + (loc.y - py) ** 2;
+    if (d < bestD) {
+      bestD = d;
+      best = id;
+    }
   }
-  return specs;
+  return best;
+}
+
+function buildDirectedLegs(
+  svg: SVGSVGElement,
+  wireCtx: readonly { wireId: string; path: SVGPathElement; ballRoot: SVGGElement }[],
+): DirectedLeg[] {
+  const legs: DirectedLeg[] = [];
+  for (const w of wireCtx) {
+    const len = w.path.getTotalLength();
+    const p0 = w.path.getPointAtLength(0);
+    const p1 = w.path.getPointAtLength(len);
+    const a0 = closestAnchorToPathPoint(w.path, svg, p0.x, p0.y);
+    const a1 = closestAnchorToPathPoint(w.path, svg, p1.x, p1.y);
+    legs.push({ wireId: w.wireId, path: w.path, ballRoot: w.ballRoot, forward: true, from: a0, to: a1 });
+    legs.push({ wireId: w.wireId, path: w.path, ballRoot: w.ballRoot, forward: false, from: a1, to: a0 });
+  }
+  return legs;
+}
+
+function pickLegFromAnchor(legs: readonly DirectedLeg[], from: AnchorId, rng: () => number): DirectedLeg {
+  const candidates = legs.filter((l) => l.from === from);
+  if (candidates.length > 0) return candidates[randInt(rng, 0, candidates.length - 1)]!;
+  return legs[randInt(rng, 0, legs.length - 1)]!;
 }
 
 function placeBallOnPath(
@@ -207,47 +242,59 @@ function placeBallOnPath(
   circle.setAttribute("cy", String(pt.y));
 }
 
-function startChaoticWire(path: SVGPathElement, ballRoot: SVGGElement, wireId: string, rng: () => number): gsap.core.Tween[] {
-  const pathLen = path.getTotalLength();
-  const isFounder = wireId === ORG_WIRE_FOUNDER_PANCAKE.dataNodeId;
-  const nMin = isFounder ? FOUNDER_BALL_COUNT_MIN : DEPT_BALL_COUNT_MIN;
-  const nMax = isFounder ? FOUNDER_BALL_COUNT_MAX : DEPT_BALL_COUNT_MAX;
-  const count = randInt(rng, nMin, nMax);
-  const specs = buildRandomSpecs(rng, count);
-  const tweens: gsap.core.Tween[] = [];
+function runBallLeg(circle: SVGCircleElement, legs: readonly DirectedLeg[], rng: () => number): void {
+  const from = ANCHOR_IDS[randInt(rng, 0, ANCHOR_IDS.length - 1)];
+  const leg = pickLegFromAnchor(legs, from, rng);
+  leg.ballRoot.appendChild(circle);
 
-  clearBallRoot(ballRoot);
+  const pathLen = leg.path.getTotalLength();
+  const duration = rand(rng, DURATION_MIN, DURATION_MAX);
+  const ease = pickEase(rng);
+  const delay = rand(rng, 0, LEG_DELAY_MAX);
 
-  specs.forEach((spec) => {
-    const circle = createTrailCircle(spec.r);
-    circle.setAttribute("opacity", "1");
-    ballRoot.appendChild(circle);
+  circle.setAttribute("r", String(rand(rng, BALL_R_MIN, BALL_R_MAX)));
 
-    const proxy = { u: 0 };
-    const tick = () => {
-      placeBallOnPath(path, pathLen, proxy.u, spec.forward, circle);
-    };
+  const proxy = { u: 0 };
+  const tick = () => {
+    placeBallOnPath(leg.path, pathLen, proxy.u, leg.forward, circle);
+  };
 
-    const tw = gsap.fromTo(
-      proxy,
-      { u: 0 },
-      {
-        u: 1,
-        duration: spec.duration,
-        ease: spec.ease,
-        repeat: -1,
-        yoyo: true,
-        delay: spec.delay,
-        immediateRender: true,
-        onUpdate: tick,
-      },
-    );
+  gsap.fromTo(
+    proxy,
+    { u: 0 },
+    {
+      u: 1,
+      duration,
+      ease,
+      delay,
+      immediateRender: true,
+      onUpdate: tick,
+      onComplete: () => runBallLeg(circle, legs, rng),
+    },
+  );
 
-    tick();
-    tweens.push(tw);
+  tick();
+}
+
+function startBallTraffic(
+  svg: SVGSVGElement,
+  wireCtx: readonly { wireId: string; path: SVGPathElement; ballRoot: SVGGElement }[],
+  rng: () => number,
+): void {
+  wireCtx.forEach(({ ballRoot }) => {
+    gsap.killTweensOf(ballRoot.querySelectorAll("circle[data-org-trail-ball]"));
+    clearBallRoot(ballRoot);
   });
 
-  return tweens;
+  const legs = buildDirectedLegs(svg, wireCtx);
+  if (legs.length === 0) return;
+
+  const total = randInt(rng, TOTAL_BALL_MIN, TOTAL_BALL_MAX);
+  for (let i = 0; i < total; i++) {
+    const circle = createTrailCircle(rand(rng, BALL_R_MIN, BALL_R_MAX));
+    circle.setAttribute("opacity", "1");
+    runBallLeg(circle, legs, rng);
+  }
 }
 
 function mountReducedMotionBalls(
@@ -276,7 +323,6 @@ function mountReducedMotionBalls(
 
 export function OrgConnections() {
   const rootRef = useRef<SVGSVGElement>(null);
-  const ballTweensRef = useRef<gsap.core.Tween[]>([]);
 
   useGSAP(
     () => {
@@ -300,8 +346,9 @@ export function OrgConnections() {
 
       const cleanup = () => {
         st?.kill();
-        ballTweensRef.current.forEach((t) => t.kill());
-        ballTweensRef.current = [];
+        svg.querySelectorAll<SVGCircleElement>("circle[data-org-trail-ball]").forEach((c) => {
+          gsap.killTweensOf(c);
+        });
         wireCtx.forEach(({ ballRoot }) => {
           gsap.killTweensOf(ballRoot.querySelectorAll("circle"));
           clearBallRoot(ballRoot);
@@ -322,14 +369,15 @@ export function OrgConnections() {
         start: "top 80%",
         once: true,
         onEnter: () => {
-          ballTweensRef.current.forEach((t) => t.kill());
-          ballTweensRef.current = [];
-          const rng = () => Math.random();
-
-          wireCtx.forEach(({ path, ballRoot, wireId }) => {
-            const tweens = startChaoticWire(path, ballRoot, wireId, rng);
-            ballTweensRef.current.push(...tweens);
+          svg.querySelectorAll<SVGCircleElement>("circle[data-org-trail-ball]").forEach((c) => {
+            gsap.killTweensOf(c);
           });
+          wireCtx.forEach(({ ballRoot }) => {
+            gsap.killTweensOf(ballRoot.querySelectorAll("circle"));
+            clearBallRoot(ballRoot);
+          });
+          const rng = () => Math.random();
+          startBallTraffic(svg, wireCtx, rng);
         },
       });
 

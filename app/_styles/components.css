@@ -761,11 +761,10 @@
     fill: var(--palette-chrome-70);
   }
 
-  /** Trail balls — same fill as static flow nodes; light ring + shadow for depth only. */
+  /** Trail balls — same fill as static flow nodes; soft shadow only (no stroke). */
   .home-org-diagram__flow-node.home-org-diagram__flow-node--trail {
     fill: var(--palette-chrome-70);
-    stroke: var(--palette-chrome-50);
-    stroke-width: 1.25px;
+    stroke: none;
     opacity: 1;
     filter: drop-shadow(0 1px 2px color-mix(in srgb, var(--palette-chrome-100) 16%, transparent));
   }
