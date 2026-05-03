@@ -9,6 +9,7 @@ import {
   homeHeroOrbitSatelliteCssRotationDeg,
   homeHeroOrbitSatelliteSrc,
 } from "@/components/sections/home/home-hero-orbit-satellites";
+import { HomeHeroPancakeMonster } from "@/components/sections/home/HomeHeroPancakeMonster";
 import { H1 } from "@/components/ui/Headings";
 
 /**
@@ -118,15 +119,7 @@ export function HomeHero() {
                   </div>
                 </div>
               ))}
-              {/* eslint-disable-next-line @next/next/no-img-element -- Figma-export rasters */}
-              <img
-                className="home-hero-pancake-img"
-                src="/pancake-monster.png"
-                alt=""
-                width={496}
-                height={512}
-                decoding="async"
-              />
+              <HomeHeroPancakeMonster />
               {HOME_HERO_ORBIT_SATELLITES.filter((s) => s.layer === "frontOfMascot").map((s) => (
                 <div
                   key={s.figmaNode}

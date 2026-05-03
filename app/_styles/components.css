@@ -572,15 +572,25 @@
     --orbit-a: var(--angle-home-hero-monster-orbit-6);
   }
 
-  .home-hero-pancake-img {
+  /**
+   * Hero mascot slot — same footprint as former `/pancake-monster.png` (Figma `428:14920` = 160²).
+   * `HomeHeroPancakeMonster` measures this box and drives the interactive SVG at that pixel size.
+   */
+  .home-hero-pancake-monster-slot {
     position: relative;
     z-index: 3;
-    display: block;
-    width: auto;
-    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
     max-width: var(--size-home-hero-monster-max-width);
-    max-height: var(--size-home-hero-monster-max-width);
-    object-fit: contain;
+    aspect-ratio: 1;
+    margin-inline: auto;
+    pointer-events: auto;
+  }
+
+  .home-hero-pancake-monster-slot .pancake-monster {
+    flex-shrink: 0;
   }
 
   /**
