@@ -5,6 +5,8 @@
 
 import { useId } from "react";
 
+import { OrgConnections } from "@/components/sections/home/OrgConnections";
+
 type OrgRowStatus = "positive" | "warning" | "negative";
 
 type OrgRow = { label: string; status: OrgRowStatus };
@@ -67,95 +69,6 @@ const V264_INNER_OFFSET_Y = (V264_WRAPPER.h - V_PATH_INNER_H) / 2;
 const CHIP_ARROW_SX = V_PATH_INNER_W / CHIP_ARROW_VB_W;
 const CHIP_ARROW_SY = V_PATH_INNER_H / CHIP_ARROW_VB_H;
 
-/**
- * Org wires — Figma `428:14926` (`get_design_context` MCP SVG + `get_metadata` frame).
- * Growth (211), Engineering (213), Operations (215) share the same pattern: path `d` in local
- * viewBox + `translate`/`scale` onto the 1136×706 stage. Flow nodes are sampled in **local**
- * space then mapped to stage so circles stay round (same transform as the path).
- * Paint order: Vector 211 → 215 → 213 (matches Figma sibling order so Ops passes under Eng).
- */
-type OrgWireFrame = { x: number; y: number; w: number; h: number };
-
-type Cubic = { x0: number; y0: number; x1: number; y1: number; x2: number; y2: number; x3: number; y3: number };
-
-function cubicPoint(t: number, c: Cubic): { x: number; y: number } {
-  const u = 1 - t;
-  const u2 = u * u;
-  const u3 = u2 * u;
-  const t2 = t * t;
-  const t3 = t2 * t;
-  return {
-    x: u3 * c.x0 + 3 * u2 * t * c.x1 + 3 * u * t2 * c.x2 + t3 * c.x3,
-    y: u3 * c.y0 + 3 * u2 * t * c.y1 + 3 * u * t2 * c.y2 + t3 * c.y3,
-  };
-}
-
-function orgWireTransform(frame: OrgWireFrame, vbW: number, vbH: number): string {
-  const sx = frame.w / vbW;
-  const sy = frame.h / vbH;
-  return `translate(${frame.x} ${frame.y}) scale(${sx} ${sy})`;
-}
-
-/** Map local wire coordinates (same space as `d`) to Frame 76 stage pixels. */
-function orgWireStagePoint(frame: OrgWireFrame, vbW: number, vbH: number, lx: number, ly: number): { cx: number; cy: number } {
-  return {
-    cx: frame.x + (lx / vbW) * frame.w,
-    cy: frame.y + (ly / vbH) * frame.h,
-  };
-}
-
-type OrgTransformedWire = {
-  dataNodeId: string;
-  pathIdSuffix: string;
-  vbW: number;
-  vbH: number;
-  d: string;
-  frame: OrgWireFrame;
-  cubic: Cubic;
-  /** Figma export uses uniform-ish stroke; keep non-scaling only where scale ≈ 1. */
-  vectorStroke: boolean;
-};
-
-/** Vector 211 — MCP asset + metadata. */
-const ORG_WIRE_GROWTH: OrgTransformedWire = {
-  dataNodeId: "428:14927",
-  pathIdSuffix: "growth",
-  vbW: 174,
-  vbH: 511.538,
-  d: "M172.5 510C31.0004 520.5 169.5 46.5004 1.50037 1.50037",
-  frame: { x: 206, y: 284, w: 508.67185943172194, h: 171.00009024587575 },
-  cubic: { x0: 172.5, y0: 510, x1: 31.0004, y1: 520.5, x2: 169.5, y2: 46.5004, x3: 1.50037, y3: 1.50037 },
-  vectorStroke: false,
-};
-
-/** Vector 215 — MCP asset + metadata. */
-const ORG_WIRE_OPERATIONS: OrgTransformedWire = {
-  dataNodeId: "428:14928",
-  pathIdSuffix: "operations",
-  vbW: 160.501,
-  vbH: 149.501,
-  d: "M159 148C138.5 92.0004 46.0004 21.0004 1.50038 1.50038",
-  frame: { x: 877.5, y: 248.5, w: 146.49999851030066, h: 157.50002806622547 },
-  cubic: { x0: 159, y0: 148, x1: 138.5, y1: 92.0004, x2: 46.0004, y2: 21.0004, x3: 1.50038, y3: 1.50038 },
-  vectorStroke: false,
-};
-
-/** Vector 213 — MCP asset + metadata. */
-const ORG_WIRE_ENGINEERING: OrgTransformedWire = {
-  dataNodeId: "428:14937",
-  pathIdSuffix: "engineering",
-  vbW: 177.412,
-  vbH: 209,
-  d: "M152.086 1.5C255.086 104.5 -9.91415 143.5 1.58568 207.5",
-  frame: { x: 574.1351928710938, y: 102, w: 174.69086593814586, h: 206.0001297062929 },
-  cubic: { x0: 152.086, y0: 1.5, x1: 255.086, y1: 104.5, x2: -9.91415, y2: 143.5, x3: 1.58568, y3: 207.5 },
-  vectorStroke: true,
-};
-
-const ORG_WIRES_PAINT_ORDER: readonly OrgTransformedWire[] = [ORG_WIRE_GROWTH, ORG_WIRE_OPERATIONS, ORG_WIRE_ENGINEERING];
-
-const ORG_FLOW_T_SAMPLES = [0.22, 0.52, 0.78] as const;
-
 export function HomeOrgDiagram() {
   const founderClipId = useId().replace(/:/g, "");
   const orgWireUid = useId().replace(/:/g, "");
@@ -163,14 +76,16 @@ export function HomeOrgDiagram() {
   return (
     <div className="home-org-diagram">
       <div className="home-org-diagram__stage">
+        <OrgConnections />
+
         <svg
-          className="home-org-diagram__svg home-org-diagram__svg--wires"
+          className="home-org-diagram__svg home-org-diagram__svg--chip-link"
           viewBox="0 0 1136 706"
           preserveAspectRatio="xMidYMid meet"
           aria-hidden
           focusable="false"
         >
-          {/* Figma Vector 210 is authored in a tall local box then squashed; draw a flat dotted link in stage space instead. */}
+          {/* Figma Vector 210 — dotted link You avatar → Pancake (not part of monster→dept `OrgConnections`). */}
           <path
             id={`${orgWireUid}-chip`}
             className="home-org-diagram__wire"
@@ -178,38 +93,6 @@ export function HomeOrgDiagram() {
             data-node-id="428:14936"
             vectorEffect="nonScalingStroke"
           />
-          {ORG_WIRES_PAINT_ORDER.map((wire) => (
-            <g
-              key={wire.dataNodeId}
-              data-node-id={wire.dataNodeId}
-              transform={orgWireTransform(wire.frame, wire.vbW, wire.vbH)}
-            >
-              <path
-                id={`${orgWireUid}-${wire.pathIdSuffix}`}
-                className="home-org-diagram__wire"
-                d={wire.d}
-                vectorEffect={wire.vectorStroke ? "nonScalingStroke" : undefined}
-              />
-            </g>
-          ))}
-          <g className="home-org-diagram__flow-nodes" aria-hidden>
-            {ORG_FLOW_T_SAMPLES.flatMap((t, i) =>
-              ORG_WIRES_PAINT_ORDER.map((wire) => {
-                const p = cubicPoint(t, wire.cubic);
-                const s = orgWireStagePoint(wire.frame, wire.vbW, wire.vbH, p.x, p.y);
-                return (
-                  <circle
-                    key={`${wire.dataNodeId}-${i}`}
-                    className="home-org-diagram__flow-node"
-                    data-wire={wire.pathIdSuffix}
-                    cx={s.cx}
-                    cy={s.cy}
-                    r={4}
-                  />
-                );
-              }))
-            }
-          </g>
         </svg>
 
         <div
