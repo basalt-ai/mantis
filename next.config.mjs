@@ -23,11 +23,14 @@ const nextConfig = {
       "retrofuturism",
       "sustainable",
     ];
-    return dead.map((path) => ({
-      source: `/${path}`,
-      destination: "/",
-      permanent: true,
-    }));
+    return [
+      { source: "/favicon.ico", destination: "/icon.png", permanent: false },
+      ...dead.map((path) => ({
+        source: `/${path}`,
+        destination: "/",
+        permanent: true,
+      })),
+    ];
   },
 };
 
