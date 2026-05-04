@@ -6,9 +6,9 @@
 
 "use client";
 
-import { useId, useRef } from "react";
+import { useId, useRef, useState } from "react";
 
-import { HomeOrgLiveRows } from "@/components/sections/home/HomeOrgLiveRows";
+import { getInitialDeptMap, HomeOrgLiveRows } from "@/components/sections/home/HomeOrgLiveRows";
 import { OrgConnections } from "@/components/sections/home/OrgConnections";
 
 /** Figma `428:14929` / `428:14930` — path `d` from MCP SVG asset (same geometry; placement + rotation per node). */
@@ -33,6 +33,7 @@ const CHIP_ARROW_SY = V_PATH_INNER_H / CHIP_ARROW_VB_H;
 export function HomeOrgDiagram() {
   const founderClipId = useId().replace(/:/g, "");
   const diagramRootRef = useRef<HTMLDivElement>(null);
+  const [deptRows, setDeptRows] = useState(getInitialDeptMap);
 
   return (
     <div ref={diagramRootRef} className="home-org-diagram">
@@ -124,7 +125,7 @@ export function HomeOrgDiagram() {
           <img className="home-org-diagram__monster-img" src="/pancake-monster.png" alt="" width={128} height={128} decoding="async" />
         </div>
 
-        <HomeOrgLiveRows scrollRootRef={diagramRootRef} />
+        <HomeOrgLiveRows scrollRootRef={diagramRootRef} deptRows={deptRows} setDeptRows={setDeptRows} />
       </div>
     </div>
   );

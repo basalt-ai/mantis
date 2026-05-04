@@ -1,7 +1,7 @@
 "use client";
 
-import type { RefObject } from "react";
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import type { Dispatch, RefObject, SetStateAction } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react";
 
 import { gsap } from "@/lib/gsap";
 
@@ -37,7 +37,8 @@ function makeRowId(): string {
   return `org-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-function initialDeptMap(): Record<OrgSurface, LiveRow[]> {
+/** Initial row ids + labels; used by `HomeOrgDiagram` state so remounting `HomeOrgLiveRows` does not regenerate ids. */
+export function getInitialDeptMap(): Record<OrgSurface, LiveRow[]> {
   const m = {} as Record<OrgSurface, LiveRow[]>;
   for (const d of LIVE_INITIAL_DEPTS) {
     m[d.surface] = d.rows.map((r) => ({
@@ -105,17 +106,18 @@ function findDeptArticle(root: HTMLElement | null, surface: OrgSurface): HTMLEle
 
 type HomeOrgLiveRowsProps = {
   scrollRootRef: RefObject<HTMLElement | null>;
+  deptRows: Record<OrgSurface, LiveRow[]>;
+  setDeptRows: Dispatch<SetStateAction<Record<OrgSurface, LiveRow[]>>>;
 };
 
 const SURFACES: OrgSurface[] = ["growth", "engineering", "operations"];
 
-export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
+export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOrgLiveRowsProps) {
   const reducedMotion = useMemo(
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     [],
   );
 
-  const [deptRows, setDeptRows] = useState<Record<OrgSurface, LiveRow[]>>(() => initialDeptMap());
   const deptRowsRef = useRef(deptRows);
   useLayoutEffect(() => {
     deptRowsRef.current = deptRows;
@@ -388,7 +390,7 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
         REMOVE_SHAKE_S * 0.55,
       );
     },
-    [scrollRootRef, clearRemoveFailsafe],
+    [scrollRootRef, clearRemoveFailsafe, setDeptRows],
   );
 
   scheduleSurfaceNextRef.current = scheduleSurfaceNext;
