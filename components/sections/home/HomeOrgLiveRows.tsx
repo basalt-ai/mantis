@@ -327,8 +327,10 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       const syncLiveFromScrollPosition = () => {
         if (cancelled || !st) return;
         ScrollTrigger.refresh();
+        // Only arm when active. Do NOT call stopLive() here — after refresh(), isActive can
+        // briefly read false while the diagram is still on screen; that was killing timers +
+        // pending→active delayedCalls mid-session (freeze after several adds).
         if (st.isActive) startLive();
-        else stopLive();
       };
 
       const attach = () => {
@@ -337,14 +339,10 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
 
         st = ScrollTrigger.create({
           trigger: root,
-          /** Line near viewport bottom — live starts sooner than the old `top 88%` gate. */
-          start: "top 97%",
-          /**
-           * Keep the trigger active while the diagram still intersects the viewport.
-           * A tight `end` (e.g. bottom 5%) flips inactive when the org grows to 6 rows and the
-           * block’s bottom crosses the line — `stopLive` then kills timers + pending→active calls.
-           */
+          /** While any part of the diagram intersects the viewport (stable when the block grows). */
+          start: "top bottom",
           end: "bottom top",
+          invalidateOnRefresh: true,
           onEnter: startLive,
           onEnterBack: startLive,
           onLeave: stopLive,
