@@ -88,8 +88,7 @@ function flipReflowRows(
   });
 }
 
-function findRowEl(root: HTMLElement | null, surface: OrgSurface, id: string): HTMLElement | null {
-  const article = findDeptArticle(root, surface);
+function findRowElInArticle(article: HTMLElement | null, id: string): HTMLElement | null {
   if (!article) return null;
   const nodes = article.querySelectorAll<HTMLElement>("[data-org-live-row]");
   for (let i = 0; i < nodes.length; i++) {
@@ -99,6 +98,7 @@ function findRowEl(root: HTMLElement | null, surface: OrgSurface, id: string): H
   return null;
 }
 
+/** Fallback when per-surface refs are not set yet (should be rare). */
 function findDeptArticle(root: HTMLElement | null, surface: OrgSurface): HTMLElement | null {
   if (!root) return null;
   return root.querySelector<HTMLElement>(`article.home-org-diagram__dept--${surface}`);
@@ -117,6 +117,9 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     [],
   );
+
+  /** Direct article nodes — avoids `querySelector` matching the wrong subtree if markup/order changes. */
+  const deptArticleBySurfaceRef = useRef<Partial<Record<OrgSurface, HTMLElement>>>({});
 
   const deptRowsRef = useRef(deptRows);
   useLayoutEffect(() => {
@@ -173,6 +176,15 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
   const clearAllRemoveFailsafes = useCallback(() => {
     for (const s of SURFACES) clearRemoveFailsafe(s);
   }, [clearRemoveFailsafe]);
+
+  const resolveDeptArticle = useCallback(
+    (surface: OrgSurface): HTMLElement | null => {
+      const fromRef = deptArticleBySurfaceRef.current[surface];
+      if (fromRef?.isConnected) return fromRef;
+      return findDeptArticle(scrollRootRef.current, surface);
+    },
+    [scrollRootRef],
+  );
 
   /**
    * Schedule the next tick for one surface. Never chain from runBlock via try/finally: remove
@@ -248,7 +260,7 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
       }
 
       if (doAdd) {
-        const article = findDeptArticle(root, surface);
+        const article = resolveDeptArticle(surface);
         const beforeRects = article ? captureDeptRowRects(article) : new Map<string, DOMRect>();
         const sampleRow = article?.querySelector<HTMLElement>(".home-org-diagram__row");
         const rowH = sampleRow ? Math.max(20, sampleRow.getBoundingClientRect().height) : 28;
@@ -268,9 +280,10 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
 
         queueMicrotask(() => {
           if (disposedRef.current) return;
-          if (!article) return;
-          flipReflowRows(article, beforeRects, ADD_IN_DURATION, "power3.out");
-          const el = findRowEl(root, surface, id);
+          const art = resolveDeptArticle(surface);
+          if (!art) return;
+          flipReflowRows(art, beforeRects, ADD_IN_DURATION, "power3.out");
+          const el = findRowElInArticle(art, id);
           if (!el) return;
           gsap.fromTo(
             el,
@@ -302,9 +315,15 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
       }
 
       const victim = targetPool[Math.floor(Math.random() * targetPool.length)]!;
-      const article = findDeptArticle(root, surface);
-      const rowEl = findRowEl(root, surface, victim.id);
+      const article = resolveDeptArticle(surface);
+      const rowEl = findRowElInArticle(article, victim.id);
       if (!article || !rowEl) {
+        if (deptRowsRef.current[surface].some((r) => r.id === victim.id)) {
+          setDeptRows((prev) => ({
+            ...prev,
+            [surface]: prev[surface].filter((r) => r.id !== victim.id),
+          }));
+        }
         scheduleSurfaceNextRef.current(surface);
         return;
       }
@@ -390,7 +409,7 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
         REMOVE_SHAKE_S * 0.55,
       );
     },
-    [scrollRootRef, clearRemoveFailsafe, setDeptRows],
+    [scrollRootRef, clearRemoveFailsafe, setDeptRows, resolveDeptArticle],
   );
 
   scheduleSurfaceNextRef.current = scheduleSurfaceNext;
@@ -479,6 +498,10 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
       {LIVE_INITIAL_DEPTS.map((dept) => (
         <article
           key={dept.title}
+          ref={(el) => {
+            if (el) deptArticleBySurfaceRef.current[dept.surface] = el;
+            else delete deptArticleBySurfaceRef.current[dept.surface];
+          }}
           className={`home-org-diagram__dept home-org-diagram__dept--${dept.surface} home-org-diagram__abs`}
         >
           <h3 className="home-org-diagram__dept-title">{dept.title}</h3>
