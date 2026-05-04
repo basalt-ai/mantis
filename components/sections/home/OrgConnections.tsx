@@ -4,10 +4,8 @@
  * Org diagram wires — Figma `428:14926` (`get_design_context` MCP).
  * • Five elements: You, Pancake (hub for depts + chip for founder wire), Growth, Engineering, Operations.
  * • Founder↔chip path ends classified with chip stage coords vs You (hub anchor alone mislabels short paths).
- * • Two reserved balls alternate only on the founder wire (staggered) so that link is never empty; other balls
- *   use dept/hub edges only (no random founder legs) to avoid burst stacking on the short segment.
- * • Balls travel one full edge (u 0→1, no yoyo); on arrival they respawn from a random element’s departure.
- *   Stroke-free trail dots.
+ * • Every ball: one full edge (u 0→1), then respawns from a random element’s departure (same rule on founder
+ *   as on dept links — no dedicated ping-pong). Stroke-free trail dots.
  */
 
 import { useRef } from "react";
@@ -77,9 +75,6 @@ const FOUNDER_WIRE_ID = ORG_WIRE_FOUNDER_PANCAKE.dataNodeId;
 
 /** Pancake *chip* end of the founder wire (stage space) — distinct from hub used for dept wires. */
 const FOUNDER_CHIP_STAGE = { x: 862, y: 36 };
-
-/** Reserved balls that only run the founder↔chip edge (staggered) so it never goes quiet. */
-const FOUNDER_RESERVED_BALLS = 2;
 
 /** All wires that carry ball traffic (depts + human↔Pancake). */
 const ORG_WIRES_WITH_BALLS: readonly OrgTransformedWire[] = [...ORG_DEPT_WIRES, ORG_WIRE_FOUNDER_PANCAKE];
@@ -285,48 +280,6 @@ function placeBallOnPath(
   circle.setAttribute("cy", String(pt.y));
 }
 
-/** Slightly faster legs on the short founder wire (reserved shuttles). */
-const FOUNDER_DURATION_MIN = 0.75;
-const FOUNDER_DURATION_MAX = 1.65;
-
-function runFounderReserveLeg(
-  circle: SVGCircleElement,
-  legForward: DirectedLeg,
-  legBack: DirectedLeg,
-  preferForward: boolean,
-  rng: () => number,
-): void {
-  const leg = preferForward ? legForward : legBack;
-  leg.ballRoot.appendChild(circle);
-
-  const pathLen = leg.path.getTotalLength();
-  const duration = rand(rng, FOUNDER_DURATION_MIN, FOUNDER_DURATION_MAX);
-  const ease = pickEase(rng);
-
-  circle.setAttribute("r", String(rand(rng, BALL_R_MIN, BALL_R_MAX)));
-
-  const proxy = { u: 0 };
-  const tick = () => {
-    placeBallOnPath(leg.path, pathLen, proxy.u, leg.forward, circle);
-  };
-
-  gsap.fromTo(
-    proxy,
-    { u: 0 },
-    {
-      u: 1,
-      duration,
-      ease,
-      delay: 0,
-      immediateRender: true,
-      onUpdate: tick,
-      onComplete: () => runFounderReserveLeg(circle, legForward, legBack, !preferForward, rng),
-    },
-  );
-
-  tick();
-}
-
 function runBallLeg(circle: SVGCircleElement, legs: readonly DirectedLeg[], rng: () => number): void {
   const from = pickUniformDepartureAnchor(rng);
   const leg = pickLegFromAnchor(legs, from, rng);
@@ -372,33 +325,13 @@ function startBallTraffic(
   });
 
   const legs = buildDirectedLegs(svg, wireCtx);
-  const founderLegs = legs.filter((l) => l.wireId === FOUNDER_WIRE_ID);
-  const hubLegs = legs.filter((l) => l.wireId !== FOUNDER_WIRE_ID);
-  if (hubLegs.length === 0) return;
-
-  const legForward = founderLegs.find((l) => l.forward) ?? founderLegs[0];
-  const legBack = founderLegs.find((l) => !l.forward) ?? founderLegs[1];
-  if (legForward && legBack) {
-    const half = (FOUNDER_DURATION_MIN + FOUNDER_DURATION_MAX) / 2;
-    for (let i = 0; i < FOUNDER_RESERVED_BALLS; i++) {
-      const circle = createTrailCircle(rand(rng, BALL_R_MIN, BALL_R_MAX));
-      circle.setAttribute("data-org-founder-reserve", "1");
-      circle.setAttribute("opacity", "1");
-      const preferForward = i % 2 === 0;
-      const stagger = i === 0 ? 0 : rand(rng, 0.38, 0.62) * half;
-      if (stagger <= 0.02) {
-        runFounderReserveLeg(circle, legForward, legBack, preferForward, rng);
-      } else {
-        gsap.delayedCall(stagger, () => runFounderReserveLeg(circle, legForward, legBack, preferForward, rng));
-      }
-    }
-  }
+  if (legs.length === 0) return;
 
   const total = randInt(rng, TOTAL_BALL_MIN, TOTAL_BALL_MAX);
   for (let i = 0; i < total; i++) {
     const circle = createTrailCircle(rand(rng, BALL_R_MIN, BALL_R_MAX));
     circle.setAttribute("opacity", "1");
-    runBallLeg(circle, hubLegs, rng);
+    runBallLeg(circle, legs, rng);
   }
 }
 
