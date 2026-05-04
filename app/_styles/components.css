@@ -791,25 +791,35 @@
     stroke-linejoin: round;
   }
 
+  /** Shared inverted label surface — height follows copy (no fixed aspect-ratio). */
+  .home-org-diagram__chip--surface {
+    background-color: var(--inverted-surface);
+    border-radius: clamp(6px, 1.4cqi, var(--radius-sm));
+    height: auto;
+    min-width: 0;
+    overflow: visible;
+  }
+
   .home-org-diagram__you-chip {
     left: calc(212 / 1136 * 100%);
     top: calc(70 / 706 * 100%);
-    width: calc(101 / 1136 * 100%);
-    aspect-ratio: 101 / 55;
+    width: max(calc(101 / 1136 * 100%), min(24cqi, calc(168 / 1136 * 100%)));
     padding: 0;
-    background: none;
     z-index: 3;
     display: flex;
     flex-direction: column;
+    align-items: stretch;
   }
 
-  .home-org-diagram__you-chip .home-org-diagram__chip-svg--bg {
-    position: absolute;
-    inset: 0;
-    display: block;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
+  .home-org-diagram__pancake-chip {
+    left: calc(800 / 1136 * 100%);
+    top: calc(8 / 706 * 100%);
+    width: max(calc(125 / 1136 * 100%), min(26cqi, calc(200 / 1136 * 100%)));
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    z-index: 3;
   }
 
   .home-org-diagram__chip-copy {
@@ -817,33 +827,16 @@
     z-index: 1;
     box-sizing: border-box;
     width: 100%;
-    flex: 1 1 auto;
-    min-height: 0;
+    flex: 0 1 auto;
     min-width: 0;
+    min-height: auto;
     padding-inline: clamp(5px, 2.2cqi, var(--spacing-xl));
-    padding-block: 0;
+    padding-block: clamp(6px, 1.4cqi, 12px);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    gap: 0;
-  }
-
-  .home-org-diagram__pancake-chip {
-    left: calc(800 / 1136 * 100%);
-    top: calc(8 / 706 * 100%);
-    width: calc(125 / 1136 * 100%);
-    aspect-ratio: 125 / 55;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    border-radius: var(--radius-sm);
-    background-color: var(--inverted-surface);
-    z-index: 3;
-  }
-
-  .home-org-diagram__chip-svg-bg {
-    fill: var(--inverted-surface);
+    gap: 0.12em;
   }
 
   .home-org-diagram__chip-title--inverted {
@@ -863,7 +856,6 @@
 
   .home-org-diagram__chip-sub--inverted {
     margin: 0;
-    margin-top: calc(-1 * var(--spacing-sm));
     width: 100%;
     min-width: 0;
     text-align: left;
@@ -875,6 +867,13 @@
     color: var(--subtle-text-on-inverted-surface);
     overflow-wrap: break-word;
     word-break: normal;
+  }
+
+  @supports (text-wrap: pretty) {
+    .home-org-diagram__chip-title--inverted,
+    .home-org-diagram__chip-sub--inverted {
+      text-wrap: pretty;
+    }
   }
 
   .home-org-diagram__chip-sub--inverted.home-org-diagram__chip-sub--nowrap {

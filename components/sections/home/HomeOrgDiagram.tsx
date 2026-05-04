@@ -78,27 +78,20 @@ export function HomeOrgDiagram() {
         <OrgConnections />
 
         <div
-          className="home-org-diagram__you-chip home-org-diagram__abs"
+          className="home-org-diagram__you-chip home-org-diagram__abs home-org-diagram__chip--surface"
           data-node-id="596:1685"
           aria-label="You, the founder"
         >
-          <svg
-            className="home-org-diagram__chip-svg--bg"
-            viewBox="0 0 101 55"
-            width={101}
-            height={55}
-            aria-hidden
-            focusable="false"
-          >
-            <rect className="home-org-diagram__chip-svg-bg" width="101" height="55" rx="12" />
-          </svg>
           <div className="home-org-diagram__chip-copy">
             <p className="home-org-diagram__chip-title home-org-diagram__chip-title--inverted">You</p>
             <p className="home-org-diagram__chip-sub home-org-diagram__chip-sub--inverted">The founder</p>
           </div>
         </div>
 
-        <div className="home-org-diagram__pancake-chip home-org-diagram__abs" data-node-id="428:14941">
+        <div
+          className="home-org-diagram__pancake-chip home-org-diagram__abs home-org-diagram__chip--surface"
+          data-node-id="428:14941"
+        >
           <div className="home-org-diagram__chip-copy">
             <p className="home-org-diagram__chip-title home-org-diagram__chip-title--inverted">Pancake</p>
             <p className="home-org-diagram__chip-sub home-org-diagram__chip-sub--inverted home-org-diagram__chip-sub--nowrap">
