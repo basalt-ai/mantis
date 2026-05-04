@@ -126,8 +126,8 @@ const REDUCED_FALLBACK_BY_WIRE: Record<string, readonly { cx: number; cy: number
 
 const BALL_R_MIN = 3.2;
 const BALL_R_MAX = 7.8;
-const TOTAL_BALL_MIN = 18;
-const TOTAL_BALL_MAX = 26;
+const TOTAL_BALL_MIN = 13;
+const TOTAL_BALL_MAX = 18;
 /** One-way leg duration (s) before length scaling; clamped after scale. */
 const DURATION_MIN = 1.1;
 const DURATION_MAX = 2.85;
