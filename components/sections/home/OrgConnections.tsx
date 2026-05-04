@@ -4,8 +4,8 @@
  * Org diagram wires — Figma `428:14926` (`get_design_context` MCP).
  * • Five elements: You, Pancake (hub for depts + chip for founder wire), Growth, Engineering, Operations.
  * • Founder↔chip path ends classified with chip stage coords vs You (hub anchor alone mislabels short paths).
- * • Every ball: one full edge (u 0→1), then respawns from a weighted departure anchor (lighter on `you`) and
- *   from Pancake we take the founder↔chip leg half the time when dept legs compete — balances you→chip vs chip→you.
+ * • One ball is always on the founder↔chip wire only (same leg tween + respawn between you and pancake); the
+ *   random pool uses hub/dept legs only so that minimum is not stolen by other routes.
  * • Duration is random and scaled by path length so short founder↔chip legs don’t read slower than long dept wires.
  *   Stroke-free trail dots.
  */
@@ -134,6 +134,8 @@ const TOTAL_BALL_MAX = 18;
 const DEPARTURE_WEIGHT_YOU = 0.5;
 /** When leaving Pancake, chance to pick the founder↔chip leg if dept legs also exist (balances chip↦you vs you↦chip). */
 const PANCAKE_FOUNDER_LEG_PROB = 0.5;
+/** Balls that only use founder↔chip legs so that link is never empty (same u 0→1 + respawn as runBallLeg). */
+const FOUNDER_ALWAYS_ON_COUNT = 1;
 /** One-way leg duration (s) before length scaling; clamped after scale. */
 const DURATION_MIN = 1.1;
 const DURATION_MAX = 2.85;
@@ -290,6 +292,12 @@ function pickWeightedDepartureAnchor(rng: () => number): AnchorId {
   return ANCHOR_IDS[ANCHOR_IDS.length - 1]!;
 }
 
+/** Departure on the founder wire only: `you` vs `pancake` (chip), same weight ratio as global `you` bias. */
+function pickFounderWireDeparture(rng: () => number): "you" | "pancake" {
+  const t = rng() * (DEPARTURE_WEIGHT_YOU + 1);
+  return t < DEPARTURE_WEIGHT_YOU ? "you" : "pancake";
+}
+
 function pickLegFromAnchor(legs: readonly DirectedLeg[], from: AnchorId, rng: () => number): DirectedLeg {
   const candidates = legs.filter((l) => l.from === from);
   if (candidates.length === 0) return legs[randInt(rng, 0, legs.length - 1)]!;
@@ -322,6 +330,41 @@ function placeBallOnPath(
   const pt = path.getPointAtLength(along * pathLen);
   circle.setAttribute("cx", String(pt.x));
   circle.setAttribute("cy", String(pt.y));
+}
+
+/** Same as `runBallLeg` but legs are restricted to founder↔chip so this ball never leaves that link. */
+function runFounderOnlyBallLeg(circle: SVGCircleElement, founderLegs: readonly DirectedLeg[], rng: () => number): void {
+  const from = pickFounderWireDeparture(rng);
+  const leg = pickLegFromAnchor(founderLegs, from, rng);
+  leg.ballRoot.appendChild(circle);
+
+  const pathLen = leg.path.getTotalLength();
+  const duration = randomLegDuration(pathLen, rng);
+  const ease = pickEase(rng);
+  const delay = rand(rng, 0, LEG_DELAY_MAX);
+
+  circle.setAttribute("r", String(rand(rng, BALL_R_MIN, BALL_R_MAX)));
+
+  const proxy = { u: 0 };
+  const tick = () => {
+    placeBallOnPath(leg.path, pathLen, proxy.u, leg.forward, circle);
+  };
+
+  gsap.fromTo(
+    proxy,
+    { u: 0 },
+    {
+      u: 1,
+      duration,
+      ease,
+      delay,
+      immediateRender: true,
+      onUpdate: tick,
+      onComplete: () => runFounderOnlyBallLeg(circle, founderLegs, rng),
+    },
+  );
+
+  tick();
 }
 
 function runBallLeg(circle: SVGCircleElement, legs: readonly DirectedLeg[], rng: () => number): void {
@@ -369,13 +412,24 @@ function startBallTraffic(
   });
 
   const legs = buildDirectedLegs(svg, wireCtx);
-  if (legs.length === 0) return;
+  const founderLegs = legs.filter((l) => l.wireId === FOUNDER_WIRE_ID);
+  const hubLegs = legs.filter((l) => l.wireId !== FOUNDER_WIRE_ID);
+  if (hubLegs.length === 0) return;
+
+  if (founderLegs.length >= 2) {
+    for (let k = 0; k < FOUNDER_ALWAYS_ON_COUNT; k++) {
+      const c = createTrailCircle(rand(rng, BALL_R_MIN, BALL_R_MAX));
+      c.setAttribute("data-org-founder-always", "1");
+      c.setAttribute("opacity", "1");
+      runFounderOnlyBallLeg(c, founderLegs, rng);
+    }
+  }
 
   const total = randInt(rng, TOTAL_BALL_MIN, TOTAL_BALL_MAX);
   for (let i = 0; i < total; i++) {
     const circle = createTrailCircle(rand(rng, BALL_R_MIN, BALL_R_MAX));
     circle.setAttribute("opacity", "1");
-    runBallLeg(circle, legs, rng);
+    runBallLeg(circle, hubLegs, rng);
   }
 }
 
