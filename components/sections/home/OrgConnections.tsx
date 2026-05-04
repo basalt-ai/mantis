@@ -4,8 +4,8 @@
  * Org diagram wires — Figma `428:14926` (`get_design_context` MCP).
  * • Five elements: You, Pancake (hub for depts + chip for founder wire), Growth, Engineering, Operations.
  * • Founder↔chip path ends classified with chip stage coords vs You (hub anchor alone mislabels short paths).
- * • One ball is always on the founder↔chip wire only (same leg tween + respawn between you and pancake); the
- *   random pool uses hub/dept legs only so that minimum is not stolen by other routes.
+ * • Several balls run only on founder↔chip (same leg tween + respawn you/pancake); hub traffic uses dept legs only.
+ * • Hub ball count (~Pancake↔three blocks) is kept lower than founder-only traffic so the short link can feel busier.
  * • Duration is random and scaled by path length so short founder↔chip legs don’t read slower than long dept wires.
  *   Stroke-free trail dots.
  */
@@ -128,14 +128,16 @@ const REDUCED_FALLBACK_BY_WIRE: Record<string, readonly { cx: number; cy: number
 
 const BALL_R_MIN = 3.2;
 const BALL_R_MAX = 7.8;
-const TOTAL_BALL_MIN = 13;
-const TOTAL_BALL_MAX = 18;
+/** Hub/dept legs only (Pancake ↔ Growth, Engineering, Operations) — ~half of previous density. */
+const TOTAL_BALL_MIN = 6;
+const TOTAL_BALL_MAX = 9;
 /** Departure weight for `you` (<1): only one outgoing leg (→chip), so uniform anchors over-count you→chip. */
 const DEPARTURE_WEIGHT_YOU = 0.5;
 /** When leaving Pancake, chance to pick the founder↔chip leg if dept legs also exist (balances chip↦you vs you↦chip). */
 const PANCAKE_FOUNDER_LEG_PROB = 0.5;
-/** Balls that only use founder↔chip legs so that link is never empty (same u 0→1 + respawn as runBallLeg). */
-const FOUNDER_ALWAYS_ON_COUNT = 1;
+/** Balls that only use founder↔chip legs (same u 0→1 + respawn as runBallLeg); always >1 on that wire. */
+const FOUNDER_BALL_MIN = 2;
+const FOUNDER_BALL_MAX = 4;
 /** One-way leg duration (s) before length scaling; clamped after scale. */
 const DURATION_MIN = 1.1;
 const DURATION_MAX = 2.85;
@@ -417,7 +419,8 @@ function startBallTraffic(
   if (hubLegs.length === 0) return;
 
   if (founderLegs.length >= 2) {
-    for (let k = 0; k < FOUNDER_ALWAYS_ON_COUNT; k++) {
+    const founderBallCount = randInt(rng, FOUNDER_BALL_MIN, FOUNDER_BALL_MAX);
+    for (let k = 0; k < founderBallCount; k++) {
       const c = createTrailCircle(rand(rng, BALL_R_MIN, BALL_R_MAX));
       c.setAttribute("data-org-founder-always", "1");
       c.setAttribute("opacity", "1");
