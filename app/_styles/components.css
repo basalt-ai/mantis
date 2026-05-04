@@ -712,8 +712,8 @@
   /**
    * Org diagram — Figma `428:14926` (1136×706). Tokens from MCP variable defs + design context.
    * Width matches landing figures: full row up to token max (no dvh cap — that shrank the chart vs Figma).
-   * You chip: anchor `right` so extra width grows left (toward center), matching the arrow toward the avatar.
-   * Pancake chip: anchor `left` so extra width grows right (label sits right of the icon; avoids overlapping the stack).
+   * You chip: right edge fixed at Figma (212+101)/1136; width is content-driven (max-width cap) so the box hugs copy.
+   * Pancake chip: left edge at 800/1136; same — keeps the hand-drawn arrow anchors from MCP aligned to box edges.
    */
   .home-org-diagram {
     box-sizing: border-box;
@@ -799,28 +799,32 @@
   }
 
   .home-org-diagram__you-chip {
-    /** Anchor right edge at Figma (212+101)/1136 so wider chips grow left, toward arrows/avatar. */
+    /** Right edge at Figma (212+101)/1136; shrink-wrap width so empty rail next to copy is gone. */
     right: calc((1136 - 212 - 101) / 1136 * 100%);
     left: auto;
     top: calc(70 / 706 * 100%);
-    width: max(calc(101 / 1136 * 100%), min(24cqi, calc(168 / 1136 * 100%)));
-    padding: 0;
-    z-index: 2;
     display: flex;
     flex-direction: column;
-    align-items: stretch;
+    align-items: flex-start;
+    width: max-content;
+    max-width: calc(168 / 1136 * 100%);
+    min-width: 0;
+    padding: 0;
+    z-index: 2;
   }
 
   .home-org-diagram__pancake-chip {
-    /** Label sits right of the icon — keep Figma left edge so wider chips grow away from the monster. */
+    /** Left edge at Figma 800/1136; shrink-wrap so the label sits tight to the icon-side arrow. */
     left: calc(800 / 1136 * 100%);
     right: auto;
     top: calc(8 / 706 * 100%);
-    width: max(calc(125 / 1136 * 100%), min(30cqi, calc(228 / 1136 * 100%)));
-    padding: 0;
     display: flex;
     flex-direction: column;
-    align-items: stretch;
+    align-items: flex-start;
+    width: max-content;
+    max-width: calc(228 / 1136 * 100%);
+    min-width: 0;
+    padding: 0;
     z-index: 2;
   }
 
@@ -828,7 +832,8 @@
     position: relative;
     z-index: 1;
     box-sizing: border-box;
-    width: 100%;
+    width: max-content;
+    max-width: 100%;
     flex: 0 1 auto;
     min-width: 0;
     min-height: auto;
@@ -843,7 +848,8 @@
 
   .home-org-diagram__chip-title--inverted {
     margin: 0;
-    width: 100%;
+    width: max-content;
+    max-width: 100%;
     min-width: 0;
     text-align: left;
     font-family: var(--font-body);
@@ -858,7 +864,8 @@
 
   .home-org-diagram__chip-sub--inverted {
     margin: 0;
-    width: 100%;
+    width: max-content;
+    max-width: 100%;
     min-width: 0;
     text-align: left;
     font-family: var(--font-body);
