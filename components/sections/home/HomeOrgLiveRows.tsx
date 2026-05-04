@@ -88,11 +88,14 @@ function flipReflowRows(
 }
 
 function findRowEl(root: HTMLElement | null, surface: OrgSurface, id: string): HTMLElement | null {
-  if (!root) return null;
-  const safe = typeof CSS !== "undefined" && typeof CSS.escape === "function" ? CSS.escape(id) : id;
-  return root.querySelector<HTMLElement>(
-    `article.home-org-diagram__dept--${surface} [data-org-live-row="${safe}"]`,
-  );
+  const article = findDeptArticle(root, surface);
+  if (!article) return null;
+  const nodes = article.querySelectorAll<HTMLElement>("[data-org-live-row]");
+  for (let i = 0; i < nodes.length; i++) {
+    const el = nodes[i]!;
+    if (el.getAttribute("data-org-live-row") === id) return el;
+  }
+  return null;
 }
 
 function findDeptArticle(root: HTMLElement | null, surface: OrgSurface): HTMLElement | null {
