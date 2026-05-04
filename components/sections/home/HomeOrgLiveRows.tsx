@@ -306,72 +306,50 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
     if (reducedMotion) return;
 
     let cancelled = false;
-    let io: IntersectionObserver | null = null;
-    let raf0 = 0;
-    let raf1 = 0;
 
+    /** Only arm timers once per “live” session — avoids IO/scroll churn clearing random delays every frame. */
     const startLive = () => {
       if (cancelled) return;
+      if (liveEnabledRef.current) return;
       liveEnabledRef.current = true;
       for (const s of SURFACES) {
         armBlockRef.current(s);
       }
     };
 
-    /** Pause timers only — do NOT kill pending→active delayedCalls (ScrollTrigger/IO flips were cancelling them). */
     const pauseLive = () => {
+      if (!liveEnabledRef.current) return;
       liveEnabledRef.current = false;
       clearAllBlockTimers();
     };
 
-    const wire = () => {
-      const root = scrollRootRef.current;
-      if (!root || cancelled) return false;
-
-      io = new IntersectionObserver(
-        (entries) => {
-          if (cancelled) return;
-          const hit = entries.some((e) => e.isIntersecting);
-          if (hit) startLive();
-          else pauseLive();
-        },
-        {
-          root: null,
-          /** Keep “in view” through layout shifts and partial exits (diagram grows with rows). */
-          rootMargin: "40% 0px 40% 0px",
-          threshold: 0.01,
-        },
-      );
-
-      io.observe(root);
-      return true;
+    const onVisibility = () => {
+      if (cancelled) return;
+      if (document.visibilityState === "hidden") pauseLive();
+      else startLive();
     };
 
-    const tryWire = () => {
-      if (wire()) return;
-      raf0 = requestAnimationFrame(() => {
-        if (cancelled) return;
-        if (wire()) return;
-        raf1 = requestAnimationFrame(() => {
-          if (cancelled) return;
-          wire();
-        });
-      });
-    };
-
-    tryWire();
+    /**
+     * Do NOT gate on viewport intersection for this block.
+     * The diagram uses absolutely positioned dept cards; IO / bbox checks on the wrapper can read
+     * “out of view” after rows grow even while the org is still on screen — that paused timers and
+     * looked like a freeze right after ~6 arrivals.
+     */
+    if (typeof document !== "undefined") {
+      if (document.visibilityState !== "hidden") startLive();
+      document.addEventListener("visibilitychange", onVisibility);
+    }
 
     return () => {
       cancelled = true;
-      cancelAnimationFrame(raf0);
-      cancelAnimationFrame(raf1);
-      io?.disconnect();
-      io = null;
+      if (typeof document !== "undefined") {
+        document.removeEventListener("visibilitychange", onVisibility);
+      }
       liveEnabledRef.current = false;
       clearAllBlockTimers();
       killDelayedCalls();
     };
-  }, [reducedMotion, clearAllBlockTimers, killDelayedCalls, scrollRootRef]);
+  }, [reducedMotion, clearAllBlockTimers, killDelayedCalls]);
 
   if (reducedMotion) {
     return (
