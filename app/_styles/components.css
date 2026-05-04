@@ -698,14 +698,6 @@
     justify-content: center;
   }
 
-  /** Org diagram: allow horizontal pan on very narrow viewports so chips/cards are not crushed. */
-  .home-landing-section__figure:has(.home-org-diagram) {
-    overflow-x: auto;
-    overflow-y: visible;
-    overscroll-behavior-x: contain;
-    -webkit-overflow-scrolling: touch;
-  }
-
   .home-landing-section__img {
     display: block;
     width: 100%;
@@ -719,14 +711,17 @@
 
   /**
    * Org diagram — Figma `428:14926` (1136×706). Tokens from MCP variable defs + design context.
+   * Width is capped by viewport height so the whole diagram scales down without an inner scroll strip;
+   * `min(100%, …, dvh * ratio)` keeps the stage short enough to fit above the fold on resize.
    */
   .home-org-diagram {
-    width: 100%;
-    max-width: calc(71 * var(--spacing-xl));
-    min-width: 300px;
+    box-sizing: border-box;
+    width: min(100%, calc(71 * var(--spacing-xl)), calc(72dvh * 1136 / 706));
+    margin-inline: auto;
+    min-width: 0;
     overflow: visible;
-    /** Reserve space when dept cards extend below the fixed-aspect stage (abs children do not stretch it). */
-    padding-bottom: clamp(1.25rem, 4vw, 3rem);
+    /** Extra paint area when dept cards extend below the fixed-aspect stage. */
+    padding-bottom: clamp(0.75rem, 2.5vw, 2rem);
   }
 
   .home-org-diagram__stage {
