@@ -272,38 +272,72 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
     () => {
       if (reducedMotion) return;
 
-      const root = scrollRootRef.current;
-      if (!root) return;
+      let st: ScrollTrigger | null = null;
+      let cancelled = false;
+      let raf0 = 0;
+      let raf1 = 0;
 
-      const st = ScrollTrigger.create({
-        trigger: root,
-        start: "top 88%",
-        end: "bottom 5%",
-        onEnter: () => {
-          liveEnabledRef.current = true;
-          scheduleNextTickRef.current();
-        },
-        onEnterBack: () => {
-          liveEnabledRef.current = true;
-          scheduleNextTickRef.current();
-        },
-        onLeave: () => {
-          liveEnabledRef.current = false;
-          clearTimer();
-          killDelayedCalls();
-        },
-        onLeaveBack: () => {
-          liveEnabledRef.current = false;
-          clearTimer();
-          killDelayedCalls();
-        },
-      });
+      const startLive = () => {
+        liveEnabledRef.current = true;
+        scheduleNextTickRef.current();
+      };
 
-      return () => {
-        st.kill();
+      const stopLive = () => {
         liveEnabledRef.current = false;
         clearTimer();
         killDelayedCalls();
+      };
+
+      const syncLiveFromScrollPosition = () => {
+        if (cancelled || !st) return;
+        ScrollTrigger.refresh();
+        if (st.isActive) startLive();
+        else stopLive();
+      };
+
+      const attach = () => {
+        const root = scrollRootRef.current;
+        if (!root) return false;
+
+        st = ScrollTrigger.create({
+          trigger: root,
+          start: "top 88%",
+          end: "bottom 5%",
+          onEnter: startLive,
+          onEnterBack: startLive,
+          onLeave: stopLive,
+          onLeaveBack: stopLive,
+        });
+
+        // If the org block is already past `start` when the trigger mounts, `onEnter` never fires
+        // (classic ScrollTrigger gotcha). Mirror enter/leave from measured `isActive` instead.
+        syncLiveFromScrollPosition();
+        raf0 = requestAnimationFrame(() => {
+          raf1 = requestAnimationFrame(syncLiveFromScrollPosition);
+        });
+
+        return true;
+      };
+
+      if (!attach()) {
+        raf0 = requestAnimationFrame(() => {
+          if (cancelled) return;
+          if (!attach()) {
+            raf1 = requestAnimationFrame(() => {
+              if (cancelled) return;
+              attach();
+            });
+          }
+        });
+      }
+
+      return () => {
+        cancelled = true;
+        cancelAnimationFrame(raf0);
+        cancelAnimationFrame(raf1);
+        st?.kill();
+        st = null;
+        stopLive();
       };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps -- tick logic uses refs; avoid recreating ScrollTrigger
