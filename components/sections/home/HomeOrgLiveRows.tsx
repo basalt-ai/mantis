@@ -89,6 +89,13 @@ function flipReflowRows(
 
 function findRowEl(root: HTMLElement | null, surface: OrgSurface, id: string): HTMLElement | null {
   const article = findDeptArticle(root, surface);
+  console.log("[org-live] findRowEl debug", {
+    surface,
+    id,
+    rootIsNull: !root,
+    articleFound: !!article,
+    rowsCountInArticle: article ? article.querySelectorAll("[data-org-live-row]").length : 0,
+  });
   if (!article) return null;
   const nodes = article.querySelectorAll<HTMLElement>("[data-org-live-row]");
   for (let i = 0; i < nodes.length; i++) {
@@ -99,8 +106,13 @@ function findRowEl(root: HTMLElement | null, surface: OrgSurface, id: string): H
 }
 
 function findDeptArticle(root: HTMLElement | null, surface: OrgSurface): HTMLElement | null {
-  if (!root) return null;
-  return root.querySelector<HTMLElement>(`article.home-org-diagram__dept--${surface}`);
+  if (!root) {
+    console.log("[org-live] findDeptArticle", { surface, found: false });
+    return null;
+  }
+  const article = root.querySelector<HTMLElement>(`article.home-org-diagram__dept--${surface}`);
+  console.log("[org-live] findDeptArticle", { surface, found: !!article });
+  return article;
 }
 
 type HomeOrgLiveRowsProps = {
