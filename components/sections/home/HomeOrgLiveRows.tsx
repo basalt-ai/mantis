@@ -82,7 +82,8 @@ function flipReflowRows(
     const next = el.getBoundingClientRect();
     const dy = prev.top - next.top;
     if (Math.abs(dy) < 0.75) return;
-    gsap.fromTo(el, { y: dy }, { y: 0, duration, ease, overwrite: "auto" });
+    /** `false` — avoid killing concurrent transform tweens on the same row (e.g. exit x while reflow y). */
+    gsap.fromTo(el, { y: dy }, { y: 0, duration, ease, overwrite: false });
   });
 }
 
@@ -146,6 +147,25 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
     pendingPromoteTimersRef.current.forEach((t) => clearTimeout(t));
     pendingPromoteTimersRef.current.clear();
   }, []);
+
+  /** If exit GSAP never reaches onComplete, that surface would stop scheduling forever — force finish. */
+  const removeFailsafeBySurfaceRef = useRef<Record<OrgSurface, number | null>>({
+    growth: null,
+    engineering: null,
+    operations: null,
+  });
+
+  const clearRemoveFailsafe = useCallback((surface: OrgSurface) => {
+    const t = removeFailsafeBySurfaceRef.current[surface];
+    if (t != null) {
+      clearTimeout(t);
+      removeFailsafeBySurfaceRef.current[surface] = null;
+    }
+  }, []);
+
+  const clearAllRemoveFailsafes = useCallback(() => {
+    for (const s of SURFACES) clearRemoveFailsafe(s);
+  }, [clearRemoveFailsafe]);
 
   /**
    * Schedule the next tick for one surface. Never chain from runBlock via try/finally: remove
@@ -279,13 +299,36 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
 
       gsap.set(rowEl, { willChange: "transform, filter" });
 
+      clearRemoveFailsafe(surface);
+      removeFailsafeBySurfaceRef.current[surface] = window.setTimeout(() => {
+        removeFailsafeBySurfaceRef.current[surface] = null;
+        if (!liveEnabledRef.current) return;
+        const stillThere = deptRowsRef.current[surface].some((r) => r.id === victim.id);
+        if (stillThere) {
+          gsap.killTweensOf(rowEl);
+          gsap.set(rowEl, { clearProps: "transform,opacity,filter,willChange" });
+          setDeptRows((prev) => ({
+            ...prev,
+            [surface]: prev[surface].filter((r) => r.id !== victim.id),
+          }));
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              flipReflowRows(article, beforeRects, 0.42, "power3.out");
+            });
+          });
+        }
+        scheduleSurfaceNextRef.current(surface);
+      }, 2400);
+
       const tl = gsap.timeline({
-        defaults: { overwrite: "auto" },
+        defaults: { overwrite: false },
         onInterrupt: () => {
+          clearRemoveFailsafe(surface);
           gsap.set(rowEl, { clearProps: "transform,opacity,filter,willChange" });
           scheduleSurfaceNextRef.current(surface);
         },
         onComplete: () => {
+          clearRemoveFailsafe(surface);
           gsap.set(rowEl, { clearProps: "willChange" });
           setDeptRows((prev) => ({
             ...prev,
@@ -329,7 +372,7 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
         REMOVE_SHAKE_S * 0.55,
       );
     },
-    [scrollRootRef],
+    [scrollRootRef, clearRemoveFailsafe],
   );
 
   scheduleSurfaceNextRef.current = scheduleSurfaceNext;
@@ -356,6 +399,7 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       liveEnabledRef.current = false;
       clearAllBlockTimers();
       clearAllPendingPromoteTimers();
+      clearAllRemoveFailsafes();
     };
 
     const onVisibility = () => {
@@ -383,8 +427,9 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       liveEnabledRef.current = false;
       clearAllBlockTimers();
       clearAllPendingPromoteTimers();
+      clearAllRemoveFailsafes();
     };
-  }, [reducedMotion, clearAllBlockTimers, clearAllPendingPromoteTimers]);
+  }, [reducedMotion, clearAllBlockTimers, clearAllPendingPromoteTimers, clearAllRemoveFailsafes]);
 
   if (reducedMotion) {
     return (
