@@ -201,11 +201,12 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       const vis = visibleLabels(rows);
       const pool = ROLE_POOLS[surface].filter((l) => !vis.has(l));
       const addOk = rows.length < ROW_CAP && pool.length > 0;
-      const actives = rows.filter((r) => r.phase === "active");
+      /** Anything not explicitly pending counts as “active” for removal priority (avoids empty targetPool). */
+      const actives = rows.filter((r) => r.phase !== "pending");
       const pendings = rows.filter((r) => r.phase === "pending");
-      const removeOk =
-        rows.length > ROW_FLOOR && (actives.length > 0 || pendings.length > 0);
-      const targetPool = actives.length > 0 ? actives : pendings;
+      const removeOk = rows.length > ROW_FLOOR;
+      let targetPool =
+        actives.length > 0 ? actives : pendings.length > 0 ? pendings : rows.length > ROW_FLOOR ? rows : [];
       const atCap = rows.length >= ROW_CAP;
 
       let doAdd: boolean;
@@ -226,11 +227,14 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
         doAdd = false;
       }
       if (!doAdd && targetPool.length === 0) {
-        if (!addOk) {
+        if (rows.length > ROW_FLOOR) {
+          targetPool = rows;
+        } else if (!addOk) {
           scheduleSurfaceNextRef.current(surface);
           return;
+        } else {
+          doAdd = true;
         }
-        doAdd = true;
       }
 
       if (doAdd) {
