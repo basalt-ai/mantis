@@ -814,7 +814,7 @@
   .home-org-diagram__pancake-chip {
     left: calc(800 / 1136 * 100%);
     top: calc(8 / 706 * 100%);
-    width: max(calc(125 / 1136 * 100%), min(26cqi, calc(200 / 1136 * 100%)));
+    width: max(calc(125 / 1136 * 100%), min(30cqi, calc(228 / 1136 * 100%)));
     padding: 0;
     display: flex;
     flex-direction: column;
@@ -873,16 +873,6 @@
     .home-org-diagram__chip-title--inverted,
     .home-org-diagram__chip-sub--inverted {
       text-wrap: pretty;
-    }
-  }
-
-  .home-org-diagram__chip-sub--inverted.home-org-diagram__chip-sub--nowrap {
-    white-space: nowrap;
-  }
-
-  @container org-diagram (max-width: 420px) {
-    .home-org-diagram__chip-sub--inverted.home-org-diagram__chip-sub--nowrap {
-      white-space: normal;
     }
   }
 
