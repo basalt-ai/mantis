@@ -301,7 +301,7 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       const dot = rowEl.querySelector<HTMLElement>(".home-org-diagram__dot");
       const slideX = Math.max(56, article.getBoundingClientRect().width * 0.28);
 
-      gsap.set(rowEl, { willChange: "transform, filter" });
+      gsap.set(rowEl, { willChange: "transform, opacity" });
 
       clearRemoveFailsafe(surface);
       removeFailsafeBySurfaceRef.current[surface] = window.setTimeout(() => {
@@ -310,7 +310,7 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
         const stillThere = deptRowsRef.current[surface].some((r) => r.id === victim.id);
         if (stillThere) {
           gsap.killTweensOf(rowEl);
-          gsap.set(rowEl, { clearProps: "transform,opacity,filter,willChange" });
+          gsap.set(rowEl, { clearProps: "transform,opacity,visibility,willChange" });
           setDeptRows((prev) => ({
             ...prev,
             [surface]: prev[surface].filter((r) => r.id !== victim.id),
@@ -328,12 +328,12 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
         defaults: { overwrite: false },
         onInterrupt: () => {
           clearRemoveFailsafe(surface);
-          gsap.set(rowEl, { clearProps: "transform,opacity,filter,willChange" });
+          gsap.set(rowEl, { clearProps: "transform,opacity,visibility,willChange" });
           scheduleSurfaceNextRef.current(surface);
         },
         onComplete: () => {
           clearRemoveFailsafe(surface);
-          gsap.set(rowEl, { clearProps: "willChange" });
+          gsap.set(rowEl, { clearProps: "transform,opacity,visibility,willChange" });
           setDeptRows((prev) => ({
             ...prev,
             [surface]: prev[surface].filter((r) => r.id !== victim.id),
@@ -368,10 +368,10 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
         rowEl,
         {
           x: slideX,
-          opacity: 0,
-          filter: "blur(6px)",
+          autoAlpha: 0,
           duration: REMOVE_OUT_DURATION,
           ease: "power2.inOut",
+          force3D: true,
         },
         REMOVE_SHAKE_S * 0.55,
       );
