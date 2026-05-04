@@ -37,12 +37,18 @@ function makeRowId(): string {
   return `org-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-/** Initial row ids + labels; used by `HomeOrgDiagram` state so remounting `HomeOrgLiveRows` does not regenerate ids. */
+/**
+ * Initial row ids + labels.
+ * Seed ids MUST be deterministic — `makeRowId()` uses `Date.now()`/`Math.random()` and produced
+ * different ids on the server vs client, triggering a `data-org-live-row` hydration mismatch.
+ * In production that left the DOM with server ids and React state with client ids, so
+ * `findRowEl(victim.id)` returned null on every initial-row removal and the column froze.
+ */
 export function getInitialDeptMap(): Record<OrgSurface, LiveRow[]> {
   const m = {} as Record<OrgSurface, LiveRow[]>;
   for (const d of LIVE_INITIAL_DEPTS) {
-    m[d.surface] = d.rows.map((r) => ({
-      id: makeRowId(),
+    m[d.surface] = d.rows.map((r, i) => ({
+      id: `seed-${d.surface}-${i}`,
       label: r.label,
       phase: "active",
       baseDot: r.dot,
@@ -278,7 +284,13 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
           [surface]: [{ id, label, phase: "pending" }, ...prev[surface]],
         }));
 
-        queueMicrotask(() => {
+        /**
+         * `requestAnimationFrame`, not `queueMicrotask` — React 18 commits via the scheduler
+         * (MessageChannel), which runs AFTER microtasks. A microtask here would query the DOM
+         * before the new row was committed, `findRowElInArticle` would return null, and the entry
+         * tween + promote setTimeout would never fire (rows would pop in red and never turn green).
+         */
+        requestAnimationFrame(() => {
           if (disposedRef.current) return;
           const art = resolveDeptArticle(surface);
           if (!art) return;
@@ -301,6 +313,16 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
           const t = window.setTimeout(() => {
             if (disposedRef.current) return;
             pendingPromoteTimersRef.current.delete(id);
+            const promoteEl = findRowElInArticle(resolveDeptArticle(surface), id);
+            const promoteDot = promoteEl?.querySelector<HTMLElement>(".home-org-diagram__dot");
+            if (promoteDot) {
+              /** Bounce-pulse: makes the red→green flip feel earned instead of an instant swap. */
+              gsap.fromTo(
+                promoteDot,
+                { scale: 0.45 },
+                { scale: 1, duration: 0.42, ease: "back.out(2.6)", overwrite: "auto" },
+              );
+            }
             setDeptRows((prev) => ({
               ...prev,
               [surface]: prev[surface].map((r) =>
@@ -341,7 +363,9 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
         const stillThere = deptRowsRef.current[surface].some((r) => r.id === victim.id);
         if (stillThere) {
           gsap.killTweensOf(rowEl);
+          if (dot) gsap.killTweensOf(dot);
           gsap.set(rowEl, { clearProps: "transform,opacity,visibility,willChange" });
+          if (dot) gsap.set(dot, { clearProps: "transform" });
           setDeptRows((prev) => ({
             ...prev,
             [surface]: prev[surface].filter((r) => r.id !== victim.id),
@@ -361,12 +385,14 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
           if (disposedRef.current) return;
           clearRemoveFailsafe(surface);
           gsap.set(rowEl, { clearProps: "transform,opacity,visibility,willChange" });
+          if (dot) gsap.set(dot, { clearProps: "transform" });
           scheduleSurfaceNextRef.current(surface);
         },
         onComplete: () => {
           if (disposedRef.current) return;
           clearRemoveFailsafe(surface);
           gsap.set(rowEl, { clearProps: "transform,opacity,visibility,willChange" });
+          if (dot) gsap.set(dot, { clearProps: "transform" });
           setDeptRows((prev) => ({
             ...prev,
             [surface]: prev[surface].filter((r) => r.id !== victim.id),
@@ -383,18 +409,16 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
       tl.to(rowEl, { x: 5, duration: 0.04, ease: "none", repeat: 5, yoyo: true }, 0);
 
       if (dot) {
-        const flicker: OrgDotTone[] = ["negative", "positive", "negative", "positive", "negative"];
-        let t = REMOVE_SHAKE_S * 0.35;
-        flicker.forEach((st) => {
-          tl.call(
-            () => {
-              dot.className = `home-org-diagram__dot home-org-diagram__dot--${st}`;
-            },
-            undefined,
-            t,
-          );
-          t += 0.045;
-        });
+        /**
+         * Scale-pulse the dot via GSAP only. The previous flicker mutated `dot.className`
+         * directly, which bypassed React: if the timeline was interrupted mid-flicker the dot
+         * stayed at whatever class GSAP last wrote (often "--negative"), and React never
+         * reconciled it back because its virtual-DOM diff still matched the original render.
+         * Animating `scale` keeps everything inside GSAP and is reverted by `clearProps` in
+         * `onComplete`/`onInterrupt`.
+         */
+        tl.to(dot, { scale: 1.45, duration: REMOVE_SHAKE_S * 0.45, ease: "power2.out" }, 0)
+          .to(dot, { scale: 0.55, duration: REMOVE_SHAKE_S * 0.55, ease: "power2.in" }, REMOVE_SHAKE_S * 0.45);
       }
 
       tl.to(
