@@ -750,8 +750,9 @@
     z-index: 1;
   }
 
+  /** Above label chips so connector paths stay visible when chips grow (taller copy). */
   .home-org-diagram__svg--chip-arrows {
-    z-index: 2;
+    z-index: 3;
   }
 
   .home-org-diagram__wire {
@@ -800,7 +801,7 @@
     top: calc(70 / 706 * 100%);
     width: max(calc(101 / 1136 * 100%), min(24cqi, calc(168 / 1136 * 100%)));
     padding: 0;
-    z-index: 3;
+    z-index: 2;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -814,7 +815,7 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    z-index: 3;
+    z-index: 2;
   }
 
   .home-org-diagram__chip-copy {
