@@ -4,8 +4,8 @@
  * Org diagram wires — Figma `428:14926` (`get_design_context` MCP).
  * • Five elements: You, Pancake (hub for depts + chip for founder wire), Growth, Engineering, Operations.
  * • Founder↔chip path ends classified with chip stage coords vs You (hub anchor alone mislabels short paths).
- * • Every ball: one full edge (u 0→1), then respawns from a random element’s departure (same rule on founder
- *   as on dept links — no dedicated ping-pong). Stroke-free trail dots.
+ * • Every ball: one full edge (u 0→1), then respawns from a random element’s departure. Duration is random and
+ *   scaled by path length so short founder↔chip legs don’t read slower than long dept wires. Stroke-free trail dots.
  */
 
 import { useRef } from "react";
@@ -128,9 +128,12 @@ const BALL_R_MIN = 3.2;
 const BALL_R_MAX = 7.8;
 const TOTAL_BALL_MIN = 18;
 const TOTAL_BALL_MAX = 26;
-/** One-way leg duration (s); no return tween — next leg respawns from a random element. */
+/** One-way leg duration (s) before length scaling; clamped after scale. */
 const DURATION_MIN = 1.1;
 const DURATION_MAX = 2.85;
+/** Path length in path user units above which duration is not shortened (dept wires). */
+const DURATION_REF_PATH_LEN = 300;
+const DURATION_FLOOR_AFTER_SCALE = 0.48;
 const LEG_DELAY_MAX = 0.35;
 
 const EASE_POOL = ["none", "power1.inOut", "power2.inOut", "sine.inOut", "power1.out", "power2.out"] as const;
@@ -194,6 +197,13 @@ function randInt(rng: () => number, min: number, max: number): number {
 
 function pickEase(rng: () => number): string {
   return EASE_POOL[Math.floor(rng() * EASE_POOL.length)] ?? "sine.inOut";
+}
+
+/** Random duration scaled by path length so short founder↔chip legs don’t feel sluggish vs long dept wires. */
+function randomLegDuration(pathLen: number, rng: () => number): number {
+  const base = rand(rng, DURATION_MIN, DURATION_MAX);
+  const lenFactor = gsap.utils.clamp(0.22, 1, pathLen / DURATION_REF_PATH_LEN);
+  return gsap.utils.clamp(DURATION_FLOOR_AFTER_SCALE, DURATION_MAX, base * lenFactor);
 }
 
 function closestAnchorToPathPoint(path: SVGPathElement, svg: SVGSVGElement, px: number, py: number): AnchorId {
@@ -286,7 +296,7 @@ function runBallLeg(circle: SVGCircleElement, legs: readonly DirectedLeg[], rng:
   leg.ballRoot.appendChild(circle);
 
   const pathLen = leg.path.getTotalLength();
-  const duration = rand(rng, DURATION_MIN, DURATION_MAX);
+  const duration = randomLegDuration(pathLen, rng);
   const ease = pickEase(rng);
   const delay = rand(rng, 0, LEG_DELAY_MAX);
 
