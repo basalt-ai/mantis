@@ -711,12 +711,14 @@
 
   /**
    * Org diagram — Figma `428:14926` (1136×706). Tokens from MCP variable defs + design context.
-   * Width is capped by viewport height so the whole diagram scales down without an inner scroll strip;
-   * `min(100%, …, dvh * ratio)` keeps the stage short enough to fit above the fold on resize.
+   * Width matches landing figures: full row up to token max (no dvh cap — that shrank the chart vs Figma).
+   * You / Pancake chips use `right` so extra responsive width grows toward the diagram center, keeping the
+   * Figma inner corners aligned with the fixed SVG chip-arrow anchors.
    */
   .home-org-diagram {
     box-sizing: border-box;
-    width: min(100%, calc(71 * var(--spacing-xl)), calc(72dvh * 1136 / 706));
+    width: 100%;
+    max-width: calc(71 * var(--spacing-xl));
     margin-inline: auto;
     min-width: 0;
     overflow: visible;
@@ -797,7 +799,9 @@
   }
 
   .home-org-diagram__you-chip {
-    left: calc(212 / 1136 * 100%);
+    /** Anchor right edge at Figma (212+101)/1136 so wider chips grow left, toward arrows/avatar. */
+    right: calc((1136 - 212 - 101) / 1136 * 100%);
+    left: auto;
     top: calc(70 / 706 * 100%);
     width: max(calc(101 / 1136 * 100%), min(24cqi, calc(168 / 1136 * 100%)));
     padding: 0;
@@ -808,7 +812,9 @@
   }
 
   .home-org-diagram__pancake-chip {
-    left: calc(800 / 1136 * 100%);
+    /** Anchor right edge at Figma (800+125)/1136 so wider chips grow left toward the monster icon. */
+    right: calc((1136 - 800 - 125) / 1136 * 100%);
+    left: auto;
     top: calc(8 / 706 * 100%);
     width: max(calc(125 / 1136 * 100%), min(30cqi, calc(228 / 1136 * 100%)));
     padding: 0;
