@@ -712,8 +712,8 @@
   /**
    * Org diagram — Figma `428:14926` (1136×706). Tokens from MCP variable defs + design context.
    * Width matches landing figures: full row up to token max (no dvh cap — that shrank the chart vs Figma).
-   * You / Pancake chips use `right` so extra responsive width grows toward the diagram center, keeping the
-   * Figma inner corners aligned with the fixed SVG chip-arrow anchors.
+   * You chip: anchor `right` so extra width grows left (toward center), matching the arrow toward the avatar.
+   * Pancake chip: anchor `left` so extra width grows right (label sits right of the icon; avoids overlapping the stack).
    */
   .home-org-diagram {
     box-sizing: border-box;
@@ -812,9 +812,9 @@
   }
 
   .home-org-diagram__pancake-chip {
-    /** Anchor right edge at Figma (800+125)/1136 so wider chips grow left toward the monster icon. */
-    right: calc((1136 - 800 - 125) / 1136 * 100%);
-    left: auto;
+    /** Label sits right of the icon — keep Figma left edge so wider chips grow away from the monster. */
+    left: calc(800 / 1136 * 100%);
+    right: auto;
     top: calc(8 / 706 * 100%);
     width: max(calc(125 / 1136 * 100%), min(30cqi, calc(228 / 1136 * 100%)));
     padding: 0;
