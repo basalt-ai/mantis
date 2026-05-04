@@ -1,9 +1,9 @@
 "use client";
 
 import type { RefObject } from "react";
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
-import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import { gsap } from "@/lib/gsap";
 
 import {
   LIVE_INITIAL_DEPTS,
@@ -302,87 +302,76 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
   runBlockRef.current = runBlock;
   armBlockRef.current = armBlock;
 
-  useGSAP(
-    () => {
-      if (reducedMotion) return;
+  useEffect(() => {
+    if (reducedMotion) return;
 
-      let st: ScrollTrigger | null = null;
-      let cancelled = false;
-      let raf0 = 0;
-      let raf1 = 0;
+    let cancelled = false;
+    let io: IntersectionObserver | null = null;
+    let raf0 = 0;
+    let raf1 = 0;
 
-      const startLive = () => {
-        liveEnabledRef.current = true;
-        for (const s of SURFACES) {
-          armBlockRef.current(s);
-        }
-      };
-
-      const stopLive = () => {
-        liveEnabledRef.current = false;
-        clearAllBlockTimers();
-        killDelayedCalls();
-      };
-
-      const syncLiveFromScrollPosition = () => {
-        if (cancelled || !st) return;
-        ScrollTrigger.refresh();
-        // Only arm when active. Do NOT call stopLive() here — after refresh(), isActive can
-        // briefly read false while the diagram is still on screen; that was killing timers +
-        // pending→active delayedCalls mid-session (freeze after several adds).
-        if (st.isActive) startLive();
-      };
-
-      const attach = () => {
-        const root = scrollRootRef.current;
-        if (!root) return false;
-
-        st = ScrollTrigger.create({
-          trigger: root,
-          /** While any part of the diagram intersects the viewport (stable when the block grows). */
-          start: "top bottom",
-          end: "bottom top",
-          invalidateOnRefresh: true,
-          onEnter: startLive,
-          onEnterBack: startLive,
-          onLeave: stopLive,
-          onLeaveBack: stopLive,
-        });
-
-        // If the org block is already past `start` when the trigger mounts, `onEnter` never fires
-        // (classic ScrollTrigger gotcha). Mirror enter/leave from measured `isActive` instead.
-        syncLiveFromScrollPosition();
-        raf0 = requestAnimationFrame(() => {
-          raf1 = requestAnimationFrame(syncLiveFromScrollPosition);
-        });
-
-        return true;
-      };
-
-      if (!attach()) {
-        raf0 = requestAnimationFrame(() => {
-          if (cancelled) return;
-          if (!attach()) {
-            raf1 = requestAnimationFrame(() => {
-              if (cancelled) return;
-              attach();
-            });
-          }
-        });
+    const startLive = () => {
+      if (cancelled) return;
+      liveEnabledRef.current = true;
+      for (const s of SURFACES) {
+        armBlockRef.current(s);
       }
+    };
 
-      return () => {
-        cancelled = true;
-        cancelAnimationFrame(raf0);
-        cancelAnimationFrame(raf1);
-        st?.kill();
-        st = null;
-        stopLive();
-      };
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- tick logic uses refs; avoid recreating ScrollTrigger
-    { scope: scrollRootRef, dependencies: [reducedMotion, killDelayedCalls, clearAllBlockTimers] },
-  );
+    /** Pause timers only — do NOT kill pending→active delayedCalls (ScrollTrigger/IO flips were cancelling them). */
+    const pauseLive = () => {
+      liveEnabledRef.current = false;
+      clearAllBlockTimers();
+    };
+
+    const wire = () => {
+      const root = scrollRootRef.current;
+      if (!root || cancelled) return false;
+
+      io = new IntersectionObserver(
+        (entries) => {
+          if (cancelled) return;
+          const hit = entries.some((e) => e.isIntersecting);
+          if (hit) startLive();
+          else pauseLive();
+        },
+        {
+          root: null,
+          /** Keep “in view” through layout shifts and partial exits (diagram grows with rows). */
+          rootMargin: "40% 0px 40% 0px",
+          threshold: 0.01,
+        },
+      );
+
+      io.observe(root);
+      return true;
+    };
+
+    const tryWire = () => {
+      if (wire()) return;
+      raf0 = requestAnimationFrame(() => {
+        if (cancelled) return;
+        if (wire()) return;
+        raf1 = requestAnimationFrame(() => {
+          if (cancelled) return;
+          wire();
+        });
+      });
+    };
+
+    tryWire();
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf0);
+      cancelAnimationFrame(raf1);
+      io?.disconnect();
+      io = null;
+      liveEnabledRef.current = false;
+      clearAllBlockTimers();
+      killDelayedCalls();
+    };
+  }, [reducedMotion, clearAllBlockTimers, killDelayedCalls, scrollRootRef]);
 
   if (reducedMotion) {
     return (
