@@ -364,8 +364,11 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
         if (stillThere) {
           gsap.killTweensOf(rowEl);
           if (dot) gsap.killTweensOf(dot);
-          gsap.set(rowEl, { clearProps: "transform,opacity,visibility,willChange" });
-          if (dot) gsap.set(dot, { clearProps: "transform" });
+          /**
+           * No `clearProps` here — the row is being unmounted on the next React commit.
+           * Resetting transform/opacity now would flash the row back to its original
+           * position for a frame before React removes it (the "blink-resurrection").
+           */
           setDeptRows((prev) => ({
             ...prev,
             [surface]: prev[surface].filter((r) => r.id !== victim.id),
@@ -384,6 +387,7 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
         onInterrupt: () => {
           if (disposedRef.current) return;
           clearRemoveFailsafe(surface);
+          /** Interrupted — the row is staying in state, so revert visuals to make it visible again. */
           gsap.set(rowEl, { clearProps: "transform,opacity,visibility,willChange" });
           if (dot) gsap.set(dot, { clearProps: "transform" });
           scheduleSurfaceNextRef.current(surface);
@@ -391,8 +395,11 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
         onComplete: () => {
           if (disposedRef.current) return;
           clearRemoveFailsafe(surface);
-          gsap.set(rowEl, { clearProps: "transform,opacity,visibility,willChange" });
-          if (dot) gsap.set(dot, { clearProps: "transform" });
+          /**
+           * No `clearProps` — see failsafe comment. The row is at `x=slideX, autoAlpha=0`
+           * (off-screen and invisible); leave it that way until React unmounts it on the
+           * next commit triggered by the `setDeptRows` below.
+           */
           setDeptRows((prev) => ({
             ...prev,
             [surface]: prev[surface].filter((r) => r.id !== victim.id),
