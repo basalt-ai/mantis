@@ -1,54 +1,15 @@
 /**
  * Org diagram under “An entire org working for you” — Figma `428:14926` (1136×706).
  * Built from semantic tokens + MCP `get_design_context` / `get_variable_defs` (no raster for this block).
+ * Dept role rows animate in `HomeOrgLiveRows`; wires/balls stay in `OrgConnections`.
  */
 
-import { useId } from "react";
+"use client";
 
+import { useId, useRef } from "react";
+
+import { HomeOrgLiveRows } from "@/components/sections/home/HomeOrgLiveRows";
 import { OrgConnections } from "@/components/sections/home/OrgConnections";
-
-type OrgRowStatus = "positive" | "warning" | "negative";
-
-type OrgRow = { label: string; status: OrgRowStatus };
-
-type OrgDept = {
-  title: string;
-  surface: "growth" | "engineering" | "operations";
-  rows: OrgRow[];
-};
-
-const ORG_DEPTS: OrgDept[] = [
-  {
-    title: "Growth",
-    surface: "growth",
-    rows: [
-      { label: "Copywriter", status: "positive" },
-      { label: "Ad Manager", status: "warning" },
-      { label: "Social Media Manager", status: "negative" },
-      { label: "Email Marketer", status: "positive" },
-    ],
-  },
-  {
-    title: "Engineering",
-    surface: "engineering",
-    rows: [
-      { label: "Full-stack Engineer", status: "positive" },
-      { label: "DevOps", status: "positive" },
-      { label: "Performance Monitor", status: "negative" },
-      { label: "QA Tester", status: "positive" },
-    ],
-  },
-  {
-    title: "Operations",
-    surface: "operations",
-    rows: [
-      { label: "Scheduling", status: "positive" },
-      { label: "Recruiting Screener", status: "warning" },
-      { label: "Invoicing", status: "positive" },
-      { label: "Customer Support", status: "positive" },
-    ],
-  },
-];
 
 /** Figma `428:14929` / `428:14930` — path `d` from MCP SVG asset (same geometry; placement + rotation per node). */
 const CHIP_CONNECTOR_PATH_D =
@@ -71,9 +32,10 @@ const CHIP_ARROW_SY = V_PATH_INNER_H / CHIP_ARROW_VB_H;
 
 export function HomeOrgDiagram() {
   const founderClipId = useId().replace(/:/g, "");
+  const diagramRootRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="home-org-diagram">
+    <div ref={diagramRootRef} className="home-org-diagram">
       <div className="home-org-diagram__stage">
         <OrgConnections />
 
@@ -162,22 +124,7 @@ export function HomeOrgDiagram() {
           <img className="home-org-diagram__monster-img" src="/pancake-monster.png" alt="" width={128} height={128} decoding="async" />
         </div>
 
-        {ORG_DEPTS.map((dept) => (
-          <article
-            key={dept.title}
-            className={`home-org-diagram__dept home-org-diagram__dept--${dept.surface} home-org-diagram__abs`}
-          >
-            <h3 className="home-org-diagram__dept-title">{dept.title}</h3>
-            <div className="home-org-diagram__rows">
-              {dept.rows.map((row) => (
-                <div key={row.label} className="home-org-diagram__row">
-                  <span className={`home-org-diagram__dot home-org-diagram__dot--${row.status}`} aria-hidden />
-                  <span className="home-org-diagram__row-label">{row.label}</span>
-                </div>
-              ))}
-            </div>
-          </article>
-        ))}
+        <HomeOrgLiveRows scrollRootRef={diagramRootRef} />
       </div>
     </div>
   );
