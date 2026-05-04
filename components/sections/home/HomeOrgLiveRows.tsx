@@ -1,7 +1,7 @@
 "use client";
 
 import type { RefObject } from "react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 
@@ -110,7 +110,7 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
 
   const [deptRows, setDeptRows] = useState<Record<OrgSurface, LiveRow[]>>(() => initialDeptMap());
   const deptRowsRef = useRef(deptRows);
-  useEffect(() => {
+  useLayoutEffect(() => {
     deptRowsRef.current = deptRows;
   }, [deptRows]);
 
@@ -165,25 +165,17 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       const root = scrollRootRef.current;
       if (!liveEnabledRef.current) return;
 
-      const canAdd = () => {
-        const rows = deptRowsRef.current[surface];
-        if (rows.length >= ROW_CAP) return false;
-        const vis = visibleLabels(rows);
-        return ROLE_POOLS[surface].some((l) => !vis.has(l));
-      };
-
-      const canRemove = () => {
-        const rows = deptRowsRef.current[surface];
-        if (rows.length <= ROW_FLOOR) return false;
-        const actives = rows.filter((r) => r.phase === "active");
-        const pendings = rows.filter((r) => r.phase === "pending");
-        return actives.length > 0 || pendings.length > 0;
-      };
-
       if (!root) return;
 
-      const addOk = canAdd();
-      const removeOk = canRemove();
+      const rows = deptRowsRef.current[surface];
+      const vis = visibleLabels(rows);
+      const pool = ROLE_POOLS[surface].filter((l) => !vis.has(l));
+      const addOk = rows.length < ROW_CAP && pool.length > 0;
+      const actives = rows.filter((r) => r.phase === "active");
+      const pendings = rows.filter((r) => r.phase === "pending");
+      const removeOk =
+        rows.length > ROW_FLOOR && (actives.length > 0 || pendings.length > 0);
+      const targetPool = actives.length > 0 ? actives : pendings;
 
       let doAdd: boolean;
       if (addOk && removeOk) doAdd = Math.random() < 0.5;
@@ -191,12 +183,16 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       else if (removeOk) doAdd = false;
       else return;
 
-      if (doAdd) {
-        const rows = deptRowsRef.current[surface];
-        const vis = visibleLabels(rows);
-        const pool = ROLE_POOLS[surface].filter((l) => !vis.has(l));
-        if (pool.length === 0) return;
+      if (doAdd && pool.length === 0) {
+        if (!removeOk) return;
+        doAdd = false;
+      }
+      if (!doAdd && targetPool.length === 0) {
+        if (!addOk) return;
+        doAdd = true;
+      }
 
+      if (doAdd) {
         const article = findDeptArticle(root, surface);
         const beforeRects = article ? captureDeptRowRects(article) : new Map<string, DOMRect>();
         const sampleRow = article?.querySelector<HTMLElement>(".home-org-diagram__row");
@@ -207,8 +203,8 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
           Math.max(rowH * 2.2 + 10, deptH * 0.38),
         );
 
-        const id = makeRowId();
         const label = pool[Math.floor(Math.random() * pool.length)]!;
+        const id = makeRowId();
 
         setDeptRows((prev) => ({
           ...prev,
@@ -243,12 +239,6 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
         });
         return;
       }
-
-      const rows = deptRowsRef.current[surface];
-      const actives = rows.filter((r) => r.phase === "active");
-      const pendings = rows.filter((r) => r.phase === "pending");
-      const targetPool = actives.length > 0 ? actives : pendings;
-      if (targetPool.length === 0) return;
 
       const victim = targetPool[Math.floor(Math.random() * targetPool.length)]!;
       const article = findDeptArticle(root, surface);
@@ -349,7 +339,12 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
           trigger: root,
           /** Line near viewport bottom — live starts sooner than the old `top 88%` gate. */
           start: "top 97%",
-          end: "bottom 5%",
+          /**
+           * Keep the trigger active while the diagram still intersects the viewport.
+           * A tight `end` (e.g. bottom 5%) flips inactive when the org grows to 6 rows and the
+           * block’s bottom crosses the line — `stopLive` then kills timers + pending→active calls.
+           */
+          end: "bottom top",
           onEnter: startLive,
           onEnterBack: startLive,
           onLeave: stopLive,
