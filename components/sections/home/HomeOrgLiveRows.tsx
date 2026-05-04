@@ -126,14 +126,8 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
   /** pending→active — plain timeouts (browser number handles) so GSAP never drops promotions. */
   const pendingPromoteTimersRef = useRef<Map<string, number>>(new Map());
 
-  /** One exit timeline per surface — avoids overlapping removes killing onComplete (stuck at 6 rows). */
-  const exitAnimRowIdRef = useRef<Record<OrgSurface, string | null>>({
-    growth: null,
-    engineering: null,
-    operations: null,
-  });
-
   const runBlockRef = useRef<(surface: OrgSurface) => void>(() => {});
+  const scheduleSurfaceNextRef = useRef<(surface: OrgSurface) => void>(() => {});
   const armBlockRef = useRef<(surface: OrgSurface) => void>(() => {});
 
   const clearBlockTimer = useCallback((surface: OrgSurface) => {
@@ -153,7 +147,12 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
     pendingPromoteTimersRef.current.clear();
   }, []);
 
-  const armBlock = useCallback(
+  /**
+   * Schedule the next tick for one surface. Never chain from runBlock via try/finally: remove
+   * timelines are async (~0.85s+); re-arming immediately caused overlapping ticks, overwrite kills,
+   * and stuck “at cap” states.
+   */
+  const scheduleSurfaceNext = useCallback(
     (surface: OrgSurface) => {
       clearBlockTimer(surface);
       if (!liveEnabledRef.current) return;
@@ -161,11 +160,7 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
         BLOCK_DELAY_MIN_MS + Math.random() * (BLOCK_DELAY_MAX_MS - BLOCK_DELAY_MIN_MS);
       timerBySurfaceRef.current[surface] = setTimeout(() => {
         timerBySurfaceRef.current[surface] = null;
-        try {
-          runBlockRef.current(surface);
-        } finally {
-          armBlockRef.current(surface);
-        }
+        runBlockRef.current(surface);
       }, delay);
     },
     [clearBlockTimer],
@@ -176,10 +171,12 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       const root = scrollRootRef.current;
       if (!liveEnabledRef.current) return;
 
-      if (!root) return;
+      if (!root) {
+        scheduleSurfaceNextRef.current(surface);
+        return;
+      }
 
       const rows = deptRowsRef.current[surface];
-      if (exitAnimRowIdRef.current[surface]) return;
 
       const vis = visibleLabels(rows);
       const pool = ROLE_POOLS[surface].filter((l) => !vis.has(l));
@@ -196,14 +193,23 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       else if (addOk && removeOk) doAdd = Math.random() < 0.5;
       else if (addOk) doAdd = true;
       else if (removeOk) doAdd = false;
-      else return;
+      else {
+        scheduleSurfaceNextRef.current(surface);
+        return;
+      }
 
       if (doAdd && pool.length === 0) {
-        if (!removeOk) return;
+        if (!removeOk) {
+          scheduleSurfaceNextRef.current(surface);
+          return;
+        }
         doAdd = false;
       }
       if (!doAdd && targetPool.length === 0) {
-        if (!addOk) return;
+        if (!addOk) {
+          scheduleSurfaceNextRef.current(surface);
+          return;
+        }
         doAdd = true;
       }
 
@@ -255,15 +261,17 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
           }, PENDING_TO_ACTIVE_S * 1000);
           pendingPromoteTimersRef.current.set(id, t);
         });
+        scheduleSurfaceNextRef.current(surface);
         return;
       }
 
       const victim = targetPool[Math.floor(Math.random() * targetPool.length)]!;
       const article = findDeptArticle(root, surface);
       const rowEl = findRowEl(root, surface, victim.id);
-      if (!article || !rowEl) return;
-
-      exitAnimRowIdRef.current[surface] = victim.id;
+      if (!article || !rowEl) {
+        scheduleSurfaceNextRef.current(surface);
+        return;
+      }
 
       const beforeRects = captureDeptRowRects(article);
       const dot = rowEl.querySelector<HTMLElement>(".home-org-diagram__dot");
@@ -274,27 +282,21 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       const tl = gsap.timeline({
         defaults: { overwrite: "auto" },
         onInterrupt: () => {
-          if (exitAnimRowIdRef.current[surface] === victim.id) {
-            exitAnimRowIdRef.current[surface] = null;
-          }
+          gsap.set(rowEl, { clearProps: "transform,opacity,filter,willChange" });
+          scheduleSurfaceNextRef.current(surface);
         },
         onComplete: () => {
-          try {
-            gsap.set(rowEl, { clearProps: "willChange" });
-            setDeptRows((prev) => ({
-              ...prev,
-              [surface]: prev[surface].filter((r) => r.id !== victim.id),
-            }));
+          gsap.set(rowEl, { clearProps: "willChange" });
+          setDeptRows((prev) => ({
+            ...prev,
+            [surface]: prev[surface].filter((r) => r.id !== victim.id),
+          }));
+          requestAnimationFrame(() => {
             requestAnimationFrame(() => {
-              requestAnimationFrame(() => {
-                flipReflowRows(article, beforeRects, 0.42, "power3.out");
-              });
+              flipReflowRows(article, beforeRects, 0.42, "power3.out");
             });
-          } finally {
-            if (exitAnimRowIdRef.current[surface] === victim.id) {
-              exitAnimRowIdRef.current[surface] = null;
-            }
-          }
+          });
+          scheduleSurfaceNextRef.current(surface);
         },
       });
 
@@ -330,8 +332,9 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
     [scrollRootRef],
   );
 
+  scheduleSurfaceNextRef.current = scheduleSurfaceNext;
   runBlockRef.current = runBlock;
-  armBlockRef.current = armBlock;
+  armBlockRef.current = scheduleSurfaceNext;
 
   useEffect(() => {
     if (reducedMotion) return;
@@ -353,7 +356,6 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       liveEnabledRef.current = false;
       clearAllBlockTimers();
       clearAllPendingPromoteTimers();
-      for (const s of SURFACES) exitAnimRowIdRef.current[s] = null;
     };
 
     const onVisibility = () => {
@@ -381,8 +383,6 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       liveEnabledRef.current = false;
       clearAllBlockTimers();
       clearAllPendingPromoteTimers();
-      // eslint-disable-next-line react-hooks/exhaustive-deps -- clear latest exit mutex on unmount
-      for (const s of SURFACES) exitAnimRowIdRef.current[s] = null;
     };
   }, [reducedMotion, clearAllBlockTimers, clearAllPendingPromoteTimers]);
 
