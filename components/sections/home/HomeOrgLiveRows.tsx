@@ -68,7 +68,12 @@ function captureDeptRowRects(article: Element): Map<string, DOMRect> {
   return map;
 }
 
-function flipReflowRows(article: Element, before: Map<string, DOMRect>): void {
+function flipReflowRows(
+  article: Element,
+  before: Map<string, DOMRect>,
+  duration = 0.32,
+  ease: string = "power2.out",
+): void {
   article.querySelectorAll<HTMLElement>("[data-org-live-row]").forEach((el) => {
     const id = el.dataset.orgLiveRow;
     if (!id) return;
@@ -77,7 +82,7 @@ function flipReflowRows(article: Element, before: Map<string, DOMRect>): void {
     const next = el.getBoundingClientRect();
     const dy = prev.top - next.top;
     if (Math.abs(dy) < 0.75) return;
-    gsap.fromTo(el, { y: dy }, { y: 0, duration: 0.32, ease: "power2.out", overwrite: "auto" });
+    gsap.fromTo(el, { y: dy }, { y: 0, duration, ease, overwrite: "auto" });
   });
 }
 
@@ -186,18 +191,31 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       const label = pool[Math.floor(Math.random() * pool.length)]!;
       const id = makeRowId();
 
+      const article = findDeptArticle(root, surface);
+      const beforeRects = article ? captureDeptRowRects(article) : new Map<string, DOMRect>();
+      const sampleRow = article?.querySelector<HTMLElement>(".home-org-diagram__row");
+      const rowH = sampleRow ? Math.max(20, sampleRow.getBoundingClientRect().height) : 28;
+
       setDeptRows((prev) => ({
         ...prev,
-        [surface]: [...prev[surface], { id, label, phase: "pending" }],
+        [surface]: [{ id, label, phase: "pending" }, ...prev[surface]],
       }));
 
       queueMicrotask(() => {
+        if (!article) return;
+        flipReflowRows(article, beforeRects, ADD_IN_DURATION, "power2.out");
         const el = findRowEl(root, surface, id);
         if (!el) return;
         gsap.fromTo(
           el,
-          { y: -8, opacity: 0 },
-          { y: 0, opacity: 1, duration: ADD_IN_DURATION, ease: "power2.out", overwrite: "auto" },
+          { y: -(rowH + 6), opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: ADD_IN_DURATION,
+            ease: "back.out(1.18)",
+            overwrite: "auto",
+          },
         );
       });
 
@@ -224,17 +242,21 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
 
       const beforeRects = captureDeptRowRects(article);
       const dot = rowEl.querySelector<HTMLElement>(".home-org-diagram__dot");
+      const slideX = Math.max(48, article.getBoundingClientRect().width * 0.22);
+
+      gsap.set(rowEl, { willChange: "transform, filter" });
 
       const tl = gsap.timeline({
         defaults: { overwrite: "auto" },
         onComplete: () => {
+          gsap.set(rowEl, { clearProps: "willChange" });
           setDeptRows((prev) => ({
             ...prev,
             [surface]: prev[surface].filter((r) => r.id !== victim.id),
           }));
           requestAnimationFrame(() => {
             requestAnimationFrame(() => {
-              flipReflowRows(article, beforeRects);
+              flipReflowRows(article, beforeRects, 0.36, "power3.out");
             });
           });
         },
@@ -259,7 +281,13 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
 
       tl.to(
         rowEl,
-        { y: -14, opacity: 0, duration: REMOVE_OUT_DURATION, ease: "power2.in" },
+        {
+          x: slideX,
+          opacity: 0,
+          filter: "blur(6px)",
+          duration: REMOVE_OUT_DURATION,
+          ease: "power3.in",
+        },
         REMOVE_SHAKE_S * 0.55,
       );
     }
