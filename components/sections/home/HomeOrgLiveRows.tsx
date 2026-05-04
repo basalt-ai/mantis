@@ -24,8 +24,9 @@ type LiveRow = {
 
 const ROW_CAP = 6;
 const ROW_FLOOR = 2;
-const TICK_MIN_MS = 680;
-const TICK_MAX_MS = 1120;
+/** Per-block only — each surface draws a fresh delay in this range every cycle (no master tick). */
+const BLOCK_DELAY_MIN_MS = 600;
+const BLOCK_DELAY_MAX_MS = 1800;
 const PENDING_TO_ACTIVE_S = 0.8;
 const ADD_IN_DURATION = 0.58;
 const ADD_SLIDE_MAX_PX = 168;
@@ -101,17 +102,6 @@ type HomeOrgLiveRowsProps = {
 
 const SURFACES: OrgSurface[] = ["growth", "engineering", "operations"];
 
-function shuffleSurfaces(): OrgSurface[] {
-  const out = [...SURFACES];
-  for (let i = out.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    const t = out[i]!;
-    out[i] = out[j]!;
-    out[j] = t;
-  }
-  return out;
-}
-
 export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
   const reducedMotion = useMemo(
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
@@ -124,88 +114,88 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
     deptRowsRef.current = deptRows;
   }, [deptRows]);
 
-  /** After two successful add-beats (or two remove-beats) in a row, the next beat flips to the opposite. */
-  const lastBeatWasAddRef = useRef<boolean | null>(null);
-  const sameBeatStreakRef = useRef(0);
-
   const liveEnabledRef = useRef(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timerBySurfaceRef = useRef<Record<OrgSurface, ReturnType<typeof setTimeout> | null>>({
+    growth: null,
+    engineering: null,
+    operations: null,
+  });
   const delayedCallsRef = useRef<gsap.core.Tween[]>([]);
 
-  const runLiveTickRef = useRef<() => void>(() => {});
-  const scheduleNextTickRef = useRef<() => void>(() => {});
+  const runBlockRef = useRef<(surface: OrgSurface) => void>(() => {});
+  const armBlockRef = useRef<(surface: OrgSurface) => void>(() => {});
 
-  const clearTimer = useCallback(() => {
-    if (timerRef.current != null) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
+  const clearBlockTimer = useCallback((surface: OrgSurface) => {
+    const t = timerBySurfaceRef.current[surface];
+    if (t != null) {
+      clearTimeout(t);
+      timerBySurfaceRef.current[surface] = null;
     }
   }, []);
+
+  const clearAllBlockTimers = useCallback(() => {
+    for (const s of SURFACES) clearBlockTimer(s);
+  }, [clearBlockTimer]);
 
   const killDelayedCalls = useCallback(() => {
     delayedCallsRef.current.forEach((d) => d.kill());
     delayedCallsRef.current = [];
   }, []);
 
-  const scheduleNextTick = useCallback(() => {
-    clearTimer();
-    if (!liveEnabledRef.current) return;
-    const delay = TICK_MIN_MS + Math.random() * (TICK_MAX_MS - TICK_MIN_MS);
-    timerRef.current = setTimeout(() => {
-      runLiveTickRef.current();
-      scheduleNextTickRef.current();
-    }, delay);
-  }, [clearTimer]);
+  const armBlock = useCallback(
+    (surface: OrgSurface) => {
+      clearBlockTimer(surface);
+      if (!liveEnabledRef.current) return;
+      const delay =
+        BLOCK_DELAY_MIN_MS + Math.random() * (BLOCK_DELAY_MAX_MS - BLOCK_DELAY_MIN_MS);
+      timerBySurfaceRef.current[surface] = setTimeout(() => {
+        timerBySurfaceRef.current[surface] = null;
+        try {
+          runBlockRef.current(surface);
+        } finally {
+          armBlockRef.current(surface);
+        }
+      }, delay);
+    },
+    [clearBlockTimer],
+  );
 
-  const runLiveTick = useCallback(() => {
-    const root = scrollRootRef.current;
-    if (!root || !liveEnabledRef.current) return;
+  const runBlock = useCallback(
+    (surface: OrgSurface) => {
+      const root = scrollRootRef.current;
+      if (!liveEnabledRef.current) return;
 
-    const canAdd = (s: OrgSurface) => {
-      const rows = deptRowsRef.current[s];
-      if (rows.length >= ROW_CAP) return false;
-      const vis = visibleLabels(rows);
-      return ROLE_POOLS[s].some((l) => !vis.has(l));
-    };
-
-    const canRemove = (s: OrgSurface) => {
-      const rows = deptRowsRef.current[s];
-      if (rows.length <= ROW_FLOOR) return false;
-      return rows.some((r) => r.phase === "active");
-    };
-
-    const anyCanAdd = SURFACES.some(canAdd);
-    const anyCanRemove = SURFACES.some(canRemove);
-    if (!anyCanAdd && !anyCanRemove) return;
-
-    let beatAdd: boolean;
-    if (sameBeatStreakRef.current >= 2 && lastBeatWasAddRef.current !== null) {
-      beatAdd = !lastBeatWasAddRef.current;
-    } else {
-      beatAdd = Math.random() < 0.5;
-    }
-
-    if (beatAdd && !anyCanAdd && anyCanRemove) beatAdd = false;
-    if (!beatAdd && !anyCanRemove && anyCanAdd) beatAdd = true;
-    if ((beatAdd && !anyCanAdd) || (!beatAdd && !anyCanRemove)) return;
-
-    if (beatAdd) {
-      type AddOp = {
-        surface: OrgSurface;
-        id: string;
-        label: string;
-        article: HTMLElement | null;
-        beforeRects: Map<string, DOMRect>;
-        enterY: number;
+      const canAdd = () => {
+        const rows = deptRowsRef.current[surface];
+        if (rows.length >= ROW_CAP) return false;
+        const vis = visibleLabels(rows);
+        return ROLE_POOLS[surface].some((l) => !vis.has(l));
       };
-      const addOps: AddOp[] = [];
 
-      for (const surface of shuffleSurfaces()) {
-        if (!canAdd(surface)) continue;
+      const canRemove = () => {
+        const rows = deptRowsRef.current[surface];
+        if (rows.length <= ROW_FLOOR) return false;
+        const actives = rows.filter((r) => r.phase === "active");
+        const pendings = rows.filter((r) => r.phase === "pending");
+        return actives.length > 0 || pendings.length > 0;
+      };
+
+      if (!root) return;
+
+      const addOk = canAdd();
+      const removeOk = canRemove();
+
+      let doAdd: boolean;
+      if (addOk && removeOk) doAdd = Math.random() < 0.5;
+      else if (addOk) doAdd = true;
+      else if (removeOk) doAdd = false;
+      else return;
+
+      if (doAdd) {
         const rows = deptRowsRef.current[surface];
         const vis = visibleLabels(rows);
         const pool = ROLE_POOLS[surface].filter((l) => !vis.has(l));
-        if (pool.length === 0) continue;
+        if (pool.length === 0) return;
 
         const article = findDeptArticle(root, surface);
         const beforeRects = article ? captureDeptRowRects(article) : new Map<string, DOMRect>();
@@ -217,39 +207,22 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
           Math.max(rowH * 2.2 + 10, deptH * 0.38),
         );
 
-        addOps.push({
-          surface,
-          id: makeRowId(),
-          label: pool[Math.floor(Math.random() * pool.length)]!,
-          article,
-          beforeRects,
-          enterY,
-        });
-      }
+        const id = makeRowId();
+        const label = pool[Math.floor(Math.random() * pool.length)]!;
 
-      if (addOps.length === 0) return;
+        setDeptRows((prev) => ({
+          ...prev,
+          [surface]: [{ id, label, phase: "pending" }, ...prev[surface]],
+        }));
 
-      setDeptRows((prev) => {
-        const next = { ...prev };
-        for (const op of addOps) {
-          next[op.surface] = [{ id: op.id, label: op.label, phase: "pending" }, ...next[op.surface]];
-        }
-        return next;
-      });
-
-      if (lastBeatWasAddRef.current === true) sameBeatStreakRef.current += 1;
-      else sameBeatStreakRef.current = 1;
-      lastBeatWasAddRef.current = true;
-
-      queueMicrotask(() => {
-        for (const op of addOps) {
-          if (!op.article) continue;
-          flipReflowRows(op.article, op.beforeRects, ADD_IN_DURATION, "power3.out");
-          const el = findRowEl(root, op.surface, op.id);
-          if (!el) continue;
+        queueMicrotask(() => {
+          if (!article) return;
+          flipReflowRows(article, beforeRects, ADD_IN_DURATION, "power3.out");
+          const el = findRowEl(root, surface, id);
+          if (!el) return;
           gsap.fromTo(
             el,
-            { y: op.enterY, opacity: 0.08 },
+            { y: enterY, opacity: 0.08 },
             {
               y: 0,
               opacity: 1,
@@ -261,27 +234,26 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
           const dc = gsap.delayedCall(PENDING_TO_ACTIVE_S, () => {
             setDeptRows((prev) => ({
               ...prev,
-              [op.surface]: prev[op.surface].map((r) =>
-                r.id === op.id && r.phase === "pending" ? { ...r, phase: "active" } : r,
+              [surface]: prev[surface].map((r) =>
+                r.id === id && r.phase === "pending" ? { ...r, phase: "active" } : r,
               ),
             }));
           });
           delayedCallsRef.current.push(dc);
-        }
-      });
-      return;
-    }
+        });
+        return;
+      }
 
-    let removedAny = false;
-    for (const surface of shuffleSurfaces()) {
-      if (!canRemove(surface)) continue;
       const rows = deptRowsRef.current[surface];
       const actives = rows.filter((r) => r.phase === "active");
-      if (actives.length === 0) continue;
-      const victim = actives[Math.floor(Math.random() * actives.length)]!;
+      const pendings = rows.filter((r) => r.phase === "pending");
+      const targetPool = actives.length > 0 ? actives : pendings;
+      if (targetPool.length === 0) return;
+
+      const victim = targetPool[Math.floor(Math.random() * targetPool.length)]!;
       const article = findDeptArticle(root, surface);
       const rowEl = findRowEl(root, surface, victim.id);
-      if (!article || !rowEl) continue;
+      if (!article || !rowEl) return;
 
       const beforeRects = captureDeptRowRects(article);
       const dot = rowEl.querySelector<HTMLElement>(".home-org-diagram__dot");
@@ -333,17 +305,12 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
         },
         REMOVE_SHAKE_S * 0.55,
       );
-      removedAny = true;
-    }
+    },
+    [scrollRootRef],
+  );
 
-    if (!removedAny) return;
-    if (lastBeatWasAddRef.current === false) sameBeatStreakRef.current += 1;
-    else sameBeatStreakRef.current = 1;
-    lastBeatWasAddRef.current = false;
-  }, [scrollRootRef]);
-
-  runLiveTickRef.current = runLiveTick;
-  scheduleNextTickRef.current = scheduleNextTick;
+  runBlockRef.current = runBlock;
+  armBlockRef.current = armBlock;
 
   useGSAP(
     () => {
@@ -356,12 +323,14 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
 
       const startLive = () => {
         liveEnabledRef.current = true;
-        scheduleNextTickRef.current();
+        for (const s of SURFACES) {
+          armBlockRef.current(s);
+        }
       };
 
       const stopLive = () => {
         liveEnabledRef.current = false;
-        clearTimer();
+        clearAllBlockTimers();
         killDelayedCalls();
       };
 
@@ -419,7 +388,7 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps -- tick logic uses refs; avoid recreating ScrollTrigger
-    { scope: scrollRootRef, dependencies: [reducedMotion, clearTimer, killDelayedCalls] },
+    { scope: scrollRootRef, dependencies: [reducedMotion, killDelayedCalls, clearAllBlockTimers] },
   );
 
   if (reducedMotion) {
