@@ -4,8 +4,10 @@
  * Org diagram wires — Figma `428:14926` (`get_design_context` MCP).
  * • Five elements: You, Pancake (hub for depts + chip for founder wire), Growth, Engineering, Operations.
  * • Founder↔chip path ends classified with chip stage coords vs You (hub anchor alone mislabels short paths).
- * • Every ball: one full edge (u 0→1), then respawns from a random element’s departure. Duration is random and
- *   scaled by path length so short founder↔chip legs don’t read slower than long dept wires. Stroke-free trail dots.
+ * • Every ball: one full edge (u 0→1), then respawns from a weighted departure anchor (lighter on `you`) and
+ *   from Pancake we take the founder↔chip leg half the time when dept legs compete — balances you→chip vs chip→you.
+ * • Duration is random and scaled by path length so short founder↔chip legs don’t read slower than long dept wires.
+ *   Stroke-free trail dots.
  */
 
 import { useRef } from "react";
@@ -128,6 +130,10 @@ const BALL_R_MIN = 3.2;
 const BALL_R_MAX = 7.8;
 const TOTAL_BALL_MIN = 13;
 const TOTAL_BALL_MAX = 18;
+/** Departure weight for `you` (<1): only one outgoing leg (→chip), so uniform anchors over-count you→chip. */
+const DEPARTURE_WEIGHT_YOU = 0.5;
+/** When leaving Pancake, chance to pick the founder↔chip leg if dept legs also exist (balances chip↦you vs you↦chip). */
+const PANCAKE_FOUNDER_LEG_PROB = 0.5;
 /** One-way leg duration (s) before length scaling; clamped after scale. */
 const DURATION_MIN = 1.1;
 const DURATION_MAX = 2.85;
@@ -266,13 +272,41 @@ function buildDirectedLegs(
   return legs;
 }
 
-function pickUniformDepartureAnchor(rng: () => number): AnchorId {
-  return ANCHOR_IDS[randInt(rng, 0, ANCHOR_IDS.length - 1)]!;
+function pickWeightedDepartureAnchor(rng: () => number): AnchorId {
+  const w: Record<AnchorId, number> = {
+    you: DEPARTURE_WEIGHT_YOU,
+    pancake: 1,
+    growth: 1,
+    engineering: 1,
+    operations: 1,
+  };
+  let sum = 0;
+  for (const id of ANCHOR_IDS) sum += w[id];
+  let t = rng() * sum;
+  for (const id of ANCHOR_IDS) {
+    t -= w[id];
+    if (t <= 0) return id;
+  }
+  return ANCHOR_IDS[ANCHOR_IDS.length - 1]!;
 }
 
 function pickLegFromAnchor(legs: readonly DirectedLeg[], from: AnchorId, rng: () => number): DirectedLeg {
   const candidates = legs.filter((l) => l.from === from);
   if (candidates.length === 0) return legs[randInt(rng, 0, legs.length - 1)]!;
+
+  if (from === "pancake") {
+    const founderC = candidates.filter((l) => l.wireId === FOUNDER_WIRE_ID);
+    const deptC = candidates.filter((l) => l.wireId !== FOUNDER_WIRE_ID);
+    if (founderC.length > 0 && deptC.length > 0) {
+      if (rng() < PANCAKE_FOUNDER_LEG_PROB) {
+        return founderC[randInt(rng, 0, founderC.length - 1)]!;
+      }
+      return deptC[randInt(rng, 0, deptC.length - 1)]!;
+    }
+    if (deptC.length > 0) return deptC[randInt(rng, 0, deptC.length - 1)]!;
+    if (founderC.length > 0) return founderC[randInt(rng, 0, founderC.length - 1)]!;
+  }
+
   return candidates[randInt(rng, 0, candidates.length - 1)]!;
 }
 
@@ -291,7 +325,7 @@ function placeBallOnPath(
 }
 
 function runBallLeg(circle: SVGCircleElement, legs: readonly DirectedLeg[], rng: () => number): void {
-  const from = pickUniformDepartureAnchor(rng);
+  const from = pickWeightedDepartureAnchor(rng);
   const leg = pickLegFromAnchor(legs, from, rng);
   leg.ballRoot.appendChild(circle);
 
