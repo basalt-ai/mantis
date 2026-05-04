@@ -178,6 +178,7 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       if (!liveEnabledRef.current) return;
       const delay =
         BLOCK_DELAY_MIN_MS + Math.random() * (BLOCK_DELAY_MAX_MS - BLOCK_DELAY_MIN_MS);
+      console.log("[org-live] scheduleSurfaceNext", { surface, delayMs: Math.round(delay) });
       timerBySurfaceRef.current[surface] = setTimeout(() => {
         timerBySurfaceRef.current[surface] = null;
         runBlockRef.current(surface);
@@ -189,7 +190,10 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
   const runBlock = useCallback(
     (surface: OrgSurface) => {
       const root = scrollRootRef.current;
-      if (!liveEnabledRef.current) return;
+      if (!liveEnabledRef.current) {
+        console.log("[org-live]", { surface, liveEnabled: false, early: "liveDisabled" });
+        return;
+      }
 
       if (!root) {
         scheduleSurfaceNextRef.current(surface);
@@ -208,6 +212,16 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       let targetPool =
         actives.length > 0 ? actives : pendings.length > 0 ? pendings : rows.length > ROW_FLOOR ? rows : [];
       const atCap = rows.length >= ROW_CAP;
+
+      console.log("[org-live]", {
+        surface,
+        liveEnabled: liveEnabledRef.current,
+        rowsLength: rows.length,
+        addOk,
+        removeOk,
+        atCap,
+        scrollRootIsNull: !scrollRootRef.current,
+      });
 
       let doAdd: boolean;
       if (atCap && removeOk) doAdd = false;
@@ -292,6 +306,7 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       const victim = targetPool[Math.floor(Math.random() * targetPool.length)]!;
       const article = findDeptArticle(root, surface);
       const rowEl = findRowEl(root, surface, victim.id);
+      console.log("[org-live] remove attempt", { surface, victimId: victim.id, found: !!rowEl });
       if (!article || !rowEl) {
         scheduleSurfaceNextRef.current(surface);
         return;
@@ -327,11 +342,13 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       const tl = gsap.timeline({
         defaults: { overwrite: false },
         onInterrupt: () => {
+          console.log("[org-live] exit interrupted", { surface, victimId: victim.id });
           clearRemoveFailsafe(surface);
           gsap.set(rowEl, { clearProps: "transform,opacity,visibility,willChange" });
           scheduleSurfaceNextRef.current(surface);
         },
         onComplete: () => {
+          console.log("[org-live] exit complete", { surface, victimId: victim.id });
           clearRemoveFailsafe(surface);
           gsap.set(rowEl, { clearProps: "transform,opacity,visibility,willChange" });
           setDeptRows((prev) => ({
