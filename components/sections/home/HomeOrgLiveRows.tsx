@@ -89,13 +89,6 @@ function flipReflowRows(
 
 function findRowEl(root: HTMLElement | null, surface: OrgSurface, id: string): HTMLElement | null {
   const article = findDeptArticle(root, surface);
-  console.log("[org-live] findRowEl debug", {
-    surface,
-    id,
-    rootIsNull: !root,
-    articleFound: !!article,
-    rowsCountInArticle: article ? article.querySelectorAll("[data-org-live-row]").length : 0,
-  });
   if (!article) return null;
   const nodes = article.querySelectorAll<HTMLElement>("[data-org-live-row]");
   for (let i = 0; i < nodes.length; i++) {
@@ -106,13 +99,8 @@ function findRowEl(root: HTMLElement | null, surface: OrgSurface, id: string): H
 }
 
 function findDeptArticle(root: HTMLElement | null, surface: OrgSurface): HTMLElement | null {
-  if (!root) {
-    console.log("[org-live] findDeptArticle", { surface, found: false });
-    return null;
-  }
-  const article = root.querySelector<HTMLElement>(`article.home-org-diagram__dept--${surface}`);
-  console.log("[org-live] findDeptArticle", { surface, found: !!article });
-  return article;
+  if (!root) return null;
+  return root.querySelector<HTMLElement>(`article.home-org-diagram__dept--${surface}`);
 }
 
 type HomeOrgLiveRowsProps = {
@@ -134,6 +122,8 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
   }, [deptRows]);
 
   const liveEnabledRef = useRef(false);
+  /** True after this mount's effect cleanup — blocks stray timers/GSAP from a prior Strict/HMR instance. */
+  const disposedRef = useRef(false);
   const timerBySurfaceRef = useRef<Record<OrgSurface, ReturnType<typeof setTimeout> | null>>({
     growth: null,
     engineering: null,
@@ -189,13 +179,14 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
    */
   const scheduleSurfaceNext = useCallback(
     (surface: OrgSurface) => {
+      if (disposedRef.current) return;
       clearBlockTimer(surface);
       if (!liveEnabledRef.current) return;
       const delay =
         BLOCK_DELAY_MIN_MS + Math.random() * (BLOCK_DELAY_MAX_MS - BLOCK_DELAY_MIN_MS);
-      console.log("[org-live] scheduleSurfaceNext", { surface, delayMs: Math.round(delay) });
       timerBySurfaceRef.current[surface] = setTimeout(() => {
         timerBySurfaceRef.current[surface] = null;
+        if (disposedRef.current) return;
         runBlockRef.current(surface);
       }, delay);
     },
@@ -204,11 +195,9 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
 
   const runBlock = useCallback(
     (surface: OrgSurface) => {
+      if (disposedRef.current) return;
       const root = scrollRootRef.current;
-      if (!liveEnabledRef.current) {
-        console.log("[org-live]", { surface, liveEnabled: false, early: "liveDisabled" });
-        return;
-      }
+      if (!liveEnabledRef.current) return;
 
       if (!root) {
         scheduleSurfaceNextRef.current(surface);
@@ -227,16 +216,6 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       let targetPool =
         actives.length > 0 ? actives : pendings.length > 0 ? pendings : rows.length > ROW_FLOOR ? rows : [];
       const atCap = rows.length >= ROW_CAP;
-
-      console.log("[org-live]", {
-        surface,
-        liveEnabled: liveEnabledRef.current,
-        rowsLength: rows.length,
-        addOk,
-        removeOk,
-        atCap,
-        scrollRootIsNull: !scrollRootRef.current,
-      });
 
       let doAdd: boolean;
       if (atCap && removeOk) doAdd = false;
@@ -286,6 +265,7 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
         }));
 
         queueMicrotask(() => {
+          if (disposedRef.current) return;
           if (!article) return;
           flipReflowRows(article, beforeRects, ADD_IN_DURATION, "power3.out");
           const el = findRowEl(root, surface, id);
@@ -304,6 +284,7 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
           const prevT = pendingPromoteTimersRef.current.get(id);
           if (prevT != null) clearTimeout(prevT);
           const t = window.setTimeout(() => {
+            if (disposedRef.current) return;
             pendingPromoteTimersRef.current.delete(id);
             setDeptRows((prev) => ({
               ...prev,
@@ -321,7 +302,6 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       const victim = targetPool[Math.floor(Math.random() * targetPool.length)]!;
       const article = findDeptArticle(root, surface);
       const rowEl = findRowEl(root, surface, victim.id);
-      console.log("[org-live] remove attempt", { surface, victimId: victim.id, found: !!rowEl });
       if (!article || !rowEl) {
         scheduleSurfaceNextRef.current(surface);
         return;
@@ -336,7 +316,7 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       clearRemoveFailsafe(surface);
       removeFailsafeBySurfaceRef.current[surface] = window.setTimeout(() => {
         removeFailsafeBySurfaceRef.current[surface] = null;
-        if (!liveEnabledRef.current) return;
+        if (disposedRef.current || !liveEnabledRef.current) return;
         const stillThere = deptRowsRef.current[surface].some((r) => r.id === victim.id);
         if (stillThere) {
           gsap.killTweensOf(rowEl);
@@ -357,13 +337,13 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       const tl = gsap.timeline({
         defaults: { overwrite: false },
         onInterrupt: () => {
-          console.log("[org-live] exit interrupted", { surface, victimId: victim.id });
+          if (disposedRef.current) return;
           clearRemoveFailsafe(surface);
           gsap.set(rowEl, { clearProps: "transform,opacity,visibility,willChange" });
           scheduleSurfaceNextRef.current(surface);
         },
         onComplete: () => {
-          console.log("[org-live] exit complete", { surface, victimId: victim.id });
+          if (disposedRef.current) return;
           clearRemoveFailsafe(surface);
           gsap.set(rowEl, { clearProps: "transform,opacity,visibility,willChange" });
           setDeptRows((prev) => ({
@@ -418,11 +398,12 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
   useEffect(() => {
     if (reducedMotion) return;
 
+    disposedRef.current = false;
     let cancelled = false;
 
     /** Only arm timers once per “live” session — avoids IO/scroll churn clearing random delays every frame. */
     const startLive = () => {
-      if (cancelled) return;
+      if (cancelled || disposedRef.current) return;
       if (liveEnabledRef.current) return;
       liveEnabledRef.current = true;
       for (const s of SURFACES) {
@@ -456,6 +437,7 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
     }
 
     return () => {
+      disposedRef.current = true;
       cancelled = true;
       if (typeof document !== "undefined") {
         document.removeEventListener("visibilitychange", onVisibility);
