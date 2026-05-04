@@ -24,14 +24,13 @@ type LiveRow = {
 
 const ROW_CAP = 6;
 const ROW_FLOOR = 2;
-const COOLDOWN_MS = 3000;
-const ADD_BIAS = 0.7;
-const TICK_MIN_MS = 2000;
-const TICK_MAX_MS = 3200;
+const TICK_MIN_MS = 680;
+const TICK_MAX_MS = 1120;
 const PENDING_TO_ACTIVE_S = 0.8;
-const ADD_IN_DURATION = 0.4;
-const REMOVE_SHAKE_S = 0.22;
-const REMOVE_OUT_DURATION = 0.38;
+const ADD_IN_DURATION = 0.58;
+const ADD_SLIDE_MAX_PX = 168;
+const REMOVE_SHAKE_S = 0.24;
+const REMOVE_OUT_DURATION = 0.72;
 
 function makeRowId(): string {
   return `org-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
@@ -102,6 +101,17 @@ type HomeOrgLiveRowsProps = {
 
 const SURFACES: OrgSurface[] = ["growth", "engineering", "operations"];
 
+function shuffleSurfaces(): OrgSurface[] {
+  const out = [...SURFACES];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = out[i]!;
+    out[i] = out[j]!;
+    out[j] = t;
+  }
+  return out;
+}
+
 export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
   const reducedMotion = useMemo(
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
@@ -114,11 +124,9 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
     deptRowsRef.current = deptRows;
   }, [deptRows]);
 
-  const lastTickBySurface = useRef<Record<OrgSurface, number>>({
-    growth: 0,
-    engineering: 0,
-    operations: 0,
-  });
+  /** After two successful add-beats (or two remove-beats) in a row, the next beat flips to the opposite. */
+  const lastBeatWasAddRef = useRef<boolean | null>(null);
+  const sameBeatStreakRef = useRef(0);
 
   const liveEnabledRef = useRef(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -153,11 +161,6 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
     const root = scrollRootRef.current;
     if (!root || !liveEnabledRef.current) return;
 
-    const wantsAdd = Math.random() < ADD_BIAS;
-    const now = Date.now();
-
-    const eligible = SURFACES.filter((s) => now - lastTickBySurface.current[s] >= COOLDOWN_MS);
-
     const canAdd = (s: OrgSurface) => {
       const rows = deptRowsRef.current[s];
       if (rows.length >= ROW_CAP) return false;
@@ -171,78 +174,118 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
       return rows.some((r) => r.phase === "active");
     };
 
-    let candidates = eligible.filter((s) => (wantsAdd ? canAdd(s) : canRemove(s)));
-    if (candidates.length === 0) {
-      candidates = eligible.filter((s) => (!wantsAdd ? canAdd(s) : canRemove(s)));
+    const anyCanAdd = SURFACES.some(canAdd);
+    const anyCanRemove = SURFACES.some(canRemove);
+    if (!anyCanAdd && !anyCanRemove) return;
+
+    let beatAdd: boolean;
+    if (sameBeatStreakRef.current >= 2 && lastBeatWasAddRef.current !== null) {
+      beatAdd = !lastBeatWasAddRef.current;
+    } else {
+      beatAdd = Math.random() < 0.5;
     }
-    if (candidates.length === 0) {
-      candidates = SURFACES.filter((s) => (wantsAdd ? canAdd(s) : canRemove(s)));
-    }
-    if (candidates.length === 0) return;
 
-    const surface = candidates[Math.floor(Math.random() * candidates.length)]!;
-    lastTickBySurface.current[surface] = now;
+    if (beatAdd && !anyCanAdd && anyCanRemove) beatAdd = false;
+    if (!beatAdd && !anyCanRemove && anyCanAdd) beatAdd = true;
+    if ((beatAdd && !anyCanAdd) || (!beatAdd && !anyCanRemove)) return;
 
-    if (wantsAdd && canAdd(surface)) {
-      const rows = deptRowsRef.current[surface];
-      const vis = visibleLabels(rows);
-      const pool = ROLE_POOLS[surface].filter((l) => !vis.has(l));
-      if (pool.length === 0) return;
-      const label = pool[Math.floor(Math.random() * pool.length)]!;
-      const id = makeRowId();
+    if (beatAdd) {
+      type AddOp = {
+        surface: OrgSurface;
+        id: string;
+        label: string;
+        article: HTMLElement | null;
+        beforeRects: Map<string, DOMRect>;
+        enterY: number;
+      };
+      const addOps: AddOp[] = [];
 
-      const article = findDeptArticle(root, surface);
-      const beforeRects = article ? captureDeptRowRects(article) : new Map<string, DOMRect>();
-      const sampleRow = article?.querySelector<HTMLElement>(".home-org-diagram__row");
-      const rowH = sampleRow ? Math.max(20, sampleRow.getBoundingClientRect().height) : 28;
+      for (const surface of shuffleSurfaces()) {
+        if (!canAdd(surface)) continue;
+        const rows = deptRowsRef.current[surface];
+        const vis = visibleLabels(rows);
+        const pool = ROLE_POOLS[surface].filter((l) => !vis.has(l));
+        if (pool.length === 0) continue;
 
-      setDeptRows((prev) => ({
-        ...prev,
-        [surface]: [{ id, label, phase: "pending" }, ...prev[surface]],
-      }));
+        const article = findDeptArticle(root, surface);
+        const beforeRects = article ? captureDeptRowRects(article) : new Map<string, DOMRect>();
+        const sampleRow = article?.querySelector<HTMLElement>(".home-org-diagram__row");
+        const rowH = sampleRow ? Math.max(20, sampleRow.getBoundingClientRect().height) : 28;
+        const deptH = article ? article.getBoundingClientRect().height : rowH * 4;
+        const enterY = -Math.min(
+          ADD_SLIDE_MAX_PX,
+          Math.max(rowH * 2.2 + 10, deptH * 0.38),
+        );
+
+        addOps.push({
+          surface,
+          id: makeRowId(),
+          label: pool[Math.floor(Math.random() * pool.length)]!,
+          article,
+          beforeRects,
+          enterY,
+        });
+      }
+
+      if (addOps.length === 0) return;
+
+      setDeptRows((prev) => {
+        const next = { ...prev };
+        for (const op of addOps) {
+          next[op.surface] = [{ id: op.id, label: op.label, phase: "pending" }, ...next[op.surface]];
+        }
+        return next;
+      });
+
+      if (lastBeatWasAddRef.current === true) sameBeatStreakRef.current += 1;
+      else sameBeatStreakRef.current = 1;
+      lastBeatWasAddRef.current = true;
 
       queueMicrotask(() => {
-        if (!article) return;
-        flipReflowRows(article, beforeRects, ADD_IN_DURATION, "power2.out");
-        const el = findRowEl(root, surface, id);
-        if (!el) return;
-        gsap.fromTo(
-          el,
-          { y: -(rowH + 6), opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: ADD_IN_DURATION,
-            ease: "back.out(1.18)",
-            overwrite: "auto",
-          },
-        );
+        for (const op of addOps) {
+          if (!op.article) continue;
+          flipReflowRows(op.article, op.beforeRects, ADD_IN_DURATION, "power3.out");
+          const el = findRowEl(root, op.surface, op.id);
+          if (!el) continue;
+          gsap.fromTo(
+            el,
+            { y: op.enterY, opacity: 0.08 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: ADD_IN_DURATION,
+              ease: "power3.out",
+              overwrite: "auto",
+            },
+          );
+          const dc = gsap.delayedCall(PENDING_TO_ACTIVE_S, () => {
+            setDeptRows((prev) => ({
+              ...prev,
+              [op.surface]: prev[op.surface].map((r) =>
+                r.id === op.id && r.phase === "pending" ? { ...r, phase: "active" } : r,
+              ),
+            }));
+          });
+          delayedCallsRef.current.push(dc);
+        }
       });
-
-      const dc = gsap.delayedCall(PENDING_TO_ACTIVE_S, () => {
-        setDeptRows((prev) => ({
-          ...prev,
-          [surface]: prev[surface].map((r) =>
-            r.id === id && r.phase === "pending" ? { ...r, phase: "active" } : r,
-          ),
-        }));
-      });
-      delayedCallsRef.current.push(dc);
       return;
     }
 
-    if (canRemove(surface)) {
+    let removedAny = false;
+    for (const surface of shuffleSurfaces()) {
+      if (!canRemove(surface)) continue;
       const rows = deptRowsRef.current[surface];
       const actives = rows.filter((r) => r.phase === "active");
-      if (actives.length === 0) return;
+      if (actives.length === 0) continue;
       const victim = actives[Math.floor(Math.random() * actives.length)]!;
       const article = findDeptArticle(root, surface);
       const rowEl = findRowEl(root, surface, victim.id);
-      if (!article || !rowEl) return;
+      if (!article || !rowEl) continue;
 
       const beforeRects = captureDeptRowRects(article);
       const dot = rowEl.querySelector<HTMLElement>(".home-org-diagram__dot");
-      const slideX = Math.max(48, article.getBoundingClientRect().width * 0.22);
+      const slideX = Math.max(56, article.getBoundingClientRect().width * 0.28);
 
       gsap.set(rowEl, { willChange: "transform, filter" });
 
@@ -256,7 +299,7 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
           }));
           requestAnimationFrame(() => {
             requestAnimationFrame(() => {
-              flipReflowRows(article, beforeRects, 0.36, "power3.out");
+              flipReflowRows(article, beforeRects, 0.42, "power3.out");
             });
           });
         },
@@ -286,11 +329,17 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
           opacity: 0,
           filter: "blur(6px)",
           duration: REMOVE_OUT_DURATION,
-          ease: "power3.in",
+          ease: "power2.inOut",
         },
         REMOVE_SHAKE_S * 0.55,
       );
+      removedAny = true;
     }
+
+    if (!removedAny) return;
+    if (lastBeatWasAddRef.current === false) sameBeatStreakRef.current += 1;
+    else sameBeatStreakRef.current = 1;
+    lastBeatWasAddRef.current = false;
   }, [scrollRootRef]);
 
   runLiveTickRef.current = runLiveTick;
@@ -329,7 +378,8 @@ export function HomeOrgLiveRows({ scrollRootRef }: HomeOrgLiveRowsProps) {
 
         st = ScrollTrigger.create({
           trigger: root,
-          start: "top 88%",
+          /** Line near viewport bottom — live starts sooner than the old `top 88%` gate. */
+          start: "top 97%",
           end: "bottom 5%",
           onEnter: startLive,
           onEnterBack: startLive,
