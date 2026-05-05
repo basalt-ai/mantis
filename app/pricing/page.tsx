@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function PricingPage() {
   return (
-    <main className="flex min-h-screen flex-col">
+    <main className="flex min-h-screen min-w-0 max-w-full flex-col overflow-x-clip">
       <HomeNav />
       <section className="pricing-section flex-1" aria-labelledby="pricing-heading">
         <div className="pricing-section__inner">

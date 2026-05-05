@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Lato } from "next/font/google";
 import "./globals.css";
@@ -57,6 +57,12 @@ const aeonikFono = localFont({
 export const metadata: Metadata = {
   title: "Pancake",
   description: "Let OpenClaw run your autonomous company.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

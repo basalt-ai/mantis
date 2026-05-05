@@ -273,3 +273,10 @@
     --font-size-scale-factor: 1.25;
   }
 }
+
+/* Viewports below desktop landing — tighter gutter; `min-width: 1024px` rules stay canonical for lg+. */
+@media (max-width: 1023px) {
+  :root {
+    --spacing-home-page-inline: clamp(var(--spacing-md), 4vw, calc(var(--spacing-xl) + var(--spacing-md)));
+  }
+}

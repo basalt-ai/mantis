@@ -5,7 +5,7 @@ import { Footer } from "@/components/shared/Footer";
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen min-w-0 max-w-full overflow-x-clip">
       <HomeNav />
       <HomeHero />
       <HomeLandingBody />
