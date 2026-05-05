@@ -479,14 +479,25 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
           .to(dot, { scale: 0.55, duration: REMOVE_SHAKE_S * 0.55, ease: "power2.in" }, REMOVE_SHAKE_S * 0.45);
       }
 
+      /**
+       * Slide right + fade. Previously used `autoAlpha: 0` with `force3D: true` — but
+       * `force3D` makes GSAP write transforms via the separated `translate`/`rotate`/`scale`
+       * properties, and in that path `autoAlpha`/`opacity` was silently NOT being applied
+       * (only `will-change: transform, opacity` was set; the actual `opacity` value never
+       * appeared in inline style). The row reached `translate3d(slideX, 0, 0)` still fully
+       * opaque and got unmounted from there — that's the blink: a clearly visible row at
+       * the end of its slide for one paint before React removes it.
+       *
+       * Explicit `opacity: 0` (no `force3D`) reliably fades the row to invisible by the
+       * time the tween completes.
+       */
       tl.to(
         rowEl,
         {
           x: slideX,
-          autoAlpha: 0,
+          opacity: 0,
           duration: REMOVE_OUT_DURATION,
           ease: "power2.inOut",
-          force3D: true,
         },
         REMOVE_SHAKE_S * 0.55,
       );
