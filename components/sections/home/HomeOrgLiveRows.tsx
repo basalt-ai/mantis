@@ -2,6 +2,7 @@
 
 import type { Dispatch, RefObject, SetStateAction } from "react";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { flushSync } from "react-dom";
 
 import { gsap } from "@/lib/gsap";
 
@@ -419,16 +420,15 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
            */
           rowEl.style.visibility = "hidden";
           rowEl.style.opacity = "0";
-          setDeptRows((prev) => ({
-            ...prev,
-            [surface]: prev[surface].filter((r) => r.id !== victim.id),
-          }));
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              flipReflowRows(article, beforeRects, 0.42, "power3.out");
-              flipReflowArticleHeight(article, beforeArticleH, 0.42, "power3.out");
-            });
+          /** Same flushSync trick as the onComplete path — see comment there. */
+          flushSync(() => {
+            setDeptRows((prev) => ({
+              ...prev,
+              [surface]: prev[surface].filter((r) => r.id !== victim.id),
+            }));
           });
+          flipReflowRows(article, beforeRects, 0.42, "power3.out");
+          flipReflowArticleHeight(article, beforeArticleH, 0.42, "power3.out");
         }
         scheduleSurfaceNextRef.current(surface);
       }, 2400);
@@ -457,16 +457,34 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
            */
           rowEl.style.visibility = "hidden";
           rowEl.style.opacity = "0";
-          setDeptRows((prev) => ({
-            ...prev,
-            [surface]: prev[surface].filter((r) => r.id !== victim.id),
-          }));
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              flipReflowRows(article, beforeRects, 0.42, "power3.out");
-              flipReflowArticleHeight(article, beforeArticleH, 0.42, "power3.out");
-            });
+          /**
+           * `flushSync` + same-task FLIP — fixes the remove-blink.
+           *
+           * Previously this was `setDeptRows(...)` (async commit) followed by
+           * `requestAnimationFrame × 2` to apply the inverse-FLIP transforms on
+           * the rows that just shifted up. React 18 commits state via the
+           * scheduler (MessageChannel), which can land BEFORE the first rAF
+           * fires. That meant: React removes row A from the DOM → row B
+           * reflows up to A's slot → browser paints (B sits at A's spot with
+           * no transform — the blink) → rAF fires → FLIP applies +dy to B
+           * (snaps it back to its old spot) → tween animates B from old to
+           * new. Two visible jumps for one logical move.
+           *
+           * `flushSync` makes the commit synchronous: by the time it returns
+           * the DOM is mutated, but the browser hasn't painted yet. Applying
+           * `flipReflowRows` immediately in the same task installs the
+           * inverse transform before the next paint, so the very first frame
+           * after removal already shows B at its old position about to slide.
+           * No blink.
+           */
+          flushSync(() => {
+            setDeptRows((prev) => ({
+              ...prev,
+              [surface]: prev[surface].filter((r) => r.id !== victim.id),
+            }));
           });
+          flipReflowRows(article, beforeRects, 0.42, "power3.out");
+          flipReflowArticleHeight(article, beforeArticleH, 0.42, "power3.out");
           scheduleSurfaceNextRef.current(surface);
         },
       });
