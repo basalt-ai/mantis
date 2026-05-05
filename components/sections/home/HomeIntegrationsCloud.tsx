@@ -1,5 +1,5 @@
 /**
- * Home — “Endless integrations” floating cloud (Figma `428:15019`).
+ * Home — “Endless integrations” floating cloud (Figma `428:15019`) + callout copy (`428:15015`).
  *
  * Reproduces the static Figma artwork as a live, organic animation:
  *  - Each logo sits on a tilted **pancake** chip (ellipse + 3D-side, layered
@@ -31,6 +31,24 @@ const VB_H = 900;
 /** Tentacle anchor — pancake-monster centre in Figma container coords. */
 const ANCHOR_X = 960;
 const ANCHOR_Y = 435;
+
+/**
+ * Figma `428:15015` — callout frame in inner-container coords (1786×900), aligned with MCP layout.
+ * HTML overlay uses % of `.home-integrations-cloud`; dotted connectors use the same box in SVG space.
+ */
+const INTEGRATIONS_CALLOUT_VB = { x: 196, y: 82, w: 538, h: 174 };
+const CALLOUT_LEFT_MID = {
+  x: INTEGRATIONS_CALLOUT_VB.x,
+  y: INTEGRATIONS_CALLOUT_VB.y + INTEGRATIONS_CALLOUT_VB.h * 0.48,
+};
+const CALLOUT_BOTTOM_MID = {
+  x: INTEGRATIONS_CALLOUT_VB.x + INTEGRATIONS_CALLOUT_VB.w * 0.5,
+  y: INTEGRATIONS_CALLOUT_VB.y + INTEGRATIONS_CALLOUT_VB.h,
+};
+
+/** Figma `428:15015` — verbatim from design (U+2014 before “just”). */
+const INTEGRATIONS_CALLOUT_COPY =
+  "Connect your tools. Your agents use them to read, write, ship, and sell\u2014just like an employee would.";
 
 /* ----------------------------------------------------------------------- */
 /* Pancake — inline SVG, parameterised colours, used for chips + decoration */
@@ -379,6 +397,9 @@ export function HomeIntegrationsCloud() {
     };
   }, [reducedMotion, wobbles]);
 
+  const calloutConnectorLeftD = `M ${CALLOUT_LEFT_MID.x.toFixed(1)} ${CALLOUT_LEFT_MID.y.toFixed(1)} Q 52 318 36 556`;
+  const calloutConnectorBottomD = `M ${CALLOUT_BOTTOM_MID.x.toFixed(1)} ${CALLOUT_BOTTOM_MID.y.toFixed(1)} Q 612 468 848 798`;
+
   return (
     <div className="home-integrations-cloud" data-node-id="428:15019">
       <svg
@@ -388,6 +409,17 @@ export function HomeIntegrationsCloud() {
         aria-hidden
         focusable="false"
       >
+        {/* Figma `428:15015` — dotted connectors into the cloud (same stroke system as tentacles). */}
+        <g className="home-integrations-cloud__callout-connectors">
+          <path
+            className="home-integrations-cloud__tentacle home-integrations-cloud__tentacle--callout"
+            d={calloutConnectorLeftD}
+          />
+          <path
+            className="home-integrations-cloud__tentacle home-integrations-cloud__tentacle--callout"
+            d={calloutConnectorBottomD}
+          />
+        </g>
         {/* Outer tentacle segments (chip → tail) — drawn first / under chips, faded */}
         {LOGOS.map((logo) => (
           <path
@@ -514,6 +546,18 @@ export function HomeIntegrationsCloud() {
           disableForkCursor
         />
       </div>
+
+      <p
+        className="home-integrations-cloud__callout"
+        data-node-id="428:15015"
+        style={{
+          left: `${(INTEGRATIONS_CALLOUT_VB.x / VB_W) * 100}%`,
+          top: `${(INTEGRATIONS_CALLOUT_VB.y / VB_H) * 100}%`,
+          width: `${(INTEGRATIONS_CALLOUT_VB.w / VB_W) * 100}%`,
+        }}
+      >
+        {INTEGRATIONS_CALLOUT_COPY}
+      </p>
     </div>
   );
 }

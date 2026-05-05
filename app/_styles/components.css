@@ -1039,17 +1039,6 @@
     word-break: normal;
   }
 
-  .home-landing-section__caption {
-    margin: 0;
-    max-width: var(--width-home-landing-narrow-copy);
-    width: 100%;
-    font-family: var(--font-body);
-    font-size: var(--font-size-body-regular);
-    line-height: var(--line-height-home-landing-section-lede);
-    font-weight: var(--font-normal);
-    color: var(--text);
-  }
-
   .home-landing-features {
     width: 100%;
     display: grid;
@@ -1258,16 +1247,44 @@
   }
 
   /**
-   * Monster slot — sized 30 % smaller than the original static mascot so it no
-   * longer dominates the centre of the cloud. PancakeMonster reads this width
-   * via ResizeObserver and renders the SVG sharp at any breakpoint.
+   * Monster slot. Slightly smaller than the original static mascot so it
+   * doesn't dominate the cloud's centre, but bigger than the previous
+   * reduction which made it feel like a tiny dot. PancakeMonster reads
+   * this width via ResizeObserver and renders the SVG sharp at any breakpoint.
    */
   .home-integrations-cloud__monster {
     position: absolute;
     transform: translate(-50%, -50%);
-    width: clamp(67px, 11cqi, 154px);
+    width: clamp(88px, 14.5cqi, 195px);
     aspect-ratio: 1 / 1;
     z-index: 4;
+  }
+
+  /**
+   * Figma `428:15015` — copy block over the cloud (coords share `428:15019` viewBox).
+   * Warm surface + mono body stack match org-diagram chip copy treatment.
+   */
+  .home-integrations-cloud__callout {
+    position: absolute;
+    z-index: 5;
+    box-sizing: border-box;
+    margin: 0;
+    min-width: 0;
+    text-align: left;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: var(--font-size-home-integrations-callout);
+    line-height: var(--line-height-home-integrations-callout);
+    font-weight: var(--font-normal);
+    background-color: var(--alt-weak-branded-surface-02);
+    border-radius: var(--radius-home-integrations-callout);
+    padding-inline: var(--spacing-home-integrations-callout-pad-inline);
+    padding-block: var(--spacing-home-integrations-callout-pad-block);
+  }
+
+  /** Decorative legs for `428:15015`; slightly softer than chip tentacles so type stays primary. */
+  .home-integrations-cloud__tentacle--callout {
+    opacity: 0.4;
   }
 
   @media (prefers-reduced-motion: reduce) {

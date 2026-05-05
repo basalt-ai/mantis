@@ -237,6 +237,16 @@
     --font-size-home-landing-closing-title: calc(64 * var(--font-size-base) / 16);
     --line-height-home-landing-closing-title: 64px;
 
+    /*
+     * Integrations callout — Figma `428:15015` (same inner frame `428:15019` 1786×900 as cloud).
+     * Type + padding track MCP body scale; surface from palette (warm peach).
+     */
+    --font-size-home-integrations-callout: calc(21 * var(--font-size-base) / 16);
+    --line-height-home-integrations-callout: 1.38;
+    --spacing-home-integrations-callout-pad-inline: clamp(var(--spacing-md), 2.4cqi, calc(2 * var(--spacing-xl)));
+    --spacing-home-integrations-callout-pad-block: clamp(var(--spacing-lg), 1.8cqi, calc(2 * var(--spacing-xl)));
+    --radius-home-integrations-callout: clamp(var(--radius-lg), 3cqi, var(--radius-xl));
+
     /* Font weights */
     --font-normal: 400;
     --font-semibold: 500;

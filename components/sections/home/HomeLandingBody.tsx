@@ -62,9 +62,6 @@ export function HomeLandingBody() {
           <div className="home-landing-section__figure">
             <HomeIntegrationsCloud />
           </div>
-          <p className="home-landing-section__caption text-center">
-            Connect your tools. Your agents read, write, ship, and sell through them — like an employee would.
-          </p>
         </div>
       </section>
 
