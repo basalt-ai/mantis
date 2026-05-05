@@ -51,16 +51,16 @@ function withPancakeMention(text: string): ReactNode {
 const TESTIMONIALS: Testimonial[] = [
   {
     id: "t1",
-    name: "Jules Reyes",
-    handle: "@jules · 1d",
+    name: "Maya Patel",
+    handle: "@mayapatel · 1d",
     avatar: "/testimonials/avatar-1.png",
     quote:
       "Day 14 of the pancake experiment: my engineering agent has shipped 38 PRs, my recruiter agent screened 412 candidates, and my CFO agent is actually scary good at modeling.",
   },
   {
     id: "t2",
-    name: "Jules Reyes",
-    handle: "@jules · 1d",
+    name: "Hana Sato",
+    handle: "@hanasato · 1d",
     avatar: "/testimonials/avatar-2.png",
     quote: withPancakeMention(
       'I asked @pancake to "run my entire content engine" and it just… did. Calendar, briefs, drafts, scheduling, analytics. I am the bottleneck now.'
@@ -68,16 +68,16 @@ const TESTIMONIALS: Testimonial[] = [
   },
   {
     id: "t3",
-    name: "Jules Reyes",
-    handle: "@jules · 1d",
+    name: "Leo Moretti",
+    handle: "@leomoretti · 1d",
     avatar: "/testimonials/avatar-3.png",
     quote:
       "Hired 4 pancake agents on Friday. Came back Monday to a launched landing page, 11 closed deals, and an inbox at zero. I genuinely don’t know what to do with my time.",
   },
   {
     id: "t4",
-    name: "Jules Reyes",
-    handle: "@jules · 1d",
+    name: "Daniel Kim",
+    handle: "@danielkim · 1d",
     avatar: "/testimonials/avatar-4.png",
     quote:
       "The kill switch works. I tested it. My whole org froze mid-sentence, then resumed exactly where it left off when I un-paused. This is actually production software.",
