@@ -352,7 +352,17 @@ function SlackComposer({ activeChannel }: { activeChannel: Channel }) {
           aria-label={`Message ${activeChannel}`}
           onFocus={onComposerFocus}
           onKeyDown={onComposerKeyDown}
-          className="min-h-[22px] cursor-text select-none text-left text-[15px] leading-normal outline-none ring-0 focus:outline-none"
+          /**
+           * Fixed `h-[44px]` (two lines at 15 px / 22 px line-height) — NOT
+           * `min-h`. Each channel reveals a different `COMPOSER_TEMPLATE`
+           * via the typewriter; with `min-h` the contenteditable would grow
+           * by 0 / 1 / 2 lines depending on the template's wrap, which
+           * pushed the message area up and down on every channel switch.
+           * Lock to two lines (the longest template at narrow widths fits
+           * in two), `overflow-hidden` to clip any future longer template,
+           * `whitespace-pre-wrap break-words` already wraps inside.
+           */
+          className="h-[44px] cursor-text select-none overflow-hidden text-left text-[15px] leading-normal outline-none ring-0 focus:outline-none"
           style={{ color: showPlaceholder ? "#868686" : SLACK_TEXT }}
         >
           {showPlaceholder ? (
