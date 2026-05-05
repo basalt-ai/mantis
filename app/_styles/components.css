@@ -2839,24 +2839,38 @@
     }
 
     /* === Integrations cloud — restructure: cloud on top, callout below
-       (Figma mobile 451:19545 stacks them vertically instead of overlaying). === */
+       (Figma mobile 451:19545 stacks them vertically instead of overlaying).
+       Also ZOOMED — viz is square + SVG scaled 2× so chips look as big as
+       they do in the comp instead of the desktop's wide-and-shrunk band. === */
     .home-integrations-cloud {
       aspect-ratio: auto;
       max-width: 100%;
       display: flex;
       flex-direction: column;
       gap: var(--spacing-xl);
+      overflow: visible;
     }
     .home-integrations-cloud__viz {
       position: relative;
       width: 100%;
-      aspect-ratio: 1786 / 900;
+      aspect-ratio: 5 / 6;
+      overflow: hidden;
     }
     .home-integrations-cloud__svg {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
+      /* Zoom 1.5× so chips read big like the Figma comp without cropping
+         the corner chips (X, LinkedIn, Claude) too aggressively. */
+      transform: scale(1.5);
+      transform-origin: center center;
+    }
+    /* Monster slot is positioned at left/top % of the viz container. The
+       SVG content scales 1.5×, so the monster needs to scale by the same
+       factor to stay visually proportional to the chips around it. */
+    .home-integrations-cloud__monster {
+      transform: translate(-50%, -50%) scale(1.5);
     }
     .home-integrations-cloud__callout {
       position: relative !important;
@@ -2911,6 +2925,16 @@
     .home-landing-section--closing .home-landing-section__inner {
       position: relative;
       z-index: 1;
+      align-items: center;
+      text-align: center;
+    }
+    /* Closing CTA row stacks vertically and centers (default desktop is
+       horizontal flex-wrap which left-aligns when wrapped). */
+    .home-landing-closing-cta {
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-md);
+      width: 100%;
     }
 
     /* === Org dept carousel — peek adjacent cards for swipe affordance. === */
