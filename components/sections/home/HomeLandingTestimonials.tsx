@@ -136,7 +136,10 @@ function Card({ t }: { t: Testimonial }) {
 
 export function HomeLandingTestimonials() {
   const trackRef = useRef<HTMLDivElement | null>(null);
+  const mobileTrackRef = useRef<HTMLDivElement | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -147,7 +150,19 @@ export function HomeLandingTestimonials() {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
+  // Track viewport — switch to a snap-scroll mobile carousel below `lg`.
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(max-width: 1023.98px)");
+    const onChange = () => setIsMobile(mq.matches);
+    onChange();
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  // Desktop only — the infinite GSAP ticker scroll.
+  useEffect(() => {
+    if (isMobile) return;
     const track = trackRef.current;
     if (!track) return;
     if (reducedMotion) {
@@ -159,8 +174,6 @@ export function HomeLandingTestimonials() {
     let stride = 0;
 
     const measure = () => {
-      // Track holds the cards twice; stride is half its scrollWidth + the
-      // gap between the last duplicate of set #1 and the first of set #2.
       const total = track.scrollWidth;
       stride = total / 2 + CARD_GAP_PX / 2;
     };
@@ -185,17 +198,87 @@ export function HomeLandingTestimonials() {
       gsap.ticker.remove(tick);
       window.removeEventListener("resize", handleResize);
     };
-  }, [reducedMotion]);
+  }, [reducedMotion, isMobile]);
 
-  // Render each testimonial twice for seamless looping.
+  // Mobile — track which card is centered for the dots indicator.
+  useEffect(() => {
+    if (!isMobile) return;
+    const track = mobileTrackRef.current;
+    if (!track) return;
+    const update = () => {
+      const trackRect = track.getBoundingClientRect();
+      const center = trackRect.left + trackRect.width / 2;
+      let best = 0;
+      let bestDist = Infinity;
+      const cards = track.querySelectorAll<HTMLElement>(".home-landing-testimonial");
+      cards.forEach((card, i) => {
+        const r = card.getBoundingClientRect();
+        const c = r.left + r.width / 2;
+        const d = Math.abs(c - center);
+        if (d < bestDist) {
+          bestDist = d;
+          best = i;
+        }
+      });
+      setActiveIndex(best);
+    };
+    track.addEventListener("scroll", update, { passive: true });
+    update();
+    return () => track.removeEventListener("scroll", update);
+  }, [isMobile]);
+
+  function scrollToTestimonial(i: number) {
+    const track = mobileTrackRef.current;
+    if (!track) return;
+    const cards = track.querySelectorAll<HTMLElement>(".home-landing-testimonial");
+    const target = cards[i];
+    if (!target) return;
+    const offset = target.offsetLeft - (track.clientWidth - target.clientWidth) / 2;
+    track.scrollTo({ left: offset, behavior: "smooth" });
+  }
+
+  // Desktop loop renders cards twice for seamless looping.
   const looped = [...TESTIMONIALS, ...TESTIMONIALS];
 
   return (
     <div className="home-landing-testimonials" aria-roledescription="carousel">
-      <div ref={trackRef} className="home-landing-testimonials__track">
+      {/* Desktop track — infinite GSAP scroll. */}
+      <div
+        ref={trackRef}
+        className="home-landing-testimonials__track home-landing-testimonials__track--desktop"
+      >
         {looped.map((t, i) => (
           <Card key={`${t.id}-${i}`} t={t} />
         ))}
+      </div>
+
+      {/* Mobile track — native snap scroll + dot indicator. */}
+      <div className="home-landing-testimonials__mobile">
+        <div
+          ref={mobileTrackRef}
+          className="home-landing-testimonials__track home-landing-testimonials__track--mobile"
+        >
+          {TESTIMONIALS.map((t) => (
+            <Card key={`${t.id}-mobile`} t={t} />
+          ))}
+        </div>
+        <div
+          className="home-landing-testimonials__dots"
+          role="tablist"
+          aria-label="Customer stories"
+        >
+          {TESTIMONIALS.map((t, i) => (
+            <button
+              key={t.id}
+              type="button"
+              role="tab"
+              aria-selected={i === activeIndex}
+              aria-label={`Story by ${t.name}`}
+              className={`home-landing-testimonials__dot ${i === activeIndex ? "home-landing-testimonials__dot--active" : ""}`}
+              onClick={() => scrollToTestimonial(i)}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

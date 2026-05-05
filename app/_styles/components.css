@@ -1382,6 +1382,13 @@
     color: var(--text);
   }
 
+  /* Decorative pancakes around the closing CTA — mobile-only (Figma `451:20112`).
+     Default is hidden so they never appear on desktop. The mobile @media block
+     positions and shows them. */
+  .home-landing-closing-decor {
+    display: none;
+  }
+
   /**
    * Endless integrations cloud — Figma `428:15019` (1786×900 inner frame).
    * Same `aspect-ratio` + container-query pattern as `.home-org-diagram` so
@@ -1397,6 +1404,18 @@
     container-type: inline-size;
     container-name: integrations-cloud;
     overflow: visible;
+  }
+
+  /**
+   * Viz wrapper — holds the SVG cloud + the interactive monster. On desktop
+   * it fills the aspect-ratio'd `.home-integrations-cloud` parent. On mobile
+   * it carries the 1786/900 aspect ratio itself (the parent reflows to a
+   * flex column to stack the callout below the cloud).
+   */
+  .home-integrations-cloud__viz {
+    position: relative;
+    width: 100%;
+    height: 100%;
   }
 
   .home-integrations-cloud__svg {
@@ -2365,134 +2384,545 @@
     font-weight: 700;
   }
 
+  /* Hide the mobile-only org block at all breakpoints by default; the
+     mobile media-query below switches the desktop / mobile pair. */
+  .home-landing-org-mobile {
+    display: none;
+  }
+  /* The desktop wrapper is a flex child of `home-landing-section__figure--org`
+     and otherwise collapses to 0 width (its content uses width:100% and has
+     no intrinsic min-content). Force it to fill the figure column. */
+  .home-landing-org-desktop {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* ─────────────────── Mobile nav drawer (Figma `451:20140`) ───────────────────
+     Full-bleed inverted-surface overlay with the Pancake wordmark on top
+     and stacked nav links. Opens from the hamburger button (only at <lg).
+     The overlay covers the page including the header so the X button can
+     replace the hamburger visually. */
+  .home-nav-mobile-drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background-color: var(--inverted-surface);
+    color: var(--text-on-inverted-surface);
+    display: none;
+    overflow-y: auto;
+    border-bottom-left-radius: 48px;
+    border-bottom-right-radius: 48px;
+  }
+
+  .home-nav-mobile-drawer--open {
+    display: block;
+  }
+
+  .home-nav-mobile-drawer__inner {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 100%;
+    padding: var(--spacing-xl) calc(var(--spacing-xl) + var(--spacing-md));
+    display: flex;
+    flex-direction: column;
+    gap: calc(2 * var(--spacing-xxl));
+  }
+
+  .home-nav-mobile-drawer__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+  }
+
+  .home-nav-mobile-drawer__logo {
+    display: inline-flex;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .home-nav-mobile-drawer__wordmark {
+    font-family: var(--font-display);
+    font-weight: var(--font-semibold);
+    font-size: 26px;
+    color: var(--text-on-inverted-surface);
+  }
+
+  .home-nav-mobile-drawer__close {
+    background: none;
+    border: 0;
+    padding: var(--spacing-md);
+    color: var(--text-on-inverted-surface);
+    cursor: pointer;
+    border-radius: var(--radius-md);
+  }
+
+  .home-nav-mobile-drawer__nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xxl);
+  }
+
+  .home-nav-mobile-drawer__link {
+    color: var(--text-on-inverted-surface);
+    text-decoration: none;
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: var(--font-semibold);
+    padding-block: var(--spacing-md);
+  }
+
+  /* ─────────────────── Mobile org diagram (Figma `596:2940`) ───────────────────
+     The mobile component lives at .home-landing-org-mobile and is shown
+     only below the lg breakpoint via the @media block below. */
+  .home-org-mobile {
+    width: 100%;
+    max-width: 480px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xxl);
+  }
+
+  .home-org-mobile-bubble {
+    align-self: center;
+    background-color: var(--strong-branded-surface);
+    color: var(--text);
+    border-radius: 16px;
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 18px;
+    text-align: center;
+  }
+
+  .home-org-mobile-bubble p {
+    margin: 0;
+  }
+
+  .home-org-mobile-pair {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    width: 100%;
+  }
+
+  .home-org-mobile-pair__connector {
+    flex: 0 0 auto;
+    width: 60px;
+    height: 32px;
+    margin: 0 -8px;
+    align-self: flex-start;
+    margin-top: 24px;
+  }
+
+  .home-org-mobile-mascot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
+
+  .home-org-mobile-mascot__icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: var(--alt-weak-branded-surface-01);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .home-org-mobile-mascot--pancake .home-org-mobile-mascot__icon {
+    background-color: transparent;
+  }
+
+  .home-org-mobile-mascot__icon img,
+  .home-org-mobile-mascot__svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .home-org-mobile-mascot__chip {
+    background-color: var(--inverted-surface);
+    color: var(--text-on-inverted-surface);
+    border-radius: 12px;
+    padding: 8px 14px;
+    text-align: left;
+    min-width: 100px;
+  }
+
+  .home-org-mobile-mascot__title {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-on-inverted-surface);
+    line-height: 1.2;
+  }
+
+  .home-org-mobile-mascot__sub {
+    margin: 2px 0 0;
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: var(--subtle-text-on-inverted-surface);
+    line-height: 1.25;
+  }
+
+  .home-org-mobile-eyebrow {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: var(--font-semibold);
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  /* Carousel — full-bleed (escapes the section's left/right padding) so
+     adjacent cards peek in from the edges, matching the Figma comp. */
+  .home-org-mobile-carousel {
+    width: 100vw;
+    max-width: 100vw;
+    margin-inline: calc(50% - 50vw);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+  }
+
+  .home-org-mobile-carousel__track {
+    display: flex;
+    gap: var(--spacing-md);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 16%;
+    padding-inline: 16%;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .home-org-mobile-carousel__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .home-org-mobile-card {
+    flex: 0 0 calc(100vw - 64px);
+    max-width: 320px;
+    scroll-snap-align: center;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-xl);
+    border: 1px solid transparent;
+  }
+
+  .home-org-mobile-card--growth {
+    background-color: var(--alt-weak-branded-surface-02);
+    border-color: var(--branded-stroke-03);
+  }
+
+  .home-org-mobile-card--engineering {
+    background-color: var(--alt-weak-branded-surface-01);
+    border-color: var(--branded-stroke-02);
+  }
+
+  .home-org-mobile-card--operations {
+    background-color: var(--weak-branded-surface);
+    border-color: var(--branded-stroke-01);
+  }
+
+  .home-org-mobile-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: var(--font-semibold);
+    font-size: 20px;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .home-org-mobile-card__rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .home-org-mobile-row {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background-color: var(--elevated-surface);
+    border-radius: var(--radius-sm);
+  }
+
+  .home-org-mobile-row__dot {
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .home-org-mobile-row__dot--positive { background-color: var(--positive-text); }
+  .home-org-mobile-row__dot--warning { background-color: var(--warning-text); }
+  .home-org-mobile-row__dot--negative { background-color: var(--negative-text); }
+
+  .home-org-mobile-row__label {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  .home-org-mobile-dots {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+  }
+
+  .home-org-mobile-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 0;
+    padding: 0;
+    background-color: var(--stroke);
+    cursor: pointer;
+  }
+
+  .home-org-mobile-dot--active {
+    background-color: var(--inverted-surface);
+  }
+
+  .home-org-mobile-tailor {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--surface);
+    border: 1px solid var(--stroke);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xxl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    text-align: left;
+  }
+
+  .home-org-mobile-tailor__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: var(--font-semibold);
+    font-size: 22.62px;
+    line-height: 28px;
+    color: var(--text);
+  }
+
+  .home-org-mobile-tailor__body {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--text);
+  }
+
+  /* Testimonials mobile — snap carousel + dots (Figma `451:19562`). */
+  .home-landing-testimonials__mobile {
+    display: none;
+  }
+
+  .home-landing-testimonials__track--mobile {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 16%;
+    padding-inline: 16%;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .home-landing-testimonials__track--mobile::-webkit-scrollbar {
+    display: none;
+  }
+
+  .home-landing-testimonials__track--mobile .home-landing-testimonial {
+    flex: 0 0 calc(100vw - 64px);
+    max-width: 360px;
+    scroll-snap-align: center;
+  }
+
+  .home-landing-testimonials__dots {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+  }
+
+  .home-landing-testimonials__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 0;
+    padding: 0;
+    background-color: var(--stroke);
+    cursor: pointer;
+  }
+
+  .home-landing-testimonials__dot--active {
+    background-color: var(--inverted-surface);
+  }
+
   /* ─────────────────────────────────────────────────────────────────
      Mobile responsive overrides (< lg / 1024 px).
-     Desktop (>= 1024 px) is untouched. The home sections use Figma-exact
-     percent layouts that don't shrink gracefully below ~900 px container
-     width; below the lg breakpoint we fall back to a stacked, readable
-     mobile layout while preserving the underlying animations.
+     Desktop (>= 1024 px) is untouched. Below the lg breakpoint we ship
+     a parallel mobile layout that mirrors Figma `451:19194` while
+     preserving the underlying animations.
      ───────────────────────────────────────────────────────────────── */
   @media (max-width: 1023.98px) {
-    /* === Org diagram — abandon absolute layout, stack vertically. ===
-       The aspect-ratio + 1136-px-wide percent positioning produces tiny,
-       unreadable chips and dept cards that overflow into the next section
-       title. On mobile we drop to a clean grid: avatar+chip pair on top,
-       monster+chip pair, then three dept cards stacked full-width. */
-    .home-org-diagram {
-      padding-bottom: 0;
+    /* === Org section: swap desktop diagram for mobile component === */
+    .home-landing-org-desktop { display: none; }
+    .home-landing-org-mobile { display: block; }
+
+    /* === Hero — pancake monster centered above the headline. ===
+       Desktop puts the pancake stack to the right of the title; the
+       mobile comp stacks: pancake on top, then headline, then sub +
+       CTA + "No credit card needed". The grid reflows to a single
+       column with the pancake first. */
+    .home-hero > div {
+      grid-template-columns: 1fr !important;
+      row-gap: var(--spacing-xxl) !important;
+      padding-top: var(--spacing-xxl) !important;
     }
-    .home-org-diagram__stage {
-      aspect-ratio: auto;
-      height: auto;
-      display: grid;
-      grid-template-columns: auto 1fr;
-      grid-auto-rows: auto;
-      gap: var(--spacing-xl) var(--spacing-md);
+    .home-hero-text-stack {
+      order: 2;
+      text-align: center;
+    }
+    .home-hero-text-stack h1,
+    .home-hero-text-stack .home-hero-body {
+      text-align: center;
+      white-space: normal !important;
+    }
+    .home-hero-cta-row {
+      flex-direction: column;
       align-items: center;
-      container-type: normal;
-    }
-    /* Hide the wires + chip-arrow connectors — their geometry is keyed to
-       the absolute layout we just disabled, and the rope of dotted balls
-       becomes visual noise at this size. The dept cards themselves still
-       carry the colour-coded relationship to the cofounders above. */
-    .home-org-diagram__svg {
-      display: none;
-    }
-    /* You row */
-    .home-org-diagram__you-avatar {
-      position: static;
-      grid-column: 1;
-      grid-row: 1;
-      width: 56px;
-      height: 56px;
-      margin: 0;
-    }
-    .home-org-diagram__you-chip {
-      position: static;
-      grid-column: 2;
-      grid-row: 1;
-      width: 100%;
-      max-width: none;
-      align-items: stretch;
-      justify-self: stretch;
-    }
-    /* Pancake row */
-    .home-org-diagram__monster {
-      position: static;
-      grid-column: 1;
-      grid-row: 2;
-      width: 56px;
-      height: 56px;
-      margin: 0;
-    }
-    .home-org-diagram__pancake-chip {
-      position: static;
-      grid-column: 2;
-      grid-row: 2;
-      width: 100%;
-      max-width: none;
-      align-items: stretch;
-      justify-self: stretch;
-    }
-    /* Both chip-copy blocks: comfortable padding + readable text. */
-    .home-org-diagram__chip-copy {
-      width: auto;
-      max-width: none;
-      padding-inline: var(--spacing-xl);
-      padding-block: var(--spacing-md);
-      align-items: flex-start;
-    }
-    .home-org-diagram__chip-title--inverted {
-      width: auto;
-      max-width: none;
-      font-size: var(--font-size-body-regular);
-    }
-    .home-org-diagram__chip-sub--inverted {
-      width: auto;
-      max-width: none;
-      font-size: 13px;
-    }
-    /* Dept cards: full-width rows, natural padding. */
-    .home-org-diagram__dept {
-      position: static;
-      grid-column: 1 / -1;
-      width: 100%;
-      min-height: 0;
-      padding: var(--spacing-xl);
       gap: var(--spacing-md);
     }
-    .home-org-diagram__dept--growth { grid-row: 3; }
-    .home-org-diagram__dept--engineering { grid-row: 4; }
-    .home-org-diagram__dept--operations { grid-row: 5; }
-    .home-org-diagram__dept-title {
-      font-size: 18px;
-      text-align: left;
+    .home-hero-cta-row .button {
+      width: 100%;
+      max-width: 280px;
     }
-    .home-org-diagram__row {
-      padding: var(--spacing-md) var(--spacing-lg);
+    .home-hero-pancake {
+      order: 1;
+      margin-inline: auto;
+      /* Default rule sets display:none below 1024px — re-enable for mobile. */
+      display: flex !important;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      transform: none !important;
+      /* Figma mobile renders the monster ensemble at ~160px (vs ~480px desktop). */
+      --size-home-hero-monster-max-width: 160px;
     }
-    .home-org-diagram__row-label {
-      font-size: 14px;
+    /* Hero clip — orbits/satellites scale relative to monster width and would
+       otherwise punch out into the next section at this size. */
+    .home-hero {
+      overflow: hidden;
+    }
+    .home-hero-pancake-stack-inner {
+      width: var(--size-home-hero-monster-max-width);
+      min-height: var(--size-home-hero-monster-max-width);
     }
 
-    /* === Integrations cloud — give it breathing room. ===
-       The 1786:900 SVG aspect-ratio collapses to ~190 px tall at 390 px
-       wide, scrunching every chip + the central monster. Switch to a
-       near-square aspect at narrow widths so the wobble animation has
-       space to read. The callout is already repositioned to top-centre
-       by an earlier container-query rule. */
+    /* === Integrations cloud — restructure: cloud on top, callout below
+       (Figma mobile 451:19545 stacks them vertically instead of overlaying). === */
     .home-integrations-cloud {
-      aspect-ratio: 4 / 5;
-      max-width: 480px;
+      aspect-ratio: auto;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xl);
+    }
+    .home-integrations-cloud__viz {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1786 / 900;
+    }
+    .home-integrations-cloud__svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .home-integrations-cloud__callout {
+      position: relative !important;
+      left: auto !important;
+      top: auto !important;
+      width: 100% !important;
+      max-width: 440px;
+      margin-inline: auto;
+      transform: none !important;
+      white-space: normal;
+      text-align: center;
     }
 
-    /* === Section title clearance ===
-       Sections that previously had figures overflowing their stage
-       (the org diagram in particular) need a normal flow gap so the
-       NEXT section's title doesn't sit underneath a card. Stack-layout
-       org diagram already keeps cards in flow, so this is a guarantee. */
+    /* === Testimonials — mobile snap carousel replaces desktop ticker === */
+    .home-landing-testimonials__track--desktop { display: none; }
+    .home-landing-testimonials__mobile { display: block; }
+
+    /* === Section title clearance === */
     .home-landing-section__inner {
       gap: var(--spacing-xxl);
+    }
+
+    /* === Closing CTA — decorative pancake satellites (Figma 451:20112). === */
+    .home-landing-section--closing {
+      position: relative;
+      overflow: hidden;
+    }
+    .home-landing-closing-decor {
+      display: block;
+      position: absolute;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .home-landing-closing-decor--purple {
+      top: var(--spacing-md);
+      left: calc(-1 * var(--spacing-md));
+      width: 76px;
+      height: 76px;
+    }
+    .home-landing-closing-decor--pink {
+      bottom: var(--spacing-xxl);
+      left: calc(-1 * var(--spacing-xl));
+      width: 96px;
+      height: 96px;
+    }
+    .home-landing-closing-decor--orange {
+      top: 18%;
+      right: calc(-2 * var(--spacing-xl));
+      width: 76px;
+      height: 76px;
+    }
+    .home-landing-section--closing .home-landing-section__inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* === Org dept carousel — peek adjacent cards for swipe affordance. === */
+    .home-org-mobile-card {
+      flex-basis: min(78vw, 320px) !important;
+      flex-shrink: 0;
+    }
+
+    /* === Testimonials carousel — peek adjacent cards. === */
+    .home-landing-testimonials__track--mobile .home-landing-testimonial {
+      flex-basis: min(82vw, 340px) !important;
+      flex-shrink: 0;
     }
   }
 }

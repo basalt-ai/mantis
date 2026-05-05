@@ -431,6 +431,11 @@ export function HomeIntegrationsCloud() {
 
   return (
     <div className="home-integrations-cloud" data-node-id="428:15019">
+      {/* Viz wrapper — keeps the cloud SVG + interactive monster in their own
+          aspect-ratio'd box. On desktop the wrapper fills the parent (parent
+          enforces aspect); on mobile the parent is auto-height (flex column)
+          and this wrapper enforces the 1786/900 cloud ratio. */}
+      <div className="home-integrations-cloud__viz">
       <svg
         className="home-integrations-cloud__svg"
         viewBox={`0 0 ${VB_W} ${VB_H}`}
@@ -563,6 +568,7 @@ export function HomeIntegrationsCloud() {
           getTarget={getMonsterTarget}
           disableForkCursor
         />
+      </div>
       </div>
 
       <p
