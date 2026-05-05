@@ -1582,8 +1582,8 @@
     color: var(--text-on-inverted-surface);
     border-radius: 16px;
     font-family: var(--font-mono, ui-monospace, "JetBrains Mono", "SFMono-Regular", Menlo, monospace);
-    font-size: 12px;
-    line-height: 18px;
+    font-size: 14px;
+    line-height: 21px;
     font-weight: 500;
     overflow: hidden;
     white-space: pre-wrap;
