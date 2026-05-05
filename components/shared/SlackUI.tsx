@@ -472,23 +472,24 @@ function SlackComposer({ activeChannel }: { activeChannel: Channel }) {
 }
 
 /**
- * AI Co-Founder avatar — the project's pancake-monster mascot, fitted into the
- * 36 px Slack avatar disc. Uses the same `/pancake-monster.png` raster shipped
- * for the hero / org-chart so all three surfaces feel like the same character.
+ * AI Co-Founder avatar — the project's pancake-monster mascot. Centred in a
+ * 36 px disc with cream backing and `object-contain` so the *whole* mascot
+ * (face + pancake stack) reads — no awkward face-crop. Same `/pancake-monster.png`
+ * the hero and org-chart use so the character stays consistent.
  */
 function CeoAgentAvatar() {
   return (
     <div
-      className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full bg-[var(--palette-orange-20,#FFE9C8)] shadow-[inset_0_-1px_0_rgba(0,0,0,0.12)]"
+      className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#FFF1DA] shadow-[inset_0_-1px_0_rgba(0,0,0,0.10),inset_0_0_0_1px_rgba(0,0,0,0.06)]"
       aria-hidden
     >
       {/* eslint-disable-next-line @next/next/no-img-element -- pancake mascot raster */}
       <img
         src="/pancake-monster.png"
         alt=""
-        width={36}
-        height={36}
-        className="absolute left-1/2 top-1/2 h-[44px] w-[44px] max-w-none -translate-x-1/2 -translate-y-[42%] object-contain"
+        width={32}
+        height={32}
+        className="block h-8 w-8 object-contain"
         loading="lazy"
         decoding="async"
       />
@@ -745,10 +746,18 @@ export function SlackUI() {
           </span>
         </h2>
 
-        <div className="mx-auto mt-12 max-w-5xl">
-          <div className="rounded-theme brut-border bg-white">
+        <div className="mx-auto mt-12 w-full max-w-5xl">
+          <div className="w-full rounded-theme brut-border box-border bg-white">
+            {/*
+             * Hard-locked dimensions — height stays at `h-[560px]` (mobile) /
+             * `md:h-[620px]` (desktop) and width is pinned to the parent's
+             * `max-w-5xl`. Combined with `overflow-hidden` + `min-w-0` on the
+             * inner column, switching channels can never push the window's
+             * width or height: long messages scroll inside the message
+             * column, short ones leave whitespace.
+             */}
             <div
-              className="relative flex h-[560px] flex-col overflow-hidden border border-solid border-[#e0e0e0] shadow-[0_1px_4px_rgba(0,0,0,0.06)] md:h-[620px] md:flex-row"
+              className="relative box-border flex h-[560px] w-full flex-col overflow-hidden border border-solid border-[#e0e0e0] shadow-[0_1px_4px_rgba(0,0,0,0.06)] md:h-[620px] md:flex-row"
               style={{
                 fontFamily:
                   'var(--font-lato), "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
