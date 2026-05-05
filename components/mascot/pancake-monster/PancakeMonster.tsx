@@ -21,6 +21,17 @@ export type PancakeMonsterProps = {
   className?: string;
   style?: CSSProperties;
   onForked?: () => void;
+  /**
+   * Optional alternative tracking source. When provided, the monster will
+   * orient toward the returned point (window-relative px) instead of the
+   * real cursor — used to make it "look at" arbitrary on-screen elements.
+   */
+  getTarget?: () => { x: number; y: number } | null;
+  /**
+   * Suppresses the fork-cursor swap. Useful when the monster is ambient and
+   * the page cursor shouldn't change to a fork on hover.
+   */
+  disableForkCursor?: boolean;
 };
 
 const VIEWBOX = "80 150 830 800";
@@ -70,10 +81,12 @@ export function PancakeMonster({
   className = "",
   style,
   onForked,
+  getTarget,
+  disableForkCursor = false,
 }: PancakeMonsterProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const { dx, dy, distance, isForkActive } = useCursorTracking(wrapperRef);
+  const { dx, dy, distance, isForkActive } = useCursorTracking(wrapperRef, getTarget);
   const { isBlinking, mood, setMood } = useBlinkTimer();
 
   const weights =
@@ -106,7 +119,11 @@ export function PancakeMonster({
   return (
     <div
       ref={wrapperRef}
-      className={["pancake-monster", isForkActive ? "pancake-monster--fork-active" : "", className]
+      className={[
+        "pancake-monster",
+        isForkActive && !disableForkCursor ? "pancake-monster--fork-active" : "",
+        className,
+      ]
         .filter(Boolean)
         .join(" ")}
       style={{

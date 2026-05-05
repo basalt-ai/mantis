@@ -10,7 +10,16 @@ interface CursorInfo {
   cursorPos: { x: number; y: number };
 }
 
-export function useCursorTracking(monsterRef: RefObject<HTMLElement | null>) {
+/**
+ * `getTarget` (optional): when provided, the hook uses its return value as the
+ * "cursor" position (in window-relative coords) instead of the real mouse —
+ * lets the monster track an arbitrary target, e.g. the nearest logo chip.
+ * The function is called every animation frame.
+ */
+export function useCursorTracking(
+  monsterRef: RefObject<HTMLElement | null>,
+  getTarget?: () => { x: number; y: number } | null,
+) {
   const [info, setInfo] = useState<CursorInfo>({
     dx: 0,
     dy: 0,
@@ -21,6 +30,8 @@ export function useCursorTracking(monsterRef: RefObject<HTMLElement | null>) {
 
   const rafRef = useRef<number>(0);
   const latestMouse = useRef<{ x: number; y: number } | null>(null);
+  const getTargetRef = useRef(getTarget);
+  getTargetRef.current = getTarget;
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
@@ -28,11 +39,13 @@ export function useCursorTracking(monsterRef: RefObject<HTMLElement | null>) {
     };
 
     const tick = () => {
-      if (latestMouse.current && monsterRef.current) {
+      const overridden = getTargetRef.current?.();
+      const target = overridden ?? latestMouse.current;
+      if (target && monsterRef.current) {
         const rect = monsterRef.current.getBoundingClientRect();
         const cx = rect.left + rect.width / 2;
         const cy = rect.top + rect.height / 2;
-        const { x, y } = latestMouse.current;
+        const { x, y } = target;
         const dx = x - cx;
         const dy = y - cy;
         const distance = Math.sqrt(dx * dx + dy * dy);

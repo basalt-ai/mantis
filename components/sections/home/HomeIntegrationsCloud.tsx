@@ -21,8 +21,9 @@
 
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
+import { PancakeMonster } from "@/components/mascot/pancake-monster/PancakeMonster";
 import { gsap } from "@/lib/gsap";
 
 const VB_W = 1786;
@@ -132,13 +133,14 @@ const LOGOS: LogoDef[] = [
     logoW: 60, logoH: 55,
     tailX: 90, tailY: 530, tailSize: 18, tailPalette: "pink", outerCurl: -70,
   },
-  // LinkedIn (Ellipse 8 — 206×203, tilt 58.71°).
+  // LinkedIn (Ellipse 8 — 206×203, tilt 58.71°). Pushed further right so it
+  // doesn't crowd the central pancake monster.
   {
     id: "linkedin", src: "", alt: "LinkedIn",
-    cx: 1180, cy: 480,
+    cx: 1310, cy: 470,
     chipSrc: "/integrations/ellipse-linkedin.svg", chipW: 206.38, chipH: 203.03, chipRotateDeg: 58.71,
     logoW: 130, logoH: 130,
-    tailX: 1690, tailY: 540, tailSize: 24, tailPalette: "orange", outerCurl: 70,
+    tailX: 1720, tailY: 540, tailSize: 24, tailPalette: "orange", outerCurl: 70,
   },
   // Vercel (Ellipse 5 — same cream ellipse asset as Gmail; un-rotated 172×169).
   {
@@ -246,12 +248,52 @@ export function HomeIntegrationsCloud() {
   const innerPathRefs = useRef<Map<string, SVGPathElement>>(new Map());
   const outerPathRefs = useRef<Map<string, SVGPathElement>>(new Map());
   const tailRefs = useRef<Map<string, SVGGElement>>(new Map());
-  const monsterRef = useRef<HTMLDivElement | null>(null);
+  /** Slot the monster sits in — its CSS sets responsive size; we read that into px. */
+  const monsterSlotRef = useRef<HTMLDivElement | null>(null);
+  const [monsterSizePx, setMonsterSizePx] = useState(160);
 
   const wobbles = useMemo(() => {
     const m = new Map<string, Wobble>();
     for (const l of LOGOS) m.set(l.id, wobbleFor(l.id));
     return m;
+  }, []);
+
+  /**
+   * Monster target cycler — every ~2.5 s switches the chip the monster is
+   * "looking at". The PancakeMonster's morpher will smoothly interpolate
+   * its orientation toward the new chip's window-relative centre.
+   */
+  const targetChipIdxRef = useRef(0);
+  useEffect(() => {
+    if (reducedMotion) return;
+    const id = window.setInterval(() => {
+      targetChipIdxRef.current = (targetChipIdxRef.current + 1) % LOGOS.length;
+    }, 2500);
+    return () => clearInterval(id);
+  }, [reducedMotion]);
+
+  /** Window-relative centre of the chip the monster is currently aiming at. */
+  const getMonsterTarget = useCallback(() => {
+    const id = LOGOS[targetChipIdxRef.current]?.id;
+    if (!id) return null;
+    const el = chipRefs.current.get(id);
+    if (!el) return null;
+    const r = el.getBoundingClientRect();
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+  }, []);
+
+  /** Track the monster slot's responsive size so the SVG renders sharp at any breakpoint. */
+  useLayoutEffect(() => {
+    const el = monsterSlotRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const apply = () => {
+      const w = Math.round(el.getBoundingClientRect().width);
+      if (w > 0) setMonsterSizePx(w);
+    };
+    const ro = new ResizeObserver(apply);
+    ro.observe(el);
+    apply();
+    return () => ro.disconnect();
   }, []);
 
   useEffect(() => {
@@ -327,12 +369,7 @@ export function HomeIntegrationsCloud() {
         }
       }
 
-      // Monster idle bob
-      if (monsterRef.current) {
-        const mb = Math.sin(t * 0.9) * 4;
-        const mx = Math.sin(t * 0.6 + 1.2) * 3;
-        monsterRef.current.style.transform = `translate(-50%, -50%) translate(${mx.toFixed(2)}px, ${mb.toFixed(2)}px)`;
-      }
+      // Monster handles its own animation (PancakeMonster + useCursorTracking with custom target).
     };
 
     gsap.ticker.add(tick);
@@ -454,9 +491,15 @@ export function HomeIntegrationsCloud() {
         ))}
       </svg>
 
-      {/* Pancake monster centred on the anchor (raster — not vector) */}
+      {/*
+       * Interactive pancake monster. Same component as the hero, but instead of
+       * tracking the real cursor it tracks the centre of whichever chip is the
+       * current "target" — cycling through every ~2.5 s so the monster appears
+       * to look around at the logos and try to eat them. Fork cursor is
+       * disabled — this monster is ambient, the page cursor stays normal.
+       */}
       <div
-        ref={monsterRef}
+        ref={monsterSlotRef}
         className="home-integrations-cloud__monster"
         style={{
           left: `${(ANCHOR_X / VB_W) * 100}%`,
@@ -464,14 +507,11 @@ export function HomeIntegrationsCloud() {
         }}
         aria-hidden
       >
-        {/* eslint-disable-next-line @next/next/no-img-element -- raster mascot, sized 1:1 */}
-        <img
-          src="/pancake-monster.png"
-          alt=""
-          className="home-integrations-cloud__monster-img"
-          width={224}
-          height={224}
-          decoding="async"
+        <PancakeMonster
+          size={monsterSizePx}
+          pancakeColor="yellow"
+          getTarget={getMonsterTarget}
+          disableForkCursor
         />
       </div>
     </div>

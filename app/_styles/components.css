@@ -1257,21 +1257,17 @@
     opacity: 0.32;
   }
 
+  /**
+   * Monster slot — sized 30 % smaller than the original static mascot so it no
+   * longer dominates the centre of the cloud. PancakeMonster reads this width
+   * via ResizeObserver and renders the SVG sharp at any breakpoint.
+   */
   .home-integrations-cloud__monster {
     position: absolute;
     transform: translate(-50%, -50%);
-    width: clamp(96px, 16cqi, 220px);
+    width: clamp(67px, 11cqi, 154px);
     aspect-ratio: 1 / 1;
-    will-change: transform;
     z-index: 4;
-    pointer-events: none;
-  }
-
-  .home-integrations-cloud__monster-img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
   }
 
   @media (prefers-reduced-motion: reduce) {
