@@ -471,19 +471,24 @@ function SlackComposer({ activeChannel }: { activeChannel: Channel }) {
   );
 }
 
+/**
+ * AI Co-Founder avatar — the project's pancake-monster mascot, fitted into the
+ * 36 px Slack avatar disc. Uses the same `/pancake-monster.png` raster shipped
+ * for the hero / org-chart so all three surfaces feel like the same character.
+ */
 function CeoAgentAvatar() {
   return (
     <div
-      className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full shadow-[inset_0_-1px_0_rgba(0,0,0,0.12)]"
+      className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full bg-[var(--palette-orange-20,#FFE9C8)] shadow-[inset_0_-1px_0_rgba(0,0,0,0.12)]"
       aria-hidden
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* eslint-disable-next-line @next/next/no-img-element -- pancake mascot raster */}
       <img
-        src="/ceo-agent-avatar.png"
+        src="/pancake-monster.png"
         alt=""
         width={36}
         height={36}
-        className="h-9 w-9 object-cover"
+        className="absolute left-1/2 top-1/2 h-[44px] w-[44px] max-w-none -translate-x-1/2 -translate-y-[42%] object-contain"
         loading="lazy"
         decoding="async"
       />
@@ -491,22 +496,45 @@ function CeoAgentAvatar() {
   );
 }
 
+/**
+ * "You" avatar — same purple-silhouette mark used by the org chart's founder
+ * chip (`HomeOrgDiagram` Figma `428:14931`). Inline SVG so it scales sharp at
+ * 36 px and pulls live colours from the design-system palette tokens.
+ */
 function YouAvatar() {
   return (
     <div
       className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full shadow-[inset_0_-1px_0_rgba(0,0,0,0.12)]"
       aria-hidden
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/you-avatar.png"
-        alt=""
+      <svg
+        viewBox="0 0 108 108"
         width={36}
         height={36}
-        className="h-9 w-9 object-cover"
-        loading="lazy"
-        decoding="async"
-      />
+        preserveAspectRatio="xMidYMid meet"
+        className="block h-9 w-9"
+      >
+        <rect width="108" height="108" rx="54" fill="var(--palette-purple-10)" />
+        {/* head */}
+        <path
+          d="M70.7992 43.5975C72.1483 59.1754 65.1894 74.0014 49.5981 75.4872C33.9421 76.979 24.4667 63.8761 23.1042 48.1425C21.7417 32.4089 28.8112 17.7294 44.4672 16.2375C60.0585 14.7517 69.4502 28.0197 70.7992 43.5975Z"
+          fill="var(--palette-purple-30)"
+        />
+        {/* shoulders */}
+        <path
+          d="M59.8224 148.311C38.4258 154.044 16.024 148.002 10.0967 126.621C4.14489 105.151 20.08 88.6935 41.6905 82.903C63.301 77.1125 85.5258 83.3447 91.4776 104.815C97.4049 126.196 81.2189 142.578 59.8224 148.311Z"
+          fill="var(--palette-purple-30)"
+        />
+        {/* eyes */}
+        <path
+          d="M47.6222 46.0657C47.9529 49.8841 46.5381 53.4905 43.2713 53.8018C39.991 54.1144 37.9628 50.8745 37.6288 47.018C37.2949 43.1614 38.7333 39.5912 42.0136 39.2786C45.2805 38.9673 47.2916 42.2472 47.6222 46.0657Z"
+          fill="var(--palette-chrome-100)"
+        />
+        <path
+          d="M64.9917 43.682C65.2504 46.6698 64.1434 49.4918 61.5872 49.7354C59.0204 49.98 57.4334 47.4449 57.1721 44.4272C56.9107 41.4095 58.0363 38.6159 60.6031 38.3713C63.1593 38.1277 64.7329 40.6942 64.9917 43.682Z"
+          fill="var(--palette-chrome-100)"
+        />
+      </svg>
     </div>
   );
 }
@@ -720,7 +748,7 @@ export function SlackUI() {
         <div className="mx-auto mt-12 max-w-5xl">
           <div className="rounded-theme brut-border bg-white">
             <div
-              className="relative flex min-h-[520px] flex-col border border-solid border-[#e0e0e0] shadow-[0_1px_4px_rgba(0,0,0,0.06)] md:min-h-[580px] md:flex-row"
+              className="relative flex h-[560px] flex-col overflow-hidden border border-solid border-[#e0e0e0] shadow-[0_1px_4px_rgba(0,0,0,0.06)] md:h-[620px] md:flex-row"
               style={{
                 fontFamily:
                   'var(--font-lato), "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',

@@ -1,7 +1,20 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Lato } from "next/font/google";
 import "./globals.css";
 import "./_styles/components.css";
+
+/**
+ * Lato — Slack's UI typeface (SIL Open Font License, served via next/font/google).
+ * Exposed as `--font-lato` and used inline by `<SlackUI />` to keep the fake
+ * Slack panel visually faithful without leaking Lato into the rest of the page.
+ */
+const lato = Lato({
+  subsets: ["latin"],
+  weight: ["400", "700", "900"],
+  variable: "--font-lato",
+  display: "swap",
+});
 
 const aeonik = localFont({
   src: [
@@ -52,7 +65,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${aeonik.variable} ${aeonikFono.variable}`}>
+    <html lang="en" className={`${aeonik.variable} ${aeonikFono.variable} ${lato.variable}`}>
       <head>
         <script
           dangerouslySetInnerHTML={{
