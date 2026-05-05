@@ -1784,4 +1784,327 @@
     height: 40px;
     transform: scaleY(-1);
   }
+
+  /* ─────────────────── Pricing page ───────────────────
+     Copy lives in `lib/copy.ts → pricing.*`. Layout mirrors the home-landing
+     section grammar (centered header + figure) so the page feels like a sibling
+     of the home page rather than a separate world. */
+  .pricing-section {
+    width: 100%;
+    padding-top: var(--spacing-home-landing-section-y);
+    padding-bottom: var(--spacing-home-landing-section-y);
+    background-color: var(--surface);
+    color: var(--text);
+  }
+
+  .pricing-section__inner {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 720px;
+    padding-inline: var(--spacing-home-page-inline);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-home-landing-header-to-media);
+  }
+
+  .pricing-section__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xl);
+    text-align: center;
+  }
+
+  .pricing-section__title {
+    margin: 0;
+    font-size: var(--font-size-header-02);
+    line-height: var(--line-height-home-landing-section-title);
+    letter-spacing: -0.905px;
+    color: var(--text);
+  }
+
+  .pricing-section__lede {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-home-landing-section-lede);
+    line-height: var(--line-height-home-landing-section-lede);
+    color: var(--text);
+  }
+
+  .pricing-card {
+    width: 100%;
+    max-width: 480px;
+    padding: 48px 40px;
+    background-color: var(--surface);
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    border-radius: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    text-align: center;
+  }
+
+  .pricing-card__price {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    color: var(--text);
+  }
+
+  .pricing-card__line {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 18px;
+    line-height: 28px;
+    color: rgba(44, 0, 42, 0.64);
+  }
+
+  /* ─────────────────── Build in Public page ───────────────────
+     Live signup metrics dashboard. Cards reuse the home-landing card
+     grammar (32 px radius, 1 px hairline border, surface fill); chart
+     fills/strokes use `--strong-branded-surface` (brand pink) and `--text`
+     (deep purple) so the visual language matches the home page. */
+  .build-in-public-section {
+    width: 100%;
+    padding-top: var(--spacing-home-landing-section-y);
+    padding-bottom: var(--spacing-home-landing-section-y);
+    background-color: var(--surface);
+    color: var(--text);
+  }
+
+  .build-in-public-section__inner {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 1280px;
+    padding-inline: var(--spacing-home-page-inline);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-home-landing-header-to-media);
+  }
+
+  .build-in-public-section__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xl);
+    text-align: center;
+  }
+
+  .build-in-public-section__title {
+    margin: 0;
+    font-size: var(--font-size-header-02);
+    line-height: var(--line-height-home-landing-section-title);
+    letter-spacing: -0.905px;
+    color: var(--text);
+  }
+
+  .build-in-public-section__lede {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-home-landing-section-lede);
+    line-height: var(--line-height-home-landing-section-lede);
+    color: var(--text);
+  }
+
+  .build-in-public-error {
+    width: 100%;
+    max-width: 640px;
+    padding: 24px 28px;
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    border-radius: 32px;
+    background-color: var(--surface);
+  }
+
+  .build-in-public-error__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 28px;
+    color: var(--text);
+  }
+
+  .build-in-public-error__body {
+    margin: 8px 0 0 0;
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--subtle-text);
+  }
+
+  /* Metrics dashboard — card chrome shared between KPI tiles and charts. */
+  .metrics-dashboard {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .metrics-dashboard__kpis {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  @media (min-width: 768px) {
+    .metrics-dashboard__kpis {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px;
+    }
+  }
+
+  .metrics-dashboard__charts {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  @media (min-width: 768px) {
+    .metrics-dashboard__charts {
+      gap: 32px;
+    }
+  }
+
+  .metrics-card {
+    background-color: var(--surface);
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    border-radius: 32px;
+    overflow: hidden;
+  }
+
+  .metrics-card--kpi {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  @media (min-width: 768px) {
+    .metrics-card--kpi {
+      padding: 28px;
+    }
+  }
+
+  .metrics-card__label {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 1.4;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--subtle-text);
+  }
+
+  .metrics-card__value {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 36px;
+    line-height: 1;
+    letter-spacing: -1px;
+    color: var(--text);
+  }
+
+  @media (min-width: 768px) {
+    .metrics-card__value {
+      font-size: 44px;
+      letter-spacing: -1.2px;
+    }
+  }
+
+  .metrics-card__sublabel {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--subtle-text);
+    font-style: italic;
+  }
+
+  .metrics-card__chart-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 24px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  @media (min-width: 768px) {
+    .metrics-card__chart-header {
+      padding: 20px 28px;
+    }
+  }
+
+  .metrics-card__chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background-color: var(--strong-branded-surface);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .metrics-card__chart-body {
+    padding: 16px 16px 8px;
+  }
+
+  @media (min-width: 768px) {
+    .metrics-card__chart-body {
+      padding: 20px 24px 12px;
+    }
+  }
+
+  /* Chart axis text — Aeonik Fono so it reads as the same monospace voice
+     as the rest of the home page. */
+  .metrics-card .font-mono {
+    font-family: var(--font-body);
+  }
+
+  .metrics-tooltip {
+    position: absolute;
+    top: 16px;
+    transform: translateX(-50%);
+    pointer-events: none;
+    white-space: nowrap;
+    padding: 8px 12px;
+    border-radius: 12px;
+    background-color: var(--inverted-surface, #2c002a);
+    color: var(--text-on-inverted-surface, #ffffff);
+    box-shadow: 0 12px 24px rgba(44, 0, 42, 0.18);
+    text-align: left;
+  }
+
+  .metrics-tooltip__date {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text-on-inverted-surface, #ffffff);
+  }
+
+  .metrics-tooltip__row {
+    margin: 4px 0 0 0;
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--text-on-inverted-surface, #ffffff);
+  }
+
+  .metrics-tooltip__row--pink {
+    color: var(--strong-branded-surface);
+  }
+
+  .metrics-tooltip__row-value {
+    font-weight: 700;
+  }
 }
