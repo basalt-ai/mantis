@@ -1462,11 +1462,29 @@
     line-height: var(--line-height-home-integrations-callout);
     font-weight: var(--font-normal);
     font-style: normal;
-    white-space: pre;
+    /* `pre-line` keeps the comp's three-line stack at desktop but lets each
+       line wrap if the container narrows, instead of overflowing the box. */
+    white-space: pre-line;
     background-color: var(--alt-weak-branded-surface-02);
     border-radius: var(--radius-home-integrations-callout);
     padding-inline: var(--spacing-home-integrations-callout-pad-inline);
     padding-block: var(--spacing-home-integrations-callout-pad-block);
+  }
+
+  /* Below ~840 px container width the absolute box can no longer fit the
+     hard-coded copy without clipping. Detach it from the cloud's right edge,
+     centre it across the cloud, and let the text wrap naturally. The
+     positional `left/top/width` set inline by the component are overridden
+     here so the responsive rule wins. */
+  @container integrations-cloud (max-width: 840px) {
+    .home-integrations-cloud__callout {
+      left: 50% !important;
+      top: 0 !important;
+      width: min(440px, calc(100% - 2 * var(--spacing-xl))) !important;
+      transform: translateX(-50%);
+      white-space: normal;
+      text-align: center;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
