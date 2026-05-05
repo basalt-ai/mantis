@@ -747,16 +747,17 @@ export function SlackUI() {
   const messages = CHANNEL_MESSAGES[activeChannel];
 
   return (
-    <section className="px-4 py-16 sm:px-6 sm:py-24">
+    /**
+     * No internal heading: `HomeLandingBody` already renders the section's
+     * `<H2>` + lede in the project's display face for visual parity with
+     * other landing-page sections. Rendering them again here in Lato (the
+     * scoped Slack font) produced a second, mismatched header. Section
+     * vertical padding is also dropped — the parent `home-landing-section`
+     * provides the gap to neighbours.
+     */
+    <section className="px-4 sm:px-6">
       <div className="mx-auto max-w-5xl">
-        <h2 className="text-center font-display text-3xl font-semibold text-[var(--text)] sm:text-4xl">
-          <span className="block">{slack.titleLine1}</span>
-          <span className="mt-2 block text-[1.35rem] font-medium leading-snug text-[#3d3d3d] sm:text-[1.5rem]">
-            {slack.titleLine2}
-          </span>
-        </h2>
-
-        <div className="mx-auto mt-12 w-full max-w-5xl">
+        <div className="mx-auto w-full max-w-5xl">
           <div className="w-full rounded-theme brut-border box-border bg-white">
             {/*
              * Hard-locked dimensions — height stays at `h-[560px]` (mobile) /
