@@ -953,7 +953,11 @@
     flex-direction: column;
     gap: clamp(var(--spacing-md), 2.2cqi, var(--spacing-xxl));
     width: calc(368 / 1136 * 100%);
-    min-height: calc(332 / 706 * 100%);
+    /* No `min-height`: the box now resizes down when agents leave just like
+       it resizes up when they're added. The previous 47% floor (332/706)
+       kept the dept block tall after removals, leaving empty space at the
+       bottom. Hugging content makes the FLIP-driven height tween shrink
+       symmetrically to how it grows. */
     height: auto;
     max-height: none;
     padding: clamp(var(--spacing-md), 2.8cqi, calc(2 * var(--spacing-xl)));
