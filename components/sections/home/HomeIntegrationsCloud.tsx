@@ -34,11 +34,11 @@ const ANCHOR_Y = 435;
 
 /**
  * Figma `428:15015` — callout in inner-container coords (1786×900).
- * Width must be large enough in *px after scale* (~35ch @ 14px + padding): narrow
- * `%` of the cloud was forcing extra wraps despite explicit `\n` (`pre-line`
- * still breaks long lines). `white-space: pre` + wider VB keeps exactly 3 lines.
+ * `white-space: pre` + explicit `\n` = exactly 3 lines; width is the smallest VB
+ * that still clears the longest line at 14px after scale (~35ch + padding). Right
+ * edge kept ~1758 so the chip stays top-right without a huge empty rail inside.
  */
-const INTEGRATIONS_CALLOUT_VB = { x: 1158, y: 48, w: 600, h: 118 };
+const INTEGRATIONS_CALLOUT_VB = { x: 1206, y: 48, w: 552, h: 118 };
 const CALLOUT_LEFT_MID = {
   x: INTEGRATIONS_CALLOUT_VB.x,
   y: INTEGRATIONS_CALLOUT_VB.y + INTEGRATIONS_CALLOUT_VB.h * 0.45,
@@ -438,8 +438,8 @@ export function HomeIntegrationsCloud() {
     };
   }, [reducedMotion, wobbles]);
 
-  const calloutConnectorLeftD = `M ${CALLOUT_LEFT_MID.x.toFixed(1)} ${CALLOUT_LEFT_MID.y.toFixed(1)} Q 1000 308 728 448`;
-  const calloutConnectorBottomD = `M ${CALLOUT_BOTTOM_MID.x.toFixed(1)} ${CALLOUT_BOTTOM_MID.y.toFixed(1)} Q 1140 398 1010 530`;
+  const calloutConnectorLeftD = `M ${CALLOUT_LEFT_MID.x.toFixed(1)} ${CALLOUT_LEFT_MID.y.toFixed(1)} Q 1010 306 732 446`;
+  const calloutConnectorBottomD = `M ${CALLOUT_BOTTOM_MID.x.toFixed(1)} ${CALLOUT_BOTTOM_MID.y.toFixed(1)} Q 1132 396 1008 528`;
 
   return (
     <div className="home-integrations-cloud" data-node-id="428:15019">
