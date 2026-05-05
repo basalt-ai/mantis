@@ -414,10 +414,11 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
           gsap.killTweensOf(rowEl);
           if (dot) gsap.killTweensOf(dot);
           /**
-           * No `clearProps` here — the row is being unmounted on the next React commit.
-           * Resetting transform/opacity now would flash the row back to its original
-           * position for a frame before React removes it (the "blink-resurrection").
+           * Lock invisible synchronously — the React commit unmounting this row is async,
+           * and we don't want any paint between now and unmount to show the row.
            */
+          rowEl.style.visibility = "hidden";
+          rowEl.style.opacity = "0";
           setDeptRows((prev) => ({
             ...prev,
             [surface]: prev[surface].filter((r) => r.id !== victim.id),
@@ -446,10 +447,16 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
           if (disposedRef.current) return;
           clearRemoveFailsafe(surface);
           /**
-           * No `clearProps` — see failsafe comment. The row is at `x=slideX, autoAlpha=0`
-           * (off-screen and invisible); leave it that way until React unmounts it on the
-           * next commit triggered by the `setDeptRows` below.
+           * Lock the row invisible *synchronously* before any paint can happen.
+           * GSAP demotes `translate3d` → `translate` on the final frame as part of its
+           * tween cleanup, which can churn the GPU compositor layer. Even though our
+           * tween ends at `opacity: 0`, that compositor reshuffle can briefly drop the
+           * cached invisible-state paint and flash the row back at its slid position
+           * before React's async commit unmounts it. `visibility: hidden` removes it
+           * from paint regardless of any downstream layer churn.
            */
+          rowEl.style.visibility = "hidden";
+          rowEl.style.opacity = "0";
           setDeptRows((prev) => ({
             ...prev,
             [surface]: prev[surface].filter((r) => r.id !== victim.id),
