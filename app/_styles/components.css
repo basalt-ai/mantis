@@ -702,13 +702,29 @@
    * `app/_styles/style.css` sets `* { font-family: var(--font-body) }` which
    * slams the project body face onto *every* element — defeating font
    * inheritance from the inline `font-family` we put on the Slack window.
-   * Re-scope the Slack figure so the fake-Slack panel renders in Lato (the
-   * UI font Slack itself uses) without leaking into the rest of the page.
+   * Re-scope the Slack figure so the fake-Slack panel renders in Lato
+   * (Slack's UI face) without leaking into the rest of the page.
    */
   .home-landing-section__figure--slack,
   .home-landing-section__figure--slack * {
     font-family: var(--font-lato), "Lato", -apple-system, BlinkMacSystemFont,
       "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  /**
+   * The base `.home-landing-section__figure` is a centred flex container,
+   * so its single child (here `SlackUI`) is a flex item — `flex: 0 1 auto`,
+   * shrink-to-fit. With longer messages or button rows, the SlackUI section
+   * grew wider; with shorter content, narrower — so the panel width
+   * changed channel-to-channel (briefing 979, content 863, outbound 1024).
+   * Switch this figure to a block so SlackUI fills 100 % of the available
+   * width and its inner `max-w-5xl` is the only width gate.
+   */
+  .home-landing-section__figure--slack {
+    display: block;
+  }
+  .home-landing-section__figure--slack > section {
+    width: 100%;
   }
 
   .home-landing-section__img {

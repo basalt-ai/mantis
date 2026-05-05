@@ -833,7 +833,17 @@ export function SlackUI() {
                 </div>
               </aside>
 
-              <div className="flex min-w-0 flex-1 flex-col bg-white">
+              {/*
+               * `min-h-0` is the critical bit on every flex column from here
+               * down. In a column flex parent the default min-height of an
+               * item is `auto` (= its content's intrinsic size), so a tall
+               * message list would push `flex-1` past the locked window
+               * height instead of clipping. With `min-h-0` each flex item
+               * is allowed to shrink below its content, the scroll column
+               * is bounded to the available space, and `overflow-y-auto`
+               * actually triggers when content exceeds it.
+               */}
+              <div className="flex min-h-0 min-w-0 flex-1 flex-col bg-white">
                 <header className="flex items-center border-b border-[#e8e8e8] bg-white px-4 py-3">
                   <div className="flex items-baseline gap-1.5">
                     <span className="text-[22px] font-black leading-none text-[#1d1c1d]">#</span>
@@ -843,8 +853,8 @@ export function SlackUI() {
                   </div>
                 </header>
 
-                <div className="flex flex-1 flex-col">
-                  <div className="flex-1 space-y-5 overflow-y-auto px-4 py-4 sm:px-5 sm:py-5">
+                <div className="flex min-h-0 flex-1 flex-col">
+                  <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-4 py-4 sm:px-5 sm:py-5">
                     {messages.map((m) => (
                       <SlackMessageBlock key={m.id} message={m} />
                     ))}
