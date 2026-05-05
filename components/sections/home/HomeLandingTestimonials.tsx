@@ -157,7 +157,6 @@ export function HomeLandingTestimonials() {
 
     let offset = 0;
     let stride = 0;
-    let paused = false;
 
     const measure = () => {
       // Track holds the cards twice; stride is half its scrollWidth + the
@@ -169,31 +168,21 @@ export function HomeLandingTestimonials() {
     measure();
 
     const tick = (_time: number, deltaTime: number) => {
-      if (paused || stride <= 0) return;
+      if (stride <= 0) return;
       offset -= (deltaTime / 1000) * CAROUSEL_SPEED_PX_PER_S;
       while (offset <= -stride) offset += stride;
       track.style.transform = `translate3d(${offset.toFixed(2)}px, 0, 0)`;
     };
 
-    const handlePointerEnter = () => {
-      paused = true;
-    };
-    const handlePointerLeave = () => {
-      paused = false;
-    };
     const handleResize = () => {
       measure();
     };
 
     gsap.ticker.add(tick);
-    track.addEventListener("pointerenter", handlePointerEnter);
-    track.addEventListener("pointerleave", handlePointerLeave);
     window.addEventListener("resize", handleResize);
 
     return () => {
       gsap.ticker.remove(tick);
-      track.removeEventListener("pointerenter", handlePointerEnter);
-      track.removeEventListener("pointerleave", handlePointerLeave);
       window.removeEventListener("resize", handleResize);
     };
   }, [reducedMotion]);
