@@ -1368,13 +1368,22 @@
     color: var(--text);
   }
 
+  /**
+   * Closing CTA — button on top, "No credit card needed" centered below.
+   * Used to be `flex-direction: row` with `flex-wrap: wrap`, which left the
+   * button and note side-by-side on desktop and stacked on mobile. The
+   * stacked-mobile case ended up left-aligned at certain widths because of
+   * how flex-wrap distributes wrapped items. Switched to a centered column
+   * at all breakpoints — visually cleaner and removes the breakpoint bug.
+   */
   .home-landing-closing-cta {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: var(--spacing-xxl);
+    gap: var(--spacing-md);
+    width: 100%;
+    text-align: center;
   }
 
   .home-landing-closing-cta__note {
