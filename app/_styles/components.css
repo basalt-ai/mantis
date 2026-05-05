@@ -1789,12 +1789,18 @@
      Copy lives in `lib/copy.ts → pricing.*`. Layout mirrors the home-landing
      section grammar (centered header + figure) so the page feels like a sibling
      of the home page rather than a separate world. */
+  /* Section runs as the flex-1 child of `<main className="flex min-h-screen
+     flex-col">`, so it stretches to fill whatever's left between the nav and
+     footer. Inner content vertically centers inside that stretched area —
+     short viewports keep everything in frame, tall ones get even breathing
+     room above and below the card. */
   .pricing-section {
     width: 100%;
-    padding-top: var(--spacing-home-landing-section-y);
-    padding-bottom: var(--spacing-home-landing-section-y);
+    padding-top: var(--spacing-xxl);
+    padding-bottom: var(--spacing-xxl);
     background-color: var(--surface);
     color: var(--text);
+    display: flex;
   }
 
   .pricing-section__inner {
@@ -1805,7 +1811,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--spacing-home-landing-header-to-media);
+    justify-content: center;
+    gap: calc(2 * var(--spacing-xxl));
   }
 
   .pricing-section__header {
