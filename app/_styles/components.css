@@ -2573,7 +2573,12 @@
     border-radius: 12px;
     padding: 8px 14px;
     text-align: left;
-    min-width: 100px;
+    /* Wide enough to fit "Pancake / Your co-founder" without wrap so both
+       chips render at the same width. Equal chip widths → equal mascot
+       column widths → icons sit symmetric → the connector arc centers
+       perfectly between the two icons instead of biasing left. */
+    min-width: 124px;
+    box-sizing: border-box;
   }
 
   .home-org-mobile-mascot__title {
@@ -2830,6 +2835,11 @@
       flex-direction: column;
       align-items: center;
       gap: var(--spacing-md);
+      /* Without width:100%, the flex container shrinks to the widest child
+         (the button) and sits at the text-stack's left edge — `align-items:
+         center` then has nothing to align across, so button + note both
+         left-anchor. Stretching to full width lets the centering bite. */
+      width: 100%;
     }
     .home-hero-cta-row .button {
       width: 100%;
@@ -2881,16 +2891,24 @@
       inset: 0;
       width: 100%;
       height: 100%;
-      /* Zoom 1.5× so chips read big like the Figma comp without cropping
-         the corner chips (X, LinkedIn, Claude) too aggressively. */
-      transform: scale(1.5);
+      /* Zoom uniformly so the chips read big like the Figma comp. The
+         transform scales every chip + every wire in the SVG together.
+         1.55× is the sweet spot — chips read clearly, monster reads as
+         the central focus, and all 8 chips remain on screen (Claude in
+         the top-right is closest to the crop edge but still visible). */
+      transform: scale(1.55);
       transform-origin: center center;
     }
-    /* Monster slot is positioned at left/top % of the viz container. The
-       SVG content scales 1.5×, so the monster needs to scale by the same
-       factor to stay visually proportional to the chips around it. */
+    /* The monster div sits OUTSIDE the SVG so it doesn't get the SVG's
+       transform — we have to scale it ourselves. The default monster width
+       is `clamp(88px, 14.5cqi, 195px)`; the 88px floor wins on the small
+       mobile container and dwarfs the chips around it. Override to use the
+       container-relative cqi value uncapped (matches the desktop ratio of
+       monster-to-chip ~1.5×) and apply the SAME scale as the SVG so it
+       stays proportional. */
     .home-integrations-cloud__monster {
-      transform: translate(-50%, -50%) scale(1.5);
+      width: 14.5cqi;
+      transform: translate(-50%, -50%) scale(1.55);
     }
     .home-integrations-cloud__callout {
       position: relative !important;
