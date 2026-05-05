@@ -9,31 +9,13 @@ import { HOME_PAGE_CONTAINER_CLASS } from "@/components/sections/home/home-layou
 import { HomeIntegrationsCloud } from "@/components/sections/home/HomeIntegrationsCloud";
 import { HomeLandingControl } from "@/components/sections/home/HomeLandingControl";
 import { HomeLandingFeatures } from "@/components/sections/home/HomeLandingFeatures";
+import { HomeLandingTestimonials } from "@/components/sections/home/HomeLandingTestimonials";
 import { HomeOrgDiagram } from "@/components/sections/home/HomeOrgDiagram";
 import { SlackUI } from "@/components/shared/SlackUI";
-import { H2, H3 } from "@/components/ui/Headings";
+import { H2 } from "@/components/ui/Headings";
 
 /** Figma `428:15162` — U+2028 line break before “company”. */
 const CLOSING_TITLE = "Make your \u2028company autonomous";
-
-const TESTIMONIALS = [
-  {
-    quote:
-      "Day 14 of the pancake experiment: my engineering agent has shipped 38 PRs, my recruiter agent screened 412 candidates, and my CFO agent is actually scary good at modeling.",
-  },
-  {
-    quote:
-      "I asked @pancake to \"run my entire content engine\" and it just… did. Calendar, briefs, drafts, scheduling, analytics. I am the bottleneck now.",
-  },
-  {
-    quote:
-      "Hired 4 pancake agents on Friday. Came back Monday to a launched landing page, 11 closed deals, and an inbox at zero. I genuinely don't know what to do with my time.",
-  },
-  {
-    quote:
-      "The kill switch works. I tested it. My whole org froze mid-sentence, then resumed exactly where it left off when I un-paused. This is actually production software.",
-  },
-] as const;
 
 export function HomeLandingBody() {
   return (
@@ -111,31 +93,18 @@ export function HomeLandingBody() {
         </div>
       </section>
 
-      {/* Figma `428:15175` testimonials */}
-      <section className="home-landing-section" aria-labelledby="home-landing-testimonials-heading">
-        <div className={`${HOME_PAGE_CONTAINER_CLASS} home-landing-section__inner`}>
+      {/* Figma `428:15175` testimonials — heading lives in the centered
+          container; the carousel band sits outside so it can run full-bleed. */}
+      <section className="home-landing-section home-landing-section--testimonials" aria-labelledby="home-landing-testimonials-heading">
+        <div className={`${HOME_PAGE_CONTAINER_CLASS} home-landing-section__inner home-landing-section__inner--testimonials`}>
           <header className="home-landing-section__header">
             <H2 id="home-landing-testimonials-heading" className="heading home-landing-section__title text-center">
               Take it from them
             </H2>
             <p className="home-landing-section__lede text-center">Here’s what our customers are saying</p>
           </header>
-          <div className="home-landing-testimonials">
-            {TESTIMONIALS.map((t, index) => (
-              <article key={index} className="home-landing-testimonial">
-                <p className="home-landing-testimonial__quote">{t.quote}</p>
-                <div className="home-landing-testimonial__meta">
-                  <div>
-                    <p className="home-landing-testimonial__name">Jules Reyes</p>
-                    <p className="home-landing-testimonial__handle">@jules · 1d</p>
-                  </div>
-                  <p className="home-landing-testimonial__stats">321 replies · 821 reposts · 2.8k likes</p>
-                  <p className="home-landing-testimonial__via">via X</p>
-                </div>
-              </article>
-            ))}
-          </div>
         </div>
+        <HomeLandingTestimonials />
       </section>
 
       {/* Figma `428:15160` closing CTA */}
