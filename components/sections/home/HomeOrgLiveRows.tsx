@@ -66,28 +66,37 @@ function visibleLabels(rows: LiveRow[]): Set<string> {
   return new Set(rows.map((r) => r.label));
 }
 
-function captureDeptRowRects(article: Element): Map<string, DOMRect> {
-  const map = new Map<string, DOMRect>();
+/**
+ * Capture each row's `top` measured relative to the article — NOT viewport coordinates.
+ * Viewport-relative `getBoundingClientRect().top` would change as the user scrolls; if a state
+ * mutation fired while the article was scrolling through the viewport, the FLIP delta
+ * `prev.top - next.top` would equal the scroll distance and every row in the column would
+ * tween in from off-screen on return. Article-relative coordinates are scroll-invariant.
+ */
+function captureDeptRowRects(article: Element): Map<string, { top: number }> {
+  const aTop = article.getBoundingClientRect().top;
+  const map = new Map<string, { top: number }>();
   article.querySelectorAll<HTMLElement>("[data-org-live-row]").forEach((el) => {
     const id = el.dataset.orgLiveRow;
-    if (id) map.set(id, el.getBoundingClientRect());
+    if (id) map.set(id, { top: el.getBoundingClientRect().top - aTop });
   });
   return map;
 }
 
 function flipReflowRows(
   article: Element,
-  before: Map<string, DOMRect>,
+  before: Map<string, { top: number }>,
   duration = 0.32,
   ease: string = "power2.out",
 ): void {
+  const aTop = article.getBoundingClientRect().top;
   article.querySelectorAll<HTMLElement>("[data-org-live-row]").forEach((el) => {
     const id = el.dataset.orgLiveRow;
     if (!id) return;
     const prev = before.get(id);
     if (!prev) return;
-    const next = el.getBoundingClientRect();
-    const dy = prev.top - next.top;
+    const nextTop = el.getBoundingClientRect().top - aTop;
+    const dy = prev.top - nextTop;
     if (Math.abs(dy) < 0.75) return;
     /** `false` — avoid killing concurrent transform tweens on the same row (e.g. exit x while reflow y). */
     gsap.fromTo(el, { y: dy }, { y: 0, duration, ease, overwrite: false });
@@ -302,7 +311,7 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
 
       if (doAdd) {
         const article = resolveDeptArticle(surface);
-        const beforeRects = article ? captureDeptRowRects(article) : new Map<string, DOMRect>();
+        const beforeRects = article ? captureDeptRowRects(article) : new Map<string, { top: number }>();
         /** Article height before the new row commits — used to FLIP the dept block height. */
         const beforeArticleH = article ? article.offsetHeight : 0;
         const sampleRow = article?.querySelector<HTMLElement>(".home-org-diagram__row");
