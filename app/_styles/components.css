@@ -1039,59 +1039,116 @@
     word-break: normal;
   }
 
+  /**
+   * "Naturally works as you'd expect" features grid (Figma `428:15091`).
+   * Three 368-wide cards, 16 px gap, each card stacks a 96×96 pancake icon
+   * over a centred title + body copy block. On small screens the cards
+   * stack vertically with a slightly larger gap so the row breaks cleanly.
+   */
   .home-landing-features {
     width: 100%;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--spacing-home-landing-section-gap);
-    align-items: start;
-    justify-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xxl);
   }
 
   @media (min-width: 1024px) {
     .home-landing-features {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: calc(3 * var(--spacing-xxl));
-      justify-items: stretch;
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 16px;
     }
   }
 
   .home-landing-feature-card {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md);
-    max-width: var(--width-home-landing-narrow-copy);
-    width: 100%;
+    align-items: center;
+    gap: 32px;
+    padding: 32px;
+    width: 368px;
+    max-width: 100%;
     text-align: center;
   }
 
-  @media (min-width: 1024px) {
-    .home-landing-feature-card {
-      max-width: none;
-      text-align: left;
-    }
+  /** Pancake icon stack (Figma `428:15093`/`428:15100`/`428:15114`). */
+  .home-landing-feature-card__pancake {
+    position: relative;
+    width: 96px;
+    height: 96px;
+    flex-shrink: 0;
   }
 
-  .home-landing-feature-card__eyebrow {
-    margin: 0;
-    font-family: var(--font-body);
-    font-size: var(--font-size-body-small);
-    font-weight: var(--font-semibold);
-    color: var(--subtle-text);
+  .home-landing-feature-card__pancake-side {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 96px;
+    height: 96px;
+  }
+
+  .home-landing-feature-card__pancake-top {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    width: 92px;
+    height: 88px;
+  }
+
+  /**
+   * Pancake content overlays: short JetBrains-Mono labels (".md", "24/7")
+   * sit centred on the pancake top; the network glyph (Figma `Group 47`)
+   * is positioned by absolute px to match its Figma offset inside the chip.
+   */
+  .home-landing-feature-card__pancake-label {
+    position: absolute;
+    left: 50%;
+    top: 27px;
+    transform: translateX(-50%);
+    font-family: var(--font-mono, ui-monospace, "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace);
+    font-weight: 700;
+    font-size: 29.545px;
+    letter-spacing: -0.5px;
+    color: var(--text);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .home-landing-feature-card__pancake-icon {
+    display: block;
+    position: absolute;
+    /* `left` and `top` are set inline (per-card Figma offsets). */
+    pointer-events: none;
+  }
+
+  /** Card copy block (Figma `428:15096`). */
+  .home-landing-feature-card__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
   }
 
   .home-landing-feature-card__title {
     margin: 0;
-    font-size: var(--font-size-header-03);
-    letter-spacing: -0.64px;
-    font-weight: var(--font-semibold);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.25;
+    font-weight: var(--font-heavy, 700);
+    color: var(--text);
   }
 
   .home-landing-feature-card__body {
     margin: 0;
     font-family: var(--font-body);
-    font-size: var(--font-size-body-regular);
-    line-height: var(--line-height-home-landing-section-lede);
+    font-size: 16px;
+    line-height: 1.4;
     font-weight: var(--font-normal);
     color: var(--text);
   }

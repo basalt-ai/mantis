@@ -7,6 +7,7 @@ import Link from "next/link";
 
 import { HOME_PAGE_CONTAINER_CLASS } from "@/components/sections/home/home-layout";
 import { HomeIntegrationsCloud } from "@/components/sections/home/HomeIntegrationsCloud";
+import { HomeLandingFeatures } from "@/components/sections/home/HomeLandingFeatures";
 import { HomeOrgDiagram } from "@/components/sections/home/HomeOrgDiagram";
 import { H2, H3 } from "@/components/ui/Headings";
 
@@ -74,26 +75,7 @@ export function HomeLandingBody() {
             </H2>
             <p className="home-landing-section__lede text-center">Pancake comes with modern day features.</p>
           </header>
-          <div className="home-landing-features">
-            <article className="home-landing-feature-card">
-              <p className="home-landing-feature-card__eyebrow">.md</p>
-              <H3 className="heading home-landing-feature-card__title">Markdown-configured</H3>
-              <p className="home-landing-feature-card__body">
-                Every agent, role, and workflow defined in .md files you control
-              </p>
-            </article>
-            <article className="home-landing-feature-card">
-              <H3 className="heading home-landing-feature-card__title">Context-aware</H3>
-              <p className="home-landing-feature-card__body">
-                Agents pull context from your Notion, docs, and meeting notes. They know your business.
-              </p>
-            </article>
-            <article className="home-landing-feature-card">
-              <p className="home-landing-feature-card__eyebrow">24/7</p>
-              <H3 className="heading home-landing-feature-card__title">Always on</H3>
-              <p className="home-landing-feature-card__body">Your agent org runs 24/7 — no downtime, no sick days</p>
-            </article>
-          </div>
+          <HomeLandingFeatures />
         </div>
       </section>
 
