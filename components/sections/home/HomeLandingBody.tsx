@@ -9,6 +9,7 @@ import { HOME_PAGE_CONTAINER_CLASS } from "@/components/sections/home/home-layou
 import { HomeIntegrationsCloud } from "@/components/sections/home/HomeIntegrationsCloud";
 import { HomeLandingFeatures } from "@/components/sections/home/HomeLandingFeatures";
 import { HomeOrgDiagram } from "@/components/sections/home/HomeOrgDiagram";
+import { SlackUI } from "@/components/shared/SlackUI";
 import { H2, H3 } from "@/components/ui/Headings";
 
 /** Figma `428:15162` — U+2028 line break before “company”. */
@@ -88,17 +89,8 @@ export function HomeLandingBody() {
             </H2>
             <p className="home-landing-section__lede text-center">They don’t wait to be asked.</p>
           </header>
-          <div className="home-landing-section__figure">
-            {/* eslint-disable-next-line @next/next/no-img-element -- Figma raster export (MCP screenshot) */}
-            <img
-              className="home-landing-section__img home-landing-section__img--rounded"
-              src="/home-landing-slack-screenshot.png"
-              alt=""
-              width={1024}
-              height={585}
-              decoding="async"
-              loading="lazy"
-            />
+          <div className="home-landing-section__figure home-landing-section__figure--slack">
+            <SlackUI />
           </div>
         </div>
       </section>
