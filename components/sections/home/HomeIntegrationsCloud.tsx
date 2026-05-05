@@ -33,11 +33,12 @@ const ANCHOR_X = 960;
 const ANCHOR_Y = 435;
 
 /**
- * Figma `428:15015` — callout frame in inner-container coords (1786×900): top-right, compact
- * (above LinkedIn / near GitHub row per MCP). HTML uses %; SVG connectors use same box.
- * Wider + further right vs prior pass — clears GitHub leg overlap.
+ * Figma `428:15015` — callout in inner-container coords (1786×900).
+ * Width must be large enough in *px after scale* (~35ch @ 14px + padding): narrow
+ * `%` of the cloud was forcing extra wraps despite explicit `\n` (`pre-line`
+ * still breaks long lines). `white-space: pre` + wider VB keeps exactly 3 lines.
  */
-const INTEGRATIONS_CALLOUT_VB = { x: 1272, y: 48, w: 428, h: 120 };
+const INTEGRATIONS_CALLOUT_VB = { x: 1158, y: 48, w: 600, h: 118 };
 const CALLOUT_LEFT_MID = {
   x: INTEGRATIONS_CALLOUT_VB.x,
   y: INTEGRATIONS_CALLOUT_VB.y + INTEGRATIONS_CALLOUT_VB.h * 0.45,
@@ -437,8 +438,8 @@ export function HomeIntegrationsCloud() {
     };
   }, [reducedMotion, wobbles]);
 
-  const calloutConnectorLeftD = `M ${CALLOUT_LEFT_MID.x.toFixed(1)} ${CALLOUT_LEFT_MID.y.toFixed(1)} Q 1020 312 735 452`;
-  const calloutConnectorBottomD = `M ${CALLOUT_BOTTOM_MID.x.toFixed(1)} ${CALLOUT_BOTTOM_MID.y.toFixed(1)} Q 1120 400 1005 532`;
+  const calloutConnectorLeftD = `M ${CALLOUT_LEFT_MID.x.toFixed(1)} ${CALLOUT_LEFT_MID.y.toFixed(1)} Q 1000 308 728 448`;
+  const calloutConnectorBottomD = `M ${CALLOUT_BOTTOM_MID.x.toFixed(1)} ${CALLOUT_BOTTOM_MID.y.toFixed(1)} Q 1140 398 1010 530`;
 
   return (
     <div className="home-integrations-cloud" data-node-id="428:15019">
