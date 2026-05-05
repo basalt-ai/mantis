@@ -277,27 +277,65 @@ export function HomeIntegrationsCloud() {
   }, []);
 
   /**
-   * Monster target cycler — every ~2.5 s switches the chip the monster is
-   * "looking at". The PancakeMonster's morpher will smoothly interpolate
-   * its orientation toward the new chip's window-relative centre.
+   * Monster target — a smoothly eased random walk around the monster centre
+   * instead of a hard chip-to-chip jump. Each "leg" picks a new random
+   * offset and `getMonsterTarget` returns the eased lerp between current and
+   * next every frame; the PancakeMonster morpher then interpolates its
+   * orientation against that continuously-moving point. The leg picker also
+   * sometimes returns the offset to (0, 0) — straight ahead — so the
+   * monster pauses at neutral instead of always pulling toward an edge.
    */
-  const targetChipIdxRef = useRef(0);
+  const targetMotionRef = useRef({
+    /** Offset from monster centre, window-space px. */
+    current: { x: 0, y: 0 },
+    next: { x: 0, y: 0 },
+    startedAt: 0,
+    duration: 3000,
+  });
+
   useEffect(() => {
     if (reducedMotion) return;
-    const id = window.setInterval(() => {
-      targetChipIdxRef.current = (targetChipIdxRef.current + 1) % LOGOS.length;
-    }, 2500);
+    const pickNewLeg = () => {
+      const m = targetMotionRef.current;
+      const now = performance.now();
+      // Snapshot where we *are* right now so the next leg starts from the live point.
+      const tNow = m.duration > 0 ? Math.min(1, (now - m.startedAt) / m.duration) : 1;
+      const easedNow = tNow * tNow * (3 - 2 * tNow);
+      m.current = {
+        x: m.current.x + (m.next.x - m.current.x) * easedNow,
+        y: m.current.y + (m.next.y - m.current.y) * easedNow,
+      };
+      // 30 % chance: return to centre (neutral). Otherwise pick a random
+      // direction across the full 360° spectrum at a varying radius.
+      if (Math.random() < 0.3) {
+        m.next = { x: 0, y: 0 };
+      } else {
+        const angle = Math.random() * Math.PI * 2;
+        const radius = 220 + Math.random() * 280;
+        m.next = { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius };
+      }
+      m.startedAt = now;
+      m.duration = 2200 + Math.random() * 2200;
+    };
+    pickNewLeg();
+    const id = window.setInterval(pickNewLeg, 2800);
     return () => clearInterval(id);
   }, [reducedMotion]);
 
-  /** Window-relative centre of the chip the monster is currently aiming at. */
+  /** Live eased target point in window coords. Called every frame — stays cheap. */
   const getMonsterTarget = useCallback(() => {
-    const id = LOGOS[targetChipIdxRef.current]?.id;
-    if (!id) return null;
-    const el = chipRefs.current.get(id);
-    if (!el) return null;
-    const r = el.getBoundingClientRect();
-    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    const slot = monsterSlotRef.current;
+    if (!slot) return null;
+    const r = slot.getBoundingClientRect();
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height / 2;
+    const m = targetMotionRef.current;
+    const t = m.duration > 0 ? Math.min(1, (performance.now() - m.startedAt) / m.duration) : 1;
+    const eased = t * t * (3 - 2 * t);
+    return {
+      x: cx + m.current.x + (m.next.x - m.current.x) * eased,
+      y: cy + m.current.y + (m.next.y - m.current.y) * eased,
+    };
   }, []);
 
   /** Track the monster slot's responsive size so the SVG renders sharp at any breakpoint. */
