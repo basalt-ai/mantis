@@ -94,6 +94,41 @@ function flipReflowRows(
   });
 }
 
+/**
+ * Smoothly resize the dept article between two heights.
+ * Call AFTER React commits the row count change but BEFORE the next paint:
+ * - `beforeH` is the article's offsetHeight captured before the state mutation
+ * - the article's current `offsetHeight` is treated as the new natural target
+ * Locks an inline pixel height, tweens to the target, then clears `style.height`
+ * so CSS `height: auto` / `min-height` rules take over again.
+ */
+function flipReflowArticleHeight(
+  article: HTMLElement,
+  beforeH: number,
+  duration = 0.42,
+  ease: string = "power3.out",
+): void {
+  const naturalH = article.offsetHeight;
+  if (Math.abs(beforeH - naturalH) < 0.5) return;
+  gsap.killTweensOf(article, "height");
+  gsap.fromTo(
+    article,
+    { height: beforeH },
+    {
+      height: naturalH,
+      duration,
+      ease,
+      overwrite: "auto",
+      onComplete: () => {
+        article.style.height = "";
+      },
+      onInterrupt: () => {
+        article.style.height = "";
+      },
+    },
+  );
+}
+
 function findRowElInArticle(article: HTMLElement | null, id: string): HTMLElement | null {
   if (!article) return null;
   const nodes = article.querySelectorAll<HTMLElement>("[data-org-live-row]");
@@ -268,6 +303,8 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
       if (doAdd) {
         const article = resolveDeptArticle(surface);
         const beforeRects = article ? captureDeptRowRects(article) : new Map<string, DOMRect>();
+        /** Article height before the new row commits — used to FLIP the dept block height. */
+        const beforeArticleH = article ? article.offsetHeight : 0;
         const sampleRow = article?.querySelector<HTMLElement>(".home-org-diagram__row");
         const rowH = sampleRow ? Math.max(20, sampleRow.getBoundingClientRect().height) : 28;
         const deptH = article ? article.getBoundingClientRect().height : rowH * 4;
@@ -295,6 +332,7 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
           const art = resolveDeptArticle(surface);
           if (!art) return;
           flipReflowRows(art, beforeRects, ADD_IN_DURATION, "power3.out");
+          flipReflowArticleHeight(art, beforeArticleH, ADD_IN_DURATION, "power3.out");
           const el = findRowElInArticle(art, id);
           if (!el) return;
           gsap.fromTo(
@@ -351,6 +389,8 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
       }
 
       const beforeRects = captureDeptRowRects(article);
+      /** Article height before the slide-out — used to FLIP the dept block back to its new natural height. */
+      const beforeArticleH = article.offsetHeight;
       const dot = rowEl.querySelector<HTMLElement>(".home-org-diagram__dot");
       const slideX = Math.max(56, article.getBoundingClientRect().width * 0.28);
 
@@ -376,6 +416,7 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
           requestAnimationFrame(() => {
             requestAnimationFrame(() => {
               flipReflowRows(article, beforeRects, 0.42, "power3.out");
+              flipReflowArticleHeight(article, beforeArticleH, 0.42, "power3.out");
             });
           });
         }
@@ -407,6 +448,7 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
           requestAnimationFrame(() => {
             requestAnimationFrame(() => {
               flipReflowRows(article, beforeRects, 0.42, "power3.out");
+              flipReflowArticleHeight(article, beforeArticleH, 0.42, "power3.out");
             });
           });
           scheduleSurfaceNextRef.current(surface);
