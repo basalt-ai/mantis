@@ -37,7 +37,7 @@ const ANCHOR_Y = 435;
  * (above LinkedIn / near GitHub row per MCP). HTML uses %; SVG connectors use same box.
  * Wider + further right vs prior pass — clears GitHub leg overlap.
  */
-const INTEGRATIONS_CALLOUT_VB = { x: 1272, y: 48, w: 428, h: 128 };
+const INTEGRATIONS_CALLOUT_VB = { x: 1272, y: 48, w: 428, h: 120 };
 const CALLOUT_LEFT_MID = {
   x: INTEGRATIONS_CALLOUT_VB.x,
   y: INTEGRATIONS_CALLOUT_VB.y + INTEGRATIONS_CALLOUT_VB.h * 0.45,
@@ -47,9 +47,10 @@ const CALLOUT_BOTTOM_MID = {
   y: INTEGRATIONS_CALLOUT_VB.y + INTEGRATIONS_CALLOUT_VB.h,
 };
 
-/** Figma `428:15015` — verbatim copy from design file. */
-const INTEGRATIONS_CALLOUT_COPY =
-  "Connect your tools. Your agents read, write, ship, and sell through them \u2014 like an employee would.";
+/** Figma `428:15015` — three-line stack (explicit breaks match comp). */
+const INTEGRATIONS_CALLOUT_COPY = `Connect your tools. Your agents
+read, write, ship, and sell through
+them \u2014 like an employee would.`;
 
 /* ----------------------------------------------------------------------- */
 /* Pancake — inline SVG, parameterised colours, used for chips + decoration */
@@ -437,7 +438,7 @@ export function HomeIntegrationsCloud() {
   }, [reducedMotion, wobbles]);
 
   const calloutConnectorLeftD = `M ${CALLOUT_LEFT_MID.x.toFixed(1)} ${CALLOUT_LEFT_MID.y.toFixed(1)} Q 1020 312 735 452`;
-  const calloutConnectorBottomD = `M ${CALLOUT_BOTTOM_MID.x.toFixed(1)} ${CALLOUT_BOTTOM_MID.y.toFixed(1)} Q 1120 392 1005 528`;
+  const calloutConnectorBottomD = `M ${CALLOUT_BOTTOM_MID.x.toFixed(1)} ${CALLOUT_BOTTOM_MID.y.toFixed(1)} Q 1120 400 1005 532`;
 
   return (
     <div className="home-integrations-cloud" data-node-id="428:15019">

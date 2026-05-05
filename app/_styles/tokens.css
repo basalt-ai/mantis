@@ -238,11 +238,12 @@
     --line-height-home-landing-closing-title: 64px;
 
     /*
-     * Integrations callout — Figma `428:15015` (Dev: 16px / 24px / 400, Aeonik Fono).
+     * Integrations callout — Figma `428:15015` (smaller than section lede; roomier padding).
      */
-    --line-height-home-integrations-callout: 24px;
-    --spacing-home-integrations-callout-pad-inline: clamp(var(--spacing-sm), 1.4cqi, var(--spacing-lg));
-    --spacing-home-integrations-callout-pad-block: clamp(var(--spacing-sm), 1.1cqi, var(--spacing-md));
+    --font-size-home-integrations-callout: calc(14 * var(--font-size-base) / 16);
+    --line-height-home-integrations-callout: calc(20 * var(--font-size-base) / 16);
+    --spacing-home-integrations-callout-pad-inline: clamp(var(--spacing-lg), 2.4cqi, calc(2 * var(--spacing-xl)));
+    --spacing-home-integrations-callout-pad-block: clamp(var(--spacing-md), 2cqi, calc(2 * var(--spacing-xl)));
     --radius-home-integrations-callout: var(--radius-lg);
 
     /* Font weights */

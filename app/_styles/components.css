@@ -1273,10 +1273,11 @@
     text-align: left;
     color: var(--text);
     font-family: var(--font-body);
-    font-size: var(--font-size-body-regular);
+    font-size: var(--font-size-home-integrations-callout);
     line-height: var(--line-height-home-integrations-callout);
     font-weight: var(--font-normal);
     font-style: normal;
+    white-space: pre-line;
     background-color: var(--alt-weak-branded-surface-02);
     border-radius: var(--radius-home-integrations-callout);
     padding-inline: var(--spacing-home-integrations-callout-pad-inline);
