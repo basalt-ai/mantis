@@ -72,6 +72,10 @@
 
 @layer semantic {
   :root {
+    /* Font stacks (Next `localFont` sets --font-aeonik / --font-aeonik-fono on <body>) */
+    --font-display: var(--font-aeonik), system-ui, -apple-system, sans-serif;
+    --font-body: var(--font-aeonik-fono), ui-monospace, monospace;
+
     /* Text Colors */
     --text: var(--palette-chrome-100);
     --subtle-text: var(--palette-chrome-80);
@@ -81,6 +85,8 @@
     --warning-text: var(--palette-orange-30);
     --negative-text: var(--palette-red-30);
     --text-on-inverted-surface: var(--palette-chrome-20);
+    /* Figma inverted chips — secondary line on dark surface (e.g. org diagram) */
+    --subtle-text-on-inverted-surface: var(--palette-chrome-50);
 
     /* Stroke Colors */
     --stroke: var(--palette-chrome-50);
@@ -132,7 +138,116 @@
     --font-size-body-small: var(--font-scale-min-1);
     --font-size-eyebrow: var(--font-scale-min-1);
 
+    /*
+     * Home `/`: wider horizontal gutter + coordinated nav/hero shifts (lg).
+     * Logo nudges right, Product/Resources/Pricing nudge left; hero copy follows logo; mascot follows links.
+     */
+    --spacing-home-page-inline: calc(var(--spacing-xxl) + var(--spacing-xl));
+    --spacing-home-nav-logo-nudge-x: var(--spacing-md);
+    --spacing-home-nav-links-nudge-x: var(--spacing-md);
+
+    /* Home hero vertical rhythm (text stack: title → subtitle → CTA) */
+    --spacing-home-hero-after-title: calc(2 * var(--spacing-xl));
+    --spacing-home-hero-after-subtitle: calc(2 * var(--spacing-xxl));
+
+    /* Space below nav before H1 — Figma shows a wide band (logo → headline) */
+    --spacing-home-hero-padding-top-mobile: var(--spacing-xxl);
+    --spacing-home-hero-padding-top: calc(5 * var(--spacing-xxl));
+
+    /* Home hero layout frame (`428:14920` = 160²): ellipse, dotted orbits, satellite math — Figma scale */
+    --size-home-hero-monster-max-width: calc(10 * var(--spacing-xl));
+    /* Interactive SVG mascot only — does not affect orbit / ellipse tokens (+25%×2, then +10%) */
+    --size-home-hero-monster-interactive-max-width: calc(var(--size-home-hero-monster-max-width) * 1.71875);
+    /*
+     * Cream halo: Figma hero `428:14900` — instance `428:16771` (“top”) is 236.46×236.46
+     * behind `428:14920` (160×160). Do not use PNG canvas ratio (946/496); exports include
+     * extra transparent artboard and are not layout truth.
+     */
+    --size-home-hero-monster-ellipse-width: calc(var(--size-home-hero-monster-max-width) * 11823 / 8000);
+
+    /*
+     * Dotted orbits 1–6 (Figma `428:14900`):
+     * • Orbit 1 (Ellipse 10 / `428:14903`): `ellipse × (O₁/160) × (8000/11823)` = `ellipse × (O₁/ellipse_Figma)`
+     *   with our tokens `ellipse = max×11823/8000`, `max = 160` — cream `428:16771` untouched.
+     * • Orbits 2–6: `orbit₁ × (Oᵢ/O₁)` (Figma node widths vs Ellipse 10). Rotations: CSS = −`node.rotation` (orbit 1 Dev `27.159deg`).
+     */
+    --size-home-hero-monster-dotted-ring-width: calc(
+      var(--size-home-hero-monster-ellipse-width) * 169765 * 8000 / (65536 * 11823)
+    );
+    --angle-home-hero-monster-dotted-ring: 27.159deg;
+
+    --size-home-hero-monster-orbit-2-width: calc(
+      var(--size-home-hero-monster-dotted-ring-width) * 316266251017 / 236434260807
+    );
+    --size-home-hero-monster-orbit-3-width: calc(
+      var(--size-home-hero-monster-dotted-ring-width) * 1669761334199 / 986586030650
+    );
+    --size-home-hero-monster-orbit-4-width: calc(
+      var(--size-home-hero-monster-dotted-ring-width) * 1455713360546 / 690410988819
+    );
+    --size-home-hero-monster-orbit-5-width: calc(
+      var(--size-home-hero-monster-dotted-ring-width) * 1077335507215 / 401945628013
+    );
+    --size-home-hero-monster-orbit-6-width: calc(
+      var(--size-home-hero-monster-dotted-ring-width) * 2711963235409 / 778550001398
+    );
+
+    --angle-home-hero-monster-orbit-2: 31.50293043038189deg;
+    --angle-home-hero-monster-orbit-3: 39.229604184027835deg;
+    --angle-home-hero-monster-orbit-4: 42.572312193102164deg;
+    --angle-home-hero-monster-orbit-5: 54.45646253706197deg;
+    --angle-home-hero-monster-orbit-6: 49.64686984016708deg;
+
+    /*
+     * Halo is larger than the 160² inner frame and is absolutely centered in it, so the
+     * cream extends above the frame. Margin-top = ellipse half − frame half aligns the
+     * visual top of the ellipse with the column top (same row as H1 / Tristan’s red line).
+     */
+    --spacing-home-hero-monster-stack-margin-top: calc(
+      var(--size-home-hero-monster-ellipse-width) / 2 - var(--size-home-hero-monster-max-width) / 2
+    );
+
+    /* Nudge entire halo + mascot down as one unit (added to stack margin-top at lg+) */
+    --spacing-home-hero-monster-ensemble-nudge: 7mm;
+
+    /* Home hero (Figma desktop): subtitle ~22.62px = 16 × 1.414 */
+    --font-size-home-hero-subtitle: calc(var(--font-size-base) * 1.414);
+    --line-height-home-hero-subtitle: 32px;
+    --line-height-home-hero-cta-note: 24px;
+
+    /* Home nav wordmark — slightly taller than control-sm for upper-left presence */
+    --size-home-nav-logo-height: calc(var(--control-size-sm) + var(--spacing-sm));
+
+    /* Home nav primary links (Figma: Product / Resources / Pricing) */
+    --line-height-nav-primary-link: 40px;
+
+    /*
+     * Home landing below hero — Figma `428:14366` (`-> V0.3`), desktop vs 1920px canvas.
+     * Section titles use ~45.23px; ledes ~24px; centered heading block width 752px.
+     */
+    --font-size-home-landing-section-title: calc(4523 * var(--font-size-base) / 1000);
+    --line-height-home-landing-section-title: 52px;
+    --font-size-home-landing-section-lede: calc(24 * var(--font-size-base) / 16);
+    --line-height-home-landing-section-lede: 32px;
+    --width-home-landing-heading: calc(752 / 16 * 1rem);
+    --width-home-landing-narrow-copy: calc(368 / 16 * 1rem);
+    --spacing-home-landing-section-y: calc(6 * var(--spacing-xl));
+    --spacing-home-landing-header-to-media: calc(4 * var(--spacing-xl));
+    --spacing-home-landing-section-gap: calc(5 * var(--spacing-xxl));
+    --font-size-home-landing-closing-title: calc(64 * var(--font-size-base) / 16);
+    --line-height-home-landing-closing-title: 64px;
+
+    /*
+     * Integrations callout — Figma `428:15015` (smaller than section lede; roomier padding).
+     */
+    --font-size-home-integrations-callout: calc(14 * var(--font-size-base) / 16);
+    --line-height-home-integrations-callout: calc(20 * var(--font-size-base) / 16);
+    --spacing-home-integrations-callout-pad-inline: clamp(var(--spacing-lg), 2.4cqi, calc(2 * var(--spacing-xl)));
+    --spacing-home-integrations-callout-pad-block: clamp(var(--spacing-md), 2cqi, calc(2 * var(--spacing-xl)));
+    --radius-home-integrations-callout: var(--radius-lg);
+
     /* Font weights */
+    --font-normal: 400;
     --font-semibold: 500;
     --font-heavy: 600;
     --font-bold: 800;

@@ -1,9 +1,17 @@
-/* Kit stylesheets use @layer reference / semantic / reset / component; Tailwind is forced into tw-base + tw-utilities so kit @layer component (components.css) wins over preflight. */
+/* Kit stylesheets use @layer reference / semantic / reset / component; Tailwind lives in named layers so kit @layer component wins over preflight (tw-base). Utilities in tw-utilities last. */
 @layer reference, semantic, reset, tw-base, component, tw-utilities;
 
-@import "tailwindcss/base" layer(tw-base);
-@import "tailwindcss/components" layer(component);
-@import "tailwindcss/utilities" layer(tw-utilities);
+@layer tw-base {
+  @tailwind base;
+}
+
+@layer component {
+  @tailwind components;
+}
+
+@layer tw-utilities {
+  @tailwind utilities;
+}
 
 @import "./_styles/style.css";
 @import "./_styles/reset.css";

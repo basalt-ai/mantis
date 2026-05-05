@@ -6,10 +6,12 @@ export type ButtonSize = "sm" | "md" | "lg";
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: ButtonVariant;
   size?: ButtonSize;
+  /** Square control with centered icon; pair with an accessible name (`aria-label` or visually hidden text). */
+  iconOnly?: boolean;
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { variant = "brand", size = "md", className, type = "button", children, ...rest },
+  { variant = "brand", size = "md", iconOnly = false, className, type = "button", children, ...rest },
   ref,
 ) {
   return (
@@ -19,6 +21,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       className={["button", className].filter(Boolean).join(" ")}
       data-variant={variant === "brand" ? undefined : variant}
       data-size={size === "md" ? undefined : size}
+      data-icon-only={iconOnly ? "" : undefined}
       {...rest}
     >
       {children}

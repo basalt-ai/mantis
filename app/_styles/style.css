@@ -1,3 +1,5 @@
-* {
-  font-family: var(--font-aeonik-fono), system-ui, -apple-system, sans-serif;
+@layer semantic {
+  * {
+    font-family: var(--font-body);
+  }
 }

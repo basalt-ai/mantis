@@ -31,18 +31,10 @@ type KpiCardProps = {
 
 function KpiCard({ label, value, sublabel }: KpiCardProps) {
   return (
-    <div className="rounded-theme brut-border bg-[var(--surface)] px-5 py-5 sm:px-6 sm:py-6">
-      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--text-muted)] sm:text-[11px]">
-        {label}
-      </p>
-      <p className="mt-3 font-display text-4xl font-bold leading-none text-[var(--text)] sm:text-5xl">
-        {value}
-      </p>
-      {sublabel ? (
-        <p className="mt-3 text-[11px] font-normal italic text-[var(--text-muted)] sm:text-[12px]">
-          {sublabel}
-        </p>
-      ) : null}
+    <div className="metrics-card metrics-card--kpi">
+      <p className="metrics-card__label">{label}</p>
+      <p className="metrics-card__value">{value}</p>
+      {sublabel ? <p className="metrics-card__sublabel">{sublabel}</p> : null}
     </div>
   );
 }
@@ -161,7 +153,7 @@ function CumulativeChart({ signups, ambassadors }: CumulativeChartProps) {
                     x2={width}
                     y1={y}
                     y2={y}
-                    stroke="#0a0a0a"
+                    stroke="var(--text)"
                     strokeOpacity={0.12}
                     strokeDasharray="3 4"
                     strokeWidth={1}
@@ -171,7 +163,7 @@ function CumulativeChart({ signups, ambassadors }: CumulativeChartProps) {
                     y={y}
                     textAnchor="end"
                     dominantBaseline="central"
-                    className="fill-[var(--text-muted)] font-mono text-[13px]"
+                    className="fill-[var(--subtle-text)] font-mono text-[13px]"
                   >
                     {formatNumber(t)}
                   </text>
@@ -180,12 +172,12 @@ function CumulativeChart({ signups, ambassadors }: CumulativeChartProps) {
             })}
 
             {/* Areas + lines */}
-            <path d={ambassadorArea} fill="var(--accent)" fillOpacity={0.18} />
-            <path d={signupArea} fill="var(--accent)" fillOpacity={0.3} />
+            <path d={ambassadorArea} fill="var(--strong-branded-surface)" fillOpacity={0.18} />
+            <path d={signupArea} fill="var(--strong-branded-surface)" fillOpacity={0.3} />
             <path
               d={ambassadorPath}
               fill="none"
-              stroke="var(--accent)"
+              stroke="var(--strong-branded-surface)"
               strokeWidth={2.5}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -193,14 +185,14 @@ function CumulativeChart({ signups, ambassadors }: CumulativeChartProps) {
             <path
               d={signupPath}
               fill="none"
-              stroke="#0a0a0a"
+              stroke="var(--text)"
               strokeWidth={3}
               strokeLinecap="round"
               strokeLinejoin="round"
             />
 
             {/* X-axis */}
-            <line x1={0} x2={width} y1={height} y2={height} stroke="#0a0a0a" strokeWidth={1.5} />
+            <line x1={0} x2={width} y1={height} y2={height} stroke="var(--text)" strokeWidth={1.5} />
             {signups.map((p, i) =>
               xLabels.has(i) ? (
                 <text
@@ -208,7 +200,7 @@ function CumulativeChart({ signups, ambassadors }: CumulativeChartProps) {
                   x={xAt(i)}
                   y={height + 26}
                   textAnchor="middle"
-                  className="fill-[var(--text-muted)] font-mono text-[12px] font-bold"
+                  className="fill-[var(--subtle-text)] font-mono text-[12px] font-bold"
                 >
                   {formatShortDate(p.date)}
                 </text>
@@ -223,7 +215,7 @@ function CumulativeChart({ signups, ambassadors }: CumulativeChartProps) {
                   x2={hoverX}
                   y1={0}
                   y2={height}
-                  stroke="#0a0a0a"
+                  stroke="var(--text)"
                   strokeOpacity={0.45}
                   strokeWidth={1}
                   strokeDasharray="4 4"
@@ -233,8 +225,8 @@ function CumulativeChart({ signups, ambassadors }: CumulativeChartProps) {
                     cx={hoverX}
                     cy={yAt(hoverAmb.value)}
                     r={5}
-                    fill="var(--accent)"
-                    stroke="#0a0a0a"
+                    fill="var(--strong-branded-surface)"
+                    stroke="var(--text)"
                     strokeWidth={2}
                   />
                 ) : null}
@@ -243,7 +235,7 @@ function CumulativeChart({ signups, ambassadors }: CumulativeChartProps) {
                   cy={hoverY}
                   r={6}
                   fill="#ffffff"
-                  stroke="#0a0a0a"
+                  stroke="var(--text)"
                   strokeWidth={2.5}
                 />
               </g>
@@ -327,7 +319,7 @@ function DailyChart({ signups }: DailyChartProps) {
                     x2={width}
                     y1={y}
                     y2={y}
-                    stroke="#0a0a0a"
+                    stroke="var(--text)"
                     strokeOpacity={0.12}
                     strokeDasharray="3 4"
                     strokeWidth={1}
@@ -337,7 +329,7 @@ function DailyChart({ signups }: DailyChartProps) {
                     y={y}
                     textAnchor="end"
                     dominantBaseline="central"
-                    className="fill-[var(--text-muted)] font-mono text-[13px]"
+                    className="fill-[var(--subtle-text)] font-mono text-[13px]"
                   >
                     {formatNumber(t)}
                   </text>
@@ -371,15 +363,15 @@ function DailyChart({ signups }: DailyChartProps) {
                   y={by}
                   width={barWidth}
                   height={bh}
-                  fill="var(--accent)"
-                  stroke="#0a0a0a"
+                  fill="var(--strong-branded-surface)"
+                  stroke="var(--text)"
                   strokeWidth={1.5}
                 />
               );
             })}
 
             {/* Axis */}
-            <line x1={0} x2={width} y1={height} y2={height} stroke="#0a0a0a" strokeWidth={1.5} />
+            <line x1={0} x2={width} y1={height} y2={height} stroke="var(--text)" strokeWidth={1.5} />
             {signups.map((p, i) =>
               xLabels.has(i) ? (
                 <text
@@ -387,7 +379,7 @@ function DailyChart({ signups }: DailyChartProps) {
                   x={xCenter(i)}
                   y={height + 26}
                   textAnchor="middle"
-                  className="fill-[var(--text-muted)] font-mono text-[12px] font-bold"
+                  className="fill-[var(--subtle-text)] font-mono text-[12px] font-bold"
                 >
                   {formatShortDate(p.date)}
                 </text>
@@ -422,21 +414,16 @@ function ChartFrame({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-theme brut-border bg-[var(--surface)]">
-      <div className="flex items-center gap-3 border-b-[3px] border-[var(--border-color)] px-5 py-4 sm:px-6 sm:py-5">
-        <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--text-muted)] sm:text-[12px]">
-          {title}
-        </p>
+    <div className="metrics-card metrics-card--chart">
+      <div className="metrics-card__chart-header">
+        <p className="metrics-card__label">{title}</p>
         {chip ? (
-          <span
-            className="inline-block rounded-theme bg-[var(--accent)] px-2 py-0.5 font-mono text-[12px] font-bold text-[var(--text)] shadow-[3px_3px_0_#0a0a0a] sm:text-[13px]"
-            aria-hidden
-          >
+          <span className="metrics-card__chip" aria-hidden>
             {chip}
           </span>
         ) : null}
       </div>
-      <div className="p-4 sm:p-5">{children}</div>
+      <div className="metrics-card__chart-body">{children}</div>
     </div>
   );
 }
@@ -454,17 +441,14 @@ function Tooltip({
 }) {
   const clamped = Math.max(8, Math.min(92, leftPct));
   return (
-    <div
-      className="pointer-events-none absolute top-4 -translate-x-1/2 whitespace-nowrap rounded-md bg-[var(--text)] px-3 py-2 text-left shadow-lg"
-      style={{ left: `${clamped}%` }}
-    >
-      <p className="font-display text-[13px] font-bold text-white">{formatShortDate(date)}</p>
+    <div className="metrics-tooltip" style={{ left: `${clamped}%` }}>
+      <p className="metrics-tooltip__date">{formatShortDate(date)}</p>
       {rows.map((row) => (
         <p
           key={row.label}
-          className={`mt-1 text-[13px] ${row.pink ? "text-[var(--accent)]" : "text-white"}`}
+          className={`metrics-tooltip__row${row.pink ? " metrics-tooltip__row--pink" : ""}`}
         >
-          {row.label}: <span className="font-bold">{row.value}</span>
+          {row.label}: <span className="metrics-tooltip__row-value">{row.value}</span>
         </p>
       ))}
     </div>
@@ -481,8 +465,8 @@ type Props = {
 
 export function MetricsDashboard({ metrics }: Props) {
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
-      <div className="grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-4">
+    <div className="metrics-dashboard">
+      <div className="metrics-dashboard__kpis">
         <KpiCard
           label="Total signups"
           value={formatNumber(metrics.totalSignups)}
@@ -515,7 +499,7 @@ export function MetricsDashboard({ metrics }: Props) {
         />
       </div>
 
-      <div className="mt-8 flex flex-col gap-6 sm:mt-10 sm:gap-8">
+      <div className="metrics-dashboard__charts">
         <CumulativeChart
           signups={metrics.cumulativeSignups}
           ambassadors={metrics.cumulativeAmbassadors}
