@@ -2873,8 +2873,28 @@
       justify-content: flex-start;
       width: 100%;
       transform: none !important;
-      /* Figma mobile renders the monster ensemble at ~160px (vs ~480px desktop). */
-      --size-home-hero-monster-max-width: 160px;
+      /* Figma `451:19362` — monster is 108.264 px, the cream ellipse
+         (`451:19361 "top"`) is 160 px. Setting monster = 108 alone
+         doesn't shrink the ellipse: the dependent tokens (ellipse, orbits,
+         padding) were defined as calc-of-var at :root so the inner var()
+         was already substituted with the :root value of `monster-max-width`
+         (160 px). Re-declare the chain locally so each var() resolves
+         against this element's cascade — gives a 160 px ellipse + matching
+         orbits, exactly the comp. */
+      --size-home-hero-monster-max-width: 108px;
+      --size-home-hero-monster-ellipse-width: calc(108px * 11823 / 8000);
+      --size-home-hero-monster-dotted-ring-width:
+        calc(108px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823));
+      --size-home-hero-monster-orbit-2-width:
+        calc(108px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823) * 316266251017 / 236434260807);
+      --size-home-hero-monster-orbit-3-width:
+        calc(108px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823) * 1669761334199 / 986586030650);
+      --size-home-hero-monster-orbit-4-width:
+        calc(108px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823) * 1455713360546 / 690410988819);
+      --size-home-hero-monster-orbit-5-width:
+        calc(108px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823) * 1077335507215 / 401945628013);
+      --size-home-hero-monster-orbit-6-width:
+        calc(108px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823) * 2711963235409 / 778550001398);
     }
     /* Hero clip — orbits/satellites scale relative to monster width and would
        otherwise punch out into the next section at this size. */
