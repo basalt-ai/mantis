@@ -2831,6 +2831,24 @@
       text-align: center;
       white-space: normal !important;
     }
+    /* Mobile hero typography lifted directly from Figma `451:19365` (title)
+       and `451:19366` (body). The defaults gave a 32 px title and 22.6 px
+       body which read too large for the mobile composition; Figma uses a
+       chunkier 39.81 px display title with a tight 40 px line-height
+       (matches the 5-line wrap in the comp) and a 19.2 px body. */
+    .home-hero h1.heading {
+      font-size: 39.81px;
+      line-height: 40px;
+      letter-spacing: -0.7962px;
+    }
+    .home-hero .home-hero-body {
+      font-size: 19.2px;
+      line-height: 26.88px;
+    }
+    .home-hero .home-hero-cta-note {
+      font-size: 13.33px;
+      line-height: 16px;
+    }
     .home-hero-cta-row {
       flex-direction: column;
       align-items: center;
