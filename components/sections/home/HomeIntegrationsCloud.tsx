@@ -34,11 +34,11 @@ const ANCHOR_Y = 435;
 
 /**
  * Figma `428:15015` — callout in inner-container coords (1786×900).
- * `white-space: pre` + explicit `\n` = exactly 3 lines; width is the smallest VB
- * that still clears the longest line at 14px after scale (~35ch + padding). Right
- * edge kept ~1758 so the chip stays top-right without a huge empty rail inside.
+ * `white-space: pre` + explicit `\n` = exactly 3 lines. Each time we narrow `w`,
+ * add the same delta to `x` so the block slides right (right edge ~1758) and
+ * the inner peach rail shrinks vs the longest line + padding.
  */
-const INTEGRATIONS_CALLOUT_VB = { x: 1206, y: 48, w: 552, h: 118 };
+const INTEGRATIONS_CALLOUT_VB = { x: 1278, y: 48, w: 480, h: 118 };
 const CALLOUT_LEFT_MID = {
   x: INTEGRATIONS_CALLOUT_VB.x,
   y: INTEGRATIONS_CALLOUT_VB.y + INTEGRATIONS_CALLOUT_VB.h * 0.45,
@@ -438,8 +438,8 @@ export function HomeIntegrationsCloud() {
     };
   }, [reducedMotion, wobbles]);
 
-  const calloutConnectorLeftD = `M ${CALLOUT_LEFT_MID.x.toFixed(1)} ${CALLOUT_LEFT_MID.y.toFixed(1)} Q 1010 306 732 446`;
-  const calloutConnectorBottomD = `M ${CALLOUT_BOTTOM_MID.x.toFixed(1)} ${CALLOUT_BOTTOM_MID.y.toFixed(1)} Q 1132 396 1008 528`;
+  const calloutConnectorLeftD = `M ${CALLOUT_LEFT_MID.x.toFixed(1)} ${CALLOUT_LEFT_MID.y.toFixed(1)} Q 1020 302 738 442`;
+  const calloutConnectorBottomD = `M ${CALLOUT_BOTTOM_MID.x.toFixed(1)} ${CALLOUT_BOTTOM_MID.y.toFixed(1)} Q 1150 392 1004 526`;
 
   return (
     <div className="home-integrations-cloud" data-node-id="428:15019">
