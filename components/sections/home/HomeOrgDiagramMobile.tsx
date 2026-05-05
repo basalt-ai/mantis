@@ -1,30 +1,46 @@
 /**
- * Mobile-only "An entire org working for you" section — Figma `596:2940`.
+ * Mobile-only "An entire org working for you" — Figma `596:2940`.
  *
- * Mobile rebuilds the desktop org diagram for narrow viewports:
- *  - "We need a dedicated QA tester" speech bubble between the You and
- *    Pancake icons (a Slack-style hint).
- *  - Two mascot chips (You purple / Pancake stack) labelled with the
- *    role + sub-role in inverted-surface pills.
- *  - "The org" eyebrow.
- *  - Horizontal snap-scroll carousel of dept cards (Growth, Engineering,
- *    Operations) with a dots indicator under it; one card visible at a
- *    time so the role rows stay readable.
- *  - "Tailor the org to your needs" closing card.
+ * Layout (top to bottom):
+ *  1. You + Pancake mascot pair, joined by an animated dotted-arc connector
+ *     with traveling balls that signal live communication between founder
+ *     and co-founder (mirrors the desktop You↔Pancake leg).
+ *  2. "The org" eyebrow.
+ *  3. Horizontal snap-scroll carousel of dept cards (Growth, Engineering,
+ *     Operations). Each card's role rows live-mutate via `useOrgLiveTicker`
+ *     — same add / remove / FLIP behavior as desktop, just rendered into
+ *     mobile-shaped cards.
+ *  4. Dots indicator under the carousel.
  *
  * The desktop component (`HomeOrgDiagram`) is hidden via CSS at <lg.
  */
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-import { LIVE_INITIAL_DEPTS, type OrgDotTone } from "@/components/sections/home/orgLiveData";
+import {
+  getInitialDeptMap,
+  useOrgLiveTicker,
+  type LiveRow,
+} from "@/components/sections/home/HomeOrgLiveRows";
+import { LIVE_INITIAL_DEPTS, type OrgDotTone, type OrgSurface } from "@/components/sections/home/orgLiveData";
+import { gsap } from "@/lib/gsap";
 
 const DOT_CLASS: Record<OrgDotTone, string> = {
   positive: "home-org-mobile-row__dot--positive",
   warning: "home-org-mobile-row__dot--warning",
   negative: "home-org-mobile-row__dot--negative",
 };
+
+/** Mobile dept-card lookup for the live ticker (matches markup below). */
+function mobileArticleSelector(surface: OrgSurface): string {
+  return `.home-org-mobile-card--${surface}`;
+}
+
+function dotClassForRow(row: LiveRow): OrgDotTone {
+  if (row.baseDot !== undefined) return row.baseDot;
+  return row.phase === "active" ? "positive" : "negative";
+}
 
 function FounderAvatar() {
   return (
@@ -52,9 +68,133 @@ function FounderAvatar() {
   );
 }
 
+const CONNECTOR_VB_W = 80;
+const CONNECTOR_VB_H = 40;
+/** Arc path between the two mascots (left → right, dipping over the top).
+ *  Matches the previous static dotted curve so the visual silhouette is
+ *  unchanged; only the dashes + traveling balls are new. */
+const CONNECTOR_PATH_D = `M2 32 Q ${CONNECTOR_VB_W / 2} -10 ${CONNECTOR_VB_W - 2} 32`;
+
+const CONNECTOR_BALL_COUNT = 2;
+const CONNECTOR_BALL_R_MIN = 1.6;
+const CONNECTOR_BALL_R_MAX = 2.6;
+const CONNECTOR_DURATION_MIN = 1.4;
+const CONNECTOR_DURATION_MAX = 2.4;
+const CONNECTOR_DELAY_MAX = 0.7;
+
+/**
+ * Animated dotted arc between the You and Pancake mascots.
+ *
+ * Rebuilds the desktop "Founder ↔ Pancake" wire idea for mobile: the dashed
+ * arc is the same shape it was as a static SVG, but small balls now travel
+ * along it back and forth so the link reads as living. Direction alternates
+ * per leg so traffic feels two-way instead of a conveyor belt.
+ */
+function PairConnector() {
+  const svgRef = useRef<SVGSVGElement>(null);
+  const pathRef = useRef<SVGPathElement>(null);
+
+  const reducedMotion = useMemo(
+    () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    [],
+  );
+
+  useEffect(() => {
+    if (reducedMotion) return;
+    const svg = svgRef.current;
+    const path = pathRef.current;
+    if (!svg || !path) return;
+
+    const len = path.getTotalLength();
+    const balls: SVGCircleElement[] = [];
+
+    const runLeg = (circle: SVGCircleElement, forward: boolean) => {
+      const proxy = { u: 0 };
+      const duration =
+        CONNECTOR_DURATION_MIN + Math.random() * (CONNECTOR_DURATION_MAX - CONNECTOR_DURATION_MIN);
+      const delay = Math.random() * CONNECTOR_DELAY_MAX;
+      const tick = () => {
+        const t = Math.max(0, Math.min(1, proxy.u));
+        const along = forward ? t : 1 - t;
+        const pt = path.getPointAtLength(along * len);
+        circle.setAttribute("cx", pt.x.toFixed(2));
+        circle.setAttribute("cy", pt.y.toFixed(2));
+      };
+      gsap.fromTo(
+        proxy,
+        { u: 0 },
+        {
+          u: 1,
+          duration,
+          delay,
+          ease: "sine.inOut",
+          immediateRender: true,
+          onUpdate: tick,
+          onComplete: () => runLeg(circle, !forward),
+        },
+      );
+      tick();
+    };
+
+    for (let i = 0; i < CONNECTOR_BALL_COUNT; i++) {
+      const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      c.setAttribute(
+        "r",
+        String(CONNECTOR_BALL_R_MIN + Math.random() * (CONNECTOR_BALL_R_MAX - CONNECTOR_BALL_R_MIN)),
+      );
+      c.setAttribute("class", "home-org-mobile-pair__ball");
+      svg.appendChild(c);
+      balls.push(c);
+      runLeg(c, i % 2 === 0);
+    }
+
+    return () => {
+      balls.forEach((b) => {
+        gsap.killTweensOf(b);
+        b.remove();
+      });
+    };
+  }, [reducedMotion]);
+
+  return (
+    <svg
+      ref={svgRef}
+      className="home-org-mobile-pair__connector"
+      viewBox={`0 0 ${CONNECTOR_VB_W} ${CONNECTOR_VB_H}`}
+      aria-hidden
+      focusable="false"
+    >
+      <path
+        ref={pathRef}
+        d={CONNECTOR_PATH_D}
+        fill="none"
+        stroke="var(--palette-chrome-70, #b6a4ad)"
+        strokeWidth="2"
+        strokeDasharray="1 8"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export function HomeOrgDiagramMobile() {
+  const rootRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(1); // Engineering middle by default
+
+  /**
+   * Live row state — same shape as desktop. The hook drives all add /
+   * remove / FLIP timing; we just render the markup it expects (each row
+   * carries `data-org-live-row={row.id}` for the ticker to find / animate).
+   */
+  const [deptRows, setDeptRows] = useState(getInitialDeptMap);
+
+  const { registerArticle, reducedMotion } = useOrgLiveTicker({
+    scrollRootRef: rootRef,
+    deptRows,
+    setDeptRows,
+    articleSelector: mobileArticleSelector,
+  });
 
   // Track which dept card is most centered in the carousel.
   useEffect(() => {
@@ -102,17 +242,8 @@ export function HomeOrgDiagramMobile() {
   }
 
   return (
-    <div className="home-org-mobile">
-      {/* Speech bubble — Slack-style hint between the cofounders. */}
-      <div className="home-org-mobile-bubble" aria-hidden>
-        <p>
-          We need a dedicated
-          <br />
-          QA tester
-        </p>
-      </div>
-
-      {/* Mascot row — You purple person + Pancake monster + dotted connector. */}
+    <div ref={rootRef} className="home-org-mobile">
+      {/* Mascot row — You purple person + Pancake monster + animated dotted connector. */}
       <div className="home-org-mobile-pair">
         <div className="home-org-mobile-mascot home-org-mobile-mascot--you">
           <div className="home-org-mobile-mascot__icon">
@@ -124,21 +255,7 @@ export function HomeOrgDiagramMobile() {
           </div>
         </div>
 
-        <svg
-          className="home-org-mobile-pair__connector"
-          viewBox="0 0 80 40"
-          aria-hidden
-          focusable="false"
-        >
-          <path
-            d="M2 32 Q 40 -10 78 32"
-            fill="none"
-            stroke="var(--palette-chrome-70, #b6a4ad)"
-            strokeWidth="2"
-            strokeDasharray="1 8"
-            strokeLinecap="round"
-          />
-        </svg>
+        <PairConnector />
 
         <div className="home-org-mobile-mascot home-org-mobile-mascot--pancake">
           <div className="home-org-mobile-mascot__icon">
@@ -154,19 +271,36 @@ export function HomeOrgDiagramMobile() {
 
       <p className="home-org-mobile-eyebrow">The org</p>
 
-      {/* Horizontal snap carousel — one dept card per viewport. */}
+      {/* Horizontal snap carousel — one dept card per viewport, with adjacent peeks. */}
       <div className="home-org-mobile-carousel">
         <div ref={trackRef} className="home-org-mobile-carousel__track">
           {LIVE_INITIAL_DEPTS.map((dept) => (
             <article
               key={dept.surface}
+              ref={registerArticle(dept.surface)}
               className={`home-org-mobile-card home-org-mobile-card--${dept.surface}`}
             >
               <h3 className="home-org-mobile-card__title">{dept.title}</h3>
-              <ul className="home-org-mobile-card__rows">
-                {dept.rows.slice(0, 3).map((row) => (
-                  <li key={row.label} className="home-org-mobile-row">
-                    <span className={`home-org-mobile-row__dot ${DOT_CLASS[row.dot]}`} />
+              <ul
+                className="home-org-mobile-card__rows"
+                aria-live={reducedMotion ? undefined : "polite"}
+              >
+                {(reducedMotion
+                  ? // Reduced motion: render the seeded set, no live mutations.
+                    dept.rows.map((r, i) => ({
+                      id: `seed-${dept.surface}-${i}`,
+                      label: r.label,
+                      phase: "active" as const,
+                      baseDot: r.dot,
+                    }))
+                  : deptRows[dept.surface]
+                ).map((row) => (
+                  <li
+                    key={row.id}
+                    className="home-org-mobile-row"
+                    data-org-live-row={row.id}
+                  >
+                    <span className={`home-org-mobile-row__dot ${DOT_CLASS[dotClassForRow(row)]}`} />
                     <span className="home-org-mobile-row__label">{row.label}</span>
                   </li>
                 ))}
@@ -190,14 +324,6 @@ export function HomeOrgDiagramMobile() {
           ))}
         </div>
       </div>
-
-      {/* Tailor card — Figma `596:3020`. */}
-      <article className="home-org-mobile-tailor">
-        <h3 className="home-org-mobile-tailor__title">Tailor the org to your needs</h3>
-        <p className="home-org-mobile-tailor__body">
-          Add, remove, or customise agents as you see fit!
-        </p>
-      </article>
     </div>
   );
 }

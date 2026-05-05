@@ -2526,9 +2526,16 @@
     flex: 0 0 auto;
     width: 60px;
     height: 32px;
-    margin: 0 -8px;
+    margin: 24px -8px 0 -8px;
     align-self: flex-start;
-    margin-top: 24px;
+    overflow: visible;
+  }
+
+  /* Traveling balls along the You↔Pancake dotted arc — same look as the
+     dept wires on desktop (filled chrome dots, no stroke). */
+  .home-org-mobile-pair__ball {
+    fill: var(--palette-chrome-100, #2c002a);
+    pointer-events: none;
   }
 
   .home-org-mobile-mascot {
