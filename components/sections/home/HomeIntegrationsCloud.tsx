@@ -167,29 +167,6 @@ const LOGOS: LogoDef[] = [
 ];
 
 /* ----------------------------------------------------------------------- */
-/* Decorative pancake "berries" — replace the previous flat coloured dots   */
-/* ----------------------------------------------------------------------- */
-
-type DecorPancake = {
-  id: string;
-  cx: number;
-  cy: number;
-  size: number;
-  rotateDeg: number;
-  palette: PancakePaletteName;
-};
-
-const DECOR_PANCAKES: DecorPancake[] = [
-  { id: "d1", cx: 295,  cy: 132, size: 16, rotateDeg: 12,  palette: "orange" },
-  { id: "d2", cx: 478,  cy: 245, size: 22, rotateDeg: -22, palette: "purple" },
-  { id: "d3", cx: 800,  cy: 165, size: 24, rotateDeg: 8,   palette: "orange" },
-  { id: "d4", cx: 1530, cy: 615, size: 20, rotateDeg: 18,  palette: "orange" },
-  { id: "d5", cx: 376,  cy: 770, size: 26, rotateDeg: -10, palette: "yellow" },
-  { id: "d6", cx: 564,  cy: 778, size: 30, rotateDeg: 14,  palette: "pink" },
-  { id: "d7", cx: 805,  cy: 870, size: 22, rotateDeg: -18, palette: "purple" },
-];
-
-/* ----------------------------------------------------------------------- */
 /* Background sweeping curves                                               */
 /* ----------------------------------------------------------------------- */
 
@@ -281,13 +258,11 @@ export function HomeIntegrationsCloud() {
   const outerPathRefs = useRef<Map<string, SVGPathElement>>(new Map());
   const tailRefs = useRef<Map<string, SVGGElement>>(new Map());
   const bgPathRefs = useRef<Map<string, SVGPathElement>>(new Map());
-  const decorRefs = useRef<Map<string, SVGGElement>>(new Map());
   const monsterRef = useRef<HTMLDivElement | null>(null);
 
   const wobbles = useMemo(() => {
     const m = new Map<string, Wobble>();
     for (const l of LOGOS) m.set(l.id, wobbleFor(l.id));
-    for (const d of DECOR_PANCAKES) m.set(d.id, wobbleFor(d.id));
     return m;
   }, []);
 
@@ -361,20 +336,6 @@ export function HomeIntegrationsCloud() {
           const cx2 = mx2 + nx2 * curl;
           const cy2 = my2 + ny2 * curl;
           outer.setAttribute("d", `M ${tipX.toFixed(1)} ${tipY.toFixed(1)} Q ${cx2.toFixed(1)} ${cy2.toFixed(1)} ${tlX.toFixed(1)} ${tlY.toFixed(1)}`);
-        }
-      }
-
-      // Decorative pancakes: independent slow drift
-      for (const d of DECOR_PANCAKES) {
-        const w = wobbles.get(d.id)!;
-        const dx = Math.sin(t * w.freqX * Math.PI + w.phaseX) * w.ampX * 0.5;
-        const dy = Math.sin(t * w.freqY * Math.PI + w.phaseY) * w.ampY * 0.5;
-        const el = decorRefs.current.get(d.id);
-        if (el) {
-          el.setAttribute(
-            "transform",
-            `translate(${(d.cx + dx).toFixed(2)} ${(d.cy + dy).toFixed(2)}) rotate(${d.rotateDeg})`,
-          );
         }
       }
 
@@ -466,22 +427,6 @@ export function HomeIntegrationsCloud() {
           >
             <g transform={`scale(${logo.tailSize / 49}) translate(${-49 / 2} ${-48 / 2})`}>
               <PancakePaths palette={logo.tailPalette} />
-            </g>
-          </g>
-        ))}
-
-        {/* Decorative pancake berries scattered through the field */}
-        {DECOR_PANCAKES.map((d) => (
-          <g
-            key={d.id}
-            ref={(el) => {
-              if (el) decorRefs.current.set(d.id, el);
-              else decorRefs.current.delete(d.id);
-            }}
-            transform={`translate(${d.cx} ${d.cy}) rotate(${d.rotateDeg})`}
-          >
-            <g transform={`scale(${d.size / 49}) translate(${-49 / 2} ${-48 / 2})`}>
-              <PancakePaths palette={d.palette} />
             </g>
           </g>
         ))}
