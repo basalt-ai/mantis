@@ -114,7 +114,7 @@ export function HomeLandingBody() {
             {CLOSING_TITLE}
           </h2>
           <p className="home-landing-section__lede home-landing-section__lede--closing text-center">
-            Sign up, write a markdown file, hire your first agent in 90 seconds. Free for up to 3 agents.
+            Sign up and onboard your cofounder now
           </p>
           <div className="home-landing-closing-cta">
             <Link
