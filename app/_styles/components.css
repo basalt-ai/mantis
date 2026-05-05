@@ -1257,16 +1257,6 @@
     opacity: 0.32;
   }
 
-  /** Sweeping background curves — lighter, longer dash so they read as ambient framing. */
-  .home-integrations-cloud__bg-path {
-    fill: none;
-    stroke: var(--palette-chrome-60);
-    stroke-width: 2;
-    stroke-dasharray: 1 14;
-    stroke-linecap: round;
-    opacity: 0.42;
-  }
-
   .home-integrations-cloud__monster {
     position: absolute;
     transform: translate(-50%, -50%);
@@ -1286,7 +1276,6 @@
 
   @media (prefers-reduced-motion: reduce) {
     .home-integrations-cloud__tentacle,
-    .home-integrations-cloud__bg-path,
     .home-integrations-cloud__chip,
     .home-integrations-cloud__monster {
       animation: none !important;

@@ -167,17 +167,6 @@ const LOGOS: LogoDef[] = [
 ];
 
 /* ----------------------------------------------------------------------- */
-/* Background sweeping curves                                               */
-/* ----------------------------------------------------------------------- */
-
-type BgCurve = { id: string; from: [number, number]; ctrl: [number, number]; to: [number, number]; ctrlAmp: number };
-const BG_CURVES: BgCurve[] = [
-  { id: "bgL", from: [-50,  100], ctrl: [350,  -40],  to: [780,  500], ctrlAmp: 18 },
-  { id: "bgR", from: [1820, 80],  ctrl: [1500, 380],  to: [1900, 720], ctrlAmp: 22 },
-  { id: "bgB", from: [40,   880], ctrl: [820,  1080], to: [1700, 880], ctrlAmp: 16 },
-];
-
-/* ----------------------------------------------------------------------- */
 /* Per-element wobble seed                                                  */
 /* ----------------------------------------------------------------------- */
 
@@ -257,7 +246,6 @@ export function HomeIntegrationsCloud() {
   const innerPathRefs = useRef<Map<string, SVGPathElement>>(new Map());
   const outerPathRefs = useRef<Map<string, SVGPathElement>>(new Map());
   const tailRefs = useRef<Map<string, SVGGElement>>(new Map());
-  const bgPathRefs = useRef<Map<string, SVGPathElement>>(new Map());
   const monsterRef = useRef<HTMLDivElement | null>(null);
 
   const wobbles = useMemo(() => {
@@ -339,19 +327,6 @@ export function HomeIntegrationsCloud() {
         }
       }
 
-      // Background sweeping curves
-      for (const c of BG_CURVES) {
-        const pathEl = bgPathRefs.current.get(c.id);
-        if (!pathEl) continue;
-        const phaseX = c.id.charCodeAt(0) * 1.3;
-        const phaseY = c.id.charCodeAt(2) * 0.7;
-        const dCx = Math.sin(t * 0.3 + phaseX) * c.ctrlAmp;
-        const dCy = Math.cos(t * 0.27 + phaseY) * c.ctrlAmp * 0.8;
-        const cx = c.ctrl[0] + dCx;
-        const cy = c.ctrl[1] + dCy;
-        pathEl.setAttribute("d", `M ${c.from[0]} ${c.from[1]} Q ${cx.toFixed(1)} ${cy.toFixed(1)} ${c.to[0]} ${c.to[1]}`);
-      }
-
       // Monster idle bob
       if (monsterRef.current) {
         const mb = Math.sin(t * 0.9) * 4;
@@ -376,19 +351,6 @@ export function HomeIntegrationsCloud() {
         aria-hidden
         focusable="false"
       >
-        {/* Sweeping background curves */}
-        {BG_CURVES.map((c) => (
-          <path
-            key={c.id}
-            ref={(el) => {
-              if (el) bgPathRefs.current.set(c.id, el);
-              else bgPathRefs.current.delete(c.id);
-            }}
-            className="home-integrations-cloud__bg-path"
-            d={`M ${c.from[0]} ${c.from[1]} Q ${c.ctrl[0]} ${c.ctrl[1]} ${c.to[0]} ${c.to[1]}`}
-          />
-        ))}
-
         {/* Outer tentacle segments (chip → tail) — drawn first / under chips, faded */}
         {LOGOS.map((logo) => (
           <path
