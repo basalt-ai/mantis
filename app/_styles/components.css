@@ -1207,4 +1207,111 @@
     line-height: var(--line-height-home-hero-cta-note);
     color: var(--text);
   }
+
+  /**
+   * Endless integrations cloud — Figma `428:15019` (1786×900 inner frame).
+   * Same `aspect-ratio` + container-query pattern as `.home-org-diagram` so
+   * percent-based chip positions track responsive scaling correctly.
+   */
+  .home-integrations-cloud {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: calc(71 * var(--spacing-xl));
+    margin-inline: auto;
+    aspect-ratio: 1786 / 900;
+    container-type: inline-size;
+    container-name: integrations-cloud;
+    overflow: visible;
+  }
+
+  .home-integrations-cloud__svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /** Tentacle: dotted line, same dash pattern as the org-diagram wires for visual consistency. */
+  .home-integrations-cloud__tentacle {
+    fill: none;
+    stroke: var(--palette-chrome-70);
+    stroke-width: 2.5;
+    stroke-dasharray: 1 12;
+    stroke-linecap: round;
+    opacity: 0.7;
+  }
+
+  /** Sweeping background curves — lighter, longer dash so they read as ambient framing. */
+  .home-integrations-cloud__bg-path {
+    fill: none;
+    stroke: var(--palette-chrome-60);
+    stroke-width: 2;
+    stroke-dasharray: 1 14;
+    stroke-linecap: round;
+    opacity: 0.45;
+  }
+
+  .home-integrations-cloud__accent {
+    /** Solid pancake-style accent dots — match Figma colored circle decorations. */
+    opacity: 0.92;
+  }
+
+  .home-integrations-cloud__chip {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    will-change: transform;
+    background-color: var(--palette-chrome-20);
+    border: 1px solid var(--palette-chrome-30);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    box-shadow: 0 8px 24px -16px color-mix(in srgb, var(--palette-chrome-100) 28%, transparent);
+  }
+
+  .home-integrations-cloud__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .home-integrations-cloud__logo-img,
+  .home-integrations-cloud__logo-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .home-integrations-cloud__monster {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: clamp(96px, 16cqi, 220px);
+    aspect-ratio: 1 / 1;
+    will-change: transform;
+    z-index: 4;
+    pointer-events: none;
+  }
+
+  .home-integrations-cloud__monster-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .home-integrations-cloud__tentacle,
+    .home-integrations-cloud__bg-path,
+    .home-integrations-cloud__chip,
+    .home-integrations-cloud__monster {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
 }

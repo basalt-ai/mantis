@@ -6,6 +6,7 @@
 import Link from "next/link";
 
 import { HOME_PAGE_CONTAINER_CLASS } from "@/components/sections/home/home-layout";
+import { HomeIntegrationsCloud } from "@/components/sections/home/HomeIntegrationsCloud";
 import { HomeOrgDiagram } from "@/components/sections/home/HomeOrgDiagram";
 import { H2, H3 } from "@/components/ui/Headings";
 
@@ -59,16 +60,7 @@ export function HomeLandingBody() {
             <p className="home-landing-section__lede text-center">Plug in your stack, let the agents do the rest.</p>
           </header>
           <div className="home-landing-section__figure">
-            {/* eslint-disable-next-line @next/next/no-img-element -- Figma raster export (MCP screenshot) */}
-            <img
-              className="home-landing-section__img"
-              src="/home-landing-integrations-art.png"
-              alt=""
-              width={1024}
-              height={658}
-              decoding="async"
-              loading="lazy"
-            />
+            <HomeIntegrationsCloud />
           </div>
           <p className="home-landing-section__caption text-center">
             Connect your tools. Your agents read, write, ship, and sell through them — like an employee would.
