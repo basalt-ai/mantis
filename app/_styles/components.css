@@ -2891,24 +2891,36 @@
       inset: 0;
       width: 100%;
       height: 100%;
-      /* Zoom uniformly so the chips read big like the Figma comp. The
-         transform scales every chip + every wire in the SVG together.
-         1.55× is the sweet spot — chips read clearly, monster reads as
-         the central focus, and all 8 chips remain on screen (Claude in
-         the top-right is closest to the crop edge but still visible). */
-      transform: scale(1.55);
+      /*
+       * Compose two transforms:
+       *   1. translateX(-6.65%) shifts the SVG content LEFT so the visible
+       *      crop window centers on the CHIP CLUSTER (viewBox x≈978), not
+       *      on the viewBox center (x=893). The right-side chips (Notion,
+       *      LinkedIn, Claude) push the cluster center 85 viewBox units
+       *      right of the viewBox center, and without this shift the cloud
+       *      reads as drifting right and crops X on the left.
+       *   2. scale(1.4) zooms uniformly. 1.4× is the max we can use without
+       *      cropping the corner chips: the chip-cluster x span is 1196
+       *      viewBox units (X at 380 to Claude at 1576), and the visible
+       *      window after scale is 1786/scale viewBox units wide; scale
+       *      1.4 gives a 1276-unit window — 40 units of padding past each
+       *      extreme. Pushing scale higher (1.55, 1.7) crops X or Claude.
+       */
+      transform: translateX(-6.65%) scale(1.4);
       transform-origin: center center;
     }
-    /* The monster div sits OUTSIDE the SVG so it doesn't get the SVG's
-       transform — we have to scale it ourselves. The default monster width
-       is `clamp(88px, 14.5cqi, 195px)`; the 88px floor wins on the small
-       mobile container and dwarfs the chips around it. Override to use the
-       container-relative cqi value uncapped (matches the desktop ratio of
-       monster-to-chip ~1.5×) and apply the SAME scale as the SVG so it
-       stays proportional. */
+    /* The monster div sits OUTSIDE the SVG so it doesn't inherit the SVG's
+       transform — scale it manually with the same factor. Default monster
+       width is `clamp(88px, 14.5cqi, 195px)`; the 88px floor dwarfs the
+       chips on the small mobile container, so override to unclamped
+       `14.5cqi` (matches desktop monster:chip ratio ~1.5×). Override the
+       inline `left: 53.75%` (= ANCHOR_X / VB_W of the original viewBox)
+       to `50%` so the monster lands on the same shifted center the chips
+       do, not on the original anchor's now-misaligned position. */
     .home-integrations-cloud__monster {
       width: 14.5cqi;
-      transform: translate(-50%, -50%) scale(1.55);
+      left: 50% !important;
+      transform: translate(-50%, -50%) scale(1.4);
     }
     .home-integrations-cloud__callout {
       position: relative !important;
