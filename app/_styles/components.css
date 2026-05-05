@@ -1415,26 +1415,26 @@
     display: flex;
     flex-direction: column;
     /**
-     * Figma sets gap 36 between header and content, but Aeonik Fono renders
-     * a hair wider in the browser than the comp's preview, so the body
-     * paragraph wraps an extra line and the list overflows. Tightened to 22
-     * here + 16 inside the header (instead of 24) to match the comp's
-     * three-rows-visible layout exactly.
+     * Figma deliberately overflows the bottom of every card — the third
+     * approve row, the audit log box, and the sandbox ellipses all spill
+     * past the 402px card height and are clipped by overflow:hidden.
+     * Match the comp gaps and let content overflow naturally.
      */
-    gap: 22px;
+    gap: 36px;
     text-align: left;
   }
 
   .home-landing-control-card[data-card="scope"] {
     /* Scope card uses absolute-positioned graphics; keep content above. */
     position: relative;
-    gap: 24px;
+    gap: 36px;
   }
 
   .home-landing-control-card__header {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 24px;
+    flex-shrink: 0;
   }
 
   .home-landing-control-card__title {
@@ -1468,6 +1468,7 @@
     flex-direction: column;
     gap: 13.511px;
     width: 100%;
+    flex-shrink: 0;
   }
 
   .home-landing-control-approve-row {
@@ -1571,7 +1572,10 @@
   .home-landing-control-audit-log {
     box-sizing: border-box;
     width: 100%;
-    flex: 1 1 auto;
+    flex: 0 0 auto;
+    /* Box deliberately taller than the remaining card space so its
+       bottom edge is clipped by the card, matching the Figma comp. */
+    min-height: 215px;
     margin: 0;
     padding: 24px;
     background-color: var(--inverted-surface);
