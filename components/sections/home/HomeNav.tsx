@@ -63,9 +63,6 @@ export function HomeNav() {
             >
               <SiDiscord size={20} aria-hidden />
             </a>
-            <Link href="/build-in-public" className={navLinkClassName}>
-              Build in public
-            </Link>
             <Link href="/pricing" className={navLinkClassName}>
               Pricing
             </Link>

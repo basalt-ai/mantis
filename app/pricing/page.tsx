@@ -19,9 +19,9 @@ export const metadata: Metadata = {
 
 export default function PricingPage() {
   return (
-    <main className="min-h-screen">
+    <main className="flex min-h-screen flex-col">
       <HomeNav />
-      <section className="pricing-section" aria-labelledby="pricing-heading">
+      <section className="pricing-section flex-1" aria-labelledby="pricing-heading">
         <div className="pricing-section__inner">
           <header className="pricing-section__header">
             <H2 id="pricing-heading" className="heading pricing-section__title text-center">
