@@ -33,22 +33,22 @@ const ANCHOR_X = 960;
 const ANCHOR_Y = 435;
 
 /**
- * Figma `428:15015` — callout frame in inner-container coords (1786×900), aligned with MCP layout.
- * HTML overlay uses % of `.home-integrations-cloud`; dotted connectors use the same box in SVG space.
+ * Figma `428:15015` — callout frame in inner-container coords (1786×900): top-right, compact
+ * (above LinkedIn / near GitHub row per MCP). HTML uses %; SVG connectors use same box.
  */
-const INTEGRATIONS_CALLOUT_VB = { x: 196, y: 82, w: 538, h: 174 };
+const INTEGRATIONS_CALLOUT_VB = { x: 1190, y: 52, w: 300, h: 128 };
 const CALLOUT_LEFT_MID = {
   x: INTEGRATIONS_CALLOUT_VB.x,
-  y: INTEGRATIONS_CALLOUT_VB.y + INTEGRATIONS_CALLOUT_VB.h * 0.48,
+  y: INTEGRATIONS_CALLOUT_VB.y + INTEGRATIONS_CALLOUT_VB.h * 0.45,
 };
 const CALLOUT_BOTTOM_MID = {
   x: INTEGRATIONS_CALLOUT_VB.x + INTEGRATIONS_CALLOUT_VB.w * 0.5,
   y: INTEGRATIONS_CALLOUT_VB.y + INTEGRATIONS_CALLOUT_VB.h,
 };
 
-/** Figma `428:15015` — verbatim from design (U+2014 before “just”). */
+/** Figma `428:15015` — verbatim copy from design file. */
 const INTEGRATIONS_CALLOUT_COPY =
-  "Connect your tools. Your agents use them to read, write, ship, and sell\u2014just like an employee would.";
+  "Connect your tools. Your agents read, write, ship, and sell through them \u2014 like an employee would.";
 
 /* ----------------------------------------------------------------------- */
 /* Pancake — inline SVG, parameterised colours, used for chips + decoration */
@@ -435,8 +435,8 @@ export function HomeIntegrationsCloud() {
     };
   }, [reducedMotion, wobbles]);
 
-  const calloutConnectorLeftD = `M ${CALLOUT_LEFT_MID.x.toFixed(1)} ${CALLOUT_LEFT_MID.y.toFixed(1)} Q 52 318 36 556`;
-  const calloutConnectorBottomD = `M ${CALLOUT_BOTTOM_MID.x.toFixed(1)} ${CALLOUT_BOTTOM_MID.y.toFixed(1)} Q 612 468 848 798`;
+  const calloutConnectorLeftD = `M ${CALLOUT_LEFT_MID.x.toFixed(1)} ${CALLOUT_LEFT_MID.y.toFixed(1)} Q 920 300 688 468`;
+  const calloutConnectorBottomD = `M ${CALLOUT_BOTTOM_MID.x.toFixed(1)} ${CALLOUT_BOTTOM_MID.y.toFixed(1)} Q 1040 380 988 520`;
 
   return (
     <div className="home-integrations-cloud" data-node-id="428:15019">

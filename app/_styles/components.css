@@ -1273,9 +1273,10 @@
     text-align: left;
     color: var(--text);
     font-family: var(--font-body);
-    font-size: var(--font-size-home-integrations-callout);
+    font-size: var(--font-size-body-regular);
     line-height: var(--line-height-home-integrations-callout);
     font-weight: var(--font-normal);
+    font-style: normal;
     background-color: var(--alt-weak-branded-surface-02);
     border-radius: var(--radius-home-integrations-callout);
     padding-inline: var(--spacing-home-integrations-callout-pad-inline);
