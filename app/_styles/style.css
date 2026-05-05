@@ -1,0 +1,5 @@
+@layer semantic {
+  * {
+    font-family: var(--font-body);
+  }
+}

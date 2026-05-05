@@ -24,11 +24,10 @@ export function Footer() {
 
   return (
     <footer
-      className="w-full"
+      className="w-full border-t border-[var(--subtle-stroke)]"
       style={{
-        background: "#0a0a0a",
-        color: "#9a9a9a",
-        borderTop: "3px solid #0a0a0a",
+        backgroundColor: "var(--inverted-surface)",
+        color: "var(--subtle-text)",
       }}
     >
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-4 py-4 text-[11px] sm:flex-row sm:gap-0 sm:px-6 sm:text-xs">
@@ -42,7 +41,7 @@ export function Footer() {
             style={{
               width: 1,
               height: 14,
-              background: "#3a3a3a",
+              backgroundColor: "var(--stroke)",
               margin: "0 1.25rem",
             }}
           />
@@ -59,8 +58,8 @@ export function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={label}
-              className="transition hover:text-white"
-              style={{ color: "#bdbdbd" }}
+              className="transition-colors hover:text-[var(--text-on-inverted-surface)]"
+              style={{ color: "var(--disabled-text)" }}
             >
               <Icon size={14} />
             </a>

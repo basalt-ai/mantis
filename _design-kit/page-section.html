@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Page Section — Pancake Design Kit</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    @layer component {
+      .page-section {
+        --page-section-padding: var(--spacing-md);
+        --page-section-background-color: var(--surface);
+
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: var(--page-section-padding);
+        background-color: var(--page-section-background-color);
+        color: var(--text);
+      }
+
+      .page-section-content {
+        width: 100%;
+        max-width: calc(100vw - var(--spacing-md) * 2);
+      }
+
+      /* Variants */
+      .page-section[data-variant="alt"] {
+        --page-section-background-color: var(--alt-surface);
+      }
+    }
+
+    /* Demo page styles (not part of the kit) */
+    body {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xxl);
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .demo-title {
+      font-size: var(--font-size-header-03);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .demo-content-block {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+      padding: var(--spacing-xl) 0;
+    }
+  </style>
+</head>
+<body>
+  <section class="page-section">
+    <div class="page-section-content">
+      <div class="demo-content-block">
+        <h2 class="demo-title">Default</h2>
+        <p>Surface background. Content is centered with a max-width of 100vh minus the section's md padding.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page-section" data-variant="alt">
+    <div class="page-section-content">
+      <div class="demo-content-block">
+        <h2 class="demo-title">Alt</h2>
+        <p>Alt surface background. Same centering and max-width behavior as the default variant.</p>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

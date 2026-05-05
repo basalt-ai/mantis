@@ -5,6 +5,12 @@ const nextConfig = {
     if (dev) {
       config.cache = false;
     }
+    /** Same as Vite `?raw` — used by `PancakeMonster` SVG morph sources. */
+    config.module.rules.push({
+      test: /\.svg$/i,
+      resourceQuery: /raw/,
+      type: "asset/source",
+    });
     return config;
   },
   async redirects() {
@@ -17,11 +23,14 @@ const nextConfig = {
       "retrofuturism",
       "sustainable",
     ];
-    return dead.map((path) => ({
-      source: `/${path}`,
-      destination: "/",
-      permanent: true,
-    }));
+    return [
+      { source: "/favicon.ico", destination: "/icon.png", permanent: false },
+      ...dead.map((path) => ({
+        source: `/${path}`,
+        destination: "/",
+        permanent: true,
+      })),
+    ];
   },
 };
 

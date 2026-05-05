@@ -1,0 +1,2367 @@
+@layer component {
+  .home-nav-primary-link {
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    font-style: normal;
+    font-weight: var(--font-semibold);
+    line-height: var(--line-height-nav-primary-link);
+  }
+
+  @media (min-width: 1024px) {
+    .home-nav-logo-link {
+      transform: translateX(var(--spacing-home-nav-logo-nudge-x));
+    }
+
+    .home-nav-end {
+      transform: translateX(calc(-1 * var(--spacing-home-nav-links-nudge-x)));
+    }
+  }
+
+  .button {
+    --button-padding: var(--spacing-md) var(--spacing-xl);
+    --button-background-color: var(--strong-branded-surface);
+    --button-border-color: var(--strong-branded-surface);
+    --button-radius: var(--radius-md);
+
+    --button-height: var(--control-size-md);
+
+    height: var(--button-height);
+    padding: var(--button-padding);
+    background-color: var(--button-background-color);
+    border: 1px solid var(--button-border-color);
+    color: var(--text);
+    border-radius: var(--button-radius);
+    font-size: var(--font-size-body-regular);
+    font-weight: var(--font-heavy);
+    font-style: normal;
+    font-synthesis: none;
+    cursor: pointer;
+    corner-shape: squircle;
+  }
+
+  .button:hover {
+    background-opacity: 0.8;
+  }
+
+  .button[data-size="sm"] {
+    --button-padding: var(--spacing-sm) var(--spacing-lg);
+    --button-radius: var(--radius-sm);
+    --button-height: var(--control-size-sm);
+  }
+
+  .button[data-size="lg"] {
+    --button-padding: var(--spacing-lg) var(--spacing-xxl);
+    --button-radius: var(--radius-lg);
+    --button-height: var(--control-size-lg);
+  }
+
+  .button[data-icon-only] {
+    --button-padding: 0;
+    padding: 0;
+    width: var(--button-height);
+    min-width: var(--button-height);
+    max-width: var(--button-height);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .button[data-variant="subtle"] {
+    --button-background-color: var(--elevated-surface);
+    --button-border-color: var(--stroke);
+  }
+
+  .button[data-variant="alternative"] {
+    --button-background-color: var(--alt-strong-branded-surface-01);
+    --button-border-color: var(--alt-strong-branded-surface-01);
+  }
+
+  .button[data-variant="outline"] {
+    --button-background-color: transparent;
+    --button-border-color: var(--subtle-stroke);
+  }
+
+  .button[data-variant="negative"] {
+    --button-background-color: var(--negative-surface);
+    --button-border-color: var(--negative-surface);
+  }
+
+  .button[data-variant="ghost"] {
+    --button-background-color: transparent;
+    --button-border-color: transparent;
+  }
+
+  .button[data-variant="ghost"]:hover {
+    --button-background-color: var(--weak-branded-surface);
+  }
+
+  .badge {
+    --badge-padding: var(--spacing-xs) var(--spacing-md);
+    --badge-background-color: var(--surface);
+    --badge-border-color: var(--stroke);
+    --badge-radius: var(--radius-sm);
+
+    display: inline-flex;
+    align-items: center;
+    padding: var(--badge-padding);
+    background-color: var(--badge-background-color);
+    border: 1px solid var(--badge-border-color);
+    border-radius: var(--badge-radius);
+    color: var(--text);
+    font-size: var(--font-size-eyebrow);
+    font-weight: var(--font-semibold);
+    letter-spacing: 0.453px;
+    text-transform: uppercase;
+    corner-shape: squircle;
+  }
+
+  .badge[data-variant="inverted"] {
+    --badge-background-color: var(--inverted-surface);
+    --badge-border-color: var(--inverted-surface);
+    color: var(--text-on-inverted-surface);
+  }
+
+  .badge[data-variant="brand"] {
+    --badge-background-color: var(--strong-branded-surface);
+    --badge-border-color: var(--strong-branded-surface);
+  }
+
+  .badge[data-variant="brand-alt-1"] {
+    --badge-background-color: var(--alt-strong-branded-surface-01);
+    --badge-border-color: var(--alt-strong-branded-surface-01);
+  }
+
+  .badge[data-variant="brand-alt-2"] {
+    --badge-background-color: var(--alt-strong-branded-surface-02);
+    --badge-border-color: var(--alt-strong-branded-surface-02);
+  }
+
+  .badge[data-variant="success"] {
+    --badge-background-color: var(--positive-surface);
+    --badge-border-color: var(--positive-surface);
+  }
+
+  .badge[data-variant="warning"] {
+    --badge-background-color: var(--warning-surface);
+    --badge-border-color: var(--warning-surface);
+  }
+
+  .badge[data-variant="negative"] {
+    --badge-background-color: var(--negative-surface);
+    --badge-border-color: var(--negative-surface);
+  }
+
+  .card {
+    --card-padding: 0;
+    --card-background-color: var(--surface);
+    --card-border-color: var(--stroke);
+    --card-radius: var(--radius-lg);
+
+    display: flex;
+    flex-direction: column;
+    padding: var(--card-padding);
+    background-color: var(--card-background-color);
+    border: 1px solid var(--card-border-color);
+    border-radius: var(--card-radius);
+    color: var(--text);
+    corner-shape: squircle;
+  }
+
+  .card[data-variant="brand"] {
+    --card-background-color: var(--weak-branded-surface);
+    --card-border-color: var(--branded-stroke-01);
+  }
+
+  .card[data-variant="brand-alt-1"] {
+    --card-background-color: var(--alt-weak-branded-surface-01);
+    --card-border-color: var(--branded-stroke-02);
+  }
+
+  .card[data-variant="brand-alt-2"] {
+    --card-background-color: var(--alt-weak-branded-surface-02);
+    --card-border-color: var(--branded-stroke-03);
+  }
+
+  .input {
+    --input-padding: var(--spacing-md) var(--spacing-xl);
+    --input-height: var(--control-size-md);
+    --input-border-color: var(--stroke);
+    --input-radius: var(--radius-md);
+
+    height: var(--input-height);
+    padding: var(--input-padding);
+    background-color: var(--surface);
+    border: 1px solid var(--input-border-color);
+    color: var(--text);
+    border-radius: var(--input-radius);
+    font-size: var(--font-size-body-regular);
+    outline-color: var(--input-border-color);
+    outline-width: 0px;
+
+    corner-shape: squircle;
+  }
+
+  .input:focus {
+    --input-border-color: var(--interactive-text);
+  }
+
+  .input:disabled {
+    --input-border-color: var(--subtle-stroke);
+    background-color: var(--alt-surface);
+    color: var(--disabled-text);
+    cursor: not-allowed;
+  }
+
+  .input:disabled::placeholder {
+    color: var(--disabled-text);
+  }
+
+  .input::placeholder {
+    color: var(--subtle-text);
+  }
+
+  .input[data-size="sm"] {
+    --input-padding: var(--spacing-sm) var(--spacing-lg);
+    --input-height: var(--control-size-sm);
+    --input-radius: var(--radius-sm);
+  }
+
+  .input[data-size="lg"] {
+    --input-padding: var(--spacing-lg) var(--spacing-xxl);
+    --input-height: var(--control-size-lg);
+    --input-radius: var(--radius-lg);
+  }
+
+  .input[data-err] {
+    --input-border-color: var(--negative-stroke);
+  }
+
+  .textarea {
+    --textarea-padding: var(--spacing-md) var(--spacing-xl);
+    --textarea-border-color: var(--stroke);
+    --textarea-radius: var(--radius-md);
+
+    padding: var(--textarea-padding);
+    background-color: var(--surface);
+    border: 1px solid var(--textarea-border-color);
+    color: var(--text);
+    border-radius: var(--textarea-radius);
+    font-size: var(--font-size-body-regular);
+    outline-color: var(--textarea-border-color);
+    outline-width: 0px;
+
+    corner-shape: squircle;
+  }
+
+  .textarea:focus {
+    --textarea-border-color: var(--interactive-text);
+  }
+
+  .textarea:disabled {
+    --textarea-border-color: var(--subtle-stroke);
+    background-color: var(--alt-surface);
+    color: var(--disabled-text);
+    cursor: not-allowed;
+  }
+
+  .textarea:disabled::placeholder {
+    color: var(--disabled-text);
+  }
+
+  .textarea::placeholder {
+    color: var(--subtle-text);
+  }
+
+  .textarea[data-size="sm"] {
+    --textarea-padding: var(--spacing-sm) var(--spacing-lg);
+    --textarea-radius: var(--radius-sm);
+  }
+
+  .textarea[data-size="lg"] {
+    --textarea-padding: var(--spacing-lg) var(--spacing-xxl);
+    --textarea-radius: var(--radius-lg);
+  }
+
+  .textarea[data-err] {
+    --textarea-border-color: var(--negative-stroke);
+  }
+
+  .toast {
+    --toast-padding: var(--spacing-md) var(--spacing-xl);
+    --toast-background-color: var(--surface);
+    --toast-border-color: var(--stroke);
+    --toast-radius: var(--radius-md);
+
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: var(--spacing-sm);
+    padding: var(--toast-padding);
+    background-color: var(--toast-background-color);
+    border: 1px solid var(--toast-border-color);
+    border-radius: var(--toast-radius);
+    color: var(--text);
+    corner-shape: squircle;
+  }
+
+  .toast-prefix,
+  .toast-close {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .toast-body {
+    flex-grow: 1;
+    flex-shrink: 0;
+    text-align: start;
+    font-weight: var(--font-heavy);
+    font-size: var(--font-size-body-regular);
+  }
+
+  .toast[data-variant="inverted"] {
+    --toast-background-color: var(--inverted-surface);
+    --toast-border-color: var(--inverted-surface);
+    color: var(--text-on-inverted-surface);
+  }
+
+  .toast[data-variant="success"] {
+    --toast-background-color: var(--positive-surface);
+    --toast-border-color: var(--positive-surface);
+  }
+
+  .toast[data-variant="warning"] {
+    --toast-background-color: var(--warning-surface);
+    --toast-border-color: var(--warning-surface);
+  }
+
+  .toast[data-variant="error"] {
+    --toast-background-color: var(--negative-surface);
+    --toast-border-color: var(--negative-surface);
+  }
+
+  .heading,
+  h1.heading,
+  h2.heading,
+  h3.heading,
+  h4.heading {
+    font-family: var(--font-display);
+    font-weight: var(--font-semibold);
+  }
+
+  h1.heading,
+  .heading[data-level="1"] {
+    font-size: var(--font-size-header-01);
+    letter-spacing: -1.28px;
+  }
+
+  h2.heading,
+  .heading[data-level="2"] {
+    font-size: var(--font-size-header-02);
+    letter-spacing: -0.905px;
+  }
+
+  h3.heading,
+  .heading[data-level="3"] {
+    font-size: var(--font-size-header-03);
+    letter-spacing: -0.64px;
+  }
+
+  h4.heading,
+  .heading[data-level="4"] {
+    font-size: var(--font-size-header-04);
+    letter-spacing: -0.452px;
+  }
+
+  .page-section {
+    --page-section-padding: var(--spacing-md);
+    --page-section-background-color: var(--surface);
+
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: var(--page-section-padding);
+    background-color: var(--page-section-background-color);
+    color: var(--text);
+  }
+
+  .page-section-content {
+    width: 100%;
+    max-width: calc(100vw - var(--spacing-md) * 2);
+  }
+
+  .page-section[data-variant="alt"] {
+    --page-section-background-color: var(--alt-surface);
+  }
+
+  .home-hero-text-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .home-hero-text-stack {
+      transform: translateX(var(--spacing-home-nav-logo-nudge-x));
+    }
+  }
+
+  .home-hero-cta-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-xxl);
+    margin: 0;
+  }
+
+  /**
+   * Home hero (/) — Figma desktop: H1 uses Aeonik TRIAL (--font-aeonik via --font-display).
+   * Default `*` body font is Aeonik Fono; it must stay in @layer semantic so this rule wins.
+   */
+  .home-hero h1.heading {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -1.28px;
+    color: var(--text);
+    font-size: clamp(2rem, 5.5vw, 4rem);
+    line-height: 1.05;
+    margin: 0 0 var(--spacing-home-hero-after-title) 0;
+  }
+
+  @media (min-width: 1024px) {
+    .home-hero h1.heading {
+      font-size: 64px;
+      line-height: 64px;
+    }
+  }
+
+  .home-hero .home-hero-body {
+    margin: 0 0 var(--spacing-home-hero-after-subtitle) 0;
+    max-width: 100%;
+    font-family: var(--font-body);
+    font-size: var(--font-size-home-hero-subtitle);
+    font-weight: 400;
+    line-height: var(--line-height-home-hero-subtitle);
+    color: var(--text);
+  }
+
+  .home-hero .home-hero-cta-note {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    font-weight: 400;
+    line-height: var(--line-height-home-hero-cta-note);
+    color: var(--subtle-text);
+  }
+
+  /**
+   * Hero right column: Figma hero `428:14900` — “top” `428:16771` (236.46²) + monster `428:14920` (160²).
+   */
+  .home-hero-pancake {
+    position: relative;
+    z-index: 0;
+    display: none;
+    min-height: 0;
+    user-select: none;
+  }
+
+  @media (min-width: 1024px) {
+    .home-hero-pancake {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      transform: translateX(calc(-1 * var(--spacing-home-nav-links-nudge-x)));
+    }
+  }
+
+  .home-hero-pancake-stack {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  @media (min-width: 1024px) {
+    .home-hero-pancake-stack {
+      margin-top: calc(
+        var(--spacing-home-hero-monster-stack-margin-top) + var(--spacing-home-hero-monster-ensemble-nudge)
+      );
+    }
+  }
+
+  .home-hero-pancake-stack-inner {
+    position: relative;
+    display: flex;
+    overflow: visible;
+    width: var(--size-home-hero-monster-max-width);
+    min-height: var(--size-home-hero-monster-max-width);
+    max-width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /**
+   * Ellipse: Figma `428:16771` width ÷ monster frame `428:14920` (11823/8000 = 236.46/160).
+   */
+  .home-hero-pancake-ellipse {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 0;
+    width: var(--size-home-hero-monster-ellipse-width);
+    height: auto;
+    max-width: none;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    object-fit: contain;
+  }
+
+  /**
+   * Dotted orbits 1–6: Figma `428:14903` … `428:14909` — MCP SVG paths. Width: orbit 1 from cream token;
+   * 2–6 from orbit 1 × (Oᵢ/O₁). Stroke `var(--text)`, dash `0.578125 6.9375`.
+   */
+  .home-hero-pancake-orbit {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: var(--orbit-w);
+    height: auto;
+    max-width: none;
+    transform: translate(-50%, -50%) rotate(var(--orbit-a));
+    pointer-events: none;
+  }
+
+  .home-hero-pancake-orbit svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .home-hero-pancake-orbit--1 {
+    --orbit-w: var(--size-home-hero-monster-dotted-ring-width);
+    --orbit-a: var(--angle-home-hero-monster-dotted-ring);
+  }
+
+  .home-hero-pancake-orbit--2 {
+    --orbit-w: var(--size-home-hero-monster-orbit-2-width);
+    --orbit-a: var(--angle-home-hero-monster-orbit-2);
+  }
+
+  .home-hero-pancake-orbit--3 {
+    --orbit-w: var(--size-home-hero-monster-orbit-3-width);
+    --orbit-a: var(--angle-home-hero-monster-orbit-3);
+  }
+
+  .home-hero-pancake-orbit--4 {
+    --orbit-w: var(--size-home-hero-monster-orbit-4-width);
+    --orbit-a: var(--angle-home-hero-monster-orbit-4);
+  }
+
+  .home-hero-pancake-orbit--5 {
+    --orbit-w: var(--size-home-hero-monster-orbit-5-width);
+    --orbit-a: var(--angle-home-hero-monster-orbit-5);
+  }
+
+  .home-hero-pancake-orbit--6 {
+    --orbit-w: var(--size-home-hero-monster-orbit-6-width);
+    --orbit-a: var(--angle-home-hero-monster-orbit-6);
+  }
+
+  /**
+   * Interactive hero mascot — centered like the former raster; **larger** than the 160² layout frame
+   * (`--size-home-hero-monster-interactive-max-width`) without changing orbit / ellipse scale.
+   */
+  .home-hero-pancake-monster-slot {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--size-home-hero-monster-interactive-max-width);
+    max-width: var(--size-home-hero-monster-interactive-max-width);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+  }
+
+  .home-hero-pancake-monster-slot .pancake-monster {
+    flex-shrink: 0;
+  }
+
+  /**
+   * Orbit satellite pancakes — Figma `428:14900` INSTANCE PNG @2× (bundled via `home-hero-orbit-satellites.ts` imports); position = monster-center + (dx,dy) scaled with `--size-home-hero-monster-max-width` / 160.
+   * Rotation: −`INSTANCE.rotation` (Plugin) on `.home-hero-orbit-satellite-rot`. PNG preserves skewed fills; flattened SVG + rotate did not match the canvas.
+   */
+  .home-hero-orbit-satellite {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    box-sizing: border-box;
+    pointer-events: none;
+    transform: translate(calc(-50% + var(--sat-dx, 0px)), calc(-50% + var(--sat-dy, 0px)));
+  }
+
+  .home-hero-orbit-satellite-rot {
+    width: 100%;
+    height: 100%;
+    transform: rotate(var(--sat-rot, 0deg));
+    transform-origin: 50% 50%;
+  }
+
+  .home-hero-orbit-satellite--behind {
+    z-index: 2;
+  }
+
+  .home-hero-orbit-satellite--front {
+    z-index: 4;
+  }
+
+  .home-hero-orbit-satellite-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /**
+   * Home landing below hero — Figma `428:14366` (`-> V0.3`). Org block `428:14926` = `HomeOrgDiagram` (HTML).
+   * Other rasters: `public/home-landing-*.png` (`npm run figma:export-landing` + token). Does not modify `.home-hero`.
+   */
+  .home-landing {
+    width: 100%;
+  }
+
+  .home-landing-section {
+    width: 100%;
+    padding-top: var(--spacing-home-landing-section-y);
+    padding-bottom: var(--spacing-home-landing-section-y);
+    background-color: var(--surface);
+    color: var(--text);
+  }
+
+  .home-landing-section--alt {
+    background-color: var(--alt-surface);
+  }
+
+  .home-landing-section__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-home-landing-header-to-media);
+  }
+
+  .home-landing-section__inner--closing {
+    gap: var(--spacing-home-hero-after-title);
+  }
+
+  .home-landing-section__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xl);
+    max-width: var(--width-home-landing-heading);
+    width: 100%;
+    text-align: center;
+  }
+
+  .home-landing-section__title {
+    margin: 0;
+    font-size: var(--font-size-home-landing-section-title);
+    line-height: var(--line-height-home-landing-section-title);
+    letter-spacing: -0.9px;
+    font-weight: var(--font-semibold);
+  }
+
+  .home-landing-section__lede {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-home-landing-section-lede);
+    line-height: var(--line-height-home-landing-section-lede);
+    font-weight: var(--font-normal);
+    color: var(--text);
+  }
+
+  .home-landing-section__lede--closing {
+    max-width: var(--width-home-landing-heading);
+  }
+
+  .home-landing-section__figure {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  /**
+   * `app/_styles/style.css` sets `* { font-family: var(--font-body) }` which
+   * slams the project body face onto *every* element — defeating font
+   * inheritance from the inline `font-family` we put on the Slack window.
+   * Re-scope the Slack figure so the fake-Slack panel renders in Lato
+   * (Slack's UI face) without leaking into the rest of the page.
+   */
+  .home-landing-section__figure--slack,
+  .home-landing-section__figure--slack * {
+    font-family: var(--font-lato), "Lato", -apple-system, BlinkMacSystemFont,
+      "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  /**
+   * The base `.home-landing-section__figure` is a centred flex container,
+   * so its single child (here `SlackUI`) is a flex item — `flex: 0 1 auto`,
+   * shrink-to-fit. With longer messages or button rows, the SlackUI section
+   * grew wider; with shorter content, narrower — so the panel width
+   * changed channel-to-channel (briefing 979, content 863, outbound 1024).
+   * Switch this figure to a block so SlackUI fills 100 % of the available
+   * width and its inner `max-w-5xl` is the only width gate.
+   */
+  .home-landing-section__figure--slack {
+    display: block;
+  }
+  .home-landing-section__figure--slack > section {
+    width: 100%;
+  }
+
+  .home-landing-section__img {
+    display: block;
+    width: 100%;
+    max-width: calc(71 * var(--spacing-xl));
+    height: auto;
+  }
+
+  .home-landing-section__img--rounded {
+    border-radius: var(--radius-lg);
+  }
+
+  /**
+   * Org diagram — Figma `428:14926` (1136×706). Tokens from MCP variable defs + design context.
+   * Width matches landing figures: full row up to token max (no dvh cap — that shrank the chart vs Figma).
+   * You chip: right edge fixed at Figma (212+101)/1136; width is content-driven (max-width cap) so the box hugs copy.
+   * Pancake chip: left edge at 800/1136; same — keeps the hand-drawn arrow anchors from MCP aligned to box edges.
+   */
+  .home-org-diagram {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: calc(71 * var(--spacing-xl));
+    margin-inline: auto;
+    min-width: 0;
+    overflow: visible;
+    /** Extra paint area when dept cards extend below the fixed-aspect stage. */
+    padding-bottom: clamp(0.75rem, 2.5vw, 2rem);
+  }
+
+  .home-org-diagram__stage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1136 / 706;
+    container-type: inline-size;
+    container-name: org-diagram;
+  }
+
+  .home-org-diagram__abs {
+    position: absolute;
+    box-sizing: border-box;
+  }
+
+  .home-org-diagram__svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .home-org-diagram__svg--org-connections {
+    z-index: 1;
+  }
+
+  /** Above label chips so connector paths stay visible when chips grow (taller copy). */
+  .home-org-diagram__svg--chip-arrows {
+    z-index: 3;
+  }
+
+  .home-org-diagram__wire {
+    fill: none;
+    stroke: var(--palette-chrome-70);
+    stroke-width: 3;
+    stroke-dasharray: 1 12;
+    stroke-linecap: round;
+  }
+
+  .home-org-diagram__flow-nodes {
+    pointer-events: none;
+  }
+
+  .home-org-diagram__flow-node {
+    fill: var(--palette-chrome-70);
+  }
+
+  /** Trail balls — same fill as static flow nodes; soft shadow only (no stroke). */
+  .home-org-diagram__flow-node.home-org-diagram__flow-node--trail {
+    fill: var(--palette-chrome-70);
+    stroke: none;
+    opacity: 1;
+    filter: drop-shadow(0 1px 2px color-mix(in srgb, var(--palette-chrome-100) 16%, transparent));
+  }
+
+  .home-org-diagram__chip-arrow-path {
+    fill: none;
+    stroke: var(--palette-chrome-70);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /** Shared inverted label surface — height follows copy (no fixed aspect-ratio). */
+  .home-org-diagram__chip--surface {
+    background-color: var(--inverted-surface);
+    border-radius: clamp(6px, 1.4cqi, var(--radius-sm));
+    height: auto;
+    min-width: 0;
+    overflow: visible;
+  }
+
+  .home-org-diagram__you-chip {
+    /** Right edge at Figma (212+101)/1136; shrink-wrap width so empty rail next to copy is gone. */
+    right: calc((1136 - 212 - 101) / 1136 * 100%);
+    left: auto;
+    top: calc(70 / 706 * 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: max-content;
+    max-width: calc(168 / 1136 * 100%);
+    min-width: 0;
+    padding: 0;
+    z-index: 2;
+  }
+
+  .home-org-diagram__pancake-chip {
+    /** Left edge at Figma 800/1136; shrink-wrap so the label sits tight to the icon-side arrow. */
+    left: calc(800 / 1136 * 100%);
+    right: auto;
+    top: calc(8 / 706 * 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: max-content;
+    max-width: calc(228 / 1136 * 100%);
+    min-width: 0;
+    padding: 0;
+    z-index: 2;
+  }
+
+  .home-org-diagram__chip-copy {
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+    width: max-content;
+    max-width: 100%;
+    flex: 0 1 auto;
+    min-width: 0;
+    min-height: auto;
+    padding-inline: clamp(5px, 2.2cqi, var(--spacing-xl));
+    padding-block: clamp(6px, 1.4cqi, 12px);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.12em;
+  }
+
+  .home-org-diagram__chip-title--inverted {
+    margin: 0;
+    width: max-content;
+    max-width: 100%;
+    min-width: 0;
+    text-align: left;
+    font-family: var(--font-body);
+    font-size: clamp(0.6875rem, 0.35rem + 2.4cqi, var(--font-size-body-regular));
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text-on-inverted-surface);
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  .home-org-diagram__chip-sub--inverted {
+    margin: 0;
+    width: max-content;
+    max-width: 100%;
+    min-width: 0;
+    text-align: left;
+    font-family: var(--font-body);
+    font-size: clamp(0.625rem, 0.28rem + 2cqi, calc(11.32 / 16 * var(--font-size-base)));
+    font-style: normal;
+    font-weight: var(--font-normal);
+    line-height: 1.25;
+    color: var(--subtle-text-on-inverted-surface);
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  @supports (text-wrap: pretty) {
+    .home-org-diagram__chip-title--inverted,
+    .home-org-diagram__chip-sub--inverted {
+      text-wrap: pretty;
+    }
+  }
+
+  .home-org-diagram__you-avatar {
+    left: calc(380 / 1136 * 100%);
+    top: calc(10 / 706 * 100%);
+    width: calc(108 / 1136 * 100%);
+    height: calc(108 / 706 * 100%);
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 4;
+  }
+
+  .home-org-diagram__founder-avatar-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .home-org-diagram__monster {
+    left: calc(608 / 1136 * 100%);
+    top: 0;
+    width: calc(128 / 1136 * 100%);
+    height: calc(128 / 706 * 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 4;
+  }
+
+  .home-org-diagram__monster-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .home-org-diagram__dept {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(var(--spacing-md), 2.2cqi, var(--spacing-xxl));
+    width: calc(368 / 1136 * 100%);
+    min-height: calc(332 / 706 * 100%);
+    height: auto;
+    max-height: none;
+    padding: clamp(var(--spacing-md), 2.8cqi, calc(2 * var(--spacing-xl)));
+    border-radius: var(--radius-xl);
+    border-width: 1px;
+    border-style: solid;
+    overflow: visible;
+    z-index: 5;
+  }
+
+  .home-org-diagram__dept--growth {
+    left: 0;
+    top: calc(290 / 706 * 100%);
+    background-color: var(--alt-weak-branded-surface-02);
+    border-color: var(--branded-stroke-03);
+  }
+
+  .home-org-diagram__dept--engineering {
+    left: calc(384 / 1136 * 100%);
+    top: calc(320 / 706 * 100%);
+    background-color: var(--alt-weak-branded-surface-01);
+    border-color: var(--branded-stroke-02);
+  }
+
+  .home-org-diagram__dept--operations {
+    left: calc(768 / 1136 * 100%);
+    top: calc(264 / 706 * 100%);
+    background-color: var(--weak-branded-surface);
+    border-color: var(--branded-stroke-01);
+  }
+
+  .home-org-diagram__dept-title {
+    margin: 0;
+    width: 100%;
+    min-width: 0;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: clamp(0.9375rem, 0.55rem + 2.2cqi, var(--font-size-header-04));
+    line-height: 1.2;
+    letter-spacing: -0.2262px;
+    font-weight: var(--font-semibold);
+    color: var(--text);
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  .home-org-diagram__rows {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(var(--spacing-sm), 1.6cqi, var(--spacing-md));
+    width: 100%;
+    flex: 0 1 auto;
+    min-height: 0;
+  }
+
+  .home-org-diagram__row {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: clamp(var(--spacing-md), 2cqi, var(--spacing-xl));
+    width: 100%;
+    min-width: 0;
+    padding: var(--spacing-md) clamp(var(--spacing-sm), 2.2cqi, var(--spacing-xl));
+    box-sizing: border-box;
+    border-radius: var(--radius-sm);
+    border-width: 1px;
+    border-style: solid;
+    background-color: var(--elevated-surface);
+  }
+
+  .home-org-diagram__dept--growth .home-org-diagram__row {
+    border-color: var(--branded-stroke-03);
+  }
+
+  .home-org-diagram__dept--engineering .home-org-diagram__row {
+    border-color: var(--branded-stroke-02);
+  }
+
+  .home-org-diagram__dept--operations .home-org-diagram__row {
+    border-color: var(--branded-stroke-01);
+  }
+
+  .home-org-diagram__dot {
+    flex-shrink: 0;
+    width: var(--spacing-lg);
+    height: var(--spacing-lg);
+    margin-top: 0.2em;
+    border-radius: 50%;
+  }
+
+  .home-org-diagram__dot--positive {
+    background-color: var(--positive-text);
+  }
+
+  .home-org-diagram__dot--warning {
+    background-color: var(--warning-text);
+  }
+
+  .home-org-diagram__dot--negative {
+    background-color: var(--negative-text);
+  }
+
+  .home-org-diagram__row-label {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-family: var(--font-body);
+    font-size: clamp(0.75rem, 0.4rem + 2cqi, var(--font-size-body-regular));
+    line-height: 1.35;
+    font-weight: var(--font-normal);
+    color: var(--text);
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  /**
+   * "Naturally works as you'd expect" features grid (Figma `428:15091`).
+   * Three 368-wide cards, 16 px gap, each card stacks a 96×96 pancake icon
+   * over a centred title + body copy block. On small screens the cards
+   * stack vertically with a slightly larger gap so the row breaks cleanly.
+   */
+  .home-landing-features {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xxl);
+  }
+
+  @media (min-width: 1024px) {
+    .home-landing-features {
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 16px;
+    }
+  }
+
+  .home-landing-feature-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    padding: 32px;
+    width: 368px;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  /** Pancake icon stack (Figma `428:15093`/`428:15100`/`428:15114`). */
+  .home-landing-feature-card__pancake {
+    position: relative;
+    width: 96px;
+    height: 96px;
+    flex-shrink: 0;
+  }
+
+  .home-landing-feature-card__pancake-side {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 96px;
+    height: 96px;
+  }
+
+  .home-landing-feature-card__pancake-top {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    width: 92px;
+    height: 88px;
+  }
+
+  /**
+   * Pancake content overlays: short JetBrains-Mono labels (".md", "24/7")
+   * sit centred on the pancake top; the network glyph (Figma `Group 47`)
+   * is positioned by absolute px to match its Figma offset inside the chip.
+   */
+  .home-landing-feature-card__pancake-label {
+    position: absolute;
+    left: 50%;
+    top: 27px;
+    transform: translateX(-50%);
+    font-family: var(--font-mono, ui-monospace, "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace);
+    font-weight: 700;
+    font-size: 29.545px;
+    letter-spacing: -0.5px;
+    color: var(--text);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .home-landing-feature-card__pancake-icon {
+    display: block;
+    position: absolute;
+    /* `left` and `top` are set inline (per-card Figma offsets). */
+    pointer-events: none;
+  }
+
+  /** Card copy block (Figma `428:15096`). */
+  .home-landing-feature-card__copy {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .home-landing-feature-card__title {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.25;
+    font-weight: var(--font-heavy, 700);
+    color: var(--text);
+  }
+
+  .home-landing-feature-card__body {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.4;
+    font-weight: var(--font-normal);
+    color: var(--text);
+  }
+
+  /* Testimonials section — `--testimonials` modifier wires a full-bleed
+     carousel band that sits *outside* the centered page container, separated
+     from the header by the standard header-to-media gap. */
+  .home-landing-section--testimonials {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-home-landing-header-to-media);
+  }
+
+  /* Carousel band — full width of the section. The mask softly fades the
+     leading and trailing edges so cards enter/exit gracefully. */
+  .home-landing-testimonials {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      black 64px,
+      black calc(100% - 64px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      black 64px,
+      black calc(100% - 64px),
+      transparent 100%
+    );
+  }
+
+  .home-landing-testimonials__track {
+    display: flex;
+    gap: 16px;
+    width: max-content;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+    padding-block: 4px;
+  }
+
+  .home-landing-testimonial {
+    flex-shrink: 0;
+    width: clamp(320px, 84vw, 559px);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 32px;
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    border-radius: 32px;
+    background-color: var(--surface);
+    overflow: hidden;
+  }
+
+  .home-landing-testimonial__header {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .home-landing-testimonial__avatar {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    border-radius: 999px;
+    overflow: hidden;
+    background-color: var(--alt-surface);
+  }
+
+  .home-landing-testimonial__avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .home-landing-testimonial__identity {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .home-landing-testimonial__name {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--text);
+  }
+
+  .home-landing-testimonial__handle {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--text);
+  }
+
+  .home-landing-testimonial__brand {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    color: var(--text);
+  }
+
+  .home-landing-testimonial__brand-icon {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .home-landing-testimonial__quote {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 22.62px;
+    line-height: 32px;
+    letter-spacing: 0;
+    color: var(--text);
+    white-space: pre-wrap;
+  }
+
+  .home-landing-testimonial__mention {
+    color: #7418ff;
+  }
+
+  .home-landing-testimonial__divider {
+    margin: 0;
+    width: 100%;
+    height: 0;
+    border: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.16);
+  }
+
+  .home-landing-testimonial__meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .home-landing-testimonial__stat {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .home-landing-testimonial__stat strong {
+    font-weight: 700;
+  }
+
+  .home-landing-testimonial__via {
+    margin-left: auto;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: rgba(44, 0, 42, 0.64);
+    white-space: nowrap;
+  }
+
+  .home-landing-section__closing-title {
+    margin: 0;
+    max-width: var(--width-home-landing-heading);
+    font-family: var(--font-display);
+    font-weight: var(--font-semibold);
+    font-size: var(--font-size-home-landing-closing-title);
+    line-height: var(--line-height-home-landing-closing-title);
+    letter-spacing: -1.28px;
+    color: var(--text);
+  }
+
+  .home-landing-closing-cta {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xxl);
+  }
+
+  .home-landing-closing-cta__note {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    font-weight: var(--font-normal);
+    line-height: var(--line-height-home-hero-cta-note);
+    color: var(--text);
+  }
+
+  /**
+   * Endless integrations cloud — Figma `428:15019` (1786×900 inner frame).
+   * Same `aspect-ratio` + container-query pattern as `.home-org-diagram` so
+   * percent-based chip positions track responsive scaling correctly.
+   */
+  .home-integrations-cloud {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: calc(71 * var(--spacing-xl));
+    margin-inline: auto;
+    aspect-ratio: 1786 / 900;
+    container-type: inline-size;
+    container-name: integrations-cloud;
+    overflow: visible;
+  }
+
+  .home-integrations-cloud__svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /**
+   * Tentacle dashes — same dash rhythm as the org-diagram wires for visual
+   * consistency. Inner segments (anchor → chip) are full strength; outer
+   * segments (chip → tail) fade out so the tendril clearly *continues past*
+   * the logo rather than terminating at it.
+   */
+  .home-integrations-cloud__tentacle {
+    fill: none;
+    stroke: var(--palette-chrome-70);
+    stroke-width: 2.5;
+    stroke-dasharray: 1 12;
+    stroke-linecap: round;
+  }
+
+  .home-integrations-cloud__tentacle--inner {
+    opacity: 0.7;
+  }
+
+  .home-integrations-cloud__tentacle--outer {
+    opacity: 0.32;
+  }
+
+  /**
+   * Monster slot. Slightly smaller than the original static mascot so it
+   * doesn't dominate the cloud's centre, but bigger than the previous
+   * reduction which made it feel like a tiny dot. PancakeMonster reads
+   * this width via ResizeObserver and renders the SVG sharp at any breakpoint.
+   */
+  .home-integrations-cloud__monster {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: clamp(88px, 14.5cqi, 195px);
+    aspect-ratio: 1 / 1;
+    z-index: 4;
+  }
+
+  /**
+   * Figma `428:15015` — copy block over the cloud (coords share `428:15019` viewBox).
+   * Warm surface + mono body stack match org-diagram chip copy treatment.
+   */
+  .home-integrations-cloud__callout {
+    position: absolute;
+    z-index: 5;
+    box-sizing: border-box;
+    margin: 0;
+    min-width: 0;
+    text-align: left;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: var(--font-size-home-integrations-callout);
+    line-height: var(--line-height-home-integrations-callout);
+    font-weight: var(--font-normal);
+    font-style: normal;
+    /* `pre-line` keeps the comp's three-line stack at desktop but lets each
+       line wrap if the container narrows, instead of overflowing the box. */
+    white-space: pre-line;
+    background-color: var(--alt-weak-branded-surface-02);
+    border-radius: var(--radius-home-integrations-callout);
+    padding-inline: var(--spacing-home-integrations-callout-pad-inline);
+    padding-block: var(--spacing-home-integrations-callout-pad-block);
+  }
+
+  /* Below ~840 px container width the absolute box can no longer fit the
+     hard-coded copy without clipping. Detach it from the cloud's right edge,
+     centre it across the cloud, and let the text wrap naturally. The
+     positional `left/top/width` set inline by the component are overridden
+     here so the responsive rule wins. */
+  @container integrations-cloud (max-width: 840px) {
+    .home-integrations-cloud__callout {
+      left: 50% !important;
+      top: 0 !important;
+      width: min(440px, calc(100% - 2 * var(--spacing-xl))) !important;
+      transform: translateX(-50%);
+      white-space: normal;
+      text-align: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .home-integrations-cloud__tentacle,
+    .home-integrations-cloud__chip,
+    .home-integrations-cloud__monster {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+
+  /**
+   * "You're always in control" cards (Figma `428:15129`).
+   * Three 368×402 cards laid out in a 16-px-gap row at desktop, stacked on
+   * smaller screens. Card surface, border radius, and stroke are pulled
+   * straight from the comp.
+   */
+  .home-landing-control {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xxl);
+  }
+
+  @media (min-width: 1024px) {
+    .home-landing-control {
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 16px;
+    }
+  }
+
+  .home-landing-control-card {
+    box-sizing: border-box;
+    width: 368px;
+    max-width: 100%;
+    height: 402px;
+    background-color: var(--surface);
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    border-radius: 32px;
+    padding: 28px 32px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    /**
+     * Figma deliberately overflows the bottom of every card — the third
+     * approve row, the audit log box, and the sandbox ellipses all spill
+     * past the 402px card height and are clipped by overflow:hidden.
+     * Match the comp gaps and let content overflow naturally.
+     */
+    gap: 36px;
+    text-align: left;
+  }
+
+  .home-landing-control-card[data-card="scope"] {
+    /* Scope card uses absolute-positioned graphics; keep content above. */
+    position: relative;
+    gap: 36px;
+  }
+
+  .home-landing-control-card__header {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    flex-shrink: 0;
+  }
+
+  .home-landing-control-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: var(--font-medium, 500);
+    font-size: 22.62px;
+    line-height: 28px;
+    letter-spacing: -0.2262px;
+    color: var(--text);
+  }
+
+  .home-landing-control-card__body {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: var(--font-normal);
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--text);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Card 1 — Approve before it ships                                   */
+  /* ------------------------------------------------------------------ */
+
+  .home-landing-control-approve-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 13.511px;
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  .home-landing-control-approve-row {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13.511px;
+    background-color: var(--elevated-surface);
+    border: 0.844px solid var(--stroke);
+    border-radius: 16px;
+  }
+
+  .home-landing-control-approve-row__main {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .home-landing-control-approve-row__role {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-body);
+    font-size: 9.559px;
+    font-weight: var(--font-medium, 500);
+    line-height: 13.511px;
+    letter-spacing: 0.3824px;
+    text-transform: uppercase;
+    color: var(--subtle-text);
+  }
+
+  .home-landing-control-approve-row__role img {
+    display: block;
+    width: 7px;
+    height: 7px;
+  }
+
+  .home-landing-control-approve-row__action {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: var(--font-semibold, 600);
+    font-size: 13.511px;
+    line-height: 20.267px;
+    color: var(--text);
+  }
+
+  .home-landing-control-approve-row__amount {
+    flex-shrink: 0;
+    font-family: var(--font-body);
+    font-size: 13.511px;
+    font-weight: var(--font-normal);
+    line-height: 20.267px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .home-landing-control-approve-row__buttons {
+    display: flex;
+    align-items: center;
+    gap: 6.756px;
+    flex-shrink: 0;
+  }
+
+  .home-landing-control-card__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 33.778px;
+    height: 33.778px;
+    padding: 6.756px;
+    border-radius: 10px;
+    border: 0;
+    cursor: pointer;
+    appearance: none;
+  }
+
+  .home-landing-control-card__btn--approve {
+    background-color: var(--strong-branded-surface);
+    color: var(--surface);
+  }
+
+  .home-landing-control-card__btn--reject {
+    background-color: var(--alt-surface);
+    border: 0.844px solid var(--stroke);
+    color: var(--subtle-text);
+  }
+
+  .home-landing-control-card__btn-icon {
+    display: block;
+    width: 14px;
+    height: 14px;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Card 2 — Audit every action                                        */
+  /* ------------------------------------------------------------------ */
+
+  .home-landing-control-audit-log {
+    box-sizing: border-box;
+    width: 100%;
+    flex: 0 0 auto;
+    /* Box deliberately taller than the remaining card space so its
+       bottom edge is clipped by the card, matching the Figma comp. */
+    min-height: 215px;
+    margin: 0;
+    padding: 24px;
+    background-color: var(--inverted-surface);
+    color: var(--text-on-inverted-surface);
+    border-radius: 16px;
+    font-family: var(--font-mono, ui-monospace, "JetBrains Mono", "SFMono-Regular", Menlo, monospace);
+    font-size: 14px;
+    line-height: 21px;
+    font-weight: 500;
+    overflow: hidden;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .home-landing-control-audit-log__line {
+    display: block;
+  }
+
+  .home-landing-control-audit-log__time {
+    color: var(--palette-chrome-60);
+  }
+
+  .home-landing-control-audit-log__role {
+    color: var(--strong-branded-surface);
+  }
+
+  .home-landing-control-audit-log__text {
+    color: var(--text-on-inverted-surface);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Card 3 — Limit the scope                                           */
+  /* ------------------------------------------------------------------ */
+
+  .home-landing-control-scope {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .home-landing-control-scope__ellipse,
+  .home-landing-control-scope__icon {
+    position: absolute;
+    display: block;
+  }
+
+  .home-landing-control-scope__ellipse img,
+  .home-landing-control-scope__icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /**
+   * Coordinates from Figma `428:15140` (the scope card frame, 368×402).
+   * Each ellipse retains its in-Figma rotation so the overlapping
+   * pancake-style sandboxes feel hand-placed rather than concentric.
+   */
+  .home-landing-control-scope__ellipse--center {
+    left: 9px;
+    top: 160px;
+    width: 324px;
+    height: 322px;
+    transform: rotate(27.16deg);
+    transform-origin: center;
+  }
+
+  .home-landing-control-scope__ellipse--right {
+    left: 225px;
+    top: 179px;
+    width: 167px;
+    height: 166px;
+    transform: rotate(27.16deg);
+    transform-origin: center;
+  }
+
+  .home-landing-control-scope__ellipse--left {
+    left: -73px;
+    top: 182px;
+    width: 242px;
+    height: 242px;
+    transform: scaleY(-1) rotate(134.03deg);
+    transform-origin: center;
+  }
+
+  .home-landing-control-scope__icon--a {
+    left: 7px;
+    top: 251px;
+    width: 34px;
+    height: 30px;
+    transform: rotate(180deg);
+  }
+
+  .home-landing-control-scope__icon--b {
+    left: 148px;
+    top: 296px;
+    width: 69px;
+    height: 67px;
+    transform: scaleY(-1) rotate(180deg);
+  }
+
+  .home-landing-control-scope__icon--c {
+    left: 298px;
+    top: 229px;
+    width: 42px;
+    height: 40px;
+    transform: scaleY(-1);
+  }
+
+  /* ─────────────────── Pricing page ───────────────────
+     Copy lives in `lib/copy.ts → pricing.*`. Layout mirrors the home-landing
+     section grammar (centered header + figure) so the page feels like a sibling
+     of the home page rather than a separate world. */
+  /* Section runs as the flex-1 child of `<main className="flex min-h-screen
+     flex-col">`, so it stretches to fill whatever's left between the nav and
+     footer. Inner content vertically centers inside that stretched area —
+     short viewports keep everything in frame, tall ones get even breathing
+     room above and below the card. */
+  .pricing-section {
+    width: 100%;
+    padding-top: var(--spacing-xxl);
+    padding-bottom: var(--spacing-xxl);
+    background-color: var(--surface);
+    color: var(--text);
+    display: flex;
+  }
+
+  .pricing-section__inner {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 720px;
+    padding-inline: var(--spacing-home-page-inline);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: calc(2 * var(--spacing-xxl));
+  }
+
+  .pricing-section__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xl);
+    text-align: center;
+  }
+
+  .pricing-section__title {
+    margin: 0;
+    font-size: var(--font-size-header-02);
+    line-height: var(--line-height-home-landing-section-title);
+    letter-spacing: -0.905px;
+    color: var(--text);
+  }
+
+  .pricing-section__lede {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-home-landing-section-lede);
+    line-height: var(--line-height-home-landing-section-lede);
+    color: var(--text);
+  }
+
+  .pricing-card {
+    width: 100%;
+    max-width: 480px;
+    padding: 48px 40px;
+    background-color: var(--surface);
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    border-radius: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    text-align: center;
+  }
+
+  .pricing-card__price {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    color: var(--text);
+  }
+
+  .pricing-card__line {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 18px;
+    line-height: 28px;
+    color: rgba(44, 0, 42, 0.64);
+  }
+
+  /* ─────────────────── Signup page ───────────────────
+     Mirrors `pricing-section` grammar exactly: HomeNav + centered header
+     on `--surface`, then a stack of 32 px squircle cards (form pre-submit;
+     success / referral / Discord post-submit). Inputs use `.input` and
+     CTAs use `.button[data-size="lg"]` so the visual language matches
+     the home page. */
+  .signup-section {
+    width: 100%;
+    padding-top: var(--spacing-xxl);
+    padding-bottom: var(--spacing-xxl);
+    background-color: var(--surface);
+    color: var(--text);
+    display: flex;
+  }
+
+  .signup-section__inner {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 520px;
+    padding-inline: var(--spacing-home-page-inline);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: calc(2 * var(--spacing-xxl));
+  }
+
+  .signup-section__header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xl);
+    text-align: center;
+  }
+
+  .signup-section__back {
+    align-self: flex-start;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: var(--font-semibold);
+    color: var(--text);
+    text-decoration: none;
+    transition: opacity 0.15s ease;
+  }
+
+  .signup-section__back:hover {
+    opacity: 0.7;
+  }
+
+  .signup-section__title {
+    margin: 0;
+    font-size: var(--font-size-header-02);
+    line-height: var(--line-height-home-landing-section-title);
+    letter-spacing: -0.905px;
+    color: var(--text);
+  }
+
+  .signup-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xxl);
+  }
+
+  .signup-card {
+    width: 100%;
+    padding: 32px;
+    background-color: var(--surface);
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    border-radius: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xxl);
+    text-align: left;
+    corner-shape: squircle;
+  }
+
+  .signup-card--success {
+    background-color: var(--weak-branded-surface);
+    border-color: var(--branded-stroke-01);
+  }
+
+  .signup-card--discord {
+    gap: var(--spacing-md);
+  }
+
+  .signup-card__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .signup-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 22.62px;
+    line-height: 28px;
+    letter-spacing: -0.2262px;
+    color: var(--text);
+  }
+
+  .signup-card__body {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--text);
+  }
+
+  .signup-card__body--lede {
+    color: rgba(44, 0, 42, 0.64);
+  }
+
+  .signup-card__eyebrow {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-eyebrow);
+    font-weight: var(--font-semibold);
+    letter-spacing: 0.453px;
+    text-transform: uppercase;
+    color: var(--subtle-text);
+  }
+
+  .signup-card__divider {
+    height: 1px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.08);
+  }
+
+  .signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+  }
+
+  .signup-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .signup-field__label {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: var(--font-semibold);
+    color: var(--text);
+  }
+
+  .signup-form__error {
+    margin: 0;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    background-color: var(--negative-surface);
+    border: 1px solid var(--negative-stroke);
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--text);
+    corner-shape: squircle;
+  }
+
+  .signup-referral-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  .signup-referral-row {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: center;
+  }
+
+  .signup-referral-row__input {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .signup-link-button {
+    align-self: flex-start;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: var(--font-semibold);
+    color: var(--strong-branded-surface);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .signup-link-button:hover {
+    opacity: 0.8;
+  }
+
+  .signup-referral-share {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  .signup-referral-share__url {
+    margin: 0;
+    padding: var(--spacing-lg);
+    background-color: var(--alt-surface);
+    border: 1px solid var(--stroke);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono, ui-monospace, "JetBrains Mono", "SFMono-Regular", Menlo, monospace);
+    font-size: 12px;
+    color: var(--subtle-text);
+    word-break: break-all;
+    corner-shape: squircle;
+  }
+
+  .signup-referral-share__message {
+    margin: 0;
+    padding: var(--spacing-lg);
+    background-color: var(--alt-surface);
+    border: 1px solid var(--stroke);
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--text);
+    white-space: pre-wrap;
+    corner-shape: squircle;
+  }
+
+  /* ─────────────────── Build in Public page ───────────────────
+     Live signup metrics dashboard. Cards reuse the home-landing card
+     grammar (32 px radius, 1 px hairline border, surface fill); chart
+     fills/strokes use `--strong-branded-surface` (brand pink) and `--text`
+     (deep purple) so the visual language matches the home page. */
+  .build-in-public-section {
+    width: 100%;
+    padding-top: var(--spacing-home-landing-section-y);
+    padding-bottom: var(--spacing-home-landing-section-y);
+    background-color: var(--surface);
+    color: var(--text);
+  }
+
+  .build-in-public-section__inner {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 1280px;
+    padding-inline: var(--spacing-home-page-inline);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-home-landing-header-to-media);
+  }
+
+  .build-in-public-section__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xl);
+    text-align: center;
+  }
+
+  .build-in-public-section__title {
+    margin: 0;
+    font-size: var(--font-size-header-02);
+    line-height: var(--line-height-home-landing-section-title);
+    letter-spacing: -0.905px;
+    color: var(--text);
+  }
+
+  .build-in-public-section__lede {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-home-landing-section-lede);
+    line-height: var(--line-height-home-landing-section-lede);
+    color: var(--text);
+  }
+
+  .build-in-public-error {
+    width: 100%;
+    max-width: 640px;
+    padding: 24px 28px;
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    border-radius: 32px;
+    background-color: var(--surface);
+  }
+
+  .build-in-public-error__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 28px;
+    color: var(--text);
+  }
+
+  .build-in-public-error__body {
+    margin: 8px 0 0 0;
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--subtle-text);
+  }
+
+  /* Metrics dashboard — card chrome shared between KPI tiles and charts. */
+  .metrics-dashboard {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .metrics-dashboard__kpis {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  @media (min-width: 768px) {
+    .metrics-dashboard__kpis {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px;
+    }
+  }
+
+  .metrics-dashboard__charts {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  @media (min-width: 768px) {
+    .metrics-dashboard__charts {
+      gap: 32px;
+    }
+  }
+
+  .metrics-card {
+    background-color: var(--surface);
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    border-radius: 32px;
+    overflow: hidden;
+  }
+
+  .metrics-card--kpi {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  @media (min-width: 768px) {
+    .metrics-card--kpi {
+      padding: 28px;
+    }
+  }
+
+  .metrics-card__label {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 1.4;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--subtle-text);
+  }
+
+  .metrics-card__value {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 36px;
+    line-height: 1;
+    letter-spacing: -1px;
+    color: var(--text);
+  }
+
+  @media (min-width: 768px) {
+    .metrics-card__value {
+      font-size: 44px;
+      letter-spacing: -1.2px;
+    }
+  }
+
+  .metrics-card__sublabel {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--subtle-text);
+    font-style: italic;
+  }
+
+  .metrics-card__chart-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 24px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  @media (min-width: 768px) {
+    .metrics-card__chart-header {
+      padding: 20px 28px;
+    }
+  }
+
+  .metrics-card__chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background-color: var(--strong-branded-surface);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .metrics-card__chart-body {
+    padding: 16px 16px 8px;
+  }
+
+  @media (min-width: 768px) {
+    .metrics-card__chart-body {
+      padding: 20px 24px 12px;
+    }
+  }
+
+  /* Chart axis text — Aeonik Fono so it reads as the same monospace voice
+     as the rest of the home page. */
+  .metrics-card .font-mono {
+    font-family: var(--font-body);
+  }
+
+  .metrics-tooltip {
+    position: absolute;
+    top: 16px;
+    transform: translateX(-50%);
+    pointer-events: none;
+    white-space: nowrap;
+    padding: 8px 12px;
+    border-radius: 12px;
+    background-color: var(--inverted-surface, #2c002a);
+    color: var(--text-on-inverted-surface, #ffffff);
+    box-shadow: 0 12px 24px rgba(44, 0, 42, 0.18);
+    text-align: left;
+  }
+
+  .metrics-tooltip__date {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text-on-inverted-surface, #ffffff);
+  }
+
+  .metrics-tooltip__row {
+    margin: 4px 0 0 0;
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--text-on-inverted-surface, #ffffff);
+  }
+
+  .metrics-tooltip__row--pink {
+    color: var(--strong-branded-surface);
+  }
+
+  .metrics-tooltip__row-value {
+    font-weight: 700;
+  }
+}

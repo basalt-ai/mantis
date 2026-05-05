@@ -1,20 +1,18 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Kit stylesheets use @layer reference / semantic / reset / component; Tailwind lives in named layers so kit @layer component wins over preflight (tw-base). Utilities in tw-utilities last. */
+@layer reference, semantic, reset, tw-base, component, tw-utilities;
 
-html {
-  scroll-behavior: smooth;
+@layer tw-base {
+  @tailwind base;
 }
 
-@layer base {
-  html {
-    /* Avoid black flash before theme + body paint (esp. during client hydration). */
-    background-color: #fffef8;
-  }
-  body {
-    @apply antialiased;
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-body), system-ui, sans-serif;
-  }
+@layer component {
+  @tailwind components;
 }
+
+@layer tw-utilities {
+  @tailwind utilities;
+}
+
+@import "./_styles/style.css";
+@import "./_styles/reset.css";
+@import "./_styles/tokens.css";

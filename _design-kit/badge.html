@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Badge — Pancake Design Kit</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    @layer component {
+      .badge {
+        --badge-padding: var(--spacing-xs) var(--spacing-md);
+        --badge-background-color: var(--surface);
+        --badge-border-color: var(--stroke);
+        --badge-radius: var(--radius-sm);
+
+        display: inline-flex;
+        align-items: center;
+        padding: var(--badge-padding);
+        background-color: var(--badge-background-color);
+        border: 1px solid var(--badge-border-color);
+        border-radius: var(--badge-radius);
+        color: var(--text);
+        font-size: var(--font-size-eyebrow);
+        font-weight: var(--font-semibold);
+        letter-spacing: 0.453px;
+        text-transform: uppercase;
+        corner-shape: squircle;
+      }
+
+      /* Variants */
+      .badge[data-variant="inverted"] {
+        --badge-background-color: var(--inverted-surface);
+        --badge-border-color: var(--inverted-surface);
+        color: var(--text-on-inverted-surface);
+      }
+
+      .badge[data-variant="brand"] {
+        --badge-background-color: var(--strong-branded-surface);
+        --badge-border-color: var(--strong-branded-surface);
+      }
+
+      .badge[data-variant="brand-alt-1"] {
+        --badge-background-color: var(--alt-strong-branded-surface-01);
+        --badge-border-color: var(--alt-strong-branded-surface-01);
+      }
+
+      .badge[data-variant="brand-alt-2"] {
+        --badge-background-color: var(--alt-strong-branded-surface-02);
+        --badge-border-color: var(--alt-strong-branded-surface-02);
+      }
+
+      .badge[data-variant="success"] {
+        --badge-background-color: var(--positive-surface);
+        --badge-border-color: var(--positive-surface);
+      }
+
+      .badge[data-variant="warning"] {
+        --badge-background-color: var(--warning-surface);
+        --badge-border-color: var(--warning-surface);
+      }
+
+      .badge[data-variant="negative"] {
+        --badge-background-color: var(--negative-surface);
+        --badge-border-color: var(--negative-surface);
+      }
+    }
+
+    /* Demo page styles (not part of the kit) */
+    body {
+      padding: var(--spacing-xxl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xxl);
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .demo-title {
+      font-size: var(--font-size-header-03);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .demo-row {
+      display: flex;
+      gap: var(--spacing-lg);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <section>
+    <h2 class="demo-title">Variants</h2>
+    <div class="demo-row">
+      <span class="badge">Neutral</span>
+      <span class="badge" data-variant="inverted">Inverted</span>
+      <span class="badge" data-variant="brand">Brand</span>
+      <span class="badge" data-variant="brand-alt-1">Brand Alt 1</span>
+      <span class="badge" data-variant="brand-alt-2">Brand Alt 2</span>
+      <span class="badge" data-variant="success">Success</span>
+      <span class="badge" data-variant="warning">Warning</span>
+      <span class="badge" data-variant="negative">Negative</span>
+    </div>
+  </section>
+</body>
+</html>

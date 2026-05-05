@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Input — Pancake Design Kit</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    @layer component {
+      .input {
+        --input-padding: var(--spacing-md) var(--spacing-xl);
+        --input-height: var(--control-size-md);
+        --input-border-color: var(--stroke);
+        --input-radius: var(--radius-md);
+
+        height: var(--input-height);
+        padding: var(--input-padding);
+        background-color: var(--surface);
+        border: 1px solid var(--input-border-color);
+        color: var(--text);
+        border-radius: var(--input-radius);
+        font-size: var(--font-size-body-regular);
+        outline-color: var(--input-border-color);
+        outline-width: 0px;
+
+        corner-shape: squircle;
+
+        &:focus {
+          --input-border-color: var(--interactive-text);
+        }
+
+        &:disabled {
+          --input-border-color: var(--subtle-stroke);
+          background-color: var(--alt-surface);
+          color: var(--disabled-text);
+          cursor: not-allowed;
+
+          &::placeholder {
+            color: var(--disabled-text);
+          }
+        }
+      }
+
+      .input::placeholder {
+        color: var(--subtle-text);
+      }
+
+      /* Sizes */
+      .input[data-size="sm"] {
+        --input-padding: var(--spacing-sm) var(--spacing-lg);
+        --input-height: var(--control-size-sm);
+        --input-radius: var(--radius-sm);
+      }
+
+      .input[data-size="lg"] {
+        --input-padding: var(--spacing-lg) var(--spacing-xxl);
+        --input-height: var(--control-size-lg);
+        --input-radius: var(--radius-lg);
+      }
+
+      /* States */
+      .input[data-err] {
+        --input-border-color: var(--negative-stroke);
+      }
+    }
+
+    /* Demo page styles (not part of the kit) */
+    body {
+      padding: var(--spacing-xxl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xxl);
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .demo-title {
+      font-size: var(--font-size-header-03);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .demo-row {
+      display: flex;
+      gap: var(--spacing-lg);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <section>
+    <h2 class="demo-title">Sizes</h2>
+    <div class="demo-row">
+      <input class="input" data-size="sm" placeholder="Small">
+      <input class="input" placeholder="Medium">
+      <input class="input" data-size="lg" placeholder="Large">
+    </div>
+  </section>
+
+  <section>
+    <h2 class="demo-title">States</h2>
+    <div class="demo-row">
+      <input class="input" placeholder="Default">
+      <input class="input" data-err placeholder="Error">
+      <input class="input" data-err value="invalid@">
+      <input class="input" disabled placeholder="Disabled">
+      <input class="input" disabled value="Disabled with value">
+    </div>
+  </section>
+</body>
+</html>
