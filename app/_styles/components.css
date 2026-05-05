@@ -1284,11 +1284,6 @@
     padding-block: var(--spacing-home-integrations-callout-pad-block);
   }
 
-  /** Decorative legs for `428:15015`; slightly softer than chip tentacles so type stays primary. */
-  .home-integrations-cloud__tentacle--callout {
-    opacity: 0.4;
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .home-integrations-cloud__tentacle,
     .home-integrations-cloud__chip,

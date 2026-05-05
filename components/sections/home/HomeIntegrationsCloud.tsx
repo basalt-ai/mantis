@@ -38,16 +38,7 @@ const ANCHOR_Y = 435;
  * add the same delta to `x` so the block slides right (right edge ~1758) and
  * the inner peach rail shrinks vs the longest line + padding.
  */
-const INTEGRATIONS_CALLOUT_VB = { x: 1278, y: 48, w: 480, h: 118 };
-const CALLOUT_LEFT_MID = {
-  x: INTEGRATIONS_CALLOUT_VB.x,
-  y: INTEGRATIONS_CALLOUT_VB.y + INTEGRATIONS_CALLOUT_VB.h * 0.45,
-};
-const CALLOUT_BOTTOM_MID = {
-  x: INTEGRATIONS_CALLOUT_VB.x + INTEGRATIONS_CALLOUT_VB.w * 0.5,
-  y: INTEGRATIONS_CALLOUT_VB.y + INTEGRATIONS_CALLOUT_VB.h,
-};
-
+const INTEGRATIONS_CALLOUT_VB = { x: 1278, y: 48, w: 480 };
 /** Figma `428:15015` — three-line stack (explicit breaks match comp). */
 const INTEGRATIONS_CALLOUT_COPY = `Connect your tools. Your agents
 read, write, ship, and sell through
@@ -438,9 +429,6 @@ export function HomeIntegrationsCloud() {
     };
   }, [reducedMotion, wobbles]);
 
-  const calloutConnectorLeftD = `M ${CALLOUT_LEFT_MID.x.toFixed(1)} ${CALLOUT_LEFT_MID.y.toFixed(1)} Q 1020 302 738 442`;
-  const calloutConnectorBottomD = `M ${CALLOUT_BOTTOM_MID.x.toFixed(1)} ${CALLOUT_BOTTOM_MID.y.toFixed(1)} Q 1150 392 1004 526`;
-
   return (
     <div className="home-integrations-cloud" data-node-id="428:15019">
       <svg
@@ -450,17 +438,6 @@ export function HomeIntegrationsCloud() {
         aria-hidden
         focusable="false"
       >
-        {/* Figma `428:15015` — dotted connectors into the cloud (same stroke system as tentacles). */}
-        <g className="home-integrations-cloud__callout-connectors">
-          <path
-            className="home-integrations-cloud__tentacle home-integrations-cloud__tentacle--callout"
-            d={calloutConnectorLeftD}
-          />
-          <path
-            className="home-integrations-cloud__tentacle home-integrations-cloud__tentacle--callout"
-            d={calloutConnectorBottomD}
-          />
-        </g>
         {/* Outer tentacle segments (chip → tail) — drawn first / under chips, faded */}
         {LOGOS.map((logo) => (
           <path
