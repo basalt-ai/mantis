@@ -1378,4 +1378,307 @@
       transition: none !important;
     }
   }
+
+  /**
+   * "You're always in control" cards (Figma `428:15129`).
+   * Three 368×402 cards laid out in a 16-px-gap row at desktop, stacked on
+   * smaller screens. Card surface, border radius, and stroke are pulled
+   * straight from the comp.
+   */
+  .home-landing-control {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xxl);
+  }
+
+  @media (min-width: 1024px) {
+    .home-landing-control {
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 16px;
+    }
+  }
+
+  .home-landing-control-card {
+    box-sizing: border-box;
+    width: 368px;
+    max-width: 100%;
+    height: 402px;
+    background-color: var(--surface);
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    border-radius: 32px;
+    padding: 28px 32px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    /**
+     * Figma sets gap 36 between header and content, but Aeonik Fono renders
+     * a hair wider in the browser than the comp's preview, so the body
+     * paragraph wraps an extra line and the list overflows. Tightened to 22
+     * here + 16 inside the header (instead of 24) to match the comp's
+     * three-rows-visible layout exactly.
+     */
+    gap: 22px;
+    text-align: left;
+  }
+
+  .home-landing-control-card[data-card="scope"] {
+    /* Scope card uses absolute-positioned graphics; keep content above. */
+    position: relative;
+    gap: 24px;
+  }
+
+  .home-landing-control-card__header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .home-landing-control-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: var(--font-medium, 500);
+    font-size: 22.62px;
+    line-height: 28px;
+    letter-spacing: -0.2262px;
+    color: var(--text);
+  }
+
+  .home-landing-control-card__body {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: var(--font-normal);
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--text);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Card 1 — Approve before it ships                                   */
+  /* ------------------------------------------------------------------ */
+
+  .home-landing-control-approve-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 13.511px;
+    width: 100%;
+  }
+
+  .home-landing-control-approve-row {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13.511px;
+    background-color: var(--elevated-surface);
+    border: 0.844px solid var(--stroke);
+    border-radius: 16px;
+  }
+
+  .home-landing-control-approve-row__main {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .home-landing-control-approve-row__role {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-body);
+    font-size: 9.559px;
+    font-weight: var(--font-medium, 500);
+    line-height: 13.511px;
+    letter-spacing: 0.3824px;
+    text-transform: uppercase;
+    color: var(--subtle-text);
+  }
+
+  .home-landing-control-approve-row__role img {
+    display: block;
+    width: 7px;
+    height: 7px;
+  }
+
+  .home-landing-control-approve-row__action {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: var(--font-semibold, 600);
+    font-size: 13.511px;
+    line-height: 20.267px;
+    color: var(--text);
+  }
+
+  .home-landing-control-approve-row__amount {
+    flex-shrink: 0;
+    font-family: var(--font-body);
+    font-size: 13.511px;
+    font-weight: var(--font-normal);
+    line-height: 20.267px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .home-landing-control-approve-row__buttons {
+    display: flex;
+    align-items: center;
+    gap: 6.756px;
+    flex-shrink: 0;
+  }
+
+  .home-landing-control-card__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 33.778px;
+    height: 33.778px;
+    padding: 6.756px;
+    border-radius: 10px;
+    border: 0;
+    cursor: pointer;
+    appearance: none;
+  }
+
+  .home-landing-control-card__btn--approve {
+    background-color: var(--strong-branded-surface);
+    color: var(--surface);
+  }
+
+  .home-landing-control-card__btn--reject {
+    background-color: var(--alt-surface);
+    border: 0.844px solid var(--stroke);
+    color: var(--subtle-text);
+  }
+
+  .home-landing-control-card__btn-icon {
+    display: block;
+    width: 14px;
+    height: 14px;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Card 2 — Audit every action                                        */
+  /* ------------------------------------------------------------------ */
+
+  .home-landing-control-audit-log {
+    box-sizing: border-box;
+    width: 100%;
+    flex: 1 1 auto;
+    margin: 0;
+    padding: 24px;
+    background-color: var(--inverted-surface);
+    color: var(--text-on-inverted-surface);
+    border-radius: 16px;
+    font-family: var(--font-mono, ui-monospace, "JetBrains Mono", "SFMono-Regular", Menlo, monospace);
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 500;
+    overflow: hidden;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .home-landing-control-audit-log__line {
+    display: block;
+  }
+
+  .home-landing-control-audit-log__time {
+    color: var(--palette-chrome-60);
+  }
+
+  .home-landing-control-audit-log__role {
+    color: var(--strong-branded-surface);
+  }
+
+  .home-landing-control-audit-log__text {
+    color: var(--text-on-inverted-surface);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Card 3 — Limit the scope                                           */
+  /* ------------------------------------------------------------------ */
+
+  .home-landing-control-scope {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .home-landing-control-scope__ellipse,
+  .home-landing-control-scope__icon {
+    position: absolute;
+    display: block;
+  }
+
+  .home-landing-control-scope__ellipse img,
+  .home-landing-control-scope__icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /**
+   * Coordinates from Figma `428:15140` (the scope card frame, 368×402).
+   * Each ellipse retains its in-Figma rotation so the overlapping
+   * pancake-style sandboxes feel hand-placed rather than concentric.
+   */
+  .home-landing-control-scope__ellipse--center {
+    left: 9px;
+    top: 160px;
+    width: 324px;
+    height: 322px;
+    transform: rotate(27.16deg);
+    transform-origin: center;
+  }
+
+  .home-landing-control-scope__ellipse--right {
+    left: 225px;
+    top: 179px;
+    width: 167px;
+    height: 166px;
+    transform: rotate(27.16deg);
+    transform-origin: center;
+  }
+
+  .home-landing-control-scope__ellipse--left {
+    left: -73px;
+    top: 182px;
+    width: 242px;
+    height: 242px;
+    transform: scaleY(-1) rotate(134.03deg);
+    transform-origin: center;
+  }
+
+  .home-landing-control-scope__icon--a {
+    left: 7px;
+    top: 251px;
+    width: 34px;
+    height: 30px;
+    transform: rotate(180deg);
+  }
+
+  .home-landing-control-scope__icon--b {
+    left: 148px;
+    top: 296px;
+    width: 69px;
+    height: 67px;
+    transform: scaleY(-1) rotate(180deg);
+  }
+
+  .home-landing-control-scope__icon--c {
+    left: 298px;
+    top: 229px;
+    width: 42px;
+    height: 40px;
+    transform: scaleY(-1);
+  }
 }

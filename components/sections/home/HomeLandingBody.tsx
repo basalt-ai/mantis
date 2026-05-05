@@ -7,6 +7,7 @@ import Link from "next/link";
 
 import { HOME_PAGE_CONTAINER_CLASS } from "@/components/sections/home/home-layout";
 import { HomeIntegrationsCloud } from "@/components/sections/home/HomeIntegrationsCloud";
+import { HomeLandingControl } from "@/components/sections/home/HomeLandingControl";
 import { HomeLandingFeatures } from "@/components/sections/home/HomeLandingFeatures";
 import { HomeOrgDiagram } from "@/components/sections/home/HomeOrgDiagram";
 import { SlackUI } from "@/components/shared/SlackUI";
@@ -105,16 +106,7 @@ export function HomeLandingBody() {
             <p className="home-landing-section__lede text-center">Jump in at any time, you always have the last word.</p>
           </header>
           <div className="home-landing-section__figure">
-            {/* eslint-disable-next-line @next/next/no-img-element -- Figma raster export (MCP screenshot) */}
-            <img
-              className="home-landing-section__img home-landing-section__img--rounded"
-              src="/home-landing-control-ui.png"
-              alt=""
-              width={1024}
-              height={363}
-              decoding="async"
-              loading="lazy"
-            />
+            <HomeLandingControl />
           </div>
         </div>
       </section>
