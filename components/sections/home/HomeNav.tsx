@@ -1,7 +1,11 @@
 import Link from "next/link";
+import { SiDiscord } from "react-icons/si";
 
 import { HOME_PAGE_CONTAINER_CLASS } from "@/components/sections/home/home-layout";
 import { Button } from "@/components/ui/Button";
+
+/** Same Discord invite as `main`'s Nav. */
+const DISCORD_INVITE_URL = "https://discord.gg/brJ99Up6ym";
 
 function MenuIcon() {
   return (
@@ -50,11 +54,17 @@ export function HomeNav() {
           </div>
 
           <nav className="hidden items-center lg:flex" style={{ gap: "calc(2 * var(--spacing-xl))" }} aria-label="Primary">
-            <Link href="/" className={navLinkClassName}>
-              Product
-            </Link>
+            <a
+              href={DISCORD_INVITE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${navLinkClassName} home-nav-primary-link--icon`}
+              aria-label="Join our Discord"
+            >
+              <SiDiscord size={20} aria-hidden />
+            </a>
             <Link href="/build-in-public" className={navLinkClassName}>
-              Resources
+              Build in public
             </Link>
             <Link href="/pricing" className={navLinkClassName}>
               Pricing
