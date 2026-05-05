@@ -127,19 +127,25 @@ export function HomeLandingBody() {
         </div>
       </section>
 
-      {/* Figma `428:15175` testimonials — heading lives in the centered
-          container; the carousel band sits outside so it can run full-bleed. */}
-      <section className="home-landing-section home-landing-section--testimonials" aria-labelledby="home-landing-testimonials-heading">
-        <div className={`${HOME_PAGE_CONTAINER_CLASS} home-landing-section__inner home-landing-section__inner--testimonials`}>
-          <header className="home-landing-section__header">
-            <H2 id="home-landing-testimonials-heading" className="heading home-landing-section__title text-center">
-              Take it from them
-            </H2>
-            <p className="home-landing-section__lede text-center">Here’s what our customers are saying</p>
-          </header>
-        </div>
-        <HomeLandingTestimonials />
-      </section>
+      {/*
+        Figma `428:15175` testimonials — TEMPORARILY HIDDEN.
+        Re-enable when the testimonial copy is real (the current strings are
+        placeholder fiction). Leaving the markup + the HomeLandingTestimonials
+        component in the repo so this is a single-block uncomment when the
+        real testimonials are ready.
+
+        <section className="home-landing-section home-landing-section--testimonials" aria-labelledby="home-landing-testimonials-heading">
+          <div className={`${HOME_PAGE_CONTAINER_CLASS} home-landing-section__inner home-landing-section__inner--testimonials`}>
+            <header className="home-landing-section__header">
+              <H2 id="home-landing-testimonials-heading" className="heading home-landing-section__title text-center">
+                Take it from them
+              </H2>
+              <p className="home-landing-section__lede text-center">Here's what our customers are saying</p>
+            </header>
+          </div>
+          <HomeLandingTestimonials />
+        </section>
+      */}
 
       {/* Figma `428:15160` closing CTA — mobile variant `451:20112` adds three
           decorative pancakes (purple top-left, half-pink bottom-left,
