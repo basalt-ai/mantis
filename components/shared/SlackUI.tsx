@@ -785,7 +785,12 @@ export function SlackUI() {
                 className="flex w-full shrink-0 flex-row items-center gap-2 px-3 py-2 md:w-[240px] md:flex-col md:items-stretch md:gap-0 md:px-3 md:pb-6 md:pt-4"
                 style={{ backgroundColor: SLACK_PURPLE }}
               >
-                <div className="flex shrink-0 items-center gap-2 md:mb-4 md:w-full md:px-2">
+                {/* Workspace glyph + name. Hidden on mobile so the channel
+                    rail can shift left and recover the ~40 px the glyph + gap
+                    used to consume — gives more room for the channel labels
+                    and the conversation column. Visible at md+ where there's
+                    a vertical sidebar with room for both. */}
+                <div className="hidden shrink-0 items-center gap-2 md:mb-4 md:flex md:w-full md:px-2">
                   <span
                     className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white/10 text-[15px] text-white ring-1 ring-white/15"
                     aria-hidden
