@@ -21,16 +21,18 @@ const CHIP_ARROW_CX = CHIP_ARROW_VB_W / 2;
 const CHIP_ARROW_CY = CHIP_ARROW_VB_H / 2;
 
 /** Figma `get_design_context` wrapper frames (Vector 264 / 265), not Dev metadata bbox.
- *  V264.x was 744 in the Figma export. With wrapper width 58.07 the right edge
- *  landed at x=802 — crossing the Pancake chip's left edge (x=800) by 2 units.
- *  After the path's rotation/scale, the rounded START cap of the stroke ended up
- *  ~1 unit INSIDE the chip, rendering as a visible grey "bulb" on the chip's
- *  dark surface. Shift x left by 4 so the entire wrapper sits in the gap
- *  between monster (right edge 736) and chip (left edge 800) — start cap now
- *  lands ~3 units outside the chip, matching how V265's start sits ~1 unit
- *  outside the You chip on the left side. */
+ *
+ *  Both wrappers were originally placed flush against their chip edge (V264 at
+ *  x=744 with right edge at 802 — crossing Pancake chip's left edge x=800; V265
+ *  at x=312.96 with left edge basically AT You chip's right edge x=313). After
+ *  the path's rotation/scale and the stroke's round line-cap, the START cap of
+ *  each arrow rendered as a visible grey "bulb" on the chip's dark surface.
+ *  Nudge each wrapper 4 units AWAY from its chip so the cap sits cleanly in the
+ *  gap between chip and icon:
+ *    • V264 (chip on right → monster on left): x 744 → 740 (shift left)
+ *    • V265 (chip on left → avatar on right): x 312.96 → 316.96 (shift right) */
 const V264_WRAPPER = { x: 740, y: 22.53125, w: 58.07, h: 32.288 };
-const V265_WRAPPER = { x: 312.96, y: 77.82, w: 54.87, h: 22.85 };
+const V265_WRAPPER = { x: 316.96, y: 77.82, w: 54.87, h: 22.85 };
 const V_PATH_INNER_W = 54.86962890625;
 const V_PATH_INNER_H = 22.850130081176758;
 const V264_INNER_OFFSET_X = (V264_WRAPPER.w - V_PATH_INNER_W) / 2;
