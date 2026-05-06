@@ -1436,6 +1436,34 @@
     overflow: visible;
   }
 
+  /* Desktop only: the chip cluster + tentacle anchor live around viewBox
+     x=960 in a 1786-wide viewBox, which puts the monster at 53.75% of
+     the cloud width — visibly right of cloud centre and (because the
+     cloud is centred on the page) right of the page centre. Shift the
+     entire cloud left by the same 3.75% so the monster + node of
+     tentacles land on viewport centre, matching the centred heading
+     above. Chips, callout, and tentacles all move together so the
+     internal geometry stays intact. Mobile uses its own override block
+     (see `@media (max-width: 1023.98px)` below) and is unaffected. */
+  @media (min-width: 1024px) {
+    .home-integrations-cloud {
+      transform: translateX(-3.75%);
+    }
+
+    /* Tighten the gap between the "Endless integrations / Plug in your
+       stack..." header and the cloud below — the default
+       `--spacing-home-landing-header-to-media` is 4 × xl (64 px), which
+       reads as too much whitespace because the cloud has built-in top
+       padding (the topmost chip — GitHub — sits ~104 viewBox units down
+       from the cloud's top edge, baking in another ~66 px of empty
+       space). Cut the section gap in half so the visual gap matches the
+       other sections without touching their tokens. */
+    section[aria-labelledby="home-landing-integrations-heading"]
+      .home-landing-section__inner {
+      gap: calc(2 * var(--spacing-xl));
+    }
+  }
+
   /**
    * Viz wrapper — holds the SVG cloud + the interactive monster. On desktop
    * it fills the aspect-ratio'd `.home-integrations-cloud` parent. On mobile
@@ -3020,16 +3048,27 @@
       transform-origin: center center;
     }
     /* The monster div sits OUTSIDE the SVG so it doesn't inherit the SVG's
-       transform — scale it manually with the same factor. Default monster
-       width is `clamp(88px, 14.5cqi, 195px)`; the 88px floor dwarfs the
-       chips on the small mobile container, so override to unclamped
-       `14.5cqi` (matches desktop monster:chip ratio ~1.5×). Override the
-       inline `left: 53.75%` (= ANCHOR_X / VB_W of the original viewBox)
-       to `50%` so the monster lands on the same shifted center the chips
-       do, not on the original anchor's now-misaligned position. */
+       `translateX(-6.65%) scale(1.4)` — scale it manually AND replicate the
+       horizontal/vertical shift so it stays welded to the tentacle anchor
+       point (viewBox x=960, y=435 → mapped through the SVG transform).
+       Default monster width is `clamp(88px, 14.5cqi, 195px)`; the 88px
+       floor dwarfs the chips on the small mobile container, so override
+       to unclamped `14.5cqi` (matches desktop monster:chip ratio ~1.5×).
+
+       Math (mobile wrapper aspect 5/6, SVG viewBox aspect 1786/900):
+         X: SVG content fills wrapper width, so anchor x is at the same
+            % of the element as in the viewBox: 960/1786 = 53.75%.
+            Scale(1.4) about element center (50%): 50 + (53.75 − 50) × 1.4
+            = 55.25%. TranslateX(−6.65%): 55.25 − 6.65 = 48.6%.
+         Y: SVG content is letterboxed vertically (height 156.2 in a 372
+            element → 107.9px top padding). Anchor y in element coords:
+            107.9 + (435/900) × 156.2 = 183.4 → 49.30% of element height.
+            Scale(1.4) about element center (50%): 50 + (49.30 − 50) × 1.4
+            = 49.02%. No vertical translate. So top: 49.02%. */
     .home-integrations-cloud__monster {
       width: 14.5cqi;
-      left: 50% !important;
+      left: 48.6% !important;
+      top: 49.02% !important;
       transform: translate(-50%, -50%) scale(1.4);
     }
     .home-integrations-cloud__callout {
