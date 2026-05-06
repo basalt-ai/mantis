@@ -2859,6 +2859,31 @@
       text-align: center;
       white-space: normal !important;
     }
+
+    /* Tablet (>=768 and <lg): the headline is centered + free to span the
+       full hero width, but the pancake monster's orbit satellites are
+       pinned absolutely at fixed pixel offsets from the (centered) monster
+       (~168 px outboard via --sat-dx). At 768-1023 the headline grows
+       wider than the satellite envelope, so the orange + pink satellites
+       visually crash into the title and subhead text (issue surfaced by
+       /qa).
+       Cap the centered text + CTA at 320 px so the headline ends inside
+       the satellite-clear zone (monster_center ± ~160 px). At this width
+       the title wraps to roughly the same 5 lines as the mobile comp,
+       and the satellites sit cleanly to the left/right of the text in
+       the surrounding whitespace.
+       Mobile (<768) is already narrower than 320 px so this is a no-op
+       there; desktop (>=1024) lives in a different branch entirely. */
+    @media (min-width: 768px) {
+      .home-hero-text-stack {
+        max-width: 320px;
+        margin-inline: auto;
+      }
+      .home-hero-cta-row {
+        max-width: 320px;
+        margin-inline: auto;
+      }
+    }
     /* Mobile hero typography lifted directly from Figma `451:19365` (title)
        and `451:19366` (body). The defaults gave a 32 px title and 22.6 px
        body which read too large for the mobile composition; Figma uses a
