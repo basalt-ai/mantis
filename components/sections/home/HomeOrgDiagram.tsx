@@ -70,10 +70,22 @@ export function HomeOrgDiagram() {
           aria-hidden
           focusable="false"
         >
-          {/* Vector 264 / 265 — `d` from MCP SVG; wrapper x/y from get_design_context (not metadata bbox). */}
-          <g transform={`translate(${V264_WRAPPER.x} ${V264_WRAPPER.y}) translate(${V264_INNER_OFFSET_X} ${V264_INNER_OFFSET_Y})`}>
-            <g transform={`scale(${CHIP_ARROW_SX} ${CHIP_ARROW_SY}) rotate(10.29 ${CHIP_ARROW_CX} ${CHIP_ARROW_CY})`}>
-              <path className="home-org-diagram__chip-arrow-path" d={CHIP_CONNECTOR_PATH_D} />
+          {/* Vector 264 / 265 — `d` from MCP SVG; wrapper x/y from get_design_context (not metadata bbox).
+              V264 is the Pancake-co-founder side arrow (chip on right → monster on left).
+              V265 is the You-the-founder side arrow (chip on left → avatar on right).
+              V264 used to render with rotation 10.29° (near-natural orientation), which made
+              the arrow exit the chip near its top and travel mostly horizontally into the
+              monster — visually different from V265's "exits chip lower, curves up into
+              icon" feel. To match V265 (mirrored across the vertical axis), V264 now applies
+              a vertical flip via `scale(1 -1)` around its wrapper centre (translate by
+              wrapper height first to keep the path in positive y after the flip). The result
+              is a mirror image of V265 — chip exits at its lower edge, arrow curves up into
+              monster's upper area. */}
+          <g transform={`translate(${V264_WRAPPER.x} ${V264_WRAPPER.y})`}>
+            <g transform={`translate(0 ${V264_WRAPPER.h}) scale(1 -1) translate(${V264_INNER_OFFSET_X} ${V264_INNER_OFFSET_Y})`}>
+              <g transform={`scale(${CHIP_ARROW_SX} ${CHIP_ARROW_SY}) rotate(10.29 ${CHIP_ARROW_CX} ${CHIP_ARROW_CY})`}>
+                <path className="home-org-diagram__chip-arrow-path" d={CHIP_CONNECTOR_PATH_D} />
+              </g>
             </g>
           </g>
           <g transform={`translate(${V265_WRAPPER.x} ${V265_WRAPPER.y})`}>
