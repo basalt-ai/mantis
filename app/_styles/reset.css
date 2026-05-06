@@ -18,6 +18,15 @@
   }
 
   body {
+    /* Margin/background/color used to live as an inline `style` on <body> in
+       app/layout.tsx, which produced a React hydration warning on every page
+       load — Next.js serializes inline JSX styles slightly differently from
+       the client (e.g. `0px` vs `0`, semicolons + spaces vs none). Moving
+       to a real CSS rule eliminates the SSR/CSR drift without changing the
+       computed result. */
+    margin: 0;
+    background-color: var(--surface);
+    color: var(--text);
     min-height: 100vh;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;

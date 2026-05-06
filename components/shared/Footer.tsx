@@ -46,7 +46,7 @@ export function Footer() {
             }}
           />
           <span className="whitespace-nowrap text-center sm:text-left">
-            535 Mission St, San Francisco, CA 94105, États-Unis
+            535 Mission St, San Francisco, CA 94105, USA
           </span>
         </div>
 

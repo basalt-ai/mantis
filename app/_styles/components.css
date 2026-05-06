@@ -406,6 +406,23 @@
     .home-hero-text-stack {
       transform: translateX(var(--spacing-home-nav-logo-nudge-x));
     }
+    /* Hero fills the viewport *under* the fixed-position nav header on
+       desktop — `100vh` minus the nav's measured height (144px = 2×xxl
+       padding top/bottom + ~44px logo, see HomeNav.tsx). The inner grid
+       (with its own padding-top + row-gap) is vertically centered inside
+       the section so the headline + monster ensemble sits in the middle
+       of the screen instead of the top, matching the comp's "first
+       impression" treatment. Subtracting the nav is what keeps the
+       hero+nav combined from overflowing the viewport. */
+    .home-hero {
+      min-height: calc(100vh - 144px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .home-hero > div {
+      width: 100%;
+    }
   }
 
   .home-hero-cta-row {
@@ -953,7 +970,11 @@
     flex-direction: column;
     gap: clamp(var(--spacing-md), 2.2cqi, var(--spacing-xxl));
     width: calc(368 / 1136 * 100%);
-    min-height: calc(332 / 706 * 100%);
+    /* No `min-height`: the box now resizes down when agents leave just like
+       it resizes up when they're added. The previous 47% floor (332/706)
+       kept the dept block tall after removals, leaving empty space at the
+       bottom. Hugging content makes the FLIP-driven height tween shrink
+       symmetrically to how it grows. */
     height: auto;
     max-height: none;
     padding: clamp(var(--spacing-md), 2.8cqi, calc(2 * var(--spacing-xl)));
@@ -1364,13 +1385,22 @@
     color: var(--text);
   }
 
+  /**
+   * Closing CTA — button on top, "No credit card needed" centered below.
+   * Used to be `flex-direction: row` with `flex-wrap: wrap`, which left the
+   * button and note side-by-side on desktop and stacked on mobile. The
+   * stacked-mobile case ended up left-aligned at certain widths because of
+   * how flex-wrap distributes wrapped items. Switched to a centered column
+   * at all breakpoints — visually cleaner and removes the breakpoint bug.
+   */
   .home-landing-closing-cta {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: var(--spacing-xxl);
+    gap: var(--spacing-md);
+    width: 100%;
+    text-align: center;
   }
 
   .home-landing-closing-cta__note {
@@ -1380,6 +1410,13 @@
     font-weight: var(--font-normal);
     line-height: var(--line-height-home-hero-cta-note);
     color: var(--text);
+  }
+
+  /* Decorative pancakes around the closing CTA — mobile-only (Figma `451:20112`).
+     Default is hidden so they never appear on desktop. The mobile @media block
+     positions and shows them. */
+  .home-landing-closing-decor {
+    display: none;
   }
 
   /**
@@ -1397,6 +1434,46 @@
     container-type: inline-size;
     container-name: integrations-cloud;
     overflow: visible;
+  }
+
+  /* Desktop only: the chip cluster + tentacle anchor live around viewBox
+     x=960 in a 1786-wide viewBox, which puts the monster at 53.75% of
+     the cloud width — visibly right of cloud centre and (because the
+     cloud is centred on the page) right of the page centre. Shift the
+     entire cloud left by the same 3.75% so the monster + node of
+     tentacles land on viewport centre, matching the centred heading
+     above. Chips, callout, and tentacles all move together so the
+     internal geometry stays intact. Mobile uses its own override block
+     (see `@media (max-width: 1023.98px)` below) and is unaffected. */
+  @media (min-width: 1024px) {
+    .home-integrations-cloud {
+      transform: translateX(-3.75%);
+    }
+
+    /* Tighten the gap between the "Endless integrations / Plug in your
+       stack..." header and the cloud below — the default
+       `--spacing-home-landing-header-to-media` is 4 × xl (64 px), which
+       reads as too much whitespace because the cloud has built-in top
+       padding (the topmost chip — GitHub — sits ~104 viewBox units down
+       from the cloud's top edge, baking in another ~66 px of empty
+       space). Cut the section gap in half so the visual gap matches the
+       other sections without touching their tokens. */
+    section[aria-labelledby="home-landing-integrations-heading"]
+      .home-landing-section__inner {
+      gap: calc(2 * var(--spacing-xl));
+    }
+  }
+
+  /**
+   * Viz wrapper — holds the SVG cloud + the interactive monster. On desktop
+   * it fills the aspect-ratio'd `.home-integrations-cloud` parent. On mobile
+   * it carries the 1786/900 aspect ratio itself (the parent reflows to a
+   * flex column to stack the callout below the cloud).
+   */
+  .home-integrations-cloud__viz {
+    position: relative;
+    width: 100%;
+    height: 100%;
   }
 
   .home-integrations-cloud__svg {
@@ -2363,5 +2440,712 @@
 
   .metrics-tooltip__row-value {
     font-weight: 700;
+  }
+
+  /* Hide the mobile-only org block at all breakpoints by default; the
+     mobile media-query below switches the desktop / mobile pair. */
+  .home-landing-org-mobile {
+    display: none;
+  }
+  /* The desktop wrapper is a flex child of `home-landing-section__figure--org`
+     and otherwise collapses to 0 width (its content uses width:100% and has
+     no intrinsic min-content). Force it to fill the figure column. */
+  .home-landing-org-desktop {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* ─────────────────── Mobile nav drawer (Figma `451:20140`) ───────────────────
+     Full-bleed inverted-surface overlay with the Pancake wordmark on top
+     and stacked nav links. Opens from the hamburger button (only at <lg).
+     The overlay covers the page including the header so the X button can
+     replace the hamburger visually. */
+  .home-nav-mobile-drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background-color: var(--inverted-surface);
+    color: var(--text-on-inverted-surface);
+    display: none;
+    overflow-y: auto;
+    border-bottom-left-radius: 48px;
+    border-bottom-right-radius: 48px;
+  }
+
+  .home-nav-mobile-drawer--open {
+    display: block;
+  }
+
+  .home-nav-mobile-drawer__inner {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 100%;
+    padding: var(--spacing-xl) calc(var(--spacing-xl) + var(--spacing-md));
+    display: flex;
+    flex-direction: column;
+    gap: calc(2 * var(--spacing-xxl));
+  }
+
+  .home-nav-mobile-drawer__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+  }
+
+  .home-nav-mobile-drawer__logo {
+    display: inline-flex;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .home-nav-mobile-drawer__wordmark {
+    font-family: var(--font-display);
+    font-weight: var(--font-semibold);
+    font-size: 26px;
+    color: var(--text-on-inverted-surface);
+  }
+
+  .home-nav-mobile-drawer__close {
+    background: none;
+    border: 0;
+    padding: var(--spacing-md);
+    color: var(--text-on-inverted-surface);
+    cursor: pointer;
+    border-radius: var(--radius-md);
+  }
+
+  .home-nav-mobile-drawer__nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xxl);
+  }
+
+  .home-nav-mobile-drawer__link {
+    color: var(--text-on-inverted-surface);
+    text-decoration: none;
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: var(--font-semibold);
+    padding-block: var(--spacing-md);
+  }
+
+  /* ─────────────────── Mobile org diagram (Figma `596:2940`) ───────────────────
+     The mobile component lives at .home-landing-org-mobile and is shown
+     only below the lg breakpoint via the @media block below. */
+  .home-org-mobile {
+    width: 100%;
+    max-width: 480px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xxl);
+  }
+
+  .home-org-mobile-bubble {
+    align-self: center;
+    background-color: var(--strong-branded-surface);
+    color: var(--text);
+    border-radius: 16px;
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 18px;
+    text-align: center;
+  }
+
+  .home-org-mobile-bubble p {
+    margin: 0;
+  }
+
+  .home-org-mobile-pair {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    width: 100%;
+  }
+
+  .home-org-mobile-pair__connector {
+    flex: 0 0 auto;
+    width: 60px;
+    height: 32px;
+    margin: 24px -8px 0 -8px;
+    align-self: flex-start;
+    overflow: visible;
+  }
+
+  /* Traveling balls along the You↔Pancake dotted arc — same look as the
+     dept wires on desktop (filled chrome dots, no stroke). */
+  .home-org-mobile-pair__ball {
+    fill: var(--palette-chrome-100, #2c002a);
+    pointer-events: none;
+  }
+
+  .home-org-mobile-mascot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
+
+  .home-org-mobile-mascot__icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: var(--alt-weak-branded-surface-01);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .home-org-mobile-mascot--pancake .home-org-mobile-mascot__icon {
+    background-color: transparent;
+  }
+
+  .home-org-mobile-mascot__icon img,
+  .home-org-mobile-mascot__svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .home-org-mobile-mascot__chip {
+    background-color: var(--inverted-surface);
+    color: var(--text-on-inverted-surface);
+    border-radius: 12px;
+    padding: 8px 14px;
+    text-align: left;
+    /* Wide enough to fit "Pancake / Your co-founder" without wrap so both
+       chips render at the same width. Equal chip widths → equal mascot
+       column widths → icons sit symmetric → the connector arc centers
+       perfectly between the two icons instead of biasing left. */
+    min-width: 124px;
+    box-sizing: border-box;
+  }
+
+  .home-org-mobile-mascot__title {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-on-inverted-surface);
+    line-height: 1.2;
+  }
+
+  .home-org-mobile-mascot__sub {
+    margin: 2px 0 0;
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: var(--subtle-text-on-inverted-surface);
+    line-height: 1.25;
+  }
+
+  .home-org-mobile-eyebrow {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: var(--font-semibold);
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  /* Carousel — full-bleed (escapes the section's left/right padding) so
+     adjacent cards peek in from the edges, matching the Figma comp. */
+  .home-org-mobile-carousel {
+    width: 100vw;
+    max-width: 100vw;
+    margin-inline: calc(50% - 50vw);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+  }
+
+  .home-org-mobile-carousel__track {
+    display: flex;
+    gap: var(--spacing-md);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 16%;
+    padding-inline: 16%;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .home-org-mobile-carousel__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .home-org-mobile-card {
+    flex: 0 0 calc(100vw - 64px);
+    max-width: 320px;
+    scroll-snap-align: center;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-xl);
+    border: 1px solid transparent;
+  }
+
+  .home-org-mobile-card--growth {
+    background-color: var(--alt-weak-branded-surface-02);
+    border-color: var(--branded-stroke-03);
+  }
+
+  .home-org-mobile-card--engineering {
+    background-color: var(--alt-weak-branded-surface-01);
+    border-color: var(--branded-stroke-02);
+  }
+
+  .home-org-mobile-card--operations {
+    background-color: var(--weak-branded-surface);
+    border-color: var(--branded-stroke-01);
+  }
+
+  .home-org-mobile-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: var(--font-semibold);
+    font-size: 20px;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .home-org-mobile-card__rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .home-org-mobile-row {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background-color: var(--elevated-surface);
+    border-radius: var(--radius-sm);
+  }
+
+  .home-org-mobile-row__dot {
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .home-org-mobile-row__dot--positive { background-color: var(--positive-text); }
+  .home-org-mobile-row__dot--warning { background-color: var(--warning-text); }
+  .home-org-mobile-row__dot--negative { background-color: var(--negative-text); }
+
+  .home-org-mobile-row__label {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  .home-org-mobile-dots {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+  }
+
+  .home-org-mobile-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 0;
+    padding: 0;
+    background-color: var(--stroke);
+    cursor: pointer;
+  }
+
+  .home-org-mobile-dot--active {
+    background-color: var(--inverted-surface);
+  }
+
+  .home-org-mobile-tailor {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--surface);
+    border: 1px solid var(--stroke);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xxl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    text-align: left;
+  }
+
+  .home-org-mobile-tailor__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: var(--font-semibold);
+    font-size: 22.62px;
+    line-height: 28px;
+    color: var(--text);
+  }
+
+  .home-org-mobile-tailor__body {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--text);
+  }
+
+  /* Testimonials mobile — snap carousel + dots (Figma `451:19562`). */
+  .home-landing-testimonials__mobile {
+    display: none;
+  }
+
+  .home-landing-testimonials__track--mobile {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 16%;
+    padding-inline: 16%;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .home-landing-testimonials__track--mobile::-webkit-scrollbar {
+    display: none;
+  }
+
+  .home-landing-testimonials__track--mobile .home-landing-testimonial {
+    flex: 0 0 calc(100vw - 64px);
+    max-width: 360px;
+    scroll-snap-align: center;
+  }
+
+  .home-landing-testimonials__dots {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+  }
+
+  .home-landing-testimonials__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 0;
+    padding: 0;
+    background-color: var(--stroke);
+    cursor: pointer;
+  }
+
+  .home-landing-testimonials__dot--active {
+    background-color: var(--inverted-surface);
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+     Mobile responsive overrides (< lg / 1024 px).
+     Desktop (>= 1024 px) is untouched. Below the lg breakpoint we ship
+     a parallel mobile layout that mirrors Figma `451:19194` while
+     preserving the underlying animations.
+     ───────────────────────────────────────────────────────────────── */
+  @media (max-width: 1023.98px) {
+    /* === Org section: swap desktop diagram for mobile component === */
+    .home-landing-org-desktop { display: none; }
+    .home-landing-org-mobile { display: block; }
+
+    /* === Hero — pancake monster centered above the headline. ===
+       Desktop puts the pancake stack to the right of the title; the
+       mobile comp stacks: pancake on top, then headline, then sub +
+       CTA + "No credit card needed". The grid reflows to a single
+       column with the pancake first. */
+    .home-hero > div {
+      grid-template-columns: 1fr !important;
+      /* In-between rhythm: pancake stack stays anchored near the top
+         (small padding-top), but row-gap and inter-paragraph spacing
+         keep enough breathing room that the hero doesn't feel cramped.
+         The whole block still lands above a 720 px viewport. */
+      row-gap: calc(2 * var(--spacing-xxl) + 7px) !important;
+      padding-top: var(--spacing-md) !important;
+      padding-bottom: var(--spacing-lg) !important;
+    }
+    /* Mid-weight inter-paragraph spacing inside the text stack — bigger
+       than mobile-tight, smaller than desktop-airy. */
+    .home-hero {
+      --spacing-home-hero-after-title: var(--spacing-lg);
+      --spacing-home-hero-after-subtitle: var(--spacing-xl);
+    }
+    .home-hero-text-stack {
+      order: 2;
+      text-align: center;
+    }
+    .home-hero-text-stack h1,
+    .home-hero-text-stack .home-hero-body {
+      text-align: center;
+      white-space: normal !important;
+    }
+
+    /* Tablet (>=768 and <lg): the headline is centered + free to span the
+       full hero width, but the pancake monster's orbit satellites are
+       pinned absolutely at fixed pixel offsets from the (centered) monster
+       (~168 px outboard via --sat-dx). At 768-1023 the headline grows
+       wider than the satellite envelope, so the orange + pink satellites
+       visually crash into the title and subhead text (issue surfaced by
+       /qa).
+       Cap the centered text + CTA at 320 px so the headline ends inside
+       the satellite-clear zone (monster_center ± ~160 px). At this width
+       the title wraps to roughly the same 5 lines as the mobile comp,
+       and the satellites sit cleanly to the left/right of the text in
+       the surrounding whitespace.
+       Mobile (<768) is already narrower than 320 px so this is a no-op
+       there; desktop (>=1024) lives in a different branch entirely. */
+    @media (min-width: 768px) {
+      .home-hero-text-stack {
+        max-width: 320px;
+        margin-inline: auto;
+      }
+      .home-hero-cta-row {
+        max-width: 320px;
+        margin-inline: auto;
+      }
+    }
+    /* Mobile hero typography lifted directly from Figma `451:19365` (title)
+       and `451:19366` (body). The defaults gave a 32 px title and 22.6 px
+       body which read too large for the mobile composition; Figma uses a
+       chunkier 39.81 px display title with a tight 40 px line-height
+       (matches the 5-line wrap in the comp) and a 19.2 px body. */
+    .home-hero h1.heading {
+      font-size: 39.81px;
+      line-height: 40px;
+      letter-spacing: -0.7962px;
+    }
+    .home-hero .home-hero-body {
+      font-size: 19.2px;
+      line-height: 26.88px;
+    }
+    .home-hero .home-hero-cta-note {
+      font-size: 13.33px;
+      line-height: 16px;
+    }
+    .home-hero-cta-row {
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-md);
+      /* Without width:100%, the flex container shrinks to the widest child
+         (the button) and sits at the text-stack's left edge — `align-items:
+         center` then has nothing to align across, so button + note both
+         left-anchor. Stretching to full width lets the centering bite. */
+      width: 100%;
+    }
+    .home-hero-cta-row .button {
+      width: 100%;
+      max-width: 280px;
+    }
+    .home-hero-pancake {
+      order: 1;
+      margin-inline: auto;
+      /* Default rule sets display:none below 1024px — re-enable for mobile. */
+      display: flex !important;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      transform: none !important;
+      /* MOBILE SIZING STRATEGY — three separate scales:
+         a) MONSTER (interactive PancakeMonster SVG): 108 px so it fits
+            inside the cream ellipse with breathing room (per Figma).
+         b) ELLIPSE: 159.6 px — Figma `451:19361 "top"` is 160 px. Pinned
+            here as a fixed value because the default `:root` calc would
+            ignore the cascaded `--max-width` override.
+         c) ORBITS + SATELLITES: scale relative to a virtual "max-width"
+            of 140 px instead of 108 — pushes the dotted orbit curves
+            farther out and moves the orbit-2 satellite (pink pancake)
+            further right + down so it clears the title text. The
+            JSX-emitted `--sat-dx` / `--sat-dy` use `--size-home-hero-
+            monster-max-width` directly, so bumping this value scales every
+            satellite uniformly (preserves the inter-satellite proportions
+            from desktop). All orbit widths are re-derived from the same
+            140 px base so orbits 2-6 grow by the same 1.3× factor and
+            keep their relative ratios. */
+      --size-home-hero-monster-max-width: 160px;
+      --size-home-hero-monster-ellipse-width: 159.6px;
+      --size-home-hero-monster-interactive-max-width: 150px;
+      --size-home-hero-monster-dotted-ring-width:
+        calc(160px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823));
+      --size-home-hero-monster-orbit-2-width:
+        calc(160px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823) * 316266251017 / 236434260807);
+      --size-home-hero-monster-orbit-3-width:
+        calc(160px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823) * 1669761334199 / 986586030650);
+      --size-home-hero-monster-orbit-4-width:
+        calc(160px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823) * 1455713360546 / 690410988819);
+      --size-home-hero-monster-orbit-5-width:
+        calc(160px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823) * 1077335507215 / 401945628013);
+      --size-home-hero-monster-orbit-6-width:
+        calc(160px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823) * 2711963235409 / 778550001398);
+    }
+    /* Hero clip — orbits/satellites scale relative to monster width and would
+       otherwise punch out into the next section at this size. */
+    .home-hero {
+      overflow: hidden;
+    }
+    .home-hero-pancake-stack-inner {
+      /* Pin the layout slot to the monster's actual rendered size (108 px),
+         NOT to `--size-home-hero-monster-max-width` (which we hijacked to
+         140 px to scale the orbits + satellites further out). The stack
+         needs to match the monster + ellipse footprint so the layout flow
+         is sized to the visible mascot, not the larger orbit envelope. */
+      width: 108px;
+      min-height: 108px;
+      /* Nudge the cream ellipse + monster down so the top of the ellipse
+         clears the white header. `transform` (not `margin`) keeps every
+         other element where it is — title / body / CTA stay put except
+         for the +1 px nudge handled separately via row-gap. */
+      transform: translateY(19px);
+    }
+
+    /* === Integrations cloud — restructure: cloud on top, callout below
+       (Figma mobile 451:19545 stacks them vertically instead of overlaying).
+       Also ZOOMED — viz is square + SVG scaled 2× so chips look as big as
+       they do in the comp instead of the desktop's wide-and-shrunk band. === */
+    .home-integrations-cloud {
+      aspect-ratio: auto;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xl);
+      overflow: visible;
+    }
+    .home-integrations-cloud__viz {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 5 / 6;
+      overflow: hidden;
+    }
+    .home-integrations-cloud__svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      /*
+       * Compose two transforms:
+       *   1. translateX(-6.65%) shifts the SVG content LEFT so the visible
+       *      crop window centers on the CHIP CLUSTER (viewBox x≈978), not
+       *      on the viewBox center (x=893). The right-side chips (Notion,
+       *      LinkedIn, Claude) push the cluster center 85 viewBox units
+       *      right of the viewBox center, and without this shift the cloud
+       *      reads as drifting right and crops X on the left.
+       *   2. scale(1.4) zooms uniformly. 1.4× is the max we can use without
+       *      cropping the corner chips: the chip-cluster x span is 1196
+       *      viewBox units (X at 380 to Claude at 1576), and the visible
+       *      window after scale is 1786/scale viewBox units wide; scale
+       *      1.4 gives a 1276-unit window — 40 units of padding past each
+       *      extreme. Pushing scale higher (1.55, 1.7) crops X or Claude.
+       */
+      transform: translateX(-6.65%) scale(1.4);
+      transform-origin: center center;
+    }
+    /* The monster div sits OUTSIDE the SVG so it doesn't inherit the SVG's
+       `translateX(-6.65%) scale(1.4)` — scale it manually AND replicate the
+       horizontal/vertical shift so it stays welded to the tentacle anchor
+       point (viewBox x=960, y=435 → mapped through the SVG transform).
+       Default monster width is `clamp(88px, 14.5cqi, 195px)`; the 88px
+       floor dwarfs the chips on the small mobile container, so override
+       to unclamped `14.5cqi` (matches desktop monster:chip ratio ~1.5×).
+
+       Math (mobile wrapper aspect 5/6, SVG viewBox aspect 1786/900):
+         X: SVG content fills wrapper width, so anchor x is at the same
+            % of the element as in the viewBox: 960/1786 = 53.75%.
+            Scale(1.4) about element center (50%): 50 + (53.75 − 50) × 1.4
+            = 55.25%. TranslateX(−6.65%): 55.25 − 6.65 = 48.6%.
+         Y: SVG content is letterboxed vertically (height 156.2 in a 372
+            element → 107.9px top padding). Anchor y in element coords:
+            107.9 + (435/900) × 156.2 = 183.4 → 49.30% of element height.
+            Scale(1.4) about element center (50%): 50 + (49.30 − 50) × 1.4
+            = 49.02%. No vertical translate. So top: 49.02%. */
+    .home-integrations-cloud__monster {
+      width: 14.5cqi;
+      left: 48.6% !important;
+      top: 49.02% !important;
+      transform: translate(-50%, -50%) scale(1.4);
+    }
+    .home-integrations-cloud__callout {
+      position: relative !important;
+      left: auto !important;
+      top: auto !important;
+      width: 100% !important;
+      max-width: 440px;
+      margin-inline: auto;
+      transform: none !important;
+      white-space: normal;
+      text-align: center;
+    }
+
+    /* === Testimonials — mobile snap carousel replaces desktop ticker === */
+    .home-landing-testimonials__track--desktop { display: none; }
+    .home-landing-testimonials__mobile { display: block; }
+
+    /* === Section title clearance === */
+    .home-landing-section__inner {
+      gap: var(--spacing-xxl);
+    }
+
+    /* === Closing CTA — decorative pancake satellites (Figma 451:20112). === */
+    .home-landing-section--closing {
+      position: relative;
+      overflow: hidden;
+    }
+    .home-landing-closing-decor {
+      display: block;
+      position: absolute;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .home-landing-closing-decor--purple {
+      top: var(--spacing-md);
+      left: calc(-1 * var(--spacing-md));
+      width: 76px;
+      height: 76px;
+    }
+    .home-landing-closing-decor--pink {
+      bottom: var(--spacing-xxl);
+      left: calc(-1 * var(--spacing-xl));
+      width: 96px;
+      height: 96px;
+    }
+    .home-landing-closing-decor--orange {
+      top: 18%;
+      right: calc(-2 * var(--spacing-xl));
+      width: 76px;
+      height: 76px;
+    }
+    .home-landing-section--closing .home-landing-section__inner {
+      position: relative;
+      z-index: 1;
+      align-items: center;
+      text-align: center;
+    }
+    /* Closing CTA row stacks vertically and centers (default desktop is
+       horizontal flex-wrap which left-aligns when wrapped). */
+    .home-landing-closing-cta {
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-md);
+      width: 100%;
+    }
+
+    /* === Org dept carousel — peek adjacent cards for swipe affordance. === */
+    .home-org-mobile-card {
+      flex-basis: min(78vw, 320px) !important;
+      flex-shrink: 0;
+    }
+
+    /* === Testimonials carousel — peek adjacent cards. === */
+    .home-landing-testimonials__track--mobile .home-landing-testimonial {
+      flex-basis: min(82vw, 340px) !important;
+      flex-shrink: 0;
+    }
   }
 }

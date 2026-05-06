@@ -2,6 +2,7 @@
 
 import type { Dispatch, RefObject, SetStateAction } from "react";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { flushSync } from "react-dom";
 
 import { gsap } from "@/lib/gsap";
 
@@ -149,10 +150,17 @@ function findRowElInArticle(article: HTMLElement | null, id: string): HTMLElemen
 }
 
 /** Fallback when per-surface refs are not set yet (should be rare). */
-function findDeptArticle(root: HTMLElement | null, surface: OrgSurface): HTMLElement | null {
+function findDeptArticle(
+  root: HTMLElement | null,
+  surface: OrgSurface,
+  selector: (s: OrgSurface) => string,
+): HTMLElement | null {
   if (!root) return null;
-  return root.querySelector<HTMLElement>(`article.home-org-diagram__dept--${surface}`);
+  return root.querySelector<HTMLElement>(selector(surface));
 }
+
+const DEFAULT_DEPT_SELECTOR = (surface: OrgSurface) =>
+  `article.home-org-diagram__dept--${surface}`;
 
 type HomeOrgLiveRowsProps = {
   scrollRootRef: RefObject<HTMLElement | null>;
@@ -162,7 +170,44 @@ type HomeOrgLiveRowsProps = {
 
 const SURFACES: OrgSurface[] = ["growth", "engineering", "operations"];
 
-export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOrgLiveRowsProps) {
+/**
+ * Live add/remove ticker shared between the desktop org diagram and the
+ * mobile carousel. The hook owns all timers, refs, and FLIP transitions; the
+ * caller only renders the article shells (so desktop's absolute layout and
+ * mobile's snap-scroll cards can each style their own way).
+ *
+ * Caller contract:
+ *  - Each dept's article element MUST be attached via `registerArticle(surface)`.
+ *  - Each row inside MUST carry `data-org-live-row={row.id}` so the ticker
+ *    can find/animate/remove it. Class names don't matter; the ticker uses
+ *    the data-attr for lookup and `clearProps`-style transforms for motion.
+ *  - The optional `articleSelector` is the fallback used if the ref isn't
+ *    set yet (rare race during HMR / first paint). Pass a selector that
+ *    matches your article markup.
+ */
+export type UseOrgLiveTickerOptions = {
+  scrollRootRef: RefObject<HTMLElement | null>;
+  deptRows: Record<OrgSurface, LiveRow[]>;
+  setDeptRows: Dispatch<SetStateAction<Record<OrgSurface, LiveRow[]>>>;
+  /** Fallback selector when ref-based article lookup misses. */
+  articleSelector?: (surface: OrgSurface) => string;
+};
+
+export function useOrgLiveTicker({
+  scrollRootRef,
+  deptRows,
+  setDeptRows,
+  articleSelector = DEFAULT_DEPT_SELECTOR,
+}: UseOrgLiveTickerOptions) {
+  return useOrgLiveTickerImpl({ scrollRootRef, deptRows, setDeptRows, articleSelector });
+}
+
+function useOrgLiveTickerImpl({
+  scrollRootRef,
+  deptRows,
+  setDeptRows,
+  articleSelector,
+}: Required<UseOrgLiveTickerOptions>) {
   const reducedMotion = useMemo(
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     [],
@@ -231,9 +276,9 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
     (surface: OrgSurface): HTMLElement | null => {
       const fromRef = deptArticleBySurfaceRef.current[surface];
       if (fromRef?.isConnected) return fromRef;
-      return findDeptArticle(scrollRootRef.current, surface);
+      return findDeptArticle(scrollRootRef.current, surface, articleSelector);
     },
-    [scrollRootRef],
+    [scrollRootRef, articleSelector],
   );
 
   /**
@@ -419,16 +464,15 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
            */
           rowEl.style.visibility = "hidden";
           rowEl.style.opacity = "0";
-          setDeptRows((prev) => ({
-            ...prev,
-            [surface]: prev[surface].filter((r) => r.id !== victim.id),
-          }));
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              flipReflowRows(article, beforeRects, 0.42, "power3.out");
-              flipReflowArticleHeight(article, beforeArticleH, 0.42, "power3.out");
-            });
+          /** Same flushSync trick as the onComplete path — see comment there. */
+          flushSync(() => {
+            setDeptRows((prev) => ({
+              ...prev,
+              [surface]: prev[surface].filter((r) => r.id !== victim.id),
+            }));
           });
+          flipReflowRows(article, beforeRects, 0.42, "power3.out");
+          flipReflowArticleHeight(article, beforeArticleH, 0.42, "power3.out");
         }
         scheduleSurfaceNextRef.current(surface);
       }, 2400);
@@ -457,16 +501,34 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
            */
           rowEl.style.visibility = "hidden";
           rowEl.style.opacity = "0";
-          setDeptRows((prev) => ({
-            ...prev,
-            [surface]: prev[surface].filter((r) => r.id !== victim.id),
-          }));
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              flipReflowRows(article, beforeRects, 0.42, "power3.out");
-              flipReflowArticleHeight(article, beforeArticleH, 0.42, "power3.out");
-            });
+          /**
+           * `flushSync` + same-task FLIP — fixes the remove-blink.
+           *
+           * Previously this was `setDeptRows(...)` (async commit) followed by
+           * `requestAnimationFrame × 2` to apply the inverse-FLIP transforms on
+           * the rows that just shifted up. React 18 commits state via the
+           * scheduler (MessageChannel), which can land BEFORE the first rAF
+           * fires. That meant: React removes row A from the DOM → row B
+           * reflows up to A's slot → browser paints (B sits at A's spot with
+           * no transform — the blink) → rAF fires → FLIP applies +dy to B
+           * (snaps it back to its old spot) → tween animates B from old to
+           * new. Two visible jumps for one logical move.
+           *
+           * `flushSync` makes the commit synchronous: by the time it returns
+           * the DOM is mutated, but the browser hasn't painted yet. Applying
+           * `flipReflowRows` immediately in the same task installs the
+           * inverse transform before the next paint, so the very first frame
+           * after removal already shows B at its old position about to slide.
+           * No blink.
+           */
+          flushSync(() => {
+            setDeptRows((prev) => ({
+              ...prev,
+              [surface]: prev[surface].filter((r) => r.id !== victim.id),
+            }));
           });
+          flipReflowRows(article, beforeRects, 0.42, "power3.out");
+          flipReflowArticleHeight(article, beforeArticleH, 0.42, "power3.out");
           scheduleSurfaceNextRef.current(surface);
         },
       });
@@ -570,6 +632,29 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
     };
   }, [reducedMotion, clearAllBlockTimers, clearAllPendingPromoteTimers, clearAllRemoveFailsafes]);
 
+  /**
+   * Caller attaches each surface's article element via this callback. The
+   * ticker stores the live element so it can find rows / measure heights
+   * without depending on a CSS selector that might match the wrong subtree.
+   */
+  const registerArticle = useCallback(
+    (surface: OrgSurface) => (el: HTMLElement | null) => {
+      if (el) deptArticleBySurfaceRef.current[surface] = el;
+      else delete deptArticleBySurfaceRef.current[surface];
+    },
+    [],
+  );
+
+  return { registerArticle, reducedMotion };
+}
+
+export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOrgLiveRowsProps) {
+  const { registerArticle, reducedMotion } = useOrgLiveTicker({
+    scrollRootRef,
+    deptRows,
+    setDeptRows,
+  });
+
   if (reducedMotion) {
     return (
       <>
@@ -598,10 +683,7 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
       {LIVE_INITIAL_DEPTS.map((dept) => (
         <article
           key={dept.title}
-          ref={(el) => {
-            if (el) deptArticleBySurfaceRef.current[dept.surface] = el;
-            else delete deptArticleBySurfaceRef.current[dept.surface];
-          }}
+          ref={registerArticle(dept.surface)}
           className={`home-org-diagram__dept home-org-diagram__dept--${dept.surface} home-org-diagram__abs`}
         >
           <h3 className="home-org-diagram__dept-title">{dept.title}</h3>
@@ -621,3 +703,6 @@ export function HomeOrgLiveRows({ scrollRootRef, deptRows, setDeptRows }: HomeOr
     </>
   );
 }
+
+/** Re-export a useful type for other live-ticker consumers. */
+export type { LiveRow };

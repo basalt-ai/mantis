@@ -114,12 +114,14 @@ type LogoDef = {
 
 const LOGOS: LogoDef[] = [
   // Gmail (Figma Ellipse 4 — un-rotated 172×169 cream ellipse).
+  // Tail extended outward into the top-left corner; deeper outer curl so the
+  // wire arcs more dramatically away from the monster.
   {
     id: "gmail", src: "/integrations/gmail.svg", alt: "Gmail",
     cx: 658, cy: 254,
     chipSrc: "/integrations/ellipse-gmail.svg", chipW: 172, chipH: 169, chipRotateDeg: 0,
     logoW: 96, logoH: 72, logoRotateDeg: -8.59,
-    tailX: 270, tailY: 90, tailSize: 22, tailPalette: "orange", outerCurl: -90,
+    tailX: 140, tailY: 30, tailSize: 22, tailPalette: "orange", outerCurl: -130,
   },
   // GitHub (Ellipse 9 — 137×135, tilted 58.71° in Figma).
   {
@@ -127,7 +129,7 @@ const LOGOS: LogoDef[] = [
     cx: 1085, cy: 172,
     chipSrc: "/integrations/ellipse-github.svg", chipW: 137.52, chipH: 135.29, chipRotateDeg: 58.71,
     logoW: 76, logoH: 75, logoRotateDeg: 6.63,
-    tailX: 1340, tailY: 30, tailSize: 24, tailPalette: "yellow", outerCurl: 80,
+    tailX: 1430, tailY: -10, tailSize: 24, tailPalette: "yellow", outerCurl: 120,
   },
   // Claude (Ellipse 13 — 63×55, tilt -149.23°).
   {
@@ -135,7 +137,7 @@ const LOGOS: LogoDef[] = [
     cx: 1576, cy: 303,
     chipSrc: "/integrations/ellipse-claude.svg", chipW: 63.27, chipH: 54.9, chipRotateDeg: -149.23,
     logoW: 36, logoH: 36,
-    tailX: 1820, tailY: 250, tailSize: 16, tailPalette: "orange", outerCurl: -50,
+    tailX: 1880, tailY: 200, tailSize: 16, tailPalette: "orange", outerCurl: -75,
   },
   // X (Ellipse 12 — 113×98, tilt -109.95°).
   {
@@ -143,7 +145,7 @@ const LOGOS: LogoDef[] = [
     cx: 380, cy: 470,
     chipSrc: "/integrations/ellipse-x.svg", chipW: 113.65, chipH: 98.61, chipRotateDeg: -109.95,
     logoW: 60, logoH: 55,
-    tailX: 90, tailY: 530, tailSize: 18, tailPalette: "pink", outerCurl: -70,
+    tailX: -10, tailY: 600, tailSize: 18, tailPalette: "pink", outerCurl: -110,
   },
   // LinkedIn (Ellipse 8 — 206×203, tilt 58.71°). Pushed further right so it
   // doesn't crowd the central pancake monster.
@@ -152,7 +154,7 @@ const LOGOS: LogoDef[] = [
     cx: 1310, cy: 470,
     chipSrc: "/integrations/ellipse-linkedin.svg", chipW: 206.38, chipH: 203.03, chipRotateDeg: 58.71,
     logoW: 130, logoH: 130,
-    tailX: 1720, tailY: 540, tailSize: 24, tailPalette: "orange", outerCurl: 70,
+    tailX: 1820, tailY: 600, tailSize: 24, tailPalette: "orange", outerCurl: 110,
   },
   // Vercel (Ellipse 5 — same cream ellipse asset as Gmail; un-rotated 172×169).
   {
@@ -160,7 +162,7 @@ const LOGOS: LogoDef[] = [
     cx: 556, cy: 596,
     chipSrc: "/integrations/ellipse-gmail.svg", chipW: 172, chipH: 169, chipRotateDeg: 0,
     logoW: 64, logoH: 56,
-    tailX: 280, tailY: 720, tailSize: 24, tailPalette: "yellow", outerCurl: -80,
+    tailX: 160, tailY: 830, tailSize: 24, tailPalette: "yellow", outerCurl: -125,
   },
   // Slack (Ellipse 6 — 172×169, tilt 58.71°).
   {
@@ -168,7 +170,7 @@ const LOGOS: LogoDef[] = [
     cx: 870, cy: 695,
     chipSrc: "/integrations/ellipse-slack.svg", chipW: 172.13, chipH: 169.34, chipRotateDeg: 58.71,
     logoW: 96, logoH: 96, logoRotateDeg: -9.15,
-    tailX: 770, tailY: 880, tailSize: 28, tailPalette: "purple", outerCurl: 60,
+    tailX: 720, tailY: 940, tailSize: 28, tailPalette: "purple", outerCurl: 95,
   },
   // Notion (Ellipse 7 — 215×212, tilt 58.71°).
   {
@@ -176,7 +178,7 @@ const LOGOS: LogoDef[] = [
     cx: 1242, cy: 720,
     chipSrc: "/integrations/ellipse-notion.svg", chipW: 215.57, chipH: 212.07, chipRotateDeg: 58.71,
     logoW: 132, logoH: 132, logoRotateDeg: 6.49,
-    tailX: 1640, tailY: 800, tailSize: 20, tailPalette: "orange", outerCurl: 90,
+    tailX: 1740, tailY: 880, tailSize: 20, tailPalette: "orange", outerCurl: 130,
   },
 ];
 
@@ -199,7 +201,19 @@ type Wobble = {
   outerCtrlFreq: number; outerCtrlAmp: number; outerCtrlPhase: number;
 };
 
-/** Deterministic per-id wobble (stable string hash). */
+/**
+ * Deterministic per-id wobble (stable string hash).
+ *
+ * Tuned for a livelier cloud:
+ *  - Chip drift frequencies bumped ~30% so chips visibly move (not just sit).
+ *  - Chip drift amplitudes nearly doubled — chips trace bigger orbits.
+ *  - Inner-Bezier ctrlAmpA range widened so the wires snake more dramatically
+ *    perpendicular to the anchor→chip line.
+ *  - Outer-Bezier amplitude/freq bumped so the tail end of each tendril
+ *    flicks visibly instead of holding a near-static curve.
+ *  - Tail point amplitudes bumped so the small pancake at the tail tip
+ *    drifts noticeably across its arc.
+ */
 function wobbleFor(id: string): Wobble {
   let h = 0;
   for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
@@ -208,26 +222,26 @@ function wobbleFor(id: string): Wobble {
     return ((h >>> 0) / 0x1_0000_0000) * mul;
   };
   return {
-    freqX: 0.18 + r(0.22),
-    freqY: 0.16 + r(0.24),
-    ampX:  14 + r(12),
-    ampY:  12 + r(12),
+    freqX: 0.26 + r(0.32),
+    freqY: 0.24 + r(0.32),
+    ampX:  22 + r(20),
+    ampY:  20 + r(20),
     phaseX: r(Math.PI * 2),
     phaseY: r(Math.PI * 2),
-    ctrlFreqA: 0.22 + r(0.26),
-    ctrlAmpA:  60 + r(70),
+    ctrlFreqA: 0.32 + r(0.36),
+    ctrlAmpA:  110 + r(110),
     ctrlPhaseA: r(Math.PI * 2),
-    ctrlFreqP: 0.14 + r(0.2),
-    ctrlAmpP:  18 + r(28),
+    ctrlFreqP: 0.22 + r(0.28),
+    ctrlAmpP:  32 + r(42),
     ctrlPhaseP: r(Math.PI * 2),
-    tailFreqX: 0.22 + r(0.24),
-    tailFreqY: 0.2 + r(0.22),
-    tailAmpX:  18 + r(16),
-    tailAmpY:  16 + r(16),
+    tailFreqX: 0.30 + r(0.32),
+    tailFreqY: 0.28 + r(0.30),
+    tailAmpX:  32 + r(26),
+    tailAmpY:  28 + r(26),
     tailPhaseX: r(Math.PI * 2),
     tailPhaseY: r(Math.PI * 2),
-    outerCtrlFreq: 0.18 + r(0.22),
-    outerCtrlAmp:  40 + r(60),
+    outerCtrlFreq: 0.28 + r(0.30),
+    outerCtrlAmp:  90 + r(100),
     outerCtrlPhase: r(Math.PI * 2),
   };
 }
@@ -431,6 +445,11 @@ export function HomeIntegrationsCloud() {
 
   return (
     <div className="home-integrations-cloud" data-node-id="428:15019">
+      {/* Viz wrapper — keeps the cloud SVG + interactive monster in their own
+          aspect-ratio'd box. On desktop the wrapper fills the parent (parent
+          enforces aspect); on mobile the parent is auto-height (flex column)
+          and this wrapper enforces the 1786/900 cloud ratio. */}
+      <div className="home-integrations-cloud__viz">
       <svg
         className="home-integrations-cloud__svg"
         viewBox={`0 0 ${VB_W} ${VB_H}`}
@@ -563,6 +582,7 @@ export function HomeIntegrationsCloud() {
           getTarget={getMonsterTarget}
           disableForkCursor
         />
+      </div>
       </div>
 
       <p
