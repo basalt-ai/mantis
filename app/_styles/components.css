@@ -2823,7 +2823,7 @@
          (small padding-top), but row-gap and inter-paragraph spacing
          keep enough breathing room that the hero doesn't feel cramped.
          The whole block still lands above a 720 px viewport. */
-      row-gap: calc(2 * var(--spacing-xxl)) !important;
+      row-gap: calc(2 * var(--spacing-xxl) + 1px) !important;
       padding-top: var(--spacing-md) !important;
       padding-bottom: var(--spacing-lg) !important;
     }
@@ -2929,11 +2929,11 @@
          is sized to the visible mascot, not the larger orbit envelope. */
       width: 108px;
       min-height: 108px;
-      /* Nudge the cream ellipse + monster down a touch so the top of the
-         ellipse isn't clipped under the white header. `transform` (not
-         `margin`) keeps every other element exactly where it is — title,
-         body, CTA positions are unchanged. */
-      transform: translateY(var(--spacing-md));
+      /* Nudge the cream ellipse + monster down so the top of the ellipse
+         clears the white header. `transform` (not `margin`) keeps every
+         other element where it is — title / body / CTA stay put except
+         for the +1 px nudge handled separately via row-gap. */
+      transform: translateY(11px);
     }
 
     /* === Integrations cloud — restructure: cloud on top, callout below
