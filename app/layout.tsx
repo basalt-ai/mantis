@@ -77,13 +77,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           }}
         />
       </head>
-      <body
-        style={{
-          margin: 0,
-          backgroundColor: "var(--surface)",
-          color: "var(--text)",
-        }}
-      >
+      {/* Body styles (margin: 0; background-color: var(--surface); color:
+          var(--text)) live in app/_styles/reset.css to avoid a React 18
+          hydration mismatch caused by SSR vs client-side serialization
+          of inline JSX `style` props. */}
+      <body>
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-M37BB9RG"
