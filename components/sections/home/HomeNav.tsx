@@ -146,13 +146,9 @@ export function HomeNav() {
             </button>
           </div>
           <nav className="home-nav-mobile-drawer__nav" aria-label="Mobile primary">
-            <Link
-              href="/build-in-public"
-              className="home-nav-mobile-drawer__link"
-              onClick={() => setDrawerOpen(false)}
-            >
-              Product
-            </Link>
+            {/* "Product" link removed — points to /build-in-public, which is
+                an empty page today. Match the desktop nav (Discord + Pricing
+                only) until the Product page exists. */}
             <a
               href={DISCORD_INVITE_URL}
               target="_blank"
