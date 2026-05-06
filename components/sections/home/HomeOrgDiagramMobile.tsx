@@ -269,7 +269,9 @@ export function HomeOrgDiagramMobile() {
         </div>
       </div>
 
-      <p className="home-org-mobile-eyebrow">The org</p>
+      {/* "The org" eyebrow removed per design feedback — the section H2
+          ("An entire org working for you") already labels the org, and the
+          eyebrow read as redundant noise above the carousel. */}
 
       {/* Horizontal snap carousel — one dept card per viewport, with adjacent peeks. */}
       <div className="home-org-mobile-carousel">
