@@ -774,64 +774,72 @@ export function SlackUI() {
                   'var(--font-lato), "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
               }}
             >
+              {/*
+               * Sidebar — vertical channel rail at md+ (matches Slack desktop),
+               * horizontal channel strip on mobile so the conversation gets
+               * the rest of the locked-height window. The strip keeps the
+               * channel-switching demo intact; the workspace name collapses
+               * to its glyph and "Channels" eyebrow is hidden under md.
+               */}
               <aside
-                className="flex w-full shrink-0 flex-col md:w-[240px]"
+                className="flex w-full shrink-0 flex-row items-center gap-2 px-3 py-2 md:w-[240px] md:flex-col md:items-stretch md:gap-0 md:px-3 md:pb-6 md:pt-4"
                 style={{ backgroundColor: SLACK_PURPLE }}
               >
-                <div className="flex flex-1 flex-col px-3 pb-6 pt-4">
-                  <div className="mb-4 flex items-center gap-2 px-2">
-                    <span
-                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white/10 text-[15px] text-white ring-1 ring-white/15"
-                      aria-hidden
-                    >
-                      ✦
-                    </span>
-                    <span className="truncate text-[17px] font-bold tracking-tight text-white">
-                      {slack.workspaceName}
-                    </span>
-                  </div>
-
-                  <p
-                    className="px-2 pb-2 text-[11px] font-bold uppercase tracking-[0.12em]"
-                    style={{ color: SLACK_MUTED }}
+                <div className="flex shrink-0 items-center gap-2 md:mb-4 md:w-full md:px-2">
+                  <span
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white/10 text-[15px] text-white ring-1 ring-white/15"
+                    aria-hidden
                   >
-                    Channels
-                  </p>
-                  <ul className="space-y-0.5">
-                    {slack.channels.map((ch) => {
-                      const isActive = ch === activeChannel;
-                      const unread = slack.channelUnread[ch];
-                      return (
-                        <li key={ch}>
-                          <button
-                            type="button"
-                            onClick={() => setActiveChannel(ch)}
-                            className={`flex w-full cursor-pointer items-center justify-between gap-2 rounded-md px-2 py-1.5 text-left text-[15px] transition-[background-color,color,transform] duration-150 ease-out active:scale-[0.99] ${
-                              isActive
-                                ? "bg-white/[0.14] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] hover:bg-white/[0.2]"
-                                : "bg-transparent text-white/95 hover:bg-white/[0.12] hover:text-white hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]"
-                            }`}
-                          >
-                            <span className="min-w-0 truncate">
-                              <span className="mr-0.5 font-normal opacity-75">#</span>
-                              <span className={isActive ? "font-bold" : "font-normal"}>
-                                {ch.replace("#", "")}
-                              </span>
-                            </span>
-                            {unread > 0 ? (
-                              <span
-                                className="shrink-0 rounded-full bg-[#e01e5a] px-1.5 py-0.5 text-[11px] font-bold tabular-nums leading-none text-white shadow-[0_1px_2px_rgba(0,0,0,0.25)]"
-                                aria-label={`${unread} unread`}
-                              >
-                                {unread}
-                              </span>
-                            ) : null}
-                          </button>
-                        </li>
-                      );
-                    })}
-                  </ul>
+                    ✦
+                  </span>
+                  <span className="hidden truncate text-[17px] font-bold tracking-tight text-white md:inline">
+                    {slack.workspaceName}
+                  </span>
                 </div>
+
+                <p
+                  className="hidden px-2 pb-2 text-[11px] font-bold uppercase tracking-[0.12em] md:block"
+                  style={{ color: SLACK_MUTED }}
+                >
+                  Channels
+                </p>
+                <ul
+                  className="flex min-w-0 flex-1 flex-row gap-1 overflow-x-auto md:flex-col md:gap-0 md:space-y-0.5 md:overflow-visible"
+                  style={{ scrollbarWidth: "none" }}
+                >
+                  {slack.channels.map((ch) => {
+                    const isActive = ch === activeChannel;
+                    const unread = slack.channelUnread[ch];
+                    return (
+                      <li key={ch} className="shrink-0 md:shrink">
+                        <button
+                          type="button"
+                          onClick={() => setActiveChannel(ch)}
+                          className={`flex w-full cursor-pointer items-center justify-between gap-2 whitespace-nowrap rounded-md px-2.5 py-1 text-left text-[13px] transition-[background-color,color,transform] duration-150 ease-out active:scale-[0.99] md:px-2 md:py-1.5 md:text-[15px] ${
+                            isActive
+                              ? "bg-white/[0.14] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] hover:bg-white/[0.2]"
+                              : "bg-transparent text-white/95 hover:bg-white/[0.12] hover:text-white hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]"
+                          }`}
+                        >
+                          <span className="min-w-0 truncate">
+                            <span className="mr-0.5 font-normal opacity-75">#</span>
+                            <span className={isActive ? "font-bold" : "font-normal"}>
+                              {ch.replace("#", "")}
+                            </span>
+                          </span>
+                          {unread > 0 ? (
+                            <span
+                              className="shrink-0 rounded-full bg-[#e01e5a] px-1.5 py-0.5 text-[10px] font-bold tabular-nums leading-none text-white shadow-[0_1px_2px_rgba(0,0,0,0.25)] md:text-[11px]"
+                              aria-label={`${unread} unread`}
+                            >
+                              {unread}
+                            </span>
+                          ) : null}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
               </aside>
 
               {/*
