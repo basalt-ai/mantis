@@ -2823,7 +2823,7 @@
          (small padding-top), but row-gap and inter-paragraph spacing
          keep enough breathing room that the hero doesn't feel cramped.
          The whole block still lands above a 720 px viewport. */
-      row-gap: calc(2 * var(--spacing-xxl) + 4px) !important;
+      row-gap: calc(2 * var(--spacing-xxl) + 7px) !important;
       padding-top: var(--spacing-md) !important;
       padding-bottom: var(--spacing-lg) !important;
     }
@@ -2933,7 +2933,7 @@
          clears the white header. `transform` (not `margin`) keeps every
          other element where it is — title / body / CTA stay put except
          for the +1 px nudge handled separately via row-gap. */
-      transform: translateY(14px);
+      transform: translateY(17px);
     }
 
     /* === Integrations cloud — restructure: cloud on top, callout below
