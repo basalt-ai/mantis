@@ -2819,18 +2819,19 @@
        column with the pancake first. */
     .home-hero > div {
       grid-template-columns: 1fr !important;
-      /* Tight vertical rhythm so the entire hero — pancake + title +
-         body + CTA + "no credit card" — fits within a 667 px viewport
-         (iPhone 8 / SE class) without scrolling. */
-      row-gap: var(--spacing-md) !important;
+      /* In-between rhythm: pancake stack stays anchored near the top
+         (small padding-top), but row-gap and inter-paragraph spacing
+         keep enough breathing room that the hero doesn't feel cramped.
+         The whole block still lands above a 720 px viewport. */
+      row-gap: calc(2 * var(--spacing-xxl)) !important;
       padding-top: var(--spacing-md) !important;
-      padding-bottom: var(--spacing-md) !important;
+      padding-bottom: var(--spacing-lg) !important;
     }
-    /* Tighter inter-paragraph spacing inside the text stack — the default
-       tokens are sized for desktop's wider rhythm. */
+    /* Mid-weight inter-paragraph spacing inside the text stack — bigger
+       than mobile-tight, smaller than desktop-airy. */
     .home-hero {
-      --spacing-home-hero-after-title: var(--spacing-md);
-      --spacing-home-hero-after-subtitle: var(--spacing-lg);
+      --spacing-home-hero-after-title: var(--spacing-lg);
+      --spacing-home-hero-after-subtitle: var(--spacing-xl);
     }
     .home-hero-text-stack {
       order: 2;
