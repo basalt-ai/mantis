@@ -2933,7 +2933,7 @@
          clears the white header. `transform` (not `margin`) keeps every
          other element where it is — title / body / CTA stay put except
          for the +1 px nudge handled separately via row-gap. */
-      transform: translateY(17px);
+      transform: translateY(19px);
     }
 
     /* === Integrations cloud — restructure: cloud on top, callout below
