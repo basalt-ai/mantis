@@ -70,15 +70,8 @@ export function HomeOrgDiagram() {
           aria-hidden
           focusable="false"
         >
-          {/* Vector 264 / 265 — `d` from MCP SVG; wrapper x/y from get_design_context (not metadata bbox).
-              V264 keeps its original near-natural rotation (10.29°) and shape, but its
-              wrapper y is shifted down so the arrow exits BELOW the Pancake-co-founder
-              chip instead of crossing through it. Original Figma y was 22.53 (= upper
-              area of chip whose y-range is 8-67); the visual after that read as "the
-              arrow comes through the box". Pushing y to 70 puts the arrow start just
-              below the chip's bottom edge so it reads as a proper "below the square"
-              connector into the monster, matching the user's expectation. */}
-          <g transform={`translate(${V264_WRAPPER.x} 70) translate(${V264_INNER_OFFSET_X} ${V264_INNER_OFFSET_Y})`}>
+          {/* Vector 264 / 265 — `d` from MCP SVG; wrapper x/y from get_design_context (not metadata bbox). */}
+          <g transform={`translate(${V264_WRAPPER.x} ${V264_WRAPPER.y}) translate(${V264_INNER_OFFSET_X} ${V264_INNER_OFFSET_Y})`}>
             <g transform={`scale(${CHIP_ARROW_SX} ${CHIP_ARROW_SY}) rotate(10.29 ${CHIP_ARROW_CX} ${CHIP_ARROW_CY})`}>
               <path className="home-org-diagram__chip-arrow-path" d={CHIP_CONNECTOR_PATH_D} />
             </g>
