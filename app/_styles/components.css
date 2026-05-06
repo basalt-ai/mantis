@@ -406,6 +406,20 @@
     .home-hero-text-stack {
       transform: translateX(var(--spacing-home-nav-logo-nudge-x));
     }
+    /* Hero takes the full viewport height on desktop. The inner grid
+       (with its own padding-top + row-gap) is vertically centered inside
+       the section so the headline + monster ensemble sits in the middle
+       of the screen instead of the top, matching the comp's "first
+       impression" treatment. */
+    .home-hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .home-hero > div {
+      width: 100%;
+    }
   }
 
   .home-hero-cta-row {
