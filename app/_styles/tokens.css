@@ -143,6 +143,14 @@
      * Logo nudges right, Product/Resources/Pricing nudge left; hero copy follows logo; mascot follows links.
      */
     --spacing-home-page-inline: calc(var(--spacing-xxl) + var(--spacing-xl));
+
+    /* Mobile: tighten the home-page horizontal gutter so hero copy, nav,
+       org chart, etc. all sit closer to the screen edges. The default
+       40px each side reads as exaggerated padding on small viewports —
+       16px feels balanced at 320–414 widths. */
+    @media (max-width: 1023.98px) {
+      --spacing-home-page-inline: var(--spacing-xl);
+    }
     --spacing-home-nav-logo-nudge-x: var(--spacing-md);
     --spacing-home-nav-links-nudge-x: var(--spacing-md);
 

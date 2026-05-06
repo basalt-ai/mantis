@@ -3020,7 +3020,16 @@
     }
     .home-integrations-cloud__viz {
       position: relative;
-      width: 100%;
+      /* Full-bleed: escape the section's horizontal padding so the cloud
+         goes edge-to-edge on mobile. The chip cluster + tentacles read
+         better when they have the whole viewport width to breathe. The
+         heading + callout above/below stay inside the page container's
+         padding because they're separate flex children of
+         `.home-integrations-cloud` (which uses flex-direction:column on
+         mobile via the override above). */
+      width: 100vw;
+      max-width: 100vw;
+      margin-inline: calc(50% - 50vw);
       aspect-ratio: 5 / 6;
       overflow: hidden;
     }
@@ -3140,6 +3149,23 @@
     .home-org-mobile-card {
       flex-basis: min(78vw, 320px) !important;
       flex-shrink: 0;
+    }
+
+    /* Lock the rows list to a height that fits the live ticker's row cap
+       (6 rows, see `ROW_CAP` in HomeOrgLiveRows.tsx). Without this, when
+       the ticker adds or removes a row the card height changes, the page
+       below reflows, and the user's scroll position can jump suddenly
+       up or down — especially noticeable when reading content further
+       down the page. With the rows ul pinned to its 6-row footprint
+       (6 × 37 px row + 5 × 8 px gap = 262 px), the visible card height
+       stays constant regardless of how many rows are present, so add /
+       remove animations are visible inside a stable layout slot.
+       overflow:hidden makes sure a transient over-cap state during a
+       FLIP transition can't bleed past and (more importantly) it makes
+       the area un-scrollable inside the org chart — page scrolls only. */
+    .home-org-mobile-card__rows {
+      min-height: calc(6 * 37px + 5 * var(--spacing-md));
+      overflow: hidden;
     }
 
     /* === Testimonials carousel — peek adjacent cards. === */
