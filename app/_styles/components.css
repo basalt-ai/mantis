@@ -2819,7 +2819,11 @@
        column with the pancake first. */
     .home-hero > div {
       grid-template-columns: 1fr !important;
-      row-gap: var(--spacing-xxl) !important;
+      /* Big row-gap so the title sits BELOW the orbit-2 satellite (pink
+         pancake on the right). The satellite is anchored to the monster
+         center via its `dy` — bumping row-gap slides the text-stack down
+         past the satellite's bottom edge instead of crowding it. */
+      row-gap: calc(8 * var(--spacing-xxl)) !important;
       padding-top: var(--spacing-xxl) !important;
     }
     .home-hero-text-stack {
@@ -2873,28 +2877,37 @@
       justify-content: flex-start;
       width: 100%;
       transform: none !important;
-      /* Figma `451:19362` — monster is 108.264 px, the cream ellipse
-         (`451:19361 "top"`) is 160 px. Setting monster = 108 alone
-         doesn't shrink the ellipse: the dependent tokens (ellipse, orbits,
-         padding) were defined as calc-of-var at :root so the inner var()
-         was already substituted with the :root value of `monster-max-width`
-         (160 px). Re-declare the chain locally so each var() resolves
-         against this element's cascade — gives a 160 px ellipse + matching
-         orbits, exactly the comp. */
-      --size-home-hero-monster-max-width: 108px;
-      --size-home-hero-monster-ellipse-width: calc(108px * 11823 / 8000);
+      /* MOBILE SIZING STRATEGY — three separate scales:
+         a) MONSTER (interactive PancakeMonster SVG): 108 px so it fits
+            inside the cream ellipse with breathing room (per Figma).
+         b) ELLIPSE: 159.6 px — Figma `451:19361 "top"` is 160 px. Pinned
+            here as a fixed value because the default `:root` calc would
+            ignore the cascaded `--max-width` override.
+         c) ORBITS + SATELLITES: scale relative to a virtual "max-width"
+            of 140 px instead of 108 — pushes the dotted orbit curves
+            farther out and moves the orbit-2 satellite (pink pancake)
+            further right + down so it clears the title text. The
+            JSX-emitted `--sat-dx` / `--sat-dy` use `--size-home-hero-
+            monster-max-width` directly, so bumping this value scales every
+            satellite uniformly (preserves the inter-satellite proportions
+            from desktop). All orbit widths are re-derived from the same
+            140 px base so orbits 2-6 grow by the same 1.3× factor and
+            keep their relative ratios. */
+      --size-home-hero-monster-max-width: 160px;
+      --size-home-hero-monster-ellipse-width: 159.6px;
+      --size-home-hero-monster-interactive-max-width: 108px;
       --size-home-hero-monster-dotted-ring-width:
-        calc(108px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823));
+        calc(160px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823));
       --size-home-hero-monster-orbit-2-width:
-        calc(108px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823) * 316266251017 / 236434260807);
+        calc(160px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823) * 316266251017 / 236434260807);
       --size-home-hero-monster-orbit-3-width:
-        calc(108px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823) * 1669761334199 / 986586030650);
+        calc(160px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823) * 1669761334199 / 986586030650);
       --size-home-hero-monster-orbit-4-width:
-        calc(108px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823) * 1455713360546 / 690410988819);
+        calc(160px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823) * 1455713360546 / 690410988819);
       --size-home-hero-monster-orbit-5-width:
-        calc(108px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823) * 1077335507215 / 401945628013);
+        calc(160px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823) * 1077335507215 / 401945628013);
       --size-home-hero-monster-orbit-6-width:
-        calc(108px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823) * 2711963235409 / 778550001398);
+        calc(160px * 11823 / 8000 * 169765 * 8000 / (65536 * 11823) * 2711963235409 / 778550001398);
     }
     /* Hero clip — orbits/satellites scale relative to monster width and would
        otherwise punch out into the next section at this size. */
@@ -2902,8 +2915,13 @@
       overflow: hidden;
     }
     .home-hero-pancake-stack-inner {
-      width: var(--size-home-hero-monster-max-width);
-      min-height: var(--size-home-hero-monster-max-width);
+      /* Pin the layout slot to the monster's actual rendered size (108 px),
+         NOT to `--size-home-hero-monster-max-width` (which we hijacked to
+         140 px to scale the orbits + satellites further out). The stack
+         needs to match the monster + ellipse footprint so the layout flow
+         is sized to the visible mascot, not the larger orbit envelope. */
+      width: 108px;
+      min-height: 108px;
     }
 
     /* === Integrations cloud — restructure: cloud on top, callout below
