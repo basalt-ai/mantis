@@ -127,11 +127,131 @@ export default function PrivacyPolicyPage() {
             <h2>6. Data Security</h2>
             <p>
               We implement appropriate technical and organizational measures to protect personal
-              data from unauthorized access, loss, or disclosure.
+              data from unauthorized access, loss, or disclosure. All data is transmitted over
+              TLS/SSL and encrypted at rest using AES-256 on disk.
             </p>
             <p>Data is hosted on GCP infrastructure located in the United States.</p>
 
-            <h2>7. Contact</h2>
+            <h2>7. Google User Data</h2>
+            <p>
+              Pancake integrates with Google Workspace to act as a cofounder for our users. With
+              your explicit consent, Pancake requests access to the following Google OAuth scopes:
+            </p>
+            <ul>
+              <li>
+                <code>https://www.googleapis.com/auth/userinfo.email</code> and{" "}
+                <code>https://www.googleapis.com/auth/userinfo.profile</code> — to identify you
+                and create your Pancake account.
+              </li>
+              <li>
+                <code>https://mail.google.com/</code> — to read, compose, send, and manage Gmail
+                messages on your behalf when you ask Pancake to triage your inbox or send email
+                on your behalf.
+              </li>
+              <li>
+                <code>https://www.googleapis.com/auth/drive</code> — to read, create, and modify
+                files in your Google Drive that are relevant to tasks you delegate to Pancake.
+              </li>
+              <li>
+                <code>https://www.googleapis.com/auth/documents</code> — to read and edit Google
+                Docs you ask Pancake to work on.
+              </li>
+              <li>
+                <code>https://www.googleapis.com/auth/spreadsheets</code> — to read and edit
+                Google Sheets you ask Pancake to work on.
+              </li>
+              <li>
+                <code>https://www.googleapis.com/auth/calendar</code> — to read your calendar,
+                create events, and manage scheduling on your behalf.
+              </li>
+              <li>
+                <code>https://www.googleapis.com/auth/contacts</code> — to look up and reference
+                contacts when scheduling, sending email, or sharing files.
+              </li>
+            </ul>
+
+            <h3>How we use Google user data</h3>
+            <p>
+              Google user data is used <strong>solely to provide and improve the user-facing
+              features of Pancake</strong> — specifically, to let our AI cofounder read, draft,
+              schedule, and edit on your behalf in response to your instructions. Google user
+              data is not used for any other purpose.
+            </p>
+
+            <h3>How we share Google user data</h3>
+            <p>
+              Google user data is processed by a single sub-processor:{" "}
+              <strong>Anthropic, PBC</strong>, the provider of the large language model that
+              powers Pancake&apos;s reasoning. Anthropic processes the data only to generate
+              responses for Pancake and, per its commercial terms, does not retain prompts or
+              completions beyond what is necessary to provide the service and does not use them
+              to train its models. We do not share Google user data with any other third party.
+            </p>
+
+            <h3>How we protect Google user data</h3>
+            <p>
+              Google user data is encrypted in transit using TLS/SSL and at rest using AES-256.
+              Access is restricted to authorized personnel via SSO and is logged and audited.
+              OAuth tokens are stored in an encrypted secrets store.
+            </p>
+
+            <h3>How we retain and delete Google user data</h3>
+            <p>
+              Google user data fetched to fulfill a user request is retained for{" "}
+              <strong>up to 14 days</strong> and then automatically deleted. You can revoke
+              Pancake&apos;s access at any time from your Google Account&apos;s{" "}
+              <a
+                href="https://myaccount.google.com/permissions"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Third-party apps with account access
+              </a>{" "}
+              page, or by emailing{" "}
+              <a href="mailto:privacy@pancake.ai">privacy@pancake.ai</a>. On revocation or
+              account deletion, all stored Google user data is deleted within 14 days, except
+              where retention is required by law.
+            </p>
+
+            <h3>What we do not do with Google user data</h3>
+            <ul>
+              <li>We do <strong>not</strong> sell Google user data.</li>
+              <li>
+                We do <strong>not</strong> use Google user data for advertising, including
+                personalized, retargeted, or interest-based advertising.
+              </li>
+              <li>
+                We do <strong>not</strong> transfer Google user data to data brokers, or for
+                credit-worthiness or lending purposes.
+              </li>
+              <li>
+                We do <strong>not</strong> use Google user data to develop, improve, or train
+                generalized or non-personalized AI/ML models. Anthropic, our model provider,
+                does not train its models on Pancake customer data.
+              </li>
+              <li>
+                Humans do not read Google user data except (a) with your explicit permission,
+                (b) for security purposes (e.g., investigating abuse), (c) to comply with
+                applicable law, or (d) where the data has been aggregated and anonymized for
+                internal operations.
+              </li>
+            </ul>
+
+            <h3>Limited Use disclosure</h3>
+            <p>
+              Pancake&apos;s use and transfer to any other app of information received from
+              Google APIs will adhere to the{" "}
+              <a
+                href="https://developers.google.com/terms/api-services-user-data-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Google API Services User Data Policy
+              </a>
+              , including the Limited Use requirements.
+            </p>
+
+            <h2>8. Contact</h2>
             <p>For any questions or requests regarding your data, you can contact us at:</p>
             <p>
               <a href="mailto:privacy@pancake.ai">
@@ -139,7 +259,7 @@ export default function PrivacyPolicyPage() {
               </a>
             </p>
 
-            <h2>8. Changes to This Policy</h2>
+            <h2>9. Changes to This Policy</h2>
             <p>
               This policy may be updated at any time. We encourage you to review it regularly.
               Significant changes will be communicated where appropriate.
