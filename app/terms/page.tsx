@@ -1,0 +1,164 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+
+import { HomeNav } from "@/components/sections/home/HomeNav";
+import { Footer } from "@/components/shared/Footer";
+import { H1 } from "@/components/ui/Headings";
+
+export const metadata: Metadata = {
+  title: "Terms of Service — Pancake",
+  description:
+    "The terms governing your access to and use of Pancake — including the website, web app, and Slack integration.",
+};
+
+export default function TermsOfServicePage() {
+  return (
+    <main className="flex min-h-screen flex-col">
+      <HomeNav />
+      <section className="legal-section flex-1" aria-labelledby="terms-heading">
+        <div className="legal-section__inner">
+          <H1 id="terms-heading" className="legal-section__title">
+            Terms of Service
+          </H1>
+
+          <article className="legal-prose">
+            <p>
+              Welcome to Pancake. These Terms of Service (“Terms”) govern your access to and use
+              of Pancake’s services, including our website, web application, and integrations
+              (including Slack).
+            </p>
+            <p>By accessing or using Pancake, you agree to these Terms.</p>
+
+            <h2>1. About Pancake</h2>
+            <p>
+              Pancake is a software service operated by Basalt AI Inc., a company incorporated in
+              the State of Delaware, United States, with its principal place of business in San
+              Francisco.
+            </p>
+
+            <h2>2. Eligibility</h2>
+            <p>
+              You must be at least 18 years old and have the legal capacity to enter into these
+              Terms.
+            </p>
+            <p>
+              If you are using Pancake on behalf of a company, you agree to these Terms on behalf
+              of that organization.
+            </p>
+
+            <h2>3. Use of the Service</h2>
+            <p>You agree to use Pancake only for lawful purposes and in accordance with these Terms.</p>
+            <p>You agree not to:</p>
+            <ul>
+              <li>Use the service for illegal, harmful, or abusive activities</li>
+              <li>Interfere with or disrupt the service</li>
+              <li>Attempt to gain unauthorized access to systems or data</li>
+              <li>Use the service to send spam or unsolicited communications</li>
+              <li>Reverse engineer or attempt to extract source code (except where permitted by law)</li>
+            </ul>
+
+            <h2>4. Slack Integration</h2>
+            <p>If you use Pancake with Slack:</p>
+            <ul>
+              <li>
+                You authorize Pancake to access and process data from your Slack workspace as
+                required to provide the service
+              </li>
+              <li>
+                You are responsible for ensuring you have the right to install and use the app in
+                your workspace
+              </li>
+              <li>
+                Your use of Slack is also governed by Slack Technologies’s terms and policies
+              </li>
+            </ul>
+
+            <h2>5. User Content</h2>
+            <p>You retain ownership of any content you submit to Pancake (“User Content”).</p>
+            <p>
+              By using the service, you grant Pancake a limited, non-exclusive license to use,
+              process, and store your content solely to provide and improve the service.
+            </p>
+            <p>
+              You are responsible for ensuring your content does not violate any laws or
+              third-party rights.
+            </p>
+
+            <h2>6. AI-Generated Content</h2>
+            <p>Pancake may generate responses or outputs using artificial intelligence.</p>
+            <ul>
+              <li>AI outputs may be inaccurate or incomplete</li>
+              <li>You are responsible for reviewing and validating outputs before relying on them</li>
+              <li>Pancake is not responsible for decisions made based on AI-generated content</li>
+            </ul>
+
+            <h2>7. Data &amp; Privacy</h2>
+            <p>
+              Your use of the service is also governed by our{" "}
+              <Link href="/privacy" prefetch={false}>
+                Privacy Policy
+              </Link>
+              .
+            </p>
+            <p>We encourage you to review it to understand how we collect and process data.</p>
+
+            <h2>8. Infrastructure &amp; Data Hosting</h2>
+            <p>
+              Pancake is hosted on infrastructure provided by Google Cloud Platform located in the
+              United States.
+            </p>
+            <p>
+              By using the service, you acknowledge that your data may be processed and stored in
+              the United States and other jurisdictions where our service providers operate.
+            </p>
+
+            <h2>9. Service Availability</h2>
+            <p>
+              We aim to provide a reliable service but do not guarantee that Pancake will be
+              uninterrupted or error-free.
+            </p>
+            <p>We may modify, suspend, or discontinue parts of the service at any time.</p>
+
+            <h2>10. Termination</h2>
+            <p>We may suspend or terminate your access to Pancake if you violate these Terms.</p>
+            <p>You may stop using the service at any time.</p>
+
+            <h2>11. Disclaimer of Warranties</h2>
+            <p>Pancake is provided “as is” and “as available.”</p>
+            <p>To the maximum extent permitted by law, we disclaim all warranties, express or implied, including:</p>
+            <ul>
+              <li>Merchantability</li>
+              <li>Fitness for a particular purpose</li>
+              <li>Non-infringement</li>
+            </ul>
+
+            <h2>12. Limitation of Liability</h2>
+            <p>To the maximum extent permitted by law, Pancake shall not be liable for:</p>
+            <ul>
+              <li>Indirect, incidental, or consequential damages</li>
+              <li>Loss of data, profits, or business opportunities</li>
+            </ul>
+            <p>
+              Our total liability shall not exceed the amount you paid (if any) to use the service.
+            </p>
+
+            <h2>13. Governing Law</h2>
+            <p>
+              These Terms are governed by the laws of the State of California, United States,
+              without regard to conflict of law principles.
+            </p>
+
+            <h2>14. Contact</h2>
+            <p>If you have any questions about these Terms, you can contact us at:</p>
+            <p>
+              <a href="mailto:hey@pancake.ai">
+                <strong>hey@pancake.ai</strong>
+              </a>
+            </p>
+          </article>
+        </div>
+      </section>
+      <Footer />
+    </main>
+  );
+}

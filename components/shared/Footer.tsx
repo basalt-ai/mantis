@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { FaLinkedin } from "react-icons/fa6";
 import { SiX, SiYoutube } from "react-icons/si";
 
@@ -50,7 +51,27 @@ export function Footer() {
           </span>
         </div>
 
-        <div className="flex items-center gap-4 sm:ml-auto">
+        <nav
+          aria-label="Legal"
+          className="flex items-center gap-4 sm:ml-auto"
+        >
+          <Link
+            href="/privacy"
+            prefetch={false}
+            className="whitespace-nowrap transition-colors hover:text-[var(--text-on-inverted-surface)]"
+          >
+            Privacy Policy
+          </Link>
+          <Link
+            href="/terms"
+            prefetch={false}
+            className="whitespace-nowrap transition-colors hover:text-[var(--text-on-inverted-surface)]"
+          >
+            Terms of Service
+          </Link>
+        </nav>
+
+        <div className="flex items-center gap-4 sm:ml-4">
           {socials.map(({ href, label, Icon }) => (
             <a
               key={href}
