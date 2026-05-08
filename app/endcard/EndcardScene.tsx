@@ -14,39 +14,90 @@ export function EndcardScene() {
 
   useGSAP(
     () => {
-      gsap.set(".endcard-wordmark", { opacity: 0, scale: 0.92, y: 16 });
+      const scope = scopeRef.current;
+      if (!scope) return;
+
+      const wordmarkEl = scope.querySelector<HTMLElement>(".endcard-wordmark");
+      const wordmarkHeight = wordmarkEl?.getBoundingClientRect().height ?? 200;
+      const stackGap = 24;
+      const sloganLift = wordmarkHeight / 2 + stackGap / 2;
+
+      gsap.set(".endcard-wordmark", {
+        opacity: 0,
+        y: -40,
+        rotation: -2.5,
+        scaleX: 1,
+        scaleY: 1,
+        transformOrigin: "center bottom",
+      });
+      gsap.set(".endcard-slogan", {
+        y: -sloganLift,
+        scale: 1.4,
+        transformOrigin: "center center",
+      });
       gsap.set(".endcard-slogan-char", { opacity: 0 });
       gsap.set(".endcard-url", { opacity: 0, y: 8 });
 
-      const tl = gsap.timeline({ delay: 0.25 });
+      const tl = gsap.timeline({ delay: 0.2 });
+
+      tl.to(".endcard-slogan-char", {
+        opacity: 1,
+        duration: 0.01,
+        stagger: 0.012,
+        ease: "none",
+      });
+
+      tl.to(
+        ".endcard-slogan",
+        {
+          y: 0,
+          scale: 1,
+          duration: 0.55,
+          ease: "power3.inOut",
+        },
+        "+=0.05",
+      );
+
+      tl.to(
+        ".endcard-wordmark",
+        {
+          opacity: 1,
+          y: 0,
+          rotation: 0,
+          duration: 0.42,
+          ease: "back.out(2.5)",
+        },
+        "+=0.25",
+      );
+
+      tl.to(
+        ".endcard-wordmark",
+        {
+          scaleY: 0.88,
+          scaleX: 1.05,
+          duration: 0.08,
+          ease: "power2.out",
+        },
+        "<0.3",
+      );
 
       tl.to(".endcard-wordmark", {
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        duration: 0.65,
-        ease: "back.out(1.6)",
-      })
-        .to(
-          ".endcard-slogan-char",
-          {
-            opacity: 1,
-            duration: 0.02,
-            stagger: 0.028,
-            ease: "none",
-          },
-          "+=0.18",
-        )
-        .to(
-          ".endcard-url",
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.5,
-            ease: "power2.out",
-          },
-          "-=0.05",
-        );
+        scaleY: 1,
+        scaleX: 1,
+        duration: 0.4,
+        ease: "elastic.out(1.2, 0.5)",
+      });
+
+      tl.to(
+        ".endcard-url",
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          ease: "power2.out",
+        },
+        "-=0.15",
+      );
 
       timelineRef.current = tl;
     },
@@ -79,10 +130,10 @@ export function EndcardScene() {
           className="endcard-wordmark h-auto w-[clamp(280px,28vw,560px)] select-none"
         />
         <p
-          className="endcard-slogan m-0 select-none text-center"
+          className="endcard-slogan m-0 select-none whitespace-nowrap text-center"
           style={{
             fontFamily: "var(--font-body)",
-            fontSize: "clamp(13px, 1.35vw, 20px)",
+            fontSize: "clamp(18px, 1.95vw, 38px)",
             fontWeight: 500,
             letterSpacing: "0.06em",
           }}
