@@ -32,8 +32,7 @@ export function EndcardScene() {
         strokeDasharray: kPathLength,
         strokeDashoffset: kPathLength,
       });
-      gsap.set(".endcard-wordmark-rest-left", { opacity: 0 });
-      gsap.set(".endcard-wordmark-rest-right", { opacity: 0 });
+      gsap.set(".endcard-wordmark-rest", { opacity: 0 });
       gsap.set(".endcard-slogan", {
         y: -sloganLift,
         scale: 1.4,
@@ -73,23 +72,13 @@ export function EndcardScene() {
       );
 
       tl.to(
-        ".endcard-wordmark-rest-left",
+        ".endcard-wordmark-rest",
         {
           opacity: 1,
-          duration: 0.4,
+          duration: 0.45,
           ease: "power2.out",
         },
         "+=0.1",
-      );
-
-      tl.to(
-        ".endcard-wordmark-rest-right",
-        {
-          opacity: 1,
-          duration: 0.3,
-          ease: "power2.out",
-        },
-        "+=0.15",
       );
 
       tl.to(
@@ -100,7 +89,7 @@ export function EndcardScene() {
           duration: 0.5,
           ease: "power2.out",
         },
-        "+=0.05",
+        "+=0.1",
       );
 
       timelineRef.current = tl;
@@ -141,7 +130,7 @@ export function EndcardScene() {
               key={`${char}-${i}`}
               className="endcard-slogan-char inline-block"
             >
-              {char === " " ? " " : char}
+              {char === " " ? " " : char}
             </span>
           ))}
         </p>
@@ -150,10 +139,10 @@ export function EndcardScene() {
       <p
         className="endcard-url absolute bottom-[8vh] left-1/2 m-0 -translate-x-1/2 select-none"
         style={{
-          fontFamily: "var(--font-display)",
-          fontSize: "clamp(14px, 1.15vw, 22px)",
-          fontWeight: 500,
-          letterSpacing: "0.01em",
+          fontFamily: "var(--font-body)",
+          fontSize: "clamp(13px, 1vw, 18px)",
+          fontWeight: 400,
+          letterSpacing: 0,
         }}
       >
         {URL_TEXT}
