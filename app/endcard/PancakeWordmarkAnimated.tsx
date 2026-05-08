@@ -1,7 +1,6 @@
 "use client";
 
 const FILL_COLOR = "#2C002A";
-const MASK_ID = "endcard-k-reveal-mask";
 
 const K_PATH =
   "M 572.5 2.7646 c -29.3 14.1 -42.8 73.3 -34.4 150.7 l 1.3 11.1 l -9.8 14.2 c -5.4 7.9 -9.6 14.4 -9.4 14.5 c 9.7 7.4 14.3 10.6 14.9 10.6 c 0.4 0 2.5 -2.5 4.6 -5.5 c 2.1 -3 4.1 -5.5 4.4 -5.5 c 0.4 0 0.9 1.9 1.3 4.3 c 1.8 11.5 21.3 85.8 23 87.4 c 0.6 0.6 16.8 -2.7 17.9 -3.7 c 0.4 -0.3 -2.4 -12 -6.3 -25.9 c -3.8 -13.9 -7 -25.9 -7 -26.7 c 0 -0.7 1.5 -1.7 3.3 -2.2 c 2.7 -0.8 3.4 -0.6 4.7 1.1 c 20.4 28.3 48.3 49 76.3 56.7 c 8.6 2.4 25.4 5 32 5 l 4.7 0 l 0 -9.5 l 0 -9.4 l -3.2 -0.5 c -1.8 -0.3 -6.4 -0.7 -10.3 -1 c -13.4 -1.1 -31.4 -7.1 -44.2 -14.8 c -9.1 -5.5 -21.3 -15.8 -28.6 -24.3 c -9.8 -11.3 -9.7 -10.7 -3 -14.6 c 7.9 -4.4 17.8 -14.1 20.9 -20.5 c 5.8 -11.9 3.9 -24 -5 -33 c -6.5 -6.4 -12.9 -8.8 -22.4 -8.2 c -12.3 0.7 -23 7.7 -31.7 20.6 c -4.6 6.8 -4.6 6.8 -6 -1 c -0.5 -3.4 0.1 -4.9 6.1 -15 c 36.7 -61.8 50.6 -114.9 37.4 -142.5 c -6.7 -14.1 -18.4 -18.7 -31.5 -12.4 z m 13.8 19.8 c 2.3 4.5 2.9 8.3 2.8 18.4 c 0 20 -7.5 44.6 -22.8 75.9 l -9.6 19.5 l -0.9 -5.5 c -0.5 -3 -0.7 -15.4 -0.5 -27.5 c 0.6 -24.1 2.5 -38.3 7.2 -53.5 c 6.9 -22 19.3 -36.2 23.8 -27.3 z m 18.1 150.7 c 7.7 3.2 6.2 12.9 -3.3 20.4 c -5.6 4.5 -15 9.2 -22.8 11.5 l -5.1 1.5 l 1 -3.6 c 3 -11 10.7 -23.5 16.8 -27.6 c 5.7 -3.7 8.6 -4.2 13.4 -2.2 z";
@@ -29,40 +28,8 @@ export function PancakeWordmarkAnimated({ className }: Props) {
       style={{ overflow: "visible" }}
       aria-label="Pancake"
     >
-      <defs>
-        <mask
-          id={MASK_ID}
-          maskUnits="userSpaceOnUse"
-          x="500"
-          y="-20"
-          width="260"
-          height="320"
-        >
-          <rect
-            className="endcard-k-mask-rect"
-            x="500"
-            y="-20"
-            width="260"
-            height="0"
-            fill="white"
-          />
-        </mask>
-      </defs>
-
-      <g mask={`url(#${MASK_ID})`}>
-        <path
-          className="endcard-wordmark-k"
-          d={K_PATH}
-          fill={FILL_COLOR}
-          fillRule="evenodd"
-        />
-      </g>
-      <path
-        className="endcard-wordmark-rest"
-        d={REST_PATH}
-        fill={FILL_COLOR}
-        fillRule="evenodd"
-      />
+      <path d={K_PATH} fill={FILL_COLOR} fillRule="evenodd" />
+      <path d={REST_PATH} fill={FILL_COLOR} fillRule="evenodd" />
     </svg>
   );
 }

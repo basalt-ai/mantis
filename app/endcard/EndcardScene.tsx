@@ -24,8 +24,11 @@ export function EndcardScene() {
       const stackGap = 24;
       const sloganLift = wordmarkHeight / 2 + stackGap / 2;
 
-      gsap.set(".endcard-k-mask-rect", { attr: { height: 0 } });
-      gsap.set(".endcard-wordmark-rest", { opacity: 0 });
+      gsap.set(".endcard-wordmark", {
+        opacity: 0,
+        scale: 0.94,
+        transformOrigin: "center center",
+      });
       gsap.set(".endcard-orbit-ring", { opacity: 0 });
       gsap.set(".endcard-orbit-satellite", { opacity: 0, scale: 0.85 });
       gsap.set(".endcard-slogan", {
@@ -57,23 +60,14 @@ export function EndcardScene() {
       );
 
       tl.to(
-        ".endcard-k-mask-rect",
-        {
-          attr: { height: 320 },
-          duration: 0.9,
-          ease: "power2.inOut",
-        },
-        "+=0.25",
-      );
-
-      tl.to(
-        ".endcard-wordmark-rest",
+        ".endcard-wordmark",
         {
           opacity: 1,
-          duration: 0.45,
-          ease: "power2.out",
+          scale: 1,
+          duration: 0.55,
+          ease: "back.out(1.4)",
         },
-        "+=0.1",
+        "+=0.25",
       );
 
       tl.to(
