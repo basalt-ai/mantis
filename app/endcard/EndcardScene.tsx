@@ -23,15 +23,7 @@ export function EndcardScene() {
       const stackGap = 24;
       const sloganLift = wordmarkHeight / 2 + stackGap / 2;
 
-      const kMaskStroke = scope.querySelector<SVGPathElement>(
-        ".endcard-k-mask-stroke",
-      );
-      const kPathLength = kMaskStroke?.getTotalLength() ?? 600;
-
-      gsap.set(".endcard-k-mask-stroke", {
-        strokeDasharray: kPathLength,
-        strokeDashoffset: kPathLength,
-      });
+      gsap.set(".endcard-k-mask-rect", { attr: { height: 0 } });
       gsap.set(".endcard-wordmark-rest", { opacity: 0 });
       gsap.set(".endcard-slogan", {
         y: -sloganLift,
@@ -62,10 +54,10 @@ export function EndcardScene() {
       );
 
       tl.to(
-        ".endcard-k-mask-stroke",
+        ".endcard-k-mask-rect",
         {
-          strokeDashoffset: 0,
-          duration: 1.0,
+          attr: { height: 320 },
+          duration: 0.9,
           ease: "power2.inOut",
         },
         "+=0.25",
