@@ -70,26 +70,28 @@ export function EndcardScene() {
         "+=0.25",
       );
 
+      tl.addLabel("arrival", "+=0.15");
+
       tl.to(
         ".endcard-url",
         {
           opacity: 1,
           y: 0,
-          duration: 0.5,
+          duration: 0.55,
           ease: "power2.out",
         },
-        "+=0.1",
+        "arrival",
       );
 
       tl.to(
         ".endcard-orbit-ring",
         {
           opacity: 1,
-          duration: 0.7,
-          stagger: 0.06,
+          duration: 0.55,
+          stagger: 0.04,
           ease: "power2.out",
         },
-        "+=0.15",
+        "arrival",
       );
 
       tl.to(
@@ -97,11 +99,11 @@ export function EndcardScene() {
         {
           opacity: 1,
           scale: 1,
-          duration: 0.5,
-          stagger: 0.07,
+          duration: 0.55,
+          stagger: 0.05,
           ease: "back.out(1.6)",
         },
-        "<0.15",
+        "arrival",
       );
 
       timelineRef.current = tl;
