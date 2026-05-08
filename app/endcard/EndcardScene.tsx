@@ -1,12 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import { useRef } from "react";
 
 import { gsap, useGSAP } from "@/lib/gsap";
 
+import { PancakeWordmarkAnimated } from "./PancakeWordmarkAnimated";
+
 const SLOGAN = "YOUR COFOUNDER SHOULD WORK MORE THAN YOU";
-const URL_TEXT = "WWW.GETPANCAKE.AI";
+const URL_TEXT = "getpancake.ai";
 
 export function EndcardScene() {
   const scopeRef = useRef<HTMLDivElement>(null);
@@ -22,14 +23,17 @@ export function EndcardScene() {
       const stackGap = 24;
       const sloganLift = wordmarkHeight / 2 + stackGap / 2;
 
-      gsap.set(".endcard-wordmark", {
-        opacity: 0,
-        y: -40,
-        rotation: -2.5,
-        scaleX: 1,
-        scaleY: 1,
-        transformOrigin: "center bottom",
+      const kMaskStroke = scope.querySelector<SVGPathElement>(
+        ".endcard-k-mask-stroke",
+      );
+      const kPathLength = kMaskStroke?.getTotalLength() ?? 600;
+
+      gsap.set(".endcard-k-mask-stroke", {
+        strokeDasharray: kPathLength,
+        strokeDashoffset: kPathLength,
       });
+      gsap.set(".endcard-wordmark-rest-left", { opacity: 0 });
+      gsap.set(".endcard-wordmark-rest-right", { opacity: 0 });
       gsap.set(".endcard-slogan", {
         y: -sloganLift,
         scale: 1.4,
@@ -59,34 +63,34 @@ export function EndcardScene() {
       );
 
       tl.to(
-        ".endcard-wordmark",
+        ".endcard-k-mask-stroke",
         {
-          opacity: 1,
-          y: 0,
-          rotation: 0,
-          duration: 0.42,
-          ease: "back.out(2.5)",
+          strokeDashoffset: 0,
+          duration: 1.0,
+          ease: "power2.inOut",
         },
         "+=0.25",
       );
 
       tl.to(
-        ".endcard-wordmark",
+        ".endcard-wordmark-rest-left",
         {
-          scaleY: 0.88,
-          scaleX: 1.05,
-          duration: 0.08,
+          opacity: 1,
+          duration: 0.4,
           ease: "power2.out",
         },
-        "<0.3",
+        "+=0.1",
       );
 
-      tl.to(".endcard-wordmark", {
-        scaleY: 1,
-        scaleX: 1,
-        duration: 0.4,
-        ease: "elastic.out(1.2, 0.5)",
-      });
+      tl.to(
+        ".endcard-wordmark-rest-right",
+        {
+          opacity: 1,
+          duration: 0.3,
+          ease: "power2.out",
+        },
+        "+=0.15",
+      );
 
       tl.to(
         ".endcard-url",
@@ -96,7 +100,7 @@ export function EndcardScene() {
           duration: 0.5,
           ease: "power2.out",
         },
-        "-=0.15",
+        "+=0.05",
       );
 
       timelineRef.current = tl;
@@ -120,15 +124,9 @@ export function EndcardScene() {
         className="endcard-stack flex flex-col items-center"
         style={{ gap: "var(--spacing-xxl)" }}
       >
-        <Image
-          src="/pancake-wordmark.png"
-          alt="Pancake"
-          width={739}
-          height={291}
-          priority
-          quality={100}
-          className="endcard-wordmark h-auto w-[clamp(280px,28vw,560px)] select-none"
-        />
+        <div className="endcard-wordmark w-[clamp(280px,28vw,560px)] select-none">
+          <PancakeWordmarkAnimated className="block h-auto w-full" />
+        </div>
         <p
           className="endcard-slogan m-0 select-none whitespace-nowrap text-center"
           style={{
@@ -143,7 +141,7 @@ export function EndcardScene() {
               key={`${char}-${i}`}
               className="endcard-slogan-char inline-block"
             >
-              {char === " " ? " " : char}
+              {char === " " ? " " : char}
             </span>
           ))}
         </p>
@@ -152,10 +150,10 @@ export function EndcardScene() {
       <p
         className="endcard-url absolute bottom-[8vh] left-1/2 m-0 -translate-x-1/2 select-none"
         style={{
-          fontFamily: "var(--font-body)",
-          fontSize: "clamp(11px, 0.85vw, 14px)",
+          fontFamily: "var(--font-display)",
+          fontSize: "clamp(14px, 1.15vw, 22px)",
           fontWeight: 500,
-          letterSpacing: "0.12em",
+          letterSpacing: "0.01em",
         }}
       >
         {URL_TEXT}
