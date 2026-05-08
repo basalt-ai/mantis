@@ -4,6 +4,7 @@ import { useRef } from "react";
 
 import { gsap, useGSAP } from "@/lib/gsap";
 
+import { EndcardOrbits } from "./EndcardOrbits";
 import { PancakeWordmarkAnimated } from "./PancakeWordmarkAnimated";
 
 const SLOGAN = "YOUR COFOUNDER SHOULD WORK MORE THAN YOU";
@@ -25,6 +26,8 @@ export function EndcardScene() {
 
       gsap.set(".endcard-k-mask-rect", { attr: { height: 0 } });
       gsap.set(".endcard-wordmark-rest", { opacity: 0 });
+      gsap.set(".endcard-orbit-ring", { opacity: 0 });
+      gsap.set(".endcard-orbit-satellite", { opacity: 0, scale: 0.85 });
       gsap.set(".endcard-slogan", {
         y: -sloganLift,
         scale: 1.4,
@@ -84,6 +87,29 @@ export function EndcardScene() {
         "+=0.1",
       );
 
+      tl.to(
+        ".endcard-orbit-ring",
+        {
+          opacity: 1,
+          duration: 0.7,
+          stagger: 0.06,
+          ease: "power2.out",
+        },
+        "+=0.15",
+      );
+
+      tl.to(
+        ".endcard-orbit-satellite",
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 0.5,
+          stagger: 0.07,
+          ease: "back.out(1.6)",
+        },
+        "<0.15",
+      );
+
       timelineRef.current = tl;
     },
     { scope: scopeRef },
@@ -105,8 +131,11 @@ export function EndcardScene() {
         className="endcard-stack flex flex-col items-center"
         style={{ gap: "var(--spacing-xxl)" }}
       >
-        <div className="endcard-wordmark w-[clamp(280px,28vw,560px)] select-none">
-          <PancakeWordmarkAnimated className="block h-auto w-full" />
+        <div className="endcard-orbital-wrap relative flex w-[clamp(280px,28vw,560px)] items-center justify-center">
+          <EndcardOrbits baseSize="clamp(180px, 18vw, 360px)" />
+          <div className="endcard-wordmark relative z-10 w-full select-none">
+            <PancakeWordmarkAnimated className="block h-auto w-full" />
+          </div>
         </div>
         <p
           className="endcard-slogan m-0 select-none whitespace-nowrap text-center"
