@@ -46,7 +46,7 @@ export function EndcardScene() {
       tl.to(".endcard-slogan-char", {
         opacity: 1,
         duration: 0.01,
-        stagger: 0.012,
+        stagger: 0.022,
         ease: "none",
       });
 
