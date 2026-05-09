@@ -26,26 +26,24 @@ export function EndcardScene() {
 
       gsap.set(".endcard-wordmark", {
         opacity: 0,
-        scale: 0.94,
         transformOrigin: "center center",
       });
       gsap.set(".endcard-orbit-ring", { opacity: 0 });
-      gsap.set(".endcard-orbit-satellite", { opacity: 0, scale: 0.85 });
+      gsap.set(".endcard-orbit-satellite", { opacity: 0 });
       gsap.set(".endcard-slogan", {
+        opacity: 0,
         y: -sloganLift,
         scale: 1.4,
         transformOrigin: "center center",
       });
-      gsap.set(".endcard-slogan-char", { opacity: 0 });
       gsap.set(".endcard-url", { opacity: 0, y: 8 });
 
       const tl = gsap.timeline({ delay: 0.2 });
 
-      tl.to(".endcard-slogan-char", {
+      tl.to(".endcard-slogan", {
         opacity: 1,
-        duration: 0.01,
-        stagger: 0.022,
-        ease: "none",
+        duration: 0.25,
+        ease: "power2.out",
       });
 
       tl.to(
@@ -56,16 +54,15 @@ export function EndcardScene() {
           duration: 0.55,
           ease: "power3.inOut",
         },
-        "+=0.05",
+        "+=1.0",
       );
 
       tl.to(
         ".endcard-wordmark",
         {
           opacity: 1,
-          scale: 1,
-          duration: 0.55,
-          ease: "back.out(1.4)",
+          duration: 0.5,
+          ease: "power2.out",
         },
         "+=0.25",
       );
@@ -88,7 +85,6 @@ export function EndcardScene() {
         {
           opacity: 1,
           duration: 0.55,
-          stagger: 0.04,
           ease: "power2.out",
         },
         "arrival",
@@ -98,10 +94,8 @@ export function EndcardScene() {
         ".endcard-orbit-satellite",
         {
           opacity: 1,
-          scale: 1,
           duration: 0.55,
-          stagger: 0.05,
-          ease: "back.out(1.6)",
+          ease: "power2.out",
         },
         "arrival",
       );
