@@ -55,8 +55,26 @@ const aeonikFono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Pancake",
-  description: "Let OpenClaw run your autonomous company.",
+  metadataBase: new URL("https://www.getpancake.ai"),
+  title: "The AI cofounder that makes your company autonomous",
+  description: "Pancake gets you a cofounder that knows your company better than you and handles 50% of the job.",
+  alternates: {
+    canonical: "https://www.getpancake.ai",
+  },
+  openGraph: {
+    type: "website",
+    url: "https://www.getpancake.ai",
+    title: "The AI cofounder that makes your company autonomous",
+    description: "Pancake gets you a cofounder that knows your company better than you and handles 50% of the job.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Pancake — The AI cofounder" }],
+    siteName: "Pancake",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The AI cofounder that makes your company autonomous",
+    description: "Pancake gets you a cofounder that knows your company better than you and handles 50% of the job.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({
