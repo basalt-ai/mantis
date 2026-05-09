@@ -8,7 +8,7 @@ const SLACK_PURPLE = "#4A154B";
 const SLACK_MUTED = "rgba(255,255,255,0.55)";
 const SLACK_TEXT = "#1d1c1d";
 
-const AGENT_DISPLAY_NAME = "AI Co-Founder";
+const AGENT_DISPLAY_NAME = "Pancake";
 
 type Channel = (typeof slack.channels)[number];
 
@@ -482,7 +482,7 @@ function SlackComposer({ activeChannel }: { activeChannel: Channel }) {
 }
 
 /**
- * AI Co-Founder avatar — the project's pancake-monster mascot. Centred in a
+ * Pancake avatar — the project's pancake-monster mascot. Centred in a
  * 36 px disc with cream backing and `object-contain` so the *whole* mascot
  * (face + pancake stack) reads — no awkward face-crop. Same `/pancake-monster.png`
  * the hero and org-chart use so the character stays consistent.
