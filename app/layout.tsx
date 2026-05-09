@@ -30,7 +30,7 @@ const aeonik = localFont({
     { path: "./fonts/aeonik/AeonikTRIAL-MediumItalic.otf", weight: "500", style: "italic" },
     { path: "./fonts/aeonik/AeonikTRIAL-SemiBold.otf", weight: "600", style: "normal" },
     { path: "./fonts/aeonik/AeonikTRIAL-SemiBoldItalic.otf", weight: "600", style: "italic" },
-    { path: "./fonts/aeonik/AeonikTRIAL-Bold.otf", weight: "700", style: "normal" t,
+    { path: "./fonts/aeonik/AeonikTRIAL-Bold.otf", weight: "700", style: "normal" },
     { path: "./fonts/aeonik/AeonikTRIAL-BoldItalic.otf", weight: "700", style: "italic" },
     { path: "./fonts/aeonik/AeonikTRIAL-Black.otf", weight: "900", style: "normal" },
     { path: "./fonts/aeonik/AeonikTRIAL-BlackItalic.otf", weight: "900", style: "italic" },
