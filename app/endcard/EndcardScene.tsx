@@ -31,19 +31,20 @@ export function EndcardScene() {
       gsap.set(".endcard-orbit-ring", { opacity: 0 });
       gsap.set(".endcard-orbit-satellite", { opacity: 0 });
       gsap.set(".endcard-slogan", {
-        opacity: 0,
         y: -sloganLift,
         scale: 1.4,
         transformOrigin: "center center",
       });
+      gsap.set(".endcard-slogan-char", { opacity: 0 });
       gsap.set(".endcard-url", { opacity: 0, y: 8 });
 
       const tl = gsap.timeline({ delay: 0.2 });
 
-      tl.to(".endcard-slogan", {
+      tl.to(".endcard-slogan-char", {
         opacity: 1,
-        duration: 0.25,
-        ease: "power2.out",
+        duration: 0.01,
+        stagger: 0.022,
+        ease: "none",
       });
 
       tl.to(
