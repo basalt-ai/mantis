@@ -85,7 +85,7 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
       <div className="pricing-hero__cta">
         <Link
           href={pricing.trialHref}
-          className="button"
+          className="button inline-flex items-center justify-center no-underline"
           data-size="lg"
           prefetch={false}
         >
