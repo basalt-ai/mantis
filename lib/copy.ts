@@ -196,12 +196,16 @@ export const talkToHuman = {
 export const pricing = {
   // Hard pricing numbers — source of truth.
   infrastructureDollars: 29,
-  /** 4 discrete slider stops. Total includes the $29 infrastructure cost. */
+  /** 4 discrete slider stops. Total includes the $29 infrastructure cost.
+   *  workScale is the single line we show under the price — it converts
+   *  abstract token counts into a human-scale mental model
+   *  (~100K tokens ≈ 1 minute of dense agent activity). It is the readout's
+   *  pedagogy, replacing the old "$29 kitchen + $X tokens" math. */
   tiers: [
-    { totalDollars: 49,  tokens: 5_000_000,  pancakes: 1 },
-    { totalDollars: 129, tokens: 25_000_000, pancakes: 2 },
-    { totalDollars: 229, tokens: 50_000_000, pancakes: 3 },
-    { totalDollars: 329, tokens: 75_000_000, pancakes: 4 },
+    { totalDollars: 49,  tokens: 5_000_000,  pancakes: 1, workScale: "About 1 hour of agent work a day" },
+    { totalDollars: 129, tokens: 25_000_000, pancakes: 2, workScale: "About 4 hours of agent work a day" },
+    { totalDollars: 229, tokens: 50_000_000, pancakes: 3, workScale: "A full workday of agents, every day" },
+    { totalDollars: 329, tokens: 75_000_000, pancakes: 4, workScale: "Agents running around the clock" },
   ],
   defaultTierIndex: 0,
   trial: {
@@ -213,8 +217,6 @@ export const pricing = {
   // Hero copy.
   title: "No tiers. No tricks.",
   subtitle: "$29 for the always-on setup. Tokens at cost.",
-  breakdownPrefix: "kitchen",
-  breakdownTokens: "tokens",
   perMonth: "/ month",
   // Slider labels for the 4 stops.
   sliderStopLabels: ["5M", "25M", "50M", "75M"],

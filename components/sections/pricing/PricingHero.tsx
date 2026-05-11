@@ -24,8 +24,6 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
   const tier = tiers[tierIndex];
   const sliderId = useId();
 
-  const tokenPortion = tier.totalDollars - pricing.infrastructureDollars;
-
   return (
     <div className="pricing-hero">
       <div className="pricing-hero__stack-wrap" aria-hidden>
@@ -38,14 +36,8 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
           {tier.totalDollars}
           <span className="pricing-hero__total-suffix">{pricing.perMonth}</span>
         </p>
-        <p className="pricing-hero__breakdown">
-          {pricing.currencySymbol}
-          {pricing.infrastructureDollars} {pricing.breakdownPrefix}
-          {" + "}
-          {pricing.currencySymbol}
-          {tokenPortion} {pricing.breakdownTokens}
-          {" · "}
-          {formatTokens(tier.tokens)} {pricing.sliderTokensLabel}
+        <p className="pricing-hero__work-scale" aria-live="polite">
+          {tier.workScale}
         </p>
       </div>
 
