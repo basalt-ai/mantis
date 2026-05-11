@@ -1,14 +1,16 @@
 /**
- * Pricing page — copy lifted from `lib/copy.ts` (`pricing.*`). Centered eyebrow +
- * headline + subhead, then a single plan card with a horizontal credit-tier
- * chip selector that scales the displayed price.
+ * Pricing — radically honest. One plan, one slider, one total. The pancake-
+ * monster widget grows its stack as the user drags the slider; everything else
+ * on the page is support. Pricing numbers live in `lib/copy.ts → pricing.*`.
  */
 import type { Metadata } from "next";
+import Link from "next/link";
 
+import { PricingFaq } from "@/components/sections/pricing/PricingFaq";
+import { PricingHero } from "@/components/sections/pricing/PricingHero";
 import { HomeNav } from "@/components/sections/home/HomeNav";
-import { PricingCard } from "@/components/sections/pricing/PricingCard";
 import { Footer } from "@/components/shared/Footer";
-import { H2 } from "@/components/ui/Headings";
+import { H2, H3 } from "@/components/ui/Headings";
 import { pricing } from "@/lib/copy";
 
 export const metadata: Metadata = {
@@ -20,7 +22,8 @@ export default function PricingPage() {
   return (
     <main className="flex min-h-screen flex-col">
       <HomeNav />
-      <section className="pricing-section flex-1" aria-labelledby="pricing-heading">
+
+      <section className="pricing-section" aria-labelledby="pricing-heading">
         <div className="pricing-section__inner">
           <header className="pricing-section__header">
             <p className="pricing-eyebrow">{pricing.eyebrow}</p>
@@ -30,9 +33,73 @@ export default function PricingPage() {
             <p className="pricing-section__lede text-center">{pricing.subtitle}</p>
           </header>
 
-          <PricingCard pricing={pricing} />
+          <PricingHero pricing={pricing} />
         </div>
       </section>
+
+      <section className="pricing-buys" aria-labelledby="pricing-buys-title">
+        <div className="pricing-buys__inner">
+          <h2 id="pricing-buys-title" className="heading pricing-buys__title">
+            {pricing.buys.title}
+          </h2>
+          <ul className="pricing-buys__grid">
+            {pricing.buys.cards.map((card) => (
+              <li key={card.name} className="pricing-buys__card">
+                <H3 className="heading pricing-buys__card-name">{card.name}</H3>
+                <p className="pricing-buys__card-budget">{card.budget}</p>
+                <ul className="pricing-buys__card-examples">
+                  {card.examples.map((ex) => (
+                    <li key={ex} className="pricing-buys__card-example">
+                      {ex}
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="pricing-manifesto" aria-labelledby="pricing-manifesto-title">
+        <div className="pricing-manifesto__inner">
+          <h2 id="pricing-manifesto-title" className="heading pricing-manifesto__title">
+            {pricing.manifesto.title}
+          </h2>
+          <ul className="pricing-manifesto__grid">
+            {pricing.manifesto.items.map((item) => (
+              <li key={item.title} className="pricing-manifesto__item">
+                <H3 className="heading pricing-manifesto__item-title">{item.title}</H3>
+                <p className="pricing-manifesto__item-body">{item.body}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="pricing-talk" aria-labelledby="pricing-talk-title">
+        <div className="pricing-talk__inner">
+          <div className="pricing-talk__text">
+            <H3 id="pricing-talk-title" className="heading pricing-talk__title">
+              {pricing.talkToSales.title}
+            </H3>
+            <p className="pricing-talk__body">{pricing.talkToSales.body}</p>
+          </div>
+          <Link
+            href={pricing.talkToSales.href}
+            className="button"
+            data-size="md"
+            data-variant="outline"
+            prefetch={false}
+          >
+            {pricing.talkToSales.cta}
+          </Link>
+        </div>
+      </section>
+
+      <div className="pricing-faq__container">
+        <PricingFaq pricing={pricing} />
+      </div>
+
       <Footer />
     </main>
   );

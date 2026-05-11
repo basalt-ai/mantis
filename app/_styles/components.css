@@ -1983,116 +1983,450 @@
     corner-shape: squircle;
   }
 
-  /* ─── Plan card additions (sit alongside existing .pricing-card) ─── */
-  .pricing-card {
-    max-width: 520px;
-  }
-
-  .pricing-card .button[data-size="lg"] {
+  /* ─── Pricing hero widget (monster + slider + total) ─── */
+  .pricing-hero {
     width: 100%;
+    max-width: 640px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: calc(2 * var(--spacing-xl));
+    padding: calc(2 * var(--spacing-xl)) var(--spacing-xl);
+    background-color: var(--surface);
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    border-radius: 32px;
+    corner-shape: squircle;
   }
 
-  .pricing-card__name {
+  .pricing-hero__stack-wrap {
+    width: 240px;
+    height: 320px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .pancake-stack__svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .pricing-hero__readout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    text-align: center;
+  }
+
+  .pricing-hero__total-label {
     margin: 0;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
     font-family: var(--font-body);
     font-size: var(--font-size-eyebrow);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
     color: var(--subtle-text);
   }
 
-  .pricing-card__price-suffix {
-    margin-left: var(--spacing-md);
+  .pricing-hero__total {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 64px;
+    line-height: 1;
+    letter-spacing: -2px;
+    color: var(--text);
+  }
+
+  .pricing-hero__total-suffix {
+    margin-left: var(--spacing-sm);
     font-size: var(--font-size-body-regular);
     font-weight: 400;
     color: var(--subtle-text);
     letter-spacing: 0;
   }
 
-  .pricing-card__features {
-    list-style: none;
-    padding: 0;
+  .pricing-hero__breakdown {
     margin: 0;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-lg);
-    text-align: left;
-  }
-
-  .pricing-card__feature {
-    display: flex;
-    gap: var(--spacing-lg);
-    align-items: flex-start;
     font-family: var(--font-body);
-    font-size: var(--font-size-body-regular);
-    line-height: 1.5;
-    color: var(--text);
+    font-size: var(--font-size-body-small);
+    color: var(--subtle-text);
   }
 
-  .pricing-card__feature-icon {
-    flex-shrink: 0;
-    width: 20px;
-    height: 20px;
-    margin-top: 2px;
-    color: var(--interactive-text);
-  }
-
-  /* ─── Credit-tier chip group (segmented control) ─── */
-  .pricing-tier-group__wrapper {
+  .pricing-hero__slider-wrap {
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: var(--spacing-md);
   }
 
-  .pricing-tier-group__label {
+  .pricing-hero__slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background: linear-gradient(
+      to right,
+      var(--strong-branded-surface) 0%,
+      var(--strong-branded-surface) calc(var(--progress) * 100%),
+      var(--alt-surface) calc(var(--progress) * 100%),
+      var(--alt-surface) 100%
+    );
+    background-color: var(--alt-surface);
+    cursor: pointer;
+    outline: none;
+  }
+
+  .pricing-hero__slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background-color: var(--surface);
+    border: 2px solid var(--text);
+    cursor: grab;
+    transition: transform 120ms ease;
+  }
+
+  .pricing-hero__slider::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background-color: var(--surface);
+    border: 2px solid var(--text);
+    cursor: grab;
+  }
+
+  .pricing-hero__slider:focus-visible::-webkit-slider-thumb {
+    box-shadow: 0 0 0 4px var(--weak-branded-surface);
+  }
+
+  .pricing-hero__slider:active::-webkit-slider-thumb {
+    cursor: grabbing;
+    transform: scale(1.1);
+  }
+
+  .pricing-hero__slider-stops {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+  }
+
+  .pricing-hero__slider-stop {
+    background: none;
+    border: none;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-small);
+    color: var(--subtle-text);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: color 120ms ease;
+  }
+
+  .pricing-hero__slider-stop:hover {
+    color: var(--text);
+  }
+
+  .pricing-hero__slider-stop[data-active="true"] {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .pricing-hero__slider-helper {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-small);
+    color: var(--subtle-text);
+    text-align: center;
+  }
+
+  .pricing-hero__cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    width: 100%;
+  }
+
+  .pricing-hero__cta .button[data-size="lg"] {
+    width: 100%;
+  }
+
+  .pricing-hero__cta-note {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-small);
+    color: var(--subtle-text);
+    text-align: center;
+  }
+
+  /* ─── "what your tokens buy" 3-card section ─── */
+  .pricing-buys {
+    width: 100%;
+    padding: calc(2 * var(--spacing-xxl)) var(--spacing-home-page-inline);
+    background-color: var(--alt-surface);
+  }
+
+  .pricing-buys__inner {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 1080px;
+    display: flex;
+    flex-direction: column;
+    gap: calc(2 * var(--spacing-xl));
+  }
+
+  .pricing-buys__title {
+    margin: 0;
+    font-size: var(--font-size-header-03);
+    letter-spacing: -0.5px;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .pricing-buys__grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xl);
+  }
+
+  @media (min-width: 768px) {
+    .pricing-buys__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .pricing-buys__card {
+    background-color: var(--surface);
+    border: 1px solid var(--subtle-stroke);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xxl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    corner-shape: squircle;
+  }
+
+  .pricing-buys__card-name {
+    margin: 0;
+    font-size: var(--font-size-header-04);
+    color: var(--text);
+  }
+
+  .pricing-buys__card-budget {
     margin: 0;
     font-family: var(--font-body);
     font-size: var(--font-size-eyebrow);
     text-transform: uppercase;
     letter-spacing: 0.08em;
+    color: var(--interactive-text);
+  }
+
+  .pricing-buys__card-examples {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .pricing-buys__card-example {
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .pricing-buys__card-example::before {
+    content: "→ ";
     color: var(--subtle-text);
   }
 
-  .pricing-tier-group {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--spacing-sm);
+  /* ─── "how this works" 3-column manifesto ─── */
+  .pricing-manifesto {
     width: 100%;
+    padding: calc(2 * var(--spacing-xxl)) var(--spacing-home-page-inline);
+    background-color: var(--surface);
   }
 
-  .pricing-tier-chip {
-    --chip-border-color: var(--stroke);
-    flex: 1 1 64px;
-    min-width: 64px;
-    padding: var(--spacing-md) var(--spacing-lg);
-    background-color: var(--surface);
+  .pricing-manifesto__inner {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 1080px;
+    display: flex;
+    flex-direction: column;
+    gap: calc(2 * var(--spacing-xl));
+  }
+
+  .pricing-manifesto__title {
+    margin: 0;
+    font-size: var(--font-size-header-03);
+    letter-spacing: -0.5px;
     color: var(--text);
-    border: 1px solid var(--chip-border-color);
-    border-radius: var(--radius-sm);
+    text-align: center;
+  }
+
+  .pricing-manifesto__grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: calc(2 * var(--spacing-xl));
+  }
+
+  @media (min-width: 768px) {
+    .pricing-manifesto__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .pricing-manifesto__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .pricing-manifesto__item-title {
+    margin: 0;
+    font-size: var(--font-size-header-04);
+    color: var(--text);
+  }
+
+  .pricing-manifesto__item-body {
+    margin: 0;
     font-family: var(--font-body);
     font-size: var(--font-size-body-regular);
-    cursor: pointer;
+    color: var(--subtle-text);
+    line-height: 1.5;
+  }
+
+  /* ─── talk-to-sales banner ─── */
+  .pricing-talk {
+    width: 100%;
+    padding: var(--spacing-xxl) var(--spacing-home-page-inline);
+    background-color: var(--surface);
+  }
+
+  .pricing-talk__inner {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 1080px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-xxl);
+    padding: var(--spacing-xxl);
+    background-color: var(--alt-weak-branded-surface-01);
+    border: 1px solid var(--branded-stroke-02);
+    border-radius: var(--radius-xl);
     corner-shape: squircle;
-    transition: background-color 120ms ease, border-color 120ms ease;
   }
 
-  .pricing-tier-chip:hover {
-    --chip-border-color: var(--text);
+  @media (max-width: 640px) {
+    .pricing-talk__inner {
+      flex-direction: column;
+      align-items: stretch;
+      text-align: center;
+    }
   }
 
-  .pricing-tier-chip:focus-visible {
-    --chip-border-color: var(--interactive-text);
-    outline: none;
+  .pricing-talk__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
   }
 
-  .pricing-tier-chip[aria-checked="true"] {
-    background-color: var(--weak-branded-surface);
-    --chip-border-color: var(--branded-stroke-01);
-    font-weight: 600;
+  .pricing-talk__title {
+    margin: 0;
+    font-size: var(--font-size-header-04);
+    color: var(--text);
+  }
+
+  .pricing-talk__body {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    color: var(--subtle-text);
+  }
+
+  /* ─── FAQ ─── */
+  .pricing-faq__container {
+    width: 100%;
+    padding: calc(2 * var(--spacing-xxl)) var(--spacing-home-page-inline);
+    background-color: var(--alt-surface);
+  }
+
+  .pricing-faq {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+  }
+
+  .pricing-faq__title {
+    margin: 0;
+    font-size: var(--font-size-header-03);
+    letter-spacing: -0.5px;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .pricing-faq__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .pricing-faq__item {
+    background-color: var(--surface);
+    border: 1px solid var(--subtle-stroke);
+    border-radius: var(--radius-md);
+    corner-shape: squircle;
+    overflow: hidden;
+  }
+
+  .pricing-faq__question {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    color: var(--text);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .pricing-faq__question:focus-visible {
+    outline: 2px solid var(--interactive-text);
+    outline-offset: -2px;
+  }
+
+  .pricing-faq__answer {
+    margin: 0;
+    padding: 0 var(--spacing-xl) var(--spacing-lg) var(--spacing-xl);
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    color: var(--subtle-text);
+    line-height: 1.5;
   }
 
   /* ─────────────────── Signup page ───────────────────

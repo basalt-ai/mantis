@@ -1,0 +1,105 @@
+"use client";
+
+import Link from "next/link";
+import { useId, useState } from "react";
+
+import type { pricing as pricingCopy } from "@/lib/copy";
+
+import { PancakeStack } from "./PancakeStack";
+
+type Pricing = typeof pricingCopy;
+
+function formatTokens(n: number) {
+  // 5_000_000 -> "5,000,000"
+  return n.toLocaleString("en-US");
+}
+
+function formatTokensCompact(n: number) {
+  if (n >= 1_000_000) return `${n / 1_000_000}M`;
+  if (n >= 1_000) return `${n / 1_000}k`;
+  return String(n);
+}
+
+export function PricingHero({ pricing }: { pricing: Pricing }) {
+  const tiers = pricing.tiers;
+  const [tierIndex, setTierIndex] = useState<number>(pricing.defaultTierIndex);
+  const tier = tiers[tierIndex];
+  const sliderId = useId();
+  const helperId = useId();
+
+  const tokenPortion = tier.totalEuros - pricing.infrastructureEuros;
+
+  return (
+    <div className="pricing-hero">
+      <div className="pricing-hero__stack-wrap" aria-hidden>
+        <PancakeStack count={tier.pancakes as 2 | 3 | 4 | 5} />
+      </div>
+
+      <div className="pricing-hero__readout">
+        <p className="pricing-hero__total-label">{pricing.totalLabel}</p>
+        <p className="pricing-hero__total" aria-live="polite">
+          {pricing.currencySymbol}
+          {tier.totalEuros}
+          <span className="pricing-hero__total-suffix">{pricing.perMonth}</span>
+        </p>
+        <p className="pricing-hero__breakdown">
+          {pricing.currencySymbol}
+          {pricing.infrastructureEuros} {pricing.breakdownPrefix}
+          {" + "}
+          {pricing.currencySymbol}
+          {tokenPortion} {pricing.breakdownTokens}
+          {" · "}
+          {formatTokens(tier.tokens)} {pricing.sliderTokensLabel}
+        </p>
+      </div>
+
+      <div className="pricing-hero__slider-wrap">
+        <label htmlFor={sliderId} className="sr-only">
+          monthly token volume
+        </label>
+        <input
+          id={sliderId}
+          type="range"
+          min={0}
+          max={tiers.length - 1}
+          step={1}
+          value={tierIndex}
+          onChange={(e) => setTierIndex(Number(e.target.value))}
+          aria-describedby={helperId}
+          aria-valuetext={`${formatTokens(tier.tokens)} tokens, ${pricing.currencySymbol}${tier.totalEuros} per month`}
+          className="pricing-hero__slider"
+        />
+        <div className="pricing-hero__slider-stops" aria-hidden>
+          {pricing.sliderStopLabels.map((label, i) => (
+            <button
+              key={label}
+              type="button"
+              className="pricing-hero__slider-stop"
+              data-active={i === tierIndex ? "true" : undefined}
+              onClick={() => setTierIndex(i)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <p id={helperId} className="pricing-hero__slider-helper">
+          {pricing.sliderHelper}
+        </p>
+      </div>
+
+      <div className="pricing-hero__cta">
+        <Link
+          href={pricing.trialHref}
+          className="button"
+          data-size="lg"
+          prefetch={false}
+        >
+          {pricing.trialCta}
+        </Link>
+        <p className="pricing-hero__cta-note">{pricing.trialNote}</p>
+      </div>
+    </div>
+  );
+}
+
+export { formatTokensCompact };

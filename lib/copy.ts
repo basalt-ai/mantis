@@ -188,32 +188,136 @@ export const talkToHuman = {
   subtitle: "Let's put your company on autopilot",
 } as const;
 
+/**
+ * Pricing — radically honest. Two costs: a small fixed €29 for the always-on
+ * machine (the "kitchen") plus tokens passed through at lab rates. One plan,
+ * one slider, one total. Numbers are the single source of truth for the page.
+ */
 export const pricing = {
-  eyebrow: "PRICING",
-  title: "Pay your agents in credits.",
-  subtitle: "More work? Bigger pack. Always linear, never seat-based.",
-  plan: {
-    name: "Team",
-    tiers: [
-      { credits: 20_000,  price: 49  },
-      { credits: 40_000,  price: 99  },
-      { credits: 60_000,  price: 149 },
-      { credits: 80_000,  price: 199 },
-      { credits: 100_000, price: 249 },
-    ],
-    defaultTierIndex: 0,
-    features: [
-      "Your full agent workforce — AI co-founder + specialists",
-      "Lives in Slack — proactive briefings, mentions, threads",
-      "Plugged into GitHub, Notion, Gmail, Vercel, and more",
-      "Scheduled tasks and always-on operation",
-      "Full audit trail with human guardrails",
-    ],
-    cta: "Start building",
-    href: "/signup",
+  // Hard pricing numbers — source of truth.
+  infrastructureEuros: 29,
+  /** 4 discrete slider stops. Total includes the €29 infrastructure cost. */
+  tiers: [
+    { totalEuros: 49,  tokens: 5_000_000,  pancakes: 2 },
+    { totalEuros: 129, tokens: 25_000_000, pancakes: 3 },
+    { totalEuros: 229, tokens: 50_000_000, pancakes: 4 },
+    { totalEuros: 329, tokens: 75_000_000, pancakes: 5 },
+  ],
+  defaultTierIndex: 0,
+  trial: {
+    days: 7,
+    freeTokensEuros: 20,
   },
-  priceSuffix: "/ month",
-  tierGroupLabel: "Monthly credits",
+  currency: "EUR" as const,
+  currencySymbol: "€",
+  // Hero copy.
+  eyebrow: "PRICING",
+  title: "no markup. one slider.",
+  subtitle:
+    "we buy tokens in bulk from the labs and pass through the rate. plus a small fixed cost for your always-on kitchen.",
+  totalLabel: "your monthly bill",
+  breakdownPrefix: "kitchen",
+  breakdownTokens: "tokens",
+  perMonth: "/ month",
+  // Slider labels for the 4 stops.
+  sliderStopLabels: ["5M", "25M", "50M", "75M"],
+  sliderTokensLabel: "tokens per month",
+  sliderHelper: "tokens reset monthly. no rollover. unlimited seats.",
+  // Trial CTA below the widget.
+  trialCta: "start your 7-day trial",
+  trialNote: "€20 in tokens to play with. no card required.",
+  trialHref: "/signup",
+  // "what your tokens buy" cards.
+  buys: {
+    title: "what your tokens buy",
+    cards: [
+      {
+        name: "quick task",
+        budget: "~50k tokens",
+        examples: [
+          "draft a Slack reply",
+          "summarize a thread",
+          "label and triage your inbox",
+        ],
+      },
+      {
+        name: "workflow",
+        budget: "~500k tokens",
+        examples: [
+          "research a prospect end-to-end",
+          "brief your week from your calendar",
+          "file a weekly report from raw data",
+        ],
+      },
+      {
+        name: "full project",
+        budget: "~5M tokens",
+        examples: [
+          "ship a small feature, PR included",
+          "audit a codebase and write the cleanup plan",
+          "draft a launch playbook with assets",
+        ],
+      },
+    ],
+  },
+  // "how this works" 3-column manifesto.
+  manifesto: {
+    title: "how this works",
+    items: [
+      {
+        title: "no markup.",
+        body:
+          "the labs sell us tokens. we sell them to you at the same rate. no creative bookkeeping.",
+      },
+      {
+        title: "your kitchen, always on.",
+        body:
+          "€29 keeps a machine running 24/7 just for you. think a Mac mini in the cloud — always on, always yours.",
+      },
+      {
+        title: "no surprises.",
+        body:
+          "tokens reset every month. no rollover, no overage. if you run out, bump the slider — takes effect immediately.",
+      },
+    ],
+  },
+  // "above €329 → talk to sales" banner.
+  talkToSales: {
+    title: "running heavier?",
+    body: "above 75M tokens or want a custom invoice? we'll set you up.",
+    cta: "talk to sales",
+    href: "mailto:hello@getpancake.ai?subject=Custom%20pricing",
+  },
+  // FAQ accordion.
+  faq: {
+    title: "questions",
+    items: [
+      {
+        q: "what counts as a token?",
+        a: "the same unit the labs use. roughly 3 or 4 characters of text. we don't transform or repackage.",
+      },
+      {
+        q: "do tokens roll over?",
+        a: "no. they reset on your billing day. leftovers don't carry into next month.",
+      },
+      {
+        q: "how do seats work?",
+        a: "unlimited. your whole team shares one workspace and one pool of tokens.",
+      },
+      {
+        q: "what if I run out mid-month?",
+        a: "bump the slider from your settings. the new tier takes effect immediately and you only pay the difference, prorated.",
+      },
+      {
+        q: "what is the €29 for?",
+        a: "the kitchen your agents live in. a small always-on machine that holds your context, runs your jobs, and reports back. think Mac mini in the cloud.",
+      },
+      {
+        q: "what about contracts?",
+        a: "monthly. cancel any time. for bigger volumes or annual invoicing, talk to sales.",
+      },
+    ],
+  },
 } as const;
 
 export const signup = {
