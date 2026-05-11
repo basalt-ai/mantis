@@ -34,7 +34,7 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
 
       <div className="pricing-hero__readout">
         <p className="pricing-hero__total" aria-live="polite">
-          {pricing.currencySymbol}
+          <span className="pricing-hero__total-symbol">{pricing.currencySymbol}</span>
           {tier.totalDollars}
           <span className="pricing-hero__total-suffix">{pricing.perMonth}</span>
         </p>

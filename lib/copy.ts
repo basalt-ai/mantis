@@ -280,7 +280,7 @@ export const pricing = {
           accent: "#D5E4EB",
           accentInk: "#1F4660",
           time: "11:32am",
-          text: "@pancake — pricing page still says “€99 starter”, should be €79. Same fix anywhere else in the docs?",
+          text: "@pancake — pricing page still says “$99 starter”, should be $79. Same fix anywhere else in the docs?",
         },
         agent: {
           time: "11:38am",

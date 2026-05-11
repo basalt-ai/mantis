@@ -2013,6 +2013,17 @@
     color: var(--text);
   }
 
+  /* Aeonik renders the $ glyph noticeably taller than its lining digits;
+     scale the symbol down and lift it a bit so it reads as a prefix, not a
+     dominant character. */
+  .pricing-hero__total-symbol {
+    font-size: 0.62em;
+    vertical-align: 0.18em;
+    margin-right: 2px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
   .pricing-hero__total-suffix {
     margin-left: var(--spacing-sm);
     font-size: var(--font-size-body-regular);
