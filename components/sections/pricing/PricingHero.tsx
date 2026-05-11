@@ -68,6 +68,9 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
           aria-describedby={helperId}
           aria-valuetext={`${formatTokens(tier.tokens)} tokens, ${pricing.currencySymbol}${tier.totalEuros} per month`}
           className="pricing-hero__slider"
+          style={
+            { "--progress": tierIndex / (tiers.length - 1) } as React.CSSProperties
+          }
         />
         <div className="pricing-hero__slider-stops" aria-hidden>
           {pricing.sliderStopLabels.map((label, i) => (

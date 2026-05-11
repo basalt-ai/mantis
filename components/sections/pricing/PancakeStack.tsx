@@ -3,18 +3,18 @@
 import { AnimatePresence, motion } from "framer-motion";
 
 /**
- * Pancake stack widget — 2 to 5 pancakes, animated.
+ * Pancake-monster stack widget — 2 to 5 pancakes, animated.
  *
- * Paths are inlined verbatim from the Figma master (file fr8NgOCTUxsEbrMEJA3YKu,
- * node 177:11377). The master is a 3-stack with golden top + purple middle +
- * pink bottom; for 4 and 5 we add orange and mint pancakes from the same brand
- * palette and reuse the master's pancake shapes (just recolored).
+ * Pancake shapes (sides + top) and master colours come from the Figma master
+ * (file fr8NgOCTUxsEbrMEJA3YKu, node 177:11377) — a 3-stack of pink / purple /
+ * golden-with-eyes. For 4 and 5 we add orange and mint pancakes using brand
+ * palette tokens, keeping the master's shape paths unchanged.
  *
- * Composition (top → bottom): the eye pancake is always slot 0. New pancakes
- * appear BETWEEN the eyes and the next existing pancake, so each color keeps
- * a stable identity across stack sizes (framer-motion uses the color as the
- * key, so adding a new color triggers a single drop-in animation while the
- * others smoothly shift to their new slot).
+ * Z-order: bottom pancake is rendered FIRST so the eye pancake (always slot 0)
+ * is drawn LAST and stays visibly on top. Each pancake's identity is keyed by
+ * its colour so framer-motion smoothly shifts existing pancakes between slots
+ * when the stack grows / shrinks, and only the newly-added or newly-removed
+ * pancake plays the drop / fade animation.
  */
 
 type PancakeColor = "golden" | "purple" | "orange" | "mint" | "pink";
@@ -27,6 +27,7 @@ const PANCAKE_FILL: Record<PancakeColor, { top: string; sides: string }> = {
   pink:   { top: "#FF7AA0", sides: "#FFBBC7" }, // master bottom
 };
 
+// Top-to-bottom composition. Slot 0 always has the eyes.
 const STACKS: Record<2 | 3 | 4 | 5, PancakeColor[]> = {
   2: ["golden", "pink"],
   3: ["golden", "purple", "pink"],
@@ -34,24 +35,29 @@ const STACKS: Record<2 | 3 | 4 | 5, PancakeColor[]> = {
   5: ["golden", "purple", "orange", "mint", "pink"],
 };
 
-// Alternating x offsets (per slot from the top) to give the stack a playful lean.
-const SLOT_X = [38, 67, 26, 70, 30];
-// Vertical spacing between pancake centres.
-const SLOT_DY = 50;
-// Bottom-anchored: the last pancake always sits at the same y so the stack
-// "grows up" as the slider moves right.
-const BOTTOM_PANCAKE_Y = 204;
+// Alternating x offsets give the stack a playful lean (per slot from the top).
+const SLOT_X = [38, 64, 24, 58, 30];
+// Vertical spacing between pancake centres (master uses ~50 px).
+const SLOT_DY = 48;
+// Bottom-anchored: the last pancake's top edge always sits at the same y so
+// the stack grows upward as the slider moves right.
+const BOTTOM_PANCAKE_Y = 200;
 
 function slotY(slotIndex: number, count: number) {
   return BOTTOM_PANCAKE_Y - (count - 1 - slotIndex) * SLOT_DY;
 }
 
-// SVG viewBox sized to fit the tallest stack (5 pancakes) without clipping.
-const VIEWBOX_W = 335;
-const VIEWBOX_H = 472;
+const VIEWBOX_W = 330;
+const VIEWBOX_H = 480;
+const GROUND_CX = 168;
+const GROUND_CY = 472;
 
 export function PancakeStack({ count }: { count: 2 | 3 | 4 | 5 }) {
   const stack = STACKS[count];
+  // Render slot indices in reverse so the bottom pancake is drawn first and
+  // the eye pancake (slot 0) is drawn last → eyes always on top z-wise.
+  const renderOrder = Array.from({ length: stack.length }, (_, i) => stack.length - 1 - i);
+
   return (
     <svg
       className="pancake-stack__svg"
@@ -61,22 +67,33 @@ export function PancakeStack({ count }: { count: 2 | 3 | 4 | 5 }) {
       role="img"
       aria-label={`stack of ${count} pancakes`}
     >
+      {/* Soft ground shadow — grounds the stack regardless of size */}
+      <ellipse
+        cx={GROUND_CX}
+        cy={GROUND_CY}
+        rx={132}
+        ry={11}
+        fill="#2C002A"
+        opacity={0.09}
+      />
+
       <AnimatePresence initial={false}>
-        {stack.map((color, slotIndex) => {
+        {renderOrder.map((slotIndex) => {
+          const color = stack[slotIndex];
           const x = SLOT_X[slotIndex];
           const y = slotY(slotIndex, count);
           const hasEyes = slotIndex === 0;
           return (
             <motion.g
               key={color}
-              initial={{ opacity: 0, y: y - 80, scale: 0.85 }}
+              initial={{ opacity: 0, y: y - 90, scale: 0.82 }}
               animate={{ opacity: 1, y, scale: 1 }}
-              exit={{ opacity: 0, y: y + 40, scale: 0.7 }}
+              exit={{ opacity: 0, y: y - 60, scale: 0.7 }}
               transition={{
                 type: "spring",
-                stiffness: 240,
-                damping: 14,
-                mass: 0.8,
+                stiffness: 320,
+                damping: 13,
+                mass: 0.7,
               }}
               style={{ x }}
             >
@@ -93,7 +110,7 @@ function Pancake({ color, hasEyes }: { color: PancakeColor; hasEyes: boolean }) 
   const fill = PANCAKE_FILL[color];
   return (
     <g>
-      {/* Pancake sides (darker, taller rim) */}
+      {/* Pancake sides — darker, taller rim (drawn first so the cap sits on top) */}
       <svg
         x={0.08}
         y={22.33}
@@ -107,7 +124,7 @@ function Pancake({ color, hasEyes }: { color: PancakeColor; hasEyes: boolean }) 
           fill={fill.sides}
         />
       </svg>
-      {/* Pancake top (lighter, oval cap) */}
+      {/* Pancake top — lighter, oval cap */}
       <svg
         x={8.46}
         y={22.33}
@@ -127,38 +144,15 @@ function Pancake({ color, hasEyes }: { color: PancakeColor; hasEyes: boolean }) 
 }
 
 function Eyes() {
-  // Positions are master-frame coords relative to the top pancake's local origin.
-  // Left eye: master (81, 91.43) − pancake origin (38, 4) = (43, 87.43)
-  // Right eye: master (156.75, 80) − pancake origin (38, 4) = (118.75, 76)
-  // Both rotated 90° to render as vertical ovals (master uses rotated bounding box).
+  // Master positions (relative to the top-pancake's 268×268 local frame):
+  //   left eye  centred at (55.7, 109.5), 25.4 wide × 44.2 tall
+  //   right eye centred at (135.4, 105),  33.2 wide × 57.9 tall
+  // The master uses bezier paths; visually identical to plain ellipses at this
+  // resolution, so we render simple ellipses for crisper edges.
   return (
     <>
-      <g transform="translate(43 87.43) rotate(90) translate(0 -25.396)">
-        <svg
-          width={44.227}
-          height={25.396}
-          viewBox="0 0 19.6564 11.2871"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M9.82821 0C14.9963 0 19.6564 1.9347 19.6564 5.62442C19.6564 9.32941 15.0479 11.2871 9.82821 11.2871C4.6085 11.2871 0 9.32941 0 5.62442C0 1.9347 4.66017 0 9.82821 0Z"
-            fill="#2C002A"
-          />
-        </svg>
-      </g>
-      <g transform="translate(118.75 76) rotate(90) translate(0 -33.247)">
-        <svg
-          width={57.899}
-          height={33.247}
-          viewBox="0 0 25.7328 14.7763"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M12.8664 0C19.632 0 25.7328 2.53277 25.7328 7.36308C25.7328 12.2134 19.6997 14.7763 12.8664 14.7763C6.03311 14.7763 0 12.2134 0 7.36308C0 2.53277 6.10076 0 12.8664 0Z"
-            fill="#2C002A"
-          />
-        </svg>
-      </g>
+      <ellipse cx={56} cy={110} rx={12.7} ry={22.1} fill="#2C002A" />
+      <ellipse cx={135} cy={105} rx={16.6} ry={28.95} fill="#2C002A" />
     </>
   );
 }
