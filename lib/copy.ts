@@ -223,16 +223,17 @@ export const pricing = {
   trialCta: "Start your free trial",
   trialCaption: "7 days free. No card required.",
   trialHref: "/signup",
-  // "How this works" 3-column manifesto (shown BEFORE the buys cards —
-  // trust before value: the user needs to believe the price is fair before
-  // they care what it gets them).
+  // 3-column manifesto (shown BEFORE the buys cards — trust before value:
+  // the user needs to believe the price is fair before they care what it
+  // gets them). Title doubles as the page's main headline since the hero
+  // section above runs without an H1/H2.
   manifesto: {
-    title: "How this works",
+    title: "No tiers. No tricks.",
     items: [
       {
-        title: "Pay what we pay.",
+        title: "Lab rates on tokens.",
         body:
-          "We buy tokens at scale and pass through the rate. Buy direct from OpenAI or Anthropic, you'd pay the same. Maybe more.",
+          "Most AI tools mark up tokens 3x or 5x. We charge what OpenAI and Anthropic publish. Our margin is the $29 kitchen, not your usage.",
       },
       {
         title: "Your kitchen, always on.",

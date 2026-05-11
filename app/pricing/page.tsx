@@ -14,7 +14,7 @@ import { PricingHero } from "@/components/sections/pricing/PricingHero";
 import { TokensBuyCards } from "@/components/sections/pricing/TokensBuyCards";
 import { HomeNav } from "@/components/sections/home/HomeNav";
 import { Footer } from "@/components/shared/Footer";
-import { H2, H3 } from "@/components/ui/Headings";
+import { H3 } from "@/components/ui/Headings";
 import { pricing } from "@/lib/copy";
 
 export const metadata: Metadata = {
@@ -27,15 +27,8 @@ export default function PricingPage() {
     <main className="flex min-h-screen flex-col">
       <HomeNav />
 
-      <section className="pricing-section" aria-labelledby="pricing-heading">
+      <section className="pricing-section" aria-label="Pricing">
         <div className="pricing-section__inner">
-          <header className="pricing-section__header">
-            <H2 id="pricing-heading" className="heading pricing-section__title text-center">
-              {pricing.title}
-            </H2>
-            <p className="pricing-section__lede text-center">{pricing.subtitle}</p>
-          </header>
-
           <PricingHero pricing={pricing} />
         </div>
       </section>
