@@ -211,72 +211,99 @@ export const pricing = {
   currency: "USD" as const,
   currencySymbol: "$",
   // Hero copy.
-  title: "No markup. One slider.",
-  subtitle:
-    "We buy tokens in bulk from the labs and pass through the rate. Plus a small fixed cost for your always-on kitchen.",
-  totalLabel: "Your monthly bill",
+  title: "No tiers. No tricks.",
+  subtitle: "$29 for the always-on setup. Tokens at cost.",
   breakdownPrefix: "kitchen",
   breakdownTokens: "tokens",
   perMonth: "/ month",
   // Slider labels for the 4 stops.
   sliderStopLabels: ["5M", "25M", "50M", "75M"],
-  sliderTokensLabel: "tokens per month",
-  sliderHelper: "Tokens reset monthly. No rollover. Unlimited seats.",
+  sliderTokensLabel: "tokens / month",
   // Trial CTA below the widget.
-  trialCta: "Start your 7-day trial",
-  trialNote: "$20 in tokens to play with. No card required.",
+  trialCta: "Start your free trial",
+  trialCaption: "7 days free. No card required.",
   trialHref: "/signup",
-  // "What your tokens buy" cards.
-  buys: {
-    title: "What your tokens buy",
-    cards: [
-      {
-        name: "Quick task",
-        budget: "~50k tokens",
-        examples: [
-          "Draft a Slack reply",
-          "Summarize a thread",
-          "Label and triage your inbox",
-        ],
-      },
-      {
-        name: "Workflow",
-        budget: "~500k tokens",
-        examples: [
-          "Research a prospect end-to-end",
-          "Brief your week from your calendar",
-          "File a weekly report from raw data",
-        ],
-      },
-      {
-        name: "Full project",
-        budget: "~5M tokens",
-        examples: [
-          "Ship a small feature, PR included",
-          "Audit a codebase and write the cleanup plan",
-          "Draft a launch playbook with assets",
-        ],
-      },
-    ],
-  },
-  // "How this works" 3-column manifesto.
+  // "How this works" 3-column manifesto (shown BEFORE the buys cards —
+  // trust before value: the user needs to believe the price is fair before
+  // they care what it gets them).
   manifesto: {
     title: "How this works",
     items: [
       {
-        title: "No markup.",
+        title: "Pay what we pay.",
         body:
-          "The labs sell us tokens. We sell them to you at the same rate. No creative bookkeeping.",
+          "We buy tokens at scale and pass through the rate. Buy direct from OpenAI or Anthropic, you'd pay the same. Maybe more.",
       },
       {
         title: "Your kitchen, always on.",
         body:
-          "$29 keeps a machine running 24/7 just for you. Think a Mac mini in the cloud. Always on, always yours.",
+          "$29 buys a cloud based computer. Always on, always yours, never shared.",
       },
       {
         title: "No surprises.",
         body:
-          "Tokens reset every month. No rollover, no overage. If you run out, bump the slider. Takes effect immediately.",
+          "Tokens reset monthly. Hit the limit, bump the slider. Cancel anytime, takes effect immediately.",
+      },
+    ],
+  },
+  // "What your tokens buy" — asymmetric cards with Slack-style exchanges.
+  // Layout: 2 cards top row, 1 wide card bottom.
+  buys: {
+    title: "What your tokens buy",
+    cards: [
+      {
+        kicker: "QUICK TASKS",
+        tokenRange: "100K – 300K tokens",
+        tag: "Summarize my sales thread and flag what needs me.",
+        wide: false,
+        user: {
+          name: "Sarah",
+          initial: "S",
+          accent: "#E8E0F2",
+          accentInk: "#4A3C7B",
+          time: "8:14am",
+          text: "@pancake — what slipped through yesterday's #sales thread?",
+        },
+        agent: {
+          time: "8:14am",
+          text: "Three deals moved. Acme signed. Bloom is stuck — legal hasn't replied in 4 days, want me to nudge their counsel? DataSync went cold after the demo, drafted a follow-up in HubSpot for review.",
+        },
+      },
+      {
+        kicker: "WORKFLOWS",
+        tokenRange: "500K – 1.5M tokens",
+        tag: "Find pricing typos in our docs and draft a fix.",
+        wide: false,
+        user: {
+          name: "Mike",
+          initial: "M",
+          accent: "#D5E4EB",
+          accentInk: "#1F4660",
+          time: "11:32am",
+          text: "@pancake — pricing page still says “€99 starter”, should be €79. Same fix anywhere else in the docs?",
+        },
+        agent: {
+          time: "11:38am",
+          text: "Found 3 spots: /pricing, /docs/getting-started, the homepage FAQ. Drafted a PR with all three fixes — pancake.dev/pr/d8f3. Want me to ping the docs channel after merge?",
+        },
+      },
+      {
+        kicker: "FULL PROJECTS",
+        tokenRange: "2M – 5M tokens",
+        tag: "Draft a Q3 board review from our Notion and Stripe data.",
+        wide: true,
+        user: {
+          name: "Lisa",
+          initial: "L",
+          accent: "#EAE2D2",
+          accentInk: "#6E5520",
+          time: "Monday 9:14am",
+          text: "@pancake — board meeting Friday. Pull Q3 numbers from Stripe, highlights from our Notion retros, and draft a 5-page review.",
+        },
+        agent: {
+          time: "Tuesday 4:22pm",
+          text: "Done. 5-page deck: revenue up 34% QoQ, churn down 1.2pts, top 3 wins and 2 misses from retros, slide on Q4 risks. q3-review.pdf — flagged 2 numbers I want you to double-check before sending.",
+        },
       },
     ],
   },

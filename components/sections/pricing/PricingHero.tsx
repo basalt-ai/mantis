@@ -10,13 +10,11 @@ import { PancakeStack } from "./PancakeStack";
 type Pricing = typeof pricingCopy;
 
 function formatTokens(n: number) {
-  // 5_000_000 -> "5,000,000"
-  return n.toLocaleString("en-US");
-}
-
-function formatTokensCompact(n: number) {
-  if (n >= 1_000_000) return `${n / 1_000_000}M`;
-  if (n >= 1_000) return `${n / 1_000}k`;
+  if (n >= 1_000_000) {
+    const m = n / 1_000_000;
+    return Number.isInteger(m) ? `${m}M` : `${m.toFixed(1)}M`;
+  }
+  if (n >= 1_000) return `${n / 1_000}K`;
   return String(n);
 }
 
@@ -25,7 +23,6 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
   const [tierIndex, setTierIndex] = useState<number>(pricing.defaultTierIndex);
   const tier = tiers[tierIndex];
   const sliderId = useId();
-  const helperId = useId();
 
   const tokenPortion = tier.totalDollars - pricing.infrastructureDollars;
 
@@ -36,7 +33,6 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
       </div>
 
       <div className="pricing-hero__readout">
-        <p className="pricing-hero__total-label">{pricing.totalLabel}</p>
         <p className="pricing-hero__total" aria-live="polite">
           {pricing.currencySymbol}
           {tier.totalDollars}
@@ -65,7 +61,6 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
           step={1}
           value={tierIndex}
           onChange={(e) => setTierIndex(Number(e.target.value))}
-          aria-describedby={helperId}
           aria-valuetext={`${formatTokens(tier.tokens)} tokens, ${pricing.currencySymbol}${tier.totalDollars} per month`}
           className="pricing-hero__slider"
           style={
@@ -85,9 +80,6 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
             </button>
           ))}
         </div>
-        <p id={helperId} className="pricing-hero__slider-helper">
-          {pricing.sliderHelper}
-        </p>
       </div>
 
       <div className="pricing-hero__cta">
@@ -99,10 +91,8 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
         >
           {pricing.trialCta}
         </Link>
-        <p className="pricing-hero__cta-note">{pricing.trialNote}</p>
+        <p className="pricing-hero__cta-caption">{pricing.trialCaption}</p>
       </div>
     </div>
   );
 }
-
-export { formatTokensCompact };

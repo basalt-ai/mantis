@@ -1,12 +1,17 @@
 /**
- * Pricing — radically honest. One plan, one slider, one total. The pancake-
- * monster widget grows its stack as the user drags the slider; everything else
- * on the page is support. Pricing numbers live in `lib/copy.ts → pricing.*`.
+ * Pricing — radically honest. Two costs: a small fixed $29 for the always-on
+ * machine (the "kitchen") plus tokens passed through at lab rates. One plan,
+ * one slider, one total. Numbers are the single source of truth for the page.
+ *
+ * Section order: hero → how this works → what your tokens buy → FAQ.
+ * Trust before value: the user needs to believe the price is fair before they
+ * care what it gets them.
  */
 import type { Metadata } from "next";
 
 import { PricingFaq } from "@/components/sections/pricing/PricingFaq";
 import { PricingHero } from "@/components/sections/pricing/PricingHero";
+import { TokensBuyCards } from "@/components/sections/pricing/TokensBuyCards";
 import { HomeNav } from "@/components/sections/home/HomeNav";
 import { Footer } from "@/components/shared/Footer";
 import { H2, H3 } from "@/components/ui/Headings";
@@ -35,29 +40,6 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <section className="pricing-buys" aria-labelledby="pricing-buys-title">
-        <div className="pricing-buys__inner">
-          <h2 id="pricing-buys-title" className="heading pricing-buys__title">
-            {pricing.buys.title}
-          </h2>
-          <ul className="pricing-buys__grid">
-            {pricing.buys.cards.map((card) => (
-              <li key={card.name} className="pricing-buys__card">
-                <H3 className="heading pricing-buys__card-name">{card.name}</H3>
-                <p className="pricing-buys__card-budget">{card.budget}</p>
-                <ul className="pricing-buys__card-examples">
-                  {card.examples.map((ex) => (
-                    <li key={ex} className="pricing-buys__card-example">
-                      {ex}
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
       <section className="pricing-manifesto" aria-labelledby="pricing-manifesto-title">
         <div className="pricing-manifesto__inner">
           <h2 id="pricing-manifesto-title" className="heading pricing-manifesto__title">
@@ -73,6 +55,8 @@ export default function PricingPage() {
           </ul>
         </div>
       </section>
+
+      <TokensBuyCards pricing={pricing} />
 
       <div className="pricing-faq__container">
         <PricingFaq pricing={pricing} />

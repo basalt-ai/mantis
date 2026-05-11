@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { SiDiscord } from "react-icons/si";
 
 import { HOME_PAGE_CONTAINER_CLASS } from "@/components/sections/home/home-layout";
@@ -43,6 +44,12 @@ const navLinkClassName =
  */
 export function HomeNav() {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const pathname = usePathname();
+  // Swap "Pricing" → "Sign in" when already on /pricing, so the slot points
+  // somewhere new instead of being redundant.
+  const onPricingPage = pathname === "/pricing";
+  const sideLinkLabel = onPricingPage ? "Sign in" : "Pricing";
+  const sideLinkHref = onPricingPage ? "/signup" : "/pricing";
 
   // Lock body scroll while the drawer is open + close on Escape.
   useEffect(() => {
@@ -110,8 +117,8 @@ export function HomeNav() {
             >
               <SiDiscord size={20} aria-hidden />
             </a>
-            <Link href="/pricing" className={navLinkClassName}>
-              Pricing
+            <Link href={sideLinkHref} className={navLinkClassName}>
+              {sideLinkLabel}
             </Link>
           </nav>
         </div>
@@ -159,11 +166,11 @@ export function HomeNav() {
               Resources
             </a>
             <Link
-              href="/pricing"
+              href={sideLinkHref}
               className="home-nav-mobile-drawer__link"
               onClick={() => setDrawerOpen(false)}
             >
-              Pricing
+              {sideLinkLabel}
             </Link>
           </nav>
         </div>

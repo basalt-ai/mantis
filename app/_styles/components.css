@@ -2003,15 +2003,6 @@
     text-align: center;
   }
 
-  .pricing-hero__total-label {
-    margin: 0;
-    font-family: var(--font-body);
-    font-size: var(--font-size-eyebrow);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--subtle-text);
-  }
-
   .pricing-hero__total {
     margin: 0;
     font-family: var(--font-display);
@@ -2119,27 +2110,15 @@
     font-weight: 600;
   }
 
-  .pricing-hero__slider-helper {
-    margin: 0;
-    font-family: var(--font-body);
-    font-size: var(--font-size-body-small);
-    color: var(--subtle-text);
-    text-align: center;
-  }
-
   .pricing-hero__cta {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-md);
     width: 100%;
   }
 
-  .pricing-hero__cta .button[data-size="lg"] {
-    width: 100%;
-  }
-
-  .pricing-hero__cta-note {
+  .pricing-hero__cta-caption {
     margin: 0;
     font-family: var(--font-body);
     font-size: var(--font-size-body-small);
@@ -2171,10 +2150,8 @@
     text-align: center;
   }
 
+  /* Asymmetric grid: 2 cards top row, 1 wide card bottom (mobile: stacked) */
   .pricing-buys__grid {
-    list-style: none;
-    padding: 0;
-    margin: 0;
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--spacing-xl);
@@ -2182,7 +2159,10 @@
 
   @media (min-width: 768px) {
     .pricing-buys__grid {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .pricing-buys__card[data-wide="true"] {
+      grid-column: span 2;
     }
   }
 
@@ -2193,44 +2173,54 @@
     padding: var(--spacing-xxl);
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-xl);
     corner-shape: squircle;
   }
 
-  .pricing-buys__card-name {
-    margin: 0;
-    font-size: var(--font-size-header-04);
-    color: var(--text);
+  .pricing-buys__card-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
   }
 
-  .pricing-buys__card-budget {
+  .pricing-buys__card-kicker {
     margin: 0;
     font-family: var(--font-body);
     font-size: var(--font-size-eyebrow);
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--interactive-text);
+    letter-spacing: 0.1em;
+    color: var(--subtle-text);
   }
 
-  .pricing-buys__card-examples {
-    list-style: none;
-    padding: 0;
+  .pricing-buys__card-headline {
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: var(--font-size-header-03);
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    color: var(--text);
   }
 
-  .pricing-buys__card-example {
+  .pricing-buys__card-tag {
+    margin: 0;
     font-family: var(--font-body);
     font-size: var(--font-size-body-regular);
-    color: var(--text);
+    color: var(--subtle-text);
     line-height: 1.5;
   }
 
-  .pricing-buys__card-example::before {
-    content: "→ ";
-    color: var(--subtle-text);
+  /* Slack-style chat block — reuses SlackUI's typography (15px / 1.46668 /
+     #1d1c1d) so the rhythm matches the home page exactly. */
+  .pricing-buys__chat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+    padding: var(--spacing-xl);
+    background-color: var(--surface);
+    border: 1px solid var(--subtle-stroke);
+    border-radius: var(--radius-md);
+    corner-shape: squircle;
   }
 
   /* ─── "how this works" 3-column manifesto ─── */
