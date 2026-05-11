@@ -2247,13 +2247,14 @@
       "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   }
 
-  /* Faked PDF page thumbnail attached to the Full Projects agent reply.
-     Placeholder shapes only — no real numbers. Width caps at ~260px so the
-     wide card has room for both chat + artifact without dominating. */
-  .pricing-buys__pdf {
+  /* Ops-tool widget on the Full Projects agent reply. Mimics a Clay/Apollo
+     dashboard surface so the eye reads "real outbound running" instead of
+     "marketing illustration". Numbers match the chat copy verbatim. Caps at
+     ~280px so the wide card holds chat + artifact side-by-side. */
+  .pricing-buys__tracker {
     margin: var(--spacing-md) 0 0 0;
     width: 100%;
-    max-width: 240px;
+    max-width: 280px;
     padding: var(--spacing-lg);
     background-color: var(--surface);
     border: 1px solid var(--subtle-stroke);
@@ -2263,15 +2264,16 @@
     flex-direction: column;
     gap: var(--spacing-md);
     corner-shape: squircle;
+    font-family: var(--font-body);
   }
 
-  .pricing-buys__pdf-header {
+  .pricing-buys__tracker-header {
     display: flex;
     flex-direction: column;
     gap: 2px;
   }
 
-  .pricing-buys__pdf-title {
+  .pricing-buys__tracker-title {
     margin: 0;
     font-family: var(--font-display);
     font-weight: 600;
@@ -2280,70 +2282,184 @@
     color: var(--text);
   }
 
-  .pricing-buys__pdf-meta {
+  .pricing-buys__tracker-meta {
     margin: 0;
-    font-family: var(--font-body);
-    font-size: 10px;
+    font-size: 11px;
     color: var(--subtle-text);
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
-  .pricing-buys__pdf-tiles {
+  .pricing-buys__tracker-running {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--positive-text);
+    font-weight: 600;
+  }
+
+  .pricing-buys__tracker-running::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--palette-green-30);
+    box-shadow: 0 0 0 2px rgba(3, 125, 72, 0.15);
+  }
+
+  .pricing-buys__tracker-stats {
+    margin: 0;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 6px;
   }
 
-  .pricing-buys__pdf-tile {
+  .pricing-buys__tracker-stat {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    padding: 6px;
+    gap: 2px;
+    padding: 8px 6px;
     background-color: var(--alt-surface);
     border: 1px solid var(--subtle-stroke);
     border-radius: var(--radius-sm);
     corner-shape: squircle;
   }
 
-  .pricing-buys__pdf-tile-label {
-    font-family: var(--font-body);
-    font-size: 8px;
+  .pricing-buys__tracker-stat-label {
+    font-size: 9px;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
+    color: var(--subtle-text);
+    line-height: 1.2;
+  }
+
+  .pricing-buys__tracker-stat-value {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pricing-buys__tracker-goal {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .pricing-buys__tracker-goal-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .pricing-buys__tracker-goal-label {
+    font-size: 11px;
     color: var(--subtle-text);
   }
 
-  .pricing-buys__pdf-tile-bars {
+  .pricing-buys__tracker-goal-value {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pricing-buys__tracker-goal-bar {
+    height: 6px;
+    background-color: var(--palette-chrome-30);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .pricing-buys__tracker-goal-fill {
+    display: block;
+    height: 100%;
+    background-color: var(--palette-purple-40);
+    border-radius: 999px;
+  }
+
+  .pricing-buys__tracker-channels {
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    padding: 8px 0;
+    border-top: 1px solid var(--subtle-stroke);
+    border-bottom: 1px solid var(--subtle-stroke);
+  }
+
+  .pricing-buys__tracker-channel {
     display: flex;
-    align-items: flex-end;
+    flex-direction: column;
     gap: 2px;
-    height: 16px;
   }
 
-  .pricing-buys__pdf-tile-bar {
-    flex: 1;
-    background-color: var(--palette-purple-30);
-    border-radius: 1px;
-    opacity: 0.7;
+  .pricing-buys__tracker-channel dt {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--subtle-text);
   }
 
-  .pricing-buys__pdf-lines {
+  .pricing-buys__tracker-channel dd {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .pricing-buys__tracker-replies {
+    margin: 0;
+    padding: 0;
+    list-style: none;
     display: flex;
     flex-direction: column;
     gap: 4px;
   }
 
-  .pricing-buys__pdf-line {
-    height: 4px;
-    background-color: var(--palette-chrome-40);
-    border-radius: 999px;
+  .pricing-buys__tracker-reply {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 11px;
   }
 
-  .pricing-buys__pdf-footer {
-    margin: 0;
-    font-family: var(--font-body);
+  .pricing-buys__tracker-reply-company {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .pricing-buys__tracker-reply-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
     font-size: 9px;
-    color: var(--subtle-text);
-    text-align: right;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-radius: 999px;
+    line-height: 1.4;
+  }
+
+  .pricing-buys__tracker-reply-pill[data-tone="hot"] {
+    background-color: var(--palette-red-10);
+    color: var(--palette-red-30);
+  }
+
+  .pricing-buys__tracker-reply-pill[data-tone="booked"] {
+    background-color: var(--palette-green-10);
+    color: var(--palette-green-30);
+  }
+
+  .pricing-buys__tracker-reply-pill[data-tone="nurture"] {
+    background-color: var(--palette-yellow-10);
+    color: var(--palette-yellow-40);
   }
 
   /* ─── "how this works" 3-column manifesto ─── */

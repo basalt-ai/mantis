@@ -83,66 +83,99 @@ function AgentMessage({ agent }: { agent: Card["agent"] }) {
         <p className="mt-1 whitespace-pre-line text-[15px] font-normal leading-[1.46668] text-[#1d1c1d]">
           {agent.text}
         </p>
-        {artifact === "pdf-q3" ? <PdfQ3Artifact /> : null}
+        {artifact === "outbound-tracker" ? <OutboundTrackerArtifact /> : null}
       </div>
     </div>
   );
 }
 
 /**
- * Faked PDF page thumbnail attached to the Full Projects agent reply.
- * Placeholder shapes only — no real numbers — so the eye sees that work
- * shipped without the page reading as a marketing claim.
+ * Ops-tool widget attached to the Full Projects agent reply. Mimics the
+ * dashboard surface a Clay/Apollo/Outreach user would recognize: campaign
+ * header, hard counters, progress to goal, channel meta, recent replies
+ * with status pills. Numbers match the chat copy so the artifact reads as
+ * real work shipped, not decoration.
  */
-function PdfQ3Artifact() {
+function OutboundTrackerArtifact() {
   return (
-    <figure className="pricing-buys__pdf" aria-label="q3-review.pdf preview">
-      <header className="pricing-buys__pdf-header">
-        <p className="pricing-buys__pdf-title">Q3 Review</p>
-        <p className="pricing-buys__pdf-meta">Internal · Lisa</p>
+    <figure
+      className="pricing-buys__tracker"
+      aria-label="EU mid-market e-commerce outbound campaign"
+    >
+      <header className="pricing-buys__tracker-header">
+        <p className="pricing-buys__tracker-title">EU mid-market e-comm</p>
+        <p className="pricing-buys__tracker-meta">
+          Day 3 of 5 · <span className="pricing-buys__tracker-running">Running</span>
+        </p>
       </header>
-      <div className="pricing-buys__pdf-tiles">
-        <PdfMetricTile label="MRR" shape="ascending" />
-        <PdfMetricTile label="Churn" shape="descending" />
-        <PdfMetricTile label="NPS" shape="flat" />
+
+      <dl className="pricing-buys__tracker-stats">
+        <TrackerStat label="Prospects sourced" value="184" />
+        <TrackerStat label="Emails sent" value="142" />
+        <TrackerStat label="Replies" value="38" />
+      </dl>
+
+      <div className="pricing-buys__tracker-goal">
+        <div className="pricing-buys__tracker-goal-row">
+          <span className="pricing-buys__tracker-goal-label">Demos booked</span>
+          <span className="pricing-buys__tracker-goal-value">19 / 30</span>
+        </div>
+        <div className="pricing-buys__tracker-goal-bar" aria-hidden>
+          <span
+            className="pricing-buys__tracker-goal-fill"
+            style={{ width: `${(19 / 30) * 100}%` }}
+          />
+        </div>
       </div>
-      <div className="pricing-buys__pdf-lines" aria-hidden>
-        <span className="pricing-buys__pdf-line" style={{ width: "92%" }} />
-        <span className="pricing-buys__pdf-line" style={{ width: "84%" }} />
-        <span className="pricing-buys__pdf-line" style={{ width: "76%" }} />
-        <span className="pricing-buys__pdf-line" style={{ width: "60%" }} />
-      </div>
-      <footer className="pricing-buys__pdf-footer">1 of 5</footer>
+
+      <dl className="pricing-buys__tracker-channels">
+        <div className="pricing-buys__tracker-channel">
+          <dt>Top channel</dt>
+          <dd>Cold email</dd>
+        </div>
+        <div className="pricing-buys__tracker-channel">
+          <dt>Next</dt>
+          <dd>LinkedIn</dd>
+        </div>
+      </dl>
+
+      <ul className="pricing-buys__tracker-replies">
+        <TrackerReply company="Acme" status="hot" tone="hot" />
+        <TrackerReply company="Northstar" status="meeting booked" tone="booked" />
+        <TrackerReply company="Brio" status="nurture" tone="nurture" />
+      </ul>
     </figure>
   );
 }
 
-function PdfMetricTile({
-  label,
-  shape,
-}: {
-  label: string;
-  shape: "ascending" | "descending" | "flat";
-}) {
-  const heights =
-    shape === "ascending"
-      ? [4, 7, 10, 13]
-      : shape === "descending"
-        ? [13, 10, 7, 4]
-        : [8, 9, 8, 9];
+function TrackerStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="pricing-buys__pdf-tile">
-      <span className="pricing-buys__pdf-tile-label">{label}</span>
-      <div className="pricing-buys__pdf-tile-bars" aria-hidden>
-        {heights.map((h, i) => (
-          <span
-            key={i}
-            className="pricing-buys__pdf-tile-bar"
-            style={{ height: `${h}px` }}
-          />
-        ))}
-      </div>
+    <div className="pricing-buys__tracker-stat">
+      <dt className="pricing-buys__tracker-stat-label">{label}</dt>
+      <dd className="pricing-buys__tracker-stat-value">{value}</dd>
     </div>
+  );
+}
+
+function TrackerReply({
+  company,
+  status,
+  tone,
+}: {
+  company: string;
+  status: string;
+  tone: "hot" | "booked" | "nurture";
+}) {
+  return (
+    <li className="pricing-buys__tracker-reply">
+      <span className="pricing-buys__tracker-reply-company">{company}</span>
+      <span
+        className="pricing-buys__tracker-reply-pill"
+        data-tone={tone}
+      >
+        {status}
+      </span>
+    </li>
   );
 }
 
