@@ -189,11 +189,36 @@ export const talkToHuman = {
 } as const;
 
 export const pricing = {
-  title: "Simple pricing.",
-  subtitle: "One plan. Everything included.",
-  priceLine: "$49 / month",
-  cardLine: "Your full agent workforce",
-  cta: "Start building",
+  banner: {
+    primary: "$100 in Free Credits",
+    secondary: "No Credit Card Required",
+    cta: "Get Started For Free",
+    href: "/signup",
+  },
+  titleLine1: "We'll front you $100.",
+  titleLine2: "Put Pancake to work.",
+  subtitle: "Credits power everything.",
+  plan: {
+    name: "Team",
+    tiers: [
+      { credits: 20_000, price: 50 },
+      { credits: 30_000, price: 75 },
+      { credits: 40_000, price: 100 },
+      { credits: 80_000, price: 200 },
+    ],
+    defaultTierIndex: 0,
+    features: [
+      "Your full agent workforce — AI co-founder + specialists",
+      "Lives in Slack — proactive briefings, mentions, threads",
+      "Plugged into GitHub, Notion, Gmail, Vercel, and more",
+      "Scheduled tasks and always-on operation",
+      "Full audit trail with human guardrails",
+    ],
+    cta: "Get Started For Free",
+    href: "/signup",
+  },
+  priceSuffix: "/ month",
+  creditsLabel: "credits monthly",
 } as const;
 
 export const signup = {

@@ -1,13 +1,14 @@
 /**
- * Pricing page — copy lifted from `lib/copy.ts` (`pricing.*`), redesigned in
- * the phase-3 home design system (Aeonik / Aeonik Fono, surface tokens,
- * 32 px squircle card, primary `.button[data-size="lg"]`). Uses the shared
- * `HomeNav` so the navbar matches the rest of the site exactly.
+ * Pricing page — copy lifted from `lib/copy.ts` (`pricing.*`). Layout mirrors
+ * Viktor's pricing structure minus the Enterprise plan: free-credits banner,
+ * centered headline + subhead, then a single plan card with a credit-tier
+ * dropdown that scales the displayed price.
  */
 import type { Metadata } from "next";
 import Link from "next/link";
 
 import { HomeNav } from "@/components/sections/home/HomeNav";
+import { PricingCard } from "@/components/sections/pricing/PricingCard";
 import { Footer } from "@/components/shared/Footer";
 import { H2 } from "@/components/ui/Headings";
 import { pricing } from "@/lib/copy";
@@ -23,25 +24,31 @@ export default function PricingPage() {
       <HomeNav />
       <section className="pricing-section flex-1" aria-labelledby="pricing-heading">
         <div className="pricing-section__inner">
+          <div className="pricing-banner">
+            <div className="pricing-banner__text">
+              <p className="pricing-banner__primary">{pricing.banner.primary}</p>
+              <p className="pricing-banner__secondary">{pricing.banner.secondary}</p>
+            </div>
+            <Link
+              href={pricing.banner.href}
+              className="button"
+              data-size="md"
+              prefetch={false}
+            >
+              {pricing.banner.cta}
+            </Link>
+          </div>
+
           <header className="pricing-section__header">
             <H2 id="pricing-heading" className="heading pricing-section__title text-center">
-              {pricing.title}
+              {pricing.titleLine1}
+              <br />
+              {pricing.titleLine2}
             </H2>
             <p className="pricing-section__lede text-center">{pricing.subtitle}</p>
           </header>
 
-          <div className="pricing-card">
-            <p className="pricing-card__price">{pricing.priceLine}</p>
-            <p className="pricing-card__line">{pricing.cardLine}</p>
-            <Link
-              href="/signup"
-              className="button inline-flex w-fit shrink-0 items-center justify-center no-underline"
-              data-size="lg"
-              prefetch={false}
-            >
-              {pricing.cta}
-            </Link>
-          </div>
+          <PricingCard pricing={pricing} />
         </div>
       </section>
       <Footer />

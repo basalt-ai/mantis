@@ -1966,6 +1966,185 @@
     color: rgba(44, 0, 42, 0.64);
   }
 
+  /* ─── Free-credits banner above the headline ─── */
+  .pricing-banner {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-xxl);
+    padding: var(--spacing-xl) var(--spacing-xxl);
+    background-color: var(--weak-branded-surface);
+    border: 1px solid var(--branded-stroke-01);
+    border-radius: var(--radius-xl);
+    corner-shape: squircle;
+  }
+
+  @media (max-width: 640px) {
+    .pricing-banner {
+      flex-direction: column;
+      align-items: stretch;
+      text-align: center;
+    }
+  }
+
+  .pricing-banner__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+
+  .pricing-banner__primary {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--font-size-body-large);
+    color: var(--text);
+  }
+
+  .pricing-banner__secondary {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-small);
+    color: var(--subtle-text);
+  }
+
+  /* ─── Plan card additions (sit alongside existing .pricing-card) ─── */
+  .pricing-card {
+    max-width: 520px;
+  }
+
+  .pricing-card .button[data-size="lg"] {
+    width: 100%;
+  }
+
+  .pricing-card__name {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: var(--font-body);
+    font-size: var(--font-size-eyebrow);
+    color: var(--subtle-text);
+  }
+
+  .pricing-card__price-suffix {
+    margin-left: var(--spacing-md);
+    font-size: var(--font-size-body-regular);
+    font-weight: 400;
+    color: var(--subtle-text);
+    letter-spacing: 0;
+  }
+
+  .pricing-card__features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    text-align: left;
+  }
+
+  .pricing-card__feature {
+    display: flex;
+    gap: var(--spacing-lg);
+    align-items: flex-start;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  .pricing-card__feature-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    color: var(--interactive-text);
+  }
+
+  /* ─── Credit-tier dropdown (mirrors .input grammar) ─── */
+  .pricing-select__wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  .pricing-select {
+    --select-border-color: var(--stroke);
+    width: 100%;
+    height: var(--control-size-md);
+    padding: var(--spacing-md) var(--spacing-xl);
+    background-color: var(--surface);
+    border: 1px solid var(--select-border-color);
+    color: var(--text);
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    cursor: pointer;
+    corner-shape: squircle;
+  }
+
+  .pricing-select:focus-visible,
+  .pricing-select[aria-expanded="true"] {
+    --select-border-color: var(--interactive-text);
+    outline: none;
+  }
+
+  .pricing-select__listbox {
+    position: absolute;
+    top: calc(100% + var(--spacing-sm));
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background-color: var(--surface);
+    border: 1px solid var(--subtle-stroke);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-sm);
+    max-height: 240px;
+    overflow-y: auto;
+    list-style: none;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    box-shadow: 0 8px 24px rgba(44, 0, 42, 0.08);
+    corner-shape: squircle;
+    outline: none;
+  }
+
+  .pricing-select__option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    color: var(--text);
+    cursor: pointer;
+    corner-shape: squircle;
+  }
+
+  .pricing-select__option:hover,
+  .pricing-select__option[data-active="true"] {
+    background-color: var(--alt-surface);
+  }
+
+  .pricing-select__option[aria-selected="true"] {
+    background-color: var(--weak-branded-surface);
+  }
+
+  .pricing-select__option-price {
+    color: var(--subtle-text);
+  }
+
   /* ─────────────────── Signup page ───────────────────
      Mirrors `pricing-section` grammar exactly: HomeNav + centered header
      on `--surface`, then a stack of 32 px squircle cards (form pre-submit;
