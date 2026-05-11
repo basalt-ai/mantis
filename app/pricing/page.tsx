@@ -4,7 +4,6 @@
  * on the page is support. Pricing numbers live in `lib/copy.ts → pricing.*`.
  */
 import type { Metadata } from "next";
-import Link from "next/link";
 
 import { PricingFaq } from "@/components/sections/pricing/PricingFaq";
 import { PricingHero } from "@/components/sections/pricing/PricingHero";
@@ -26,7 +25,6 @@ export default function PricingPage() {
       <section className="pricing-section" aria-labelledby="pricing-heading">
         <div className="pricing-section__inner">
           <header className="pricing-section__header">
-            <p className="pricing-eyebrow">{pricing.eyebrow}</p>
             <H2 id="pricing-heading" className="heading pricing-section__title text-center">
               {pricing.title}
             </H2>
@@ -73,26 +71,6 @@ export default function PricingPage() {
               </li>
             ))}
           </ul>
-        </div>
-      </section>
-
-      <section className="pricing-talk" aria-labelledby="pricing-talk-title">
-        <div className="pricing-talk__inner">
-          <div className="pricing-talk__text">
-            <H3 id="pricing-talk-title" className="heading pricing-talk__title">
-              {pricing.talkToSales.title}
-            </H3>
-            <p className="pricing-talk__body">{pricing.talkToSales.body}</p>
-          </div>
-          <Link
-            href={pricing.talkToSales.href}
-            className="button"
-            data-size="md"
-            data-variant="outline"
-            prefetch={false}
-          >
-            {pricing.talkToSales.cta}
-          </Link>
         </div>
       </section>
 

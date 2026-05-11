@@ -27,24 +27,24 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
   const sliderId = useId();
   const helperId = useId();
 
-  const tokenPortion = tier.totalEuros - pricing.infrastructureEuros;
+  const tokenPortion = tier.totalDollars - pricing.infrastructureDollars;
 
   return (
     <div className="pricing-hero">
       <div className="pricing-hero__stack-wrap" aria-hidden>
-        <PancakeStack count={tier.pancakes as 2 | 3 | 4 | 5} />
+        <PancakeStack count={tier.pancakes as 1 | 2 | 3 | 4} />
       </div>
 
       <div className="pricing-hero__readout">
         <p className="pricing-hero__total-label">{pricing.totalLabel}</p>
         <p className="pricing-hero__total" aria-live="polite">
           {pricing.currencySymbol}
-          {tier.totalEuros}
+          {tier.totalDollars}
           <span className="pricing-hero__total-suffix">{pricing.perMonth}</span>
         </p>
         <p className="pricing-hero__breakdown">
           {pricing.currencySymbol}
-          {pricing.infrastructureEuros} {pricing.breakdownPrefix}
+          {pricing.infrastructureDollars} {pricing.breakdownPrefix}
           {" + "}
           {pricing.currencySymbol}
           {tokenPortion} {pricing.breakdownTokens}
@@ -66,7 +66,7 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
           value={tierIndex}
           onChange={(e) => setTierIndex(Number(e.target.value))}
           aria-describedby={helperId}
-          aria-valuetext={`${formatTokens(tier.tokens)} tokens, ${pricing.currencySymbol}${tier.totalEuros} per month`}
+          aria-valuetext={`${formatTokens(tier.tokens)} tokens, ${pricing.currencySymbol}${tier.totalDollars} per month`}
           className="pricing-hero__slider"
           style={
             { "--progress": tierIndex / (tiers.length - 1) } as React.CSSProperties

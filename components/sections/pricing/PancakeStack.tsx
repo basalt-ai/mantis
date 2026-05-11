@@ -17,26 +17,25 @@ import { AnimatePresence, motion } from "framer-motion";
  * pancake plays the drop / fade animation.
  */
 
-type PancakeColor = "golden" | "purple" | "orange" | "mint" | "pink";
+type PancakeColor = "golden" | "purple" | "orange" | "pink";
 
 const PANCAKE_FILL: Record<PancakeColor, { top: string; sides: string }> = {
-  golden: { top: "#FFBD7A", sides: "#FFDBB5" }, // master top — has eyes
-  purple: { top: "#BA8BFF", sides: "#DEC3F5" }, // master middle
+  golden: { top: "#FFBD7A", sides: "#FFDBB5" }, // master top — has eyes (always slot 0)
+  purple: { top: "#BA8BFF", sides: "#DEC3F5" }, // master middle (added at 3-stack)
   orange: { top: "#FFA45F", sides: "#FFDDBE" }, // added at 4-stack
-  mint:   { top: "#68CEA7", sides: "#A6E2C8" }, // added at 5-stack
-  pink:   { top: "#FF7AA0", sides: "#FFBBC7" }, // master bottom
+  pink:   { top: "#FF7AA0", sides: "#FFBBC7" }, // master bottom (added at 2-stack)
 };
 
 // Top-to-bottom composition. Slot 0 always has the eyes.
-const STACKS: Record<2 | 3 | 4 | 5, PancakeColor[]> = {
+const STACKS: Record<1 | 2 | 3 | 4, PancakeColor[]> = {
+  1: ["golden"],
   2: ["golden", "pink"],
   3: ["golden", "purple", "pink"],
   4: ["golden", "purple", "orange", "pink"],
-  5: ["golden", "purple", "orange", "mint", "pink"],
 };
 
 // Alternating x offsets give the stack a playful lean (per slot from the top).
-const SLOT_X = [38, 64, 24, 58, 30];
+const SLOT_X = [38, 64, 24, 58];
 // Vertical spacing between pancake centres (master uses ~50 px).
 const SLOT_DY = 48;
 // Bottom-anchored: the last pancake's top edge always sits at the same y so
@@ -52,7 +51,7 @@ const VIEWBOX_H = 480;
 const GROUND_CX = 168;
 const GROUND_CY = 472;
 
-export function PancakeStack({ count }: { count: 2 | 3 | 4 | 5 }) {
+export function PancakeStack({ count }: { count: 1 | 2 | 3 | 4 }) {
   const stack = STACKS[count];
   // Render slot indices in reverse so the bottom pancake is drawn first and
   // the eye pancake (slot 0) is drawn last → eyes always on top z-wise.
