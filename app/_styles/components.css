@@ -1966,47 +1966,21 @@
     color: rgba(44, 0, 42, 0.64);
   }
 
-  /* ─── Free-credits banner above the headline ─── */
-  .pricing-banner {
-    width: 100%;
-    display: flex;
+  /* ─── PRICING eyebrow pill (small chip above the headline) ─── */
+  .pricing-eyebrow {
+    margin: 0;
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--spacing-xxl);
-    padding: var(--spacing-xl) var(--spacing-xxl);
+    padding: var(--spacing-xs) var(--spacing-md);
     background-color: var(--weak-branded-surface);
-    border: 1px solid var(--branded-stroke-01);
-    border-radius: var(--radius-xl);
-    corner-shape: squircle;
-  }
-
-  @media (max-width: 640px) {
-    .pricing-banner {
-      flex-direction: column;
-      align-items: stretch;
-      text-align: center;
-    }
-  }
-
-  .pricing-banner__text {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-  }
-
-  .pricing-banner__primary {
-    margin: 0;
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: var(--font-size-body-large);
     color: var(--text);
-  }
-
-  .pricing-banner__secondary {
-    margin: 0;
+    border: 1px solid var(--branded-stroke-01);
+    border-radius: 999px;
     font-family: var(--font-body);
-    font-size: var(--font-size-body-small);
-    color: var(--subtle-text);
+    font-size: var(--font-size-eyebrow);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    corner-shape: squircle;
   }
 
   /* ─── Plan card additions (sit alongside existing .pricing-card) ─── */
@@ -2064,85 +2038,61 @@
     color: var(--interactive-text);
   }
 
-  /* ─── Credit-tier dropdown (mirrors .input grammar) ─── */
-  .pricing-select__wrapper {
-    position: relative;
+  /* ─── Credit-tier chip group (segmented control) ─── */
+  .pricing-tier-group__wrapper {
     width: 100%;
-  }
-
-  .pricing-select {
-    --select-border-color: var(--stroke);
-    width: 100%;
-    height: var(--control-size-md);
-    padding: var(--spacing-md) var(--spacing-xl);
-    background-color: var(--surface);
-    border: 1px solid var(--select-border-color);
-    color: var(--text);
-    border-radius: var(--radius-md);
-    font-family: var(--font-body);
-    font-size: var(--font-size-body-regular);
-    text-align: left;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--spacing-md);
-    cursor: pointer;
-    corner-shape: squircle;
-  }
-
-  .pricing-select:focus-visible,
-  .pricing-select[aria-expanded="true"] {
-    --select-border-color: var(--interactive-text);
-    outline: none;
-  }
-
-  .pricing-select__listbox {
-    position: absolute;
-    top: calc(100% + var(--spacing-sm));
-    left: 0;
-    right: 0;
-    z-index: 10;
-    background-color: var(--surface);
-    border: 1px solid var(--subtle-stroke);
-    border-radius: var(--radius-md);
-    padding: var(--spacing-sm);
-    max-height: 240px;
-    overflow-y: auto;
-    list-style: none;
-    margin: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-xs);
-    box-shadow: 0 8px 24px rgba(44, 0, 42, 0.08);
-    corner-shape: squircle;
-    outline: none;
+    align-items: center;
+    gap: var(--spacing-md);
   }
 
-  .pricing-select__option {
+  .pricing-tier-group__label {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-eyebrow);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--subtle-text);
+  }
+
+  .pricing-tier-group {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--spacing-md);
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    width: 100%;
+  }
+
+  .pricing-tier-chip {
+    --chip-border-color: var(--stroke);
+    flex: 1 1 64px;
+    min-width: 64px;
     padding: var(--spacing-md) var(--spacing-lg);
+    background-color: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--chip-border-color);
     border-radius: var(--radius-sm);
     font-family: var(--font-body);
     font-size: var(--font-size-body-regular);
-    color: var(--text);
     cursor: pointer;
     corner-shape: squircle;
+    transition: background-color 120ms ease, border-color 120ms ease;
   }
 
-  .pricing-select__option:hover,
-  .pricing-select__option[data-active="true"] {
-    background-color: var(--alt-surface);
+  .pricing-tier-chip:hover {
+    --chip-border-color: var(--text);
   }
 
-  .pricing-select__option[aria-selected="true"] {
+  .pricing-tier-chip:focus-visible {
+    --chip-border-color: var(--interactive-text);
+    outline: none;
+  }
+
+  .pricing-tier-chip[aria-checked="true"] {
     background-color: var(--weak-branded-surface);
-  }
-
-  .pricing-select__option-price {
-    color: var(--subtle-text);
+    --chip-border-color: var(--branded-stroke-01);
+    font-weight: 600;
   }
 
   /* ─────────────────── Signup page ───────────────────

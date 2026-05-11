@@ -189,22 +189,17 @@ export const talkToHuman = {
 } as const;
 
 export const pricing = {
-  banner: {
-    primary: "$100 in Free Credits",
-    secondary: "No Credit Card Required",
-    cta: "Get Started For Free",
-    href: "/signup",
-  },
-  titleLine1: "We'll front you $100.",
-  titleLine2: "Put Pancake to work.",
-  subtitle: "Credits power everything.",
+  eyebrow: "PRICING",
+  title: "Pay your agents in credits.",
+  subtitle: "More work? Bigger pack. Always linear, never seat-based.",
   plan: {
     name: "Team",
     tiers: [
-      { credits: 20_000, price: 50 },
-      { credits: 30_000, price: 75 },
-      { credits: 40_000, price: 100 },
-      { credits: 80_000, price: 200 },
+      { credits: 20_000,  price: 49  },
+      { credits: 40_000,  price: 99  },
+      { credits: 60_000,  price: 149 },
+      { credits: 80_000,  price: 199 },
+      { credits: 100_000, price: 249 },
     ],
     defaultTierIndex: 0,
     features: [
@@ -214,11 +209,11 @@ export const pricing = {
       "Scheduled tasks and always-on operation",
       "Full audit trail with human guardrails",
     ],
-    cta: "Get Started For Free",
+    cta: "Start building",
     href: "/signup",
   },
   priceSuffix: "/ month",
-  creditsLabel: "credits monthly",
+  tierGroupLabel: "Monthly credits",
 } as const;
 
 export const signup = {
