@@ -2223,6 +2223,105 @@
     corner-shape: squircle;
   }
 
+  /* Faked PDF page thumbnail attached to the Full Projects agent reply.
+     Placeholder shapes only — no real numbers. Width caps at ~260px so the
+     wide card has room for both chat + artifact without dominating. */
+  .pricing-buys__pdf {
+    margin: var(--spacing-md) 0 0 0;
+    width: 100%;
+    max-width: 240px;
+    padding: var(--spacing-lg);
+    background-color: var(--surface);
+    border: 1px solid var(--subtle-stroke);
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 12px rgba(44, 0, 42, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    corner-shape: squircle;
+  }
+
+  .pricing-buys__pdf-header {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .pricing-buys__pdf-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1.2;
+    color: var(--text);
+  }
+
+  .pricing-buys__pdf-meta {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 10px;
+    color: var(--subtle-text);
+  }
+
+  .pricing-buys__pdf-tiles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .pricing-buys__pdf-tile {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 6px;
+    background-color: var(--alt-surface);
+    border: 1px solid var(--subtle-stroke);
+    border-radius: var(--radius-sm);
+    corner-shape: squircle;
+  }
+
+  .pricing-buys__pdf-tile-label {
+    font-family: var(--font-body);
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--subtle-text);
+  }
+
+  .pricing-buys__pdf-tile-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 16px;
+  }
+
+  .pricing-buys__pdf-tile-bar {
+    flex: 1;
+    background-color: var(--palette-purple-30);
+    border-radius: 1px;
+    opacity: 0.7;
+  }
+
+  .pricing-buys__pdf-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .pricing-buys__pdf-line {
+    height: 4px;
+    background-color: var(--palette-chrome-40);
+    border-radius: 999px;
+  }
+
+  .pricing-buys__pdf-footer {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 9px;
+    color: var(--subtle-text);
+    text-align: right;
+  }
+
   /* ─── "how this works" 3-column manifesto ─── */
   .pricing-manifesto {
     width: 100%;

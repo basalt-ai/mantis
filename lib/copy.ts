@@ -266,7 +266,7 @@ export const pricing = {
         },
         agent: {
           time: "8:14am",
-          text: "Three deals moved. Acme signed. Bloom is stuck — legal hasn't replied in 4 days, want me to nudge their counsel? DataSync went cold after the demo, drafted a follow-up in HubSpot for review.",
+          text: "3 deals discussed. Acme signed Friday. Bloom stuck on legal review. DataSync went quiet after the demo — drafted a follow-up in your HubSpot drafts. Want me to send it?",
         },
       },
       {
@@ -284,7 +284,7 @@ export const pricing = {
         },
         agent: {
           time: "11:38am",
-          text: "Found 3 spots: /pricing, /docs/getting-started, the homepage FAQ. Drafted a PR with all three fixes — pancake.dev/pr/d8f3. Want me to ping the docs channel after merge?",
+          text: "Found the same number in 3 places: /pricing, /docs/getting-started, homepage FAQ. Opened a PR with all three — pancake.dev/pr/d8f3.",
         },
       },
       {
@@ -302,7 +302,8 @@ export const pricing = {
         },
         agent: {
           time: "Tuesday 4:22pm",
-          text: "Done. 5-page deck: revenue up 34% QoQ, churn down 1.2pts, top 3 wins and 2 misses from retros, slide on Q4 risks. q3-review.pdf — flagged 2 numbers I want you to double-check before sending.",
+          text: "Done. q3-review.pdf in your Drive.",
+          artifact: "pdf-q3",
         },
       },
     ],

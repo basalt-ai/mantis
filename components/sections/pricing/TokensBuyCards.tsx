@@ -68,6 +68,7 @@ function UserMessage({ user }: { user: Card["user"] }) {
 }
 
 function AgentMessage({ agent }: { agent: Card["agent"] }) {
+  const artifact = "artifact" in agent ? agent.artifact : undefined;
   return (
     <div className="flex items-start gap-3">
       <PancakeAgentAvatar />
@@ -82,6 +83,64 @@ function AgentMessage({ agent }: { agent: Card["agent"] }) {
         <p className="mt-1 whitespace-pre-line text-[15px] font-normal leading-[1.46668] text-[#1d1c1d]">
           {agent.text}
         </p>
+        {artifact === "pdf-q3" ? <PdfQ3Artifact /> : null}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Faked PDF page thumbnail attached to the Full Projects agent reply.
+ * Placeholder shapes only — no real numbers — so the eye sees that work
+ * shipped without the page reading as a marketing claim.
+ */
+function PdfQ3Artifact() {
+  return (
+    <figure className="pricing-buys__pdf" aria-label="q3-review.pdf preview">
+      <header className="pricing-buys__pdf-header">
+        <p className="pricing-buys__pdf-title">Q3 Review</p>
+        <p className="pricing-buys__pdf-meta">Internal · Lisa</p>
+      </header>
+      <div className="pricing-buys__pdf-tiles">
+        <PdfMetricTile label="MRR" shape="ascending" />
+        <PdfMetricTile label="Churn" shape="descending" />
+        <PdfMetricTile label="NPS" shape="flat" />
+      </div>
+      <div className="pricing-buys__pdf-lines" aria-hidden>
+        <span className="pricing-buys__pdf-line" style={{ width: "92%" }} />
+        <span className="pricing-buys__pdf-line" style={{ width: "84%" }} />
+        <span className="pricing-buys__pdf-line" style={{ width: "76%" }} />
+        <span className="pricing-buys__pdf-line" style={{ width: "60%" }} />
+      </div>
+      <footer className="pricing-buys__pdf-footer">1 of 5</footer>
+    </figure>
+  );
+}
+
+function PdfMetricTile({
+  label,
+  shape,
+}: {
+  label: string;
+  shape: "ascending" | "descending" | "flat";
+}) {
+  const heights =
+    shape === "ascending"
+      ? [4, 7, 10, 13]
+      : shape === "descending"
+        ? [13, 10, 7, 4]
+        : [8, 9, 8, 9];
+  return (
+    <div className="pricing-buys__pdf-tile">
+      <span className="pricing-buys__pdf-tile-label">{label}</span>
+      <div className="pricing-buys__pdf-tile-bars" aria-hidden>
+        {heights.map((h, i) => (
+          <span
+            key={i}
+            className="pricing-buys__pdf-tile-bar"
+            style={{ height: `${h}px` }}
+          />
+        ))}
       </div>
     </div>
   );
