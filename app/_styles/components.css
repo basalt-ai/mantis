@@ -2223,8 +2223,7 @@
 
   /* Slack-style chat block — reuses SlackUI's exact typography (Lato,
      15px / 1.46668, #1d1c1d) so the rhythm matches the home page Slack
-     section. Lato comes from --font-lato (Next localFont in app/layout.tsx),
-     set inline by SlackUI.tsx; we apply the same stack here. */
+     section. */
   .pricing-buys__chat {
     display: flex;
     flex-direction: column;
@@ -2233,9 +2232,19 @@
     background-color: var(--surface);
     border: 1px solid var(--subtle-stroke);
     border-radius: var(--radius-md);
-    font-family: var(--font-lato), "Lato", -apple-system, BlinkMacSystemFont,
-      "Segoe UI", sans-serif;
     corner-shape: squircle;
+  }
+
+  /* `app/_styles/style.css` sets `* { font-family: var(--font-body) }` which
+     slams the project body face onto every element directly, defeating
+     inheritance. Same workaround the home Slack figure uses (see
+     `.home-landing-section__figure--slack` block above): re-scope Lato to
+     this chat block AND every descendant so the panel renders in Slack's
+     UI face without leaking. */
+  .pricing-buys__chat,
+  .pricing-buys__chat * {
+    font-family: var(--font-lato), "Lato", -apple-system, BlinkMacSystemFont,
+      "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   }
 
   /* Faked PDF page thumbnail attached to the Full Projects agent reply.
