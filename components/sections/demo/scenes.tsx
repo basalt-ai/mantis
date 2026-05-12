@@ -1,14 +1,16 @@
 /**
- * All six acts of the /demo film. Each scene takes a `localTime` prop
+ * All seven acts of the /demo film. Each scene takes a `localTime` prop
  * (seconds elapsed since its act started) and renders accordingly.
  *
- * The acts are kept in one file so the timing constants and visual
- * vocabulary stay coherent — nothing in here needs to be shared with
- * the rest of the app.
+ * Storyboard: ACT 1 OOO → ACT 2 handoff → ACT 2.5 the SYSTEM (company
+ * brain + skill files) → ACT 3 departure → ACT 4 the five days (Mon–Fri,
+ * with the voice-memo apex on Day 3) → ACT 5 return + "Yes." → ACT 6 close.
  *
- * Storyboard: ACT 1 OOO → ACT 2 handoff → ACT 3 departure → ACT 4 the
- * five days (Mon–Fri, with the voice-memo apex on Day 3) → ACT 5
- * return + "Yes." → ACT 6 close.
+ * No personified sub-agents. Pancake is the only agent identity. The
+ * variety in the messages comes from context (sourcing, sending,
+ * qualifying, escalating) — not from a swarm of avatars. The disqualif-
+ * ication beat cites a specific skill file (qualify-icp.md) so the
+ * earlier System reveal pays off later.
  */
 "use client";
 
@@ -35,7 +37,6 @@ const CEO = {
    ────────────────────────────────────────────────────────────────────── */
 
 export function Act1OOO({ localTime }: { localTime: number }) {
-  // Type characters progressively over 4 seconds.
   const fullText =
     "Out of office Aug 12–17. For anything urgent, talk to @pancake in Slack.";
   const typingDuration = 4;
@@ -94,7 +95,6 @@ export function Act1OOO({ localTime }: { localTime: number }) {
    ────────────────────────────────────────────────────────────────────── */
 
 export function Act2Handoff({ localTime }: { localTime: number }) {
-  // Two CEO messages, then Pancake replies after a beat.
   const showCEO1 = localTime > 0.4;
   const showCEO2 = localTime > 7.2;
   const showPancake = localTime > 10.4;
@@ -144,12 +144,120 @@ export function Act2Handoff({ localTime }: { localTime: number }) {
 }
 
 /* ──────────────────────────────────────────────────────────────────────
-   ACT 3 — Departure (22–30s)
-   Three quick stylized scenes: laptop closing, suitcase, plane window.
+   ACT 2.5 — The SYSTEM (22–30s)
+   Two-panel reveal: Pancake's company brain + skill files. The brain is
+   what it knows about THIS company; the skills are how it knows what to
+   do for THIS company. Items appear progressively over ~7s.
+   ────────────────────────────────────────────────────────────────────── */
+
+const BRAIN_ROWS = [
+  { at: 0.6, label: "Notion", meta: "1,247 pages — strategy, playbooks, retros" },
+  { at: 1.4, label: "Granola", meta: "47 calls — last 90 days" },
+  { at: 2.2, label: "HubSpot", meta: "1,832 contacts · 184 deals" },
+  { at: 3.0, label: "Apollo", meta: "outbound history synced" },
+  { at: 3.8, label: "Brand", meta: "voice, tone, do-not-say list" },
+  { at: 4.6, label: "ICP", meta: "B2B SaaS · 50–500 employees · EU" },
+];
+
+const SKILL_FILES = [
+  { at: 1.0, name: "gtm.md",            note: "campaign playbook" },
+  { at: 1.8, name: "qualify-icp.md",    note: "lead pre-qual rules" },
+  { at: 2.6, name: "voice-and-tone.md", note: "how Maya writes" },
+  { at: 3.4, name: "escalate-hot.md",   note: "what needs the human" },
+  { at: 4.2, name: "brand-guardrails.md", note: "what never ships" },
+  { at: 5.0, name: "sales-playbook.md", note: "objection handling" },
+];
+
+export function Act2_5System({ localTime }: { localTime: number }) {
+  const synced = localTime > 5.6;
+  return (
+    <div className="demo-stage demo-stage--system">
+      <motion.div
+        className="demo-system"
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <header className="demo-system__header">
+          <div className="demo-system__avatar" aria-hidden>
+            {/* eslint-disable-next-line @next/next/no-img-element -- decorative */}
+            <img src="/pancake-monster.png" alt="" width={28} height={28} />
+          </div>
+          <div>
+            <p className="demo-system__title">pancake · initialising for Maya</p>
+            <p className="demo-system__sub">
+              Loading your company so I can act like an insider, not a tool.
+            </p>
+          </div>
+        </header>
+        <div className="demo-system__panels">
+          <section className="demo-system__panel">
+            <h4 className="demo-system__panel-title">Company brain</h4>
+            <ul className="demo-system__list">
+              {BRAIN_ROWS.map((r, i) =>
+                localTime >= r.at ? (
+                  <motion.li
+                    key={i}
+                    className="demo-system__row"
+                    initial={{ opacity: 0, x: -6 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.28 }}
+                  >
+                    <span className="demo-system__check" aria-hidden>
+                      ✓
+                    </span>
+                    <span className="demo-system__row-label">{r.label}</span>
+                    <span className="demo-system__row-meta">{r.meta}</span>
+                  </motion.li>
+                ) : null,
+              )}
+            </ul>
+          </section>
+          <section className="demo-system__panel demo-system__panel--skills">
+            <h4 className="demo-system__panel-title">Skills · /skills/*.md</h4>
+            <ul className="demo-system__files">
+              {SKILL_FILES.map((f, i) =>
+                localTime >= f.at ? (
+                  <motion.li
+                    key={i}
+                    className="demo-system__file"
+                    initial={{ opacity: 0, x: 6 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.28 }}
+                  >
+                    <span className="demo-system__file-icon" aria-hidden>
+                      ⌘
+                    </span>
+                    <span className="demo-system__file-name">{f.name}</span>
+                    <span className="demo-system__file-note">{f.note}</span>
+                  </motion.li>
+                ) : null,
+              )}
+            </ul>
+          </section>
+        </div>
+        <footer className="demo-system__footer">
+          <span
+            className={
+              synced
+                ? "demo-system__status demo-system__status--ready"
+                : "demo-system__status"
+            }
+          >
+            <span className="demo-system__status-dot" aria-hidden />
+            {synced ? "Synced · ready to execute" : "Syncing…"}
+          </span>
+        </footer>
+      </motion.div>
+    </div>
+  );
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   ACT 3 — Departure (30–38s)
    ────────────────────────────────────────────────────────────────────── */
 
 export function Act3Departure({ localTime }: { localTime: number }) {
-  // 8s split across three frames: 0–2.6s, 2.6–5.2s, 5.2–8s
   const frame =
     localTime < 2.6 ? "laptop" : localTime < 5.2 ? "suitcase" : "plane";
 
@@ -202,7 +310,6 @@ export function Act3Departure({ localTime }: { localTime: number }) {
 
 /* ──────────────────────────────────────────────────────────────────────
    ACT 4 — The Five Days
-   Each Day takes its own localTime (we slice the master clock per day).
    ────────────────────────────────────────────────────────────────────── */
 
 function DayShell({
@@ -248,7 +355,6 @@ function DayShell({
 }
 
 export function Day1Monday({ localTime }: { localTime: number }) {
-  // 7 seconds. Two messages stagger.
   const showA = localTime > 0.6;
   const showB = localTime > 3.2;
   return (
@@ -260,15 +366,16 @@ export function Day1Monday({ localTime }: { localTime: number }) {
       glyph={<CoffeeGlyph />}
     >
       {showA && (
-        <SlackAgentMessage agent="scout" time="10:42 AM">
+        <SlackAgentMessage agent="pancake" time="10:42 AM">
           Sourced 247 prospects matching ICP. 184 cleared deliverability +
-          LinkedIn freshness check.
+          LinkedIn freshness check. Pulled criteria from your{" "}
+          <span className="demo-skill-ref">qualify-icp.md</span>.
         </SlackAgentMessage>
       )}
       {showB && (
-        <SlackAgentMessage agent="ghostwriter" time="3:18 PM">
-          Drafted 142 cold emails, 6 angles A/B&apos;d. Sample thread in
-          #review.
+        <SlackAgentMessage agent="pancake" time="3:18 PM">
+          Drafted 142 cold emails, 6 angles A/B&apos;d. Voice tuned from
+          your last 47 outbound threads in the brain. Sample in #review.
         </SlackAgentMessage>
       )}
     </DayShell>
@@ -276,7 +383,6 @@ export function Day1Monday({ localTime }: { localTime: number }) {
 }
 
 export function Day2Tuesday({ localTime }: { localTime: number }) {
-  // 11 seconds: two messages, then disqualification beat (inbound + internal note + reply).
   const showA = localTime > 0.5;
   const showB = localTime > 2.6;
   const showInbound = localTime > 4.8;
@@ -291,12 +397,12 @@ export function Day2Tuesday({ localTime }: { localTime: number }) {
       glyph={<WaveGlyph />}
     >
       {showA && (
-        <SlackAgentMessage agent="aria" time="7:14 AM">
+        <SlackAgentMessage agent="pancake" time="7:14 AM">
           Sent 142 cold emails. Apollo confirmed.
         </SlackAgentMessage>
       )}
       {showB && (
-        <SlackAgentMessage agent="aria" time="11:23 AM">
+        <SlackAgentMessage agent="pancake" time="11:23 AM">
           First 6 replies. 3 booked.
         </SlackAgentMessage>
       )}
@@ -313,12 +419,15 @@ export function Day2Tuesday({ localTime }: { localTime: number }) {
           time="11:24 AM"
           internalNote
         >
-          Checking against ICP: MeshLoop · 8 employees · Pre-seed · B2C
-          marketplace. Two flags: under 50-employee floor, B2C not B2B SaaS.
+          Running <span className="demo-skill-ref">qualify-icp.md</span>:
+          MeshLoop · 8 employees · Pre-seed · B2C marketplace. Two flags
+          against your ICP — under 50-employee floor, B2C not B2B SaaS.
+          Routing to <span className="demo-skill-ref">voice-and-tone.md</span>{" "}
+          for graceful pass.
         </SlackAgentMessage>
       )}
       {showReply && (
-        <SlackAgentMessage agent="aria" time="11:25 AM">
+        <SlackAgentMessage agent="pancake" time="11:25 AM">
           Hi Lina, thanks for jumping on this. We&apos;re focused on B2B
           SaaS teams 50+ right now, so it&apos;s probably not the moment
           for us. Wishing MeshLoop the best — happy to revisit if your
@@ -330,11 +439,10 @@ export function Day2Tuesday({ localTime }: { localTime: number }) {
 }
 
 /**
- * Day 3 — the dramatic spine of the film.
- * Sub-beats:
+ * Day 3 — the dramatic spine.
  *   3a (0–3s)   the flag (#pancake-hot pulses)
  *   3b (3–13s)  voice memo, full-frame
- *   3c (13–18s) execution, smash cut back to split-frame
+ *   3c (13–18s) execution, smash cut back
  */
 export function Day3Wednesday({ localTime }: { localTime: number }) {
   if (localTime < 3) return <Day3Flag />;
@@ -351,9 +459,10 @@ function Day3Flag() {
       palette="wednesday"
       glyph={<MountainGlyph />}
     >
-      <SlackAgentMessage agent="aria" time="4:47 PM">
+      <SlackAgentMessage agent="pancake" time="4:47 PM">
         4 hot conversations need a call. Top one: Northstar — wants a closer
-        time, leaning Tuesday.
+        time, leaning Tuesday. Triage rules from{" "}
+        <span className="demo-skill-ref">escalate-hot.md</span>.
       </SlackAgentMessage>
       <div className="demo-day__pulse-row">
         <ChannelDot pulsing />
@@ -364,7 +473,6 @@ function Day3Flag() {
 }
 
 function Day3VoiceMemo({ localTime }: { localTime: number }) {
-  // Words appear synced with the recording timeline.
   const lines = [
     { at: 1.2, text: "Northstar — yes, Tuesday. Push for 2pm, my time." },
     { at: 3.4, text: "Brio — pass, they’re not ready." },
@@ -431,17 +539,18 @@ function Day3Execution({ localTime }: { localTime: number }) {
         </SlackAgentMessage>
       )}
       {showB && (
-        <SlackAgentMessage agent="aria" time="4:51 PM">
-          Northstar booked Tuesday 2pm your time. Confirmation in your inbox.
+        <SlackAgentMessage agent="pancake" time="4:51 PM">
+          Northstar booked Tuesday 2pm your time. Confirmation in your
+          inbox. Logged to brain.
         </SlackAgentMessage>
       )}
       {showC && (
-        <SlackAgentMessage agent="aria" time="4:52 PM">
+        <SlackAgentMessage agent="pancake" time="4:52 PM">
           Brio: graceful pass sent. Helm: deck sent, no ask.
         </SlackAgentMessage>
       )}
       {showD && (
-        <SlackAgentMessage agent="aria" time="4:53 PM">
+        <SlackAgentMessage agent="pancake" time="4:53 PM">
           Cellartech: holding, will follow up Tuesday.
         </SlackAgentMessage>
       )}
@@ -452,7 +561,6 @@ function Day3Execution({ localTime }: { localTime: number }) {
 export function Day4Thursday({ localTime }: { localTime: number }) {
   const showA = localTime > 0.6;
   const showB = localTime > 3.2;
-  // Pulse appears, ignored, then settles
   return (
     <DayShell
       label="THURSDAY"
@@ -464,12 +572,13 @@ export function Day4Thursday({ localTime }: { localTime: number }) {
       {showA && (
         <SlackAgentMessage agent="pancake" time="9:24 AM">
           Two more hot conversations from yesterday. Held them — kept them
-          warm with one follow-up each. No action needed unless you want to
-          weigh in.
+          warm with one follow-up each per{" "}
+          <span className="demo-skill-ref">escalate-hot.md</span>. No
+          action needed unless you want to weigh in.
         </SlackAgentMessage>
       )}
       {showB && (
-        <SlackAgentMessage agent="aria" time="2:47 PM">
+        <SlackAgentMessage agent="pancake" time="2:47 PM">
           3 more demos booked from yesterday&apos;s batch.
         </SlackAgentMessage>
       )}
@@ -494,7 +603,8 @@ export function Day5Friday({ localTime }: { localTime: number }) {
       {showA && (
         <SlackAgentMessage agent="pancake" time="5:32 PM">
           <strong>Final tally:</strong> 31 demos booked. €847k qualified
-          pipeline. 23 companies in Series A–C range. Full report ready.
+          pipeline. 23 companies in Series A–C range. Everything logged to
+          your brain — CRM updated, brand learnings captured.
         </SlackAgentMessage>
       )}
     </DayShell>
@@ -502,12 +612,11 @@ export function Day5Friday({ localTime }: { localTime: number }) {
 }
 
 /* ──────────────────────────────────────────────────────────────────────
-   ACT 5 — Return + "Yes." (80–90s)
+   ACT 5 — Return + "Yes." (88–98s)
    ────────────────────────────────────────────────────────────────────── */
 
 export function Act5Return({ localTime }: { localTime: number }) {
   const summaryShow = localTime > 0.6;
-  // Cursor blinks, then keystrokes.
   const charCount =
     localTime < 5 ? 0 : localTime < 5.7 ? 1 : localTime < 6.2 ? 2 : localTime < 6.7 ? 3 : 4;
   const typed = "Yes.".slice(0, charCount);
@@ -525,9 +634,9 @@ export function Act5Return({ localTime }: { localTime: number }) {
                 <li>✓ 31 demos booked (target: 30)</li>
                 <li>✓ €847k qualified pipeline</li>
                 <li>✓ 23 companies in Series A–C range</li>
-                <li>✓ 8 disqualified with polite passes</li>
+                <li>✓ 8 disqualified per qualify-icp.md</li>
                 <li>✓ 7 hot conversations live, all in #pancake-hot</li>
-                <li>✓ Apollo + Cal in sync. Nothing dropped.</li>
+                <li>✓ Apollo + Cal in sync. Brain updated. Nothing dropped.</li>
               </ul>
               Want me to keep the campaign running?
             </SlackAgentMessage>
@@ -557,7 +666,7 @@ export function Act5Return({ localTime }: { localTime: number }) {
 }
 
 /* ──────────────────────────────────────────────────────────────────────
-   ACT 6 — Close (90–95s)
+   ACT 6 — Close (98–103s)
    ────────────────────────────────────────────────────────────────────── */
 
 export function Act6Close({ localTime }: { localTime: number }) {
@@ -791,7 +900,6 @@ function PlaneWindowGlyph() {
 }
 
 function Waveform({ progress }: { progress: number }) {
-  // 36 bars, deterministic pseudo-random heights for a natural look.
   const bars = Array.from({ length: 36 }, (_, i) => {
     const seed = Math.sin((i + 1) * 12.9898) * 43758.5453;
     const r = seed - Math.floor(seed);

@@ -19,6 +19,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Act1OOO,
   Act2Handoff,
+  Act2_5System,
   Act3Departure,
   Act5Return,
   Act6Close,
@@ -53,59 +54,66 @@ const CHAPTERS: Chapter[] = [
     render: (t) => <Act2Handoff localTime={t} />,
   },
   {
-    id: "departure",
-    label: "Departure",
+    id: "system",
+    label: "Brain + skills",
     start: 22,
     end: 30,
+    render: (t) => <Act2_5System localTime={t} />,
+  },
+  {
+    id: "departure",
+    label: "Departure",
+    start: 30,
+    end: 38,
     render: (t) => <Act3Departure localTime={t} />,
   },
   {
     id: "monday",
     label: "Mon",
-    start: 30,
-    end: 37,
+    start: 38,
+    end: 45,
     render: (t) => <Day1Monday localTime={t} />,
   },
   {
     id: "tuesday",
     label: "Tue",
-    start: 37,
-    end: 48,
+    start: 45,
+    end: 56,
     render: (t) => <Day2Tuesday localTime={t} />,
   },
   {
     id: "wednesday",
     label: "Wed · voice memo",
-    start: 48,
-    end: 66,
+    start: 56,
+    end: 74,
     render: (t) => <Day3Wednesday localTime={t} />,
   },
   {
     id: "thursday",
     label: "Thu",
-    start: 66,
-    end: 73,
+    start: 74,
+    end: 81,
     render: (t) => <Day4Thursday localTime={t} />,
   },
   {
     id: "friday",
     label: "Fri",
-    start: 73,
-    end: 80,
+    start: 81,
+    end: 88,
     render: (t) => <Day5Friday localTime={t} />,
   },
   {
     id: "return",
     label: "Return · Yes.",
-    start: 80,
-    end: 90,
+    start: 88,
+    end: 98,
     render: (t) => <Act5Return localTime={t} />,
   },
   {
     id: "close",
     label: "Close",
-    start: 90,
-    end: 95,
+    start: 98,
+    end: 103,
     render: (t) => <Act6Close localTime={t} />,
   },
 ];
@@ -178,7 +186,7 @@ export function DemoPlayer() {
         <Link href="/" className="demo-header__brand" aria-label="Home">
           <span className="demo-header__brand-mark">Pancake</span>
         </Link>
-        <div className="demo-header__title">A 95-second product film</div>
+        <div className="demo-header__title">A 100-second product film</div>
         <Link href="/signup" className="demo-header__cta" prefetch={false}>
           Start free trial
         </Link>

@@ -12,13 +12,16 @@
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 
-export type AgentTone = "scout" | "ghostwriter" | "aria" | "pancake";
+/**
+ * One agent identity: pancake. Not a swarm of personified sub-agents.
+ * The product's pitch is a single brain that uses skill files; the demo
+ * mirrors that. Avatar is the pancake monster; meta kept on a record so
+ * future agents (none planned) could be added without a structural change.
+ */
+export type AgentTone = "pancake";
 
 const AGENT_META: Record<AgentTone, { name: string; color: string; ink: string }> = {
-  scout:       { name: "scout",       color: "#1264A3", ink: "#FFFFFF" },
-  ghostwriter: { name: "ghostwriter", color: "#5B2C83", ink: "#FFFFFF" },
-  aria:        { name: "aria",        color: "#E9738E", ink: "#FFFFFF" },
-  pancake:     { name: "pancake",     color: "#FFF1DA", ink: "#2C002A" },
+  pancake: { name: "pancake", color: "#FFF1DA", ink: "#2C002A" },
 };
 
 export function SlackChannelHeader({ channel }: { channel: string }) {
@@ -98,18 +101,14 @@ export function SlackAgentMessage({
         style={{ backgroundColor: meta.color, color: meta.ink }}
         aria-hidden
       >
-        {agent === "pancake" ? (
-          /* eslint-disable-next-line @next/next/no-img-element -- decorative */
-          <img
-            src="/pancake-monster.png"
-            alt=""
-            width={28}
-            height={28}
-            className="demo-slack__avatar-img"
-          />
-        ) : (
-          meta.name.charAt(0).toUpperCase()
-        )}
+        {/* eslint-disable-next-line @next/next/no-img-element -- decorative */}
+        <img
+          src="/pancake-monster.png"
+          alt=""
+          width={28}
+          height={28}
+          className="demo-slack__avatar-img"
+        />
       </div>
       <div className="demo-slack__body">
         <div className="demo-slack__meta">

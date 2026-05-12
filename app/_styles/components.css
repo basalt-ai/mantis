@@ -4510,6 +4510,215 @@
     }
   }
 
+  /* ── ACT 2.5 — Company brain + skill files ──────────────────── */
+  .demo-stage--system {
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(255, 122, 160, 0.18) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(186, 139, 255, 0.18) 0%, transparent 50%),
+      linear-gradient(180deg, #1a0019 0%, #0e000d 100%);
+    padding: clamp(20px, 3vw, 36px);
+  }
+
+  .demo-system {
+    width: 100%;
+    max-width: 760px;
+    color: rgba(255, 245, 230, 0.9);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .demo-system__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .demo-system__avatar {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background-color: #fff1da;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+
+  .demo-system__avatar img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+  }
+
+  .demo-system__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 16px;
+    color: #fff5e6;
+    letter-spacing: -0.01em;
+  }
+
+  .demo-system__sub {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: rgba(255, 245, 230, 0.55);
+  }
+
+  .demo-system__panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .demo-system__panel {
+    background-color: rgba(255, 245, 230, 0.04);
+    border: 1px solid rgba(255, 245, 230, 0.1);
+    border-radius: 12px;
+    padding: 14px 16px;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .demo-system__panel-title {
+    margin: 0;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 245, 230, 0.45);
+    font-family: var(--font-mono, var(--font-body));
+  }
+
+  .demo-system__list,
+  .demo-system__files {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .demo-system__row {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 13px;
+    color: #fff5e6;
+  }
+
+  .demo-system__check {
+    color: #68cea7;
+    font-weight: 700;
+    font-size: 12px;
+  }
+
+  .demo-system__row-label {
+    font-weight: 600;
+    color: #fff5e6;
+  }
+
+  .demo-system__row-meta {
+    color: rgba(255, 245, 230, 0.55);
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .demo-system__file {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    align-items: baseline;
+    gap: 8px;
+    font-family: var(--font-mono, "SFMono-Regular", "Menlo", monospace);
+    font-size: 12px;
+    color: #ffe9c5;
+  }
+
+  .demo-system__file-icon {
+    color: var(--strong-branded-surface);
+    font-size: 11px;
+  }
+
+  .demo-system__file-name {
+    color: #ffe9c5;
+    font-weight: 600;
+  }
+
+  .demo-system__file-note {
+    color: rgba(255, 233, 197, 0.55);
+    font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .demo-system__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .demo-system__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background-color: rgba(255, 245, 230, 0.06);
+    border: 1px solid rgba(255, 245, 230, 0.12);
+    border-radius: 999px;
+    font-size: 12px;
+    color: rgba(255, 245, 230, 0.7);
+    font-family: var(--font-mono, var(--font-body));
+  }
+
+  .demo-system__status-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: rgba(255, 189, 122, 0.85);
+    animation: demo-dot-pulse 1.4s ease-in-out infinite;
+  }
+
+  .demo-system__status--ready {
+    color: #d8f5e6;
+    border-color: rgba(104, 206, 167, 0.4);
+    background-color: rgba(104, 206, 167, 0.08);
+  }
+
+  .demo-system__status--ready .demo-system__status-dot {
+    background-color: #68cea7;
+    animation: none;
+    box-shadow: 0 0 0 3px rgba(104, 206, 167, 0.18);
+  }
+
+  /* Inline skill-file reference inside a Slack message — looks like an
+     anchor to the file system ("see qualify-icp.md"). Used in the
+     internal-note disqualification beat and the day messages. */
+  .demo-skill-ref {
+    font-family: var(--font-mono, "SFMono-Regular", "Menlo", monospace);
+    font-size: 0.92em;
+    background-color: rgba(186, 139, 255, 0.14);
+    color: #6a37b8;
+    padding: 1px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(186, 139, 255, 0.28);
+    white-space: nowrap;
+  }
+
+  .demo-slack__text--internal .demo-skill-ref {
+    background-color: rgba(186, 139, 255, 0.22);
+    color: #4a228f;
+  }
+
   /* ── ACT 3 — Departure ──────────────────────────────────────── */
   .demo-stage--departure {
     background: linear-gradient(180deg, #2a0028 0%, #4a1542 100%);
