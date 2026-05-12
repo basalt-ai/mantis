@@ -237,9 +237,9 @@ export const pricing = {
     title: "No tiers. No tricks.",
     items: [
       {
-        title: "No markup on tokens.",
+        title: "No platform markup.",
         body:
-          "Most AI tools mark up tokens 3x or 5x. We charge what you'd pay OpenAI or Anthropic direct. Our margin comes from the bulk discount they give us, not a markup on you.",
+          "Most AI tools mark up tokens 3x or 5x. We charge exactly what OpenAI and Anthropic charge their direct customers. Our margin is the volume discount the labs give us for buying in bulk.",
       },
       {
         title: "Your own cloud computer.",
