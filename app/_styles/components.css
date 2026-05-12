@@ -1891,11 +1891,23 @@
      room above and below the card. */
   .pricing-section {
     width: 100%;
+    /* Full viewport height minus the navbar so the hero card sits in its
+       own framed screen. Navbar is ~68px on small viewports (spacing-lg
+       padding) and ~140px from `lg` up (2× spacing-xxl padding). The
+       inner element stretches by default, so its justify-content:center
+       handles the vertical centering of the card. */
+    min-height: calc(100dvh - 68px);
     padding-top: var(--spacing-xxl);
     padding-bottom: var(--spacing-xxl);
     background-color: var(--surface);
     color: var(--text);
     display: flex;
+  }
+
+  @media (min-width: 1024px) {
+    .pricing-section {
+      min-height: calc(100dvh - 140px);
+    }
   }
 
   .pricing-section__inner {
