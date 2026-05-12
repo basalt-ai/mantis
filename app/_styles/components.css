@@ -1986,11 +1986,11 @@
     flex-direction: column;
     align-items: center;
     gap: calc(2 * var(--spacing-xl));
-    /* Asymmetric padding: less on top so the pancake doesn't float in dead
-       space (the SVG viewBox itself has unused area above the topmost
-       pancake; tighter top padding + tighter wrap crops both). Sides and
-       bottom keep their generous breathing. */
-    padding: var(--spacing-md) calc(2 * var(--spacing-xl))
+    /* Asymmetric padding: top is tighter than sides + bottom because the
+       SVG viewBox is already cropped above the topmost pancake. 24px gives
+       the 4-pancake stack visible breathing from the card border without
+       reintroducing dead space. */
+    padding: calc(1.5 * var(--spacing-xl)) calc(2 * var(--spacing-xl))
       calc(2 * var(--spacing-xl));
     background-color: var(--surface);
     border: 1px solid rgba(0, 0, 0, 0.16);
