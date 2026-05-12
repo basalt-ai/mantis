@@ -201,10 +201,10 @@ export const pricing = {
    *  (workweek hours of agent activity). Numbers stay proportional to the
    *  token progression so the slider feels predictable: 5/25/50/75. */
   tiers: [
-    { totalDollars: 49,  tokens: 5_000_000,  pancakes: 1, workScale: "≈ 5 hours of agent work a week" },
-    { totalDollars: 129, tokens: 25_000_000, pancakes: 2, workScale: "≈ 25 hours of agent work a week" },
-    { totalDollars: 229, tokens: 50_000_000, pancakes: 3, workScale: "≈ 50 hours of agent work a week" },
-    { totalDollars: 329, tokens: 75_000_000, pancakes: 4, workScale: "≈ 75 hours of agent work a week" },
+    { totalDollars: 49,  tokens: 5_000_000,  pancakes: 1, workScale: "About 5 hours of agent work a week" },
+    { totalDollars: 129, tokens: 25_000_000, pancakes: 2, workScale: "About 25 hours of agent work a week" },
+    { totalDollars: 229, tokens: 50_000_000, pancakes: 3, workScale: "About 50 hours of agent work a week" },
+    { totalDollars: 329, tokens: 75_000_000, pancakes: 4, workScale: "About 75 hours of agent work a week" },
   ],
   defaultTierIndex: 0,
   trial: {

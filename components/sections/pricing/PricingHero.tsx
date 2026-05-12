@@ -38,6 +38,9 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
           {tier.totalDollars}
           <span className="pricing-hero__total-suffix">{pricing.perMonth}</span>
         </p>
+        <p className="pricing-hero__work-scale" aria-live="polite">
+          {tier.workScale}
+        </p>
         <p className="pricing-hero__breakdown" aria-live="polite">
           <span className="pricing-hero__breakdown-part">
             <span className="pricing-hero__breakdown-amount">
@@ -60,9 +63,6 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
               {pricing.breakdownTokensLabel}
             </span>
           </span>
-        </p>
-        <p className="pricing-hero__work-scale" aria-live="polite">
-          {tier.workScale}
         </p>
       </div>
 

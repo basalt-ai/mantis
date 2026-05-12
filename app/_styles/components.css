@@ -2032,61 +2032,57 @@
     letter-spacing: 0;
   }
 
-  /* Two-part cost breakdown — `$29 always-on setup  +  $X in tokens`.
-     Renders as a pill row: each amount pops in display face, each label sits
-     small + subtle next to it, the "+" separates them with extra air. The
-     goal is "you can see the price split at a glance" without forcing the
-     eye to parse a sentence. */
+  /* Human-scale translation directly under the price. Carries the meaning
+     of the tier — what the money actually buys in human terms — so it
+     deserves second-tier emphasis (regular weight, full text color). */
+  .pricing-hero__work-scale {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    font-weight: 400;
+    color: var(--text);
+    max-width: 32ch;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  /* Cost breakdown — `$29 always-on setup  +  $X in tokens`.
+     Apple-style rigor: one typeface (body), one size (13px). Hierarchy
+     comes from weight + color only, not face mixing. The `+` floats with
+     extra horizontal air so the two halves read as discrete components. */
   .pricing-hero__breakdown {
     margin: 0;
     display: flex;
     align-items: baseline;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 4px 12px;
+    gap: 4px 18px;
     font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.4;
     color: var(--subtle-text);
   }
 
   .pricing-hero__breakdown-part {
     display: inline-flex;
     align-items: baseline;
-    gap: 5px;
+    gap: 6px;
   }
 
   .pricing-hero__breakdown-amount {
-    font-family: var(--font-display);
     font-weight: 600;
-    font-size: 14px;
     color: var(--text);
     font-variant-numeric: tabular-nums;
-    letter-spacing: -0.01em;
   }
 
   .pricing-hero__breakdown-label {
-    font-size: 12px;
+    font-weight: 400;
     color: var(--subtle-text);
-    line-height: 1.2;
   }
 
   .pricing-hero__breakdown-plus {
-    font-family: var(--font-display);
     font-weight: 400;
-    font-size: 14px;
     color: var(--disabled-text);
-  }
-
-  /* Human-scale translation under the breakdown. Larger and more
-     prominent than the math because it carries the meaning the user
-     actually needs to evaluate the tier. */
-  .pricing-hero__work-scale {
-    margin: 0;
-    font-family: var(--font-body);
-    font-size: var(--font-size-body-regular);
-    color: var(--text);
-    max-width: 32ch;
-    text-align: center;
-    line-height: 1.4;
   }
 
   .pricing-hero__slider-wrap {
