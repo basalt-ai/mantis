@@ -9,6 +9,18 @@ import { PancakeStack } from "./PancakeStack";
 
 type Pricing = typeof pricingCopy;
 
+/* Pancake top-shell colours in the same TOP→BOTTOM order they're added to
+   the stack as the user moves up tiers (matches STACKS in PancakeStack).
+   Used to colour the tier indicator under the plan name — filled dots
+   visually echo the pancakes currently in the stack. */
+const TIER_DOT_COLORS = [
+  "#FFBD7A", // golden — tier 1+ (eyes-pancake, always present)
+  "#BA8BFF", // purple — tier 2+
+  "#68CEA7", // mint   — tier 3+
+  "#FFA45F", // orange — tier 4+
+  "#FF7AA0", // pink   — tier 5
+];
+
 /**
  * Pricing hero — single card with a 2-column grid inside.
  *
@@ -124,6 +136,19 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
         <p className="pricing-hero__plan-name" aria-live="polite">
           {tier.planName}
         </p>
+        <div className="pricing-hero__tier-dots" aria-hidden>
+          {TIER_DOT_COLORS.map((color, i) => {
+            const active = i < tier.pancakes;
+            return (
+              <span
+                key={color}
+                className="pricing-hero__tier-dot"
+                data-active={active ? "true" : undefined}
+                style={active ? { backgroundColor: color } : undefined}
+              />
+            );
+          })}
+        </div>
       </div>
     </div>
   );

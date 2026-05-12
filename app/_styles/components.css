@@ -2006,12 +2006,14 @@
     min-width: 0;
   }
 
-  /* Right column — pancake stack + plan name. */
+  /* Right column — pancake stack + plan name + tier dots, composed as
+     one centred mark. Gaps are deliberately small so the three elements
+     read as a single brand lockup, not a list. */
   .pricing-hero__mascot {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--spacing-md);
+    gap: 0;
     justify-self: center;
   }
 
@@ -2031,7 +2033,8 @@
   /* Plan name shares its typography with `.pricing-hero__total` ($49 /
      month) — same font (display), weight (500), size (64), letter-spacing
      (-2px), color (text). The two big text beats on either side of the
-     hero now read as a matched pair. */
+     hero now read as a matched pair. Negative margin pulls the name up
+     toward the pancake's shadow so the lockup feels tight, not loose. */
   .pricing-hero__plan-name {
     margin: 0;
     font-family: var(--font-display);
@@ -2041,6 +2044,37 @@
     letter-spacing: -2px;
     color: var(--text);
     text-align: center;
+    margin-top: -8px;
+  }
+
+  /* Tier-progression dots beneath the plan name. Five outlined dots in a
+     row; the first N (= tier.pancakes) are filled with the same brand
+     colours as the pancakes in the stack above. Echoes the mascot's
+     palette in a refined geometric form and adds a third visual beat to
+     the column so it stops feeling top-heavy. */
+  .pricing-hero__tier-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .pricing-hero__tier-dot {
+    display: block;
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background-color: transparent;
+    border: 1.5px solid var(--palette-chrome-40);
+    box-sizing: border-box;
+    transition: background-color 280ms ease, border-color 280ms ease,
+      transform 280ms ease;
+  }
+
+  .pricing-hero__tier-dot[data-active="true"] {
+    border-color: transparent;
+    transform: scale(1.15);
   }
 
   .pancake-stack__svg {
