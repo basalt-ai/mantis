@@ -10,17 +10,18 @@ import { AnimatePresence, motion } from "framer-motion";
  * and mint pancakes (mint pulled from --palette-green-10 so the brand
  * palette stays consistent), keeping the master's shape paths unchanged.
  *
- * Stacking model — TOP-ANCHORED, NEW-AT-THE-BOTTOM.
- * The eyes-pancake (golden) sits at slot 0 at a fixed y at the TOP of the
- * stack and never moves — it's the mascot's face, always visible. Each
- * tier-up appends a new pancake at the bottom of the stack (slot N-1),
- * which rises into view from below. Existing pancakes don't shift; only
- * the new one animates. Addition order (= top-to-bottom of the 5-stack):
- *   golden → purple → mint → orange → pink.
+ * Stacking model — BOTTOM-ANCHORED, NEW-AT-THE-BOTTOM, EXISTING-RISE-UP.
+ * The lowest slot is FIXED at BOTTOM_PANCAKE_Y. On tier-up:
+ *   1. every previously placed pancake shifts UP by one slot (SLOT_DY)
+ *   2. the newly added pancake slides into the bottom slot from below
+ * The eyes-pancake (golden, stack index 0) sits at the bottom when count=1
+ * and rises higher as the stack grows — it always stays at the TOP of the
+ * rendered stack. Order top-to-bottom in the 5-stack:
+ *   golden (top, with eyes) → purple → mint → orange → pink (bottom).
  *
  * Z-order: pancakes are drawn from bottom slot upward so the eyes-pancake
- * (slot 0) is drawn LAST and its face stays on top z-wise where it
- * overlaps with the slot just below it.
+ * is drawn LAST and its face stays on top z-wise where it overlaps with
+ * the slot just below it.
  */
 
 type PancakeColor = "golden" | "purple" | "orange" | "pink" | "mint";
@@ -45,42 +46,36 @@ const STACKS: Record<1 | 2 | 3 | 4 | 5, PancakeColor[]> = {
   5: ["golden", "purple", "mint", "orange", "pink"],
 };
 
-// Alternating x offsets give the stack a playful lean. Indexed from slot 0
-// (top of the stack) downward.
+// Alternating x offsets give the stack a playful lean. Indexed by stack
+// position (0 = top of the stack, growing downward).
 const SLOT_X = [38, 64, 24, 58, 30];
 // Vertical spacing between pancake centres (master uses ~50 px).
 const SLOT_DY = 48;
-// Top-anchored: slot 0 always sits here at the TOP of the stack; each new
-// slot is SLOT_DY below the previous. Existing slots keep their y when
-// count changes — only the newly appended slot animates.
-const TOP_PANCAKE_Y = 30;
+// Bottom-anchored: the LOWEST pancake always sits here. Existing pancakes
+// shift up by SLOT_DY on tier-up; the newly added one lands at this y.
+const BOTTOM_PANCAKE_Y = 222;
 // Approximate visual height of a rendered pancake (sides svg, 212 px) plus
 // the y offset of the sides svg inside the Pancake group (22.33 px).
 const PANCAKE_VISUAL_HEIGHT = 234.5;
-// How far below the bottom pancake the ground shadow sits.
+// How far below the bottom pancake the ground shadow sits. Ground is FIXED
+// in the bottom-anchored model.
 const GROUND_OFFSET_BELOW_STACK = 15;
+const GROUND_Y =
+  BOTTOM_PANCAKE_Y + PANCAKE_VISUAL_HEIGHT + GROUND_OFFSET_BELOW_STACK;
 
-function slotY(slotIndex: number) {
-  return TOP_PANCAKE_Y + slotIndex * SLOT_DY;
-}
-
-function groundY(count: number) {
-  // Ground follows the bottom of the current stack (slot count-1).
-  return (
-    TOP_PANCAKE_Y +
-    (count - 1) * SLOT_DY +
-    PANCAKE_VISUAL_HEIGHT +
-    GROUND_OFFSET_BELOW_STACK
-  );
+function slotY(stackIndex: number, count: number) {
+  // Stack index 0 = top of stack, count-1 = bottom. Bottom is anchored to
+  // BOTTOM_PANCAKE_Y; each step toward the top subtracts one SLOT_DY.
+  return BOTTOM_PANCAKE_Y - SLOT_DY * (count - 1 - stackIndex);
 }
 
 const VIEWBOX_W = 330;
 const VIEWBOX_H = 480;
 const GROUND_CX = 168;
 // viewBox crops the dead area above the topmost pancake so the SVG fills
-// the wrap tightly. The 5-pancake stack growing downward (bottom at slot
-// 4, y=222, visual bottom ~456, ground ~471) fits inside the cropped
-// viewBox with room for the shadow at the bottom.
+// the wrap tightly. The 5-pancake stack (top at y=30 when count=5, bottom
+// fixed at y=222, visual bottom ~456, ground ~471.5) fits inside the
+// cropped viewBox with room for the shadow at the bottom.
 const VIEWBOX_Y = 20;
 const VIEWBOX_H_CROPPED = VIEWBOX_H - VIEWBOX_Y;
 
@@ -109,13 +104,11 @@ export function PancakeStack({ count }: { count: 1 | 2 | 3 | 4 | 5 }) {
       role="img"
       aria-label={`stack of ${count} pancakes`}
     >
-      {/* Soft ground shadow — tracks the bottom of the current stack on
-          the same spring as the new pancake's entry. */}
-      <motion.ellipse
+      {/* Soft ground shadow — FIXED in the bottom-anchored model; sits
+          just below the (also fixed) bottom pancake. */}
+      <ellipse
         cx={GROUND_CX}
-        initial={false}
-        animate={{ cy: groundY(count) }}
-        transition={SPRING}
+        cy={GROUND_Y}
         rx={132}
         ry={11}
         fill="#2C002A"
@@ -123,19 +116,18 @@ export function PancakeStack({ count }: { count: 1 | 2 | 3 | 4 | 5 }) {
       />
 
       <AnimatePresence initial={false}>
-        {renderOrder.map((slotIndex) => {
-          const color = stack[slotIndex];
-          const x = SLOT_X[slotIndex];
-          const y = slotY(slotIndex);
-          // Eyes ride on the TOP pancake (slot 0, golden) — fixed mascot
-          // face that never moves and is never covered.
-          const hasEyes = slotIndex === 0;
-          /* Existing slots keep the same target (x, y) regardless of count,
-             so framer-motion skips animation on them. Only the newly
-             appended (bottom) slot plays initial → animate. The new
-             pancake rises into position from below — like sliding a plate
-             in underneath the existing stack — rather than dropping from
-             above (which would visually pass through the stack). */
+        {renderOrder.map((stackIndex) => {
+          const color = stack[stackIndex];
+          const x = SLOT_X[stackIndex];
+          const y = slotY(stackIndex, count);
+          // Eyes ride on the TOP pancake (stack index 0, golden) — the
+          // mascot face is always on the top of the rendered stack.
+          const hasEyes = stackIndex === 0;
+          /* On tier-up, each existing pancake's target y depends on count,
+             so framer-motion springs them all UP by one slot. The new
+             pancake (last index in stack) plays initial → animate, sliding
+             into the bottom slot from below — like sliding a plate in
+             underneath the existing stack. */
           return (
             <motion.g
               key={color}
