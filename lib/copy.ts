@@ -201,16 +201,16 @@ export const talkToHuman = {
 export const pricing = {
   // Hard pricing numbers — source of truth.
   infrastructureDollars: 29,
-  /** 5 discrete slider stops. Each tier is identified by team-size label,
-   *  not token count. `pancakes` drives the mascot stack height (1–5).
-   *  `workScale` keeps the human-readable "X hours of agent work a week"
-   *  framing proportional to internal token volume. */
+  /** 5 discrete slider stops. Each tier has a pancake-universe plan name
+   *  used as the active kicker above the price, plus an audience line
+   *  shown where the old "X hours of agent work a week" sat. `pancakes`
+   *  drives the mascot stack height (1–5). */
   tiers: [
-    { totalDollars: 49,  tokens: 5_000_000,   pancakes: 1, teamLabel: "Side project",  workScale: "About 5 hours of agent work a week" },
-    { totalDollars: 129, tokens: 25_000_000,  pancakes: 2, teamLabel: "Solopreneur",   workScale: "About 25 hours of agent work a week" },
-    { totalDollars: 229, tokens: 50_000_000,  pancakes: 3, teamLabel: "Founding team", workScale: "About 50 hours of agent work a week" },
-    { totalDollars: 329, tokens: 75_000_000,  pancakes: 4, teamLabel: "Startup",       workScale: "About 75 hours of agent work a week" },
-    { totalDollars: 529, tokens: 125_000_000, pancakes: 5, teamLabel: "Scaleup",       workScale: "Agents running around the clock" },
+    { totalDollars: 49,  tokens: 5_000_000,   pancakes: 1, planName: "Crepe",        forAudience: "For side projects" },
+    { totalDollars: 129, tokens: 25_000_000,  pancakes: 2, planName: "Short stack",  forAudience: "For solopreneurs" },
+    { totalDollars: 229, tokens: 50_000_000,  pancakes: 3, planName: "Stack",        forAudience: "For small founding teams" },
+    { totalDollars: 329, tokens: 75_000_000,  pancakes: 4, planName: "Tall stack",   forAudience: "For startups" },
+    { totalDollars: 529, tokens: 125_000_000, pancakes: 5, planName: "Tower",        forAudience: "For scaleups" },
   ],
   defaultTierIndex: 0,
   trial: {

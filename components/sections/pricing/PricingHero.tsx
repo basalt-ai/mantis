@@ -33,7 +33,7 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
       <div className="pricing-hero__info">
         <div className="pricing-hero__readout">
           <p className="pricing-hero__team-label" aria-live="polite">
-            {tier.teamLabel}
+            {tier.planName}
           </p>
           <p className="pricing-hero__total" aria-live="polite">
             <span className="pricing-hero__total-symbol">{pricing.currencySymbol}</span>
@@ -41,7 +41,7 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
             <span className="pricing-hero__total-suffix">{pricing.perMonth}</span>
           </p>
           <p className="pricing-hero__work-scale" aria-live="polite">
-            {tier.workScale}
+            {tier.forAudience}
           </p>
           <p className="pricing-hero__breakdown" aria-live="polite">
             <span className="pricing-hero__breakdown-part">
@@ -80,7 +80,7 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
             step={1}
             value={tierIndex}
             onChange={(e) => setTierIndex(Number(e.target.value))}
-            aria-valuetext={`${tier.teamLabel}, ${pricing.currencySymbol}${tier.totalDollars} per month`}
+            aria-valuetext={`${tier.planName}, ${pricing.currencySymbol}${tier.totalDollars} per month`}
             className="pricing-hero__slider"
             style={
               { "--progress": tierIndex / (tiers.length - 1) } as React.CSSProperties
@@ -89,13 +89,14 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
           <div className="pricing-hero__slider-stops" aria-hidden>
             {tiers.map((t, i) => (
               <button
-                key={t.teamLabel}
+                key={t.planName}
                 type="button"
                 className="pricing-hero__slider-stop"
                 data-active={i === tierIndex ? "true" : undefined}
                 onClick={() => setTierIndex(i)}
               >
-                {t.teamLabel}
+                {pricing.currencySymbol}
+                {t.totalDollars}
               </button>
             ))}
           </div>
