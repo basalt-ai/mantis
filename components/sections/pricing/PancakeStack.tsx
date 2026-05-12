@@ -95,16 +95,22 @@ export function PancakeStack({ count }: { count: 1 | 2 | 3 | 4 | 5 }) {
           return (
             <motion.g
               key={color}
-              initial={{ opacity: 0, y: y - 90, scale: 0.82 }}
-              animate={{ opacity: 1, y, scale: 1 }}
-              exit={{ opacity: 0, y: y - 60, scale: 0.7 }}
+              /* x is in `animate` (not `style`) so it inherits the same
+                 spring transition as y. Otherwise the horizontal slide
+                 uses framer-motion's default tween and finishes BEFORE
+                 the vertical spring resolves — which reads as a janky
+                 two-step motion (bottom pancake shifts horizontally,
+                 then the new one drops in). Same spring on both axes =
+                 one cohesive arrival. */
+              initial={{ opacity: 0, x, y: y - 90, scale: 0.82 }}
+              animate={{ opacity: 1, x, y, scale: 1 }}
+              exit={{ opacity: 0, x, y: y - 60, scale: 0.7 }}
               transition={{
                 type: "spring",
                 stiffness: 320,
                 damping: 13,
                 mass: 0.7,
               }}
-              style={{ x }}
             >
               <Pancake color={color} hasEyes={hasEyes} />
             </motion.g>
