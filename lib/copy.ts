@@ -209,7 +209,7 @@ export const pricing = {
     { totalDollars: 49,  tokens: 5_000_000,   pancakes: 1, teamLabel: "Side project",  workScale: "About 5 hours of agent work a week" },
     { totalDollars: 129, tokens: 25_000_000,  pancakes: 2, teamLabel: "Solopreneur",   workScale: "About 25 hours of agent work a week" },
     { totalDollars: 229, tokens: 50_000_000,  pancakes: 3, teamLabel: "Founding team", workScale: "About 50 hours of agent work a week" },
-    { totalDollars: 349, tokens: 75_000_000,  pancakes: 4, teamLabel: "Startup",       workScale: "About 75 hours of agent work a week" },
+    { totalDollars: 329, tokens: 75_000_000,  pancakes: 4, teamLabel: "Startup",       workScale: "About 75 hours of agent work a week" },
     { totalDollars: 529, tokens: 125_000_000, pancakes: 5, teamLabel: "Scaleup",       workScale: "Agents running around the clock" },
   ],
   defaultTierIndex: 0,
