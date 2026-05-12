@@ -1974,7 +1974,12 @@
     flex-direction: column;
     align-items: center;
     gap: calc(2 * var(--spacing-xl));
-    padding: calc(2 * var(--spacing-xl));
+    /* Asymmetric padding: less on top so the pancake doesn't float in dead
+       space (the SVG viewBox itself has unused area above the topmost
+       pancake; tighter top padding + tighter wrap crops both). Sides and
+       bottom keep their generous breathing. */
+    padding: var(--spacing-md) calc(2 * var(--spacing-xl))
+      calc(2 * var(--spacing-xl));
     background-color: var(--surface);
     border: 1px solid rgba(0, 0, 0, 0.16);
     border-radius: 32px;
@@ -1983,7 +1988,7 @@
 
   .pricing-hero__stack-wrap {
     width: 240px;
-    height: 320px;
+    height: 260px;
     display: flex;
     align-items: flex-end;
     justify-content: center;
