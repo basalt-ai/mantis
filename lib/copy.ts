@@ -189,8 +189,9 @@ export const talkToHuman = {
 } as const;
 
 /**
- * Pricing — radically honest. Two costs: a small fixed $29 for the always-on
- * machine (the "kitchen") plus tokens passed through at lab rates. One plan,
+ * Pricing — radically honest. Two costs: a small fixed $29 for an always-on
+ * cloud machine plus tokens at retail (we make our margin on the bulk
+ * discount the labs give us, not on a markup over the user). One plan,
  * one slider, one total. Numbers are the single source of truth for the page.
  */
 export const pricing = {
@@ -217,9 +218,8 @@ export const pricing = {
   title: "No tiers. No tricks.",
   subtitle: "$29 for the always-on setup. Tokens at cost.",
   perMonth: "/ month",
-  /** Two-part breakdown shown as small math under the big price. The labels
-   *  are deliberately literal (no metaphor). The "kitchen" framing lives in
-   *  the manifesto/FAQ where it has room to land. */
+  /** Two-part breakdown shown as small math under the big price.
+   *  The labels are deliberately literal — no metaphor in the terse line. */
   breakdownFixedLabel: "always-on setup",
   breakdownTokensLabel: "in tokens",
   // Slider labels for the 4 stops.
@@ -237,14 +237,14 @@ export const pricing = {
     title: "No tiers. No tricks.",
     items: [
       {
-        title: "Lab rates on tokens.",
+        title: "No markup on tokens.",
         body:
-          "Most AI tools mark up tokens 3x or 5x. We charge what OpenAI and Anthropic publish. Our margin is the $29 kitchen, not your usage.",
+          "Most AI tools mark up tokens 3x or 5x. We charge what you'd pay OpenAI or Anthropic direct. Our margin comes from the bulk discount they give us, not a markup on you.",
       },
       {
-        title: "Your kitchen, always on.",
+        title: "Your own cloud computer.",
         body:
-          "$29 buys a cloud based computer. Always on, always yours, never shared.",
+          "$29 buys a small machine in the cloud. Always on, always yours, never shared.",
       },
       {
         title: "No surprises.",
@@ -337,7 +337,7 @@ export const pricing = {
       },
       {
         q: "What is the $29 for?",
-        a: "The kitchen your agents live in. A small always-on machine that holds your context, runs your jobs, and reports back. Think Mac mini in the cloud.",
+        a: "The always-on machine your agents live in. A small cloud computer that holds your context, runs your jobs, and reports back. Think Mac mini in the cloud.",
       },
     ],
   },

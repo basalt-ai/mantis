@@ -1,9 +1,9 @@
 /**
- * Pricing — radically honest. Two costs: a small fixed $29 for the always-on
- * machine (the "kitchen") plus tokens passed through at lab rates. One plan,
- * one slider, one total. Numbers are the single source of truth for the page.
+ * Pricing — radically honest. Two costs: a small fixed $29 for an always-on
+ * cloud machine plus tokens at retail. Margin comes from the bulk discount
+ * the labs give us, not from marking up the user.
  *
- * Section order: hero → how this works → what your tokens buy → FAQ.
+ * Section order: hero → manifesto → what your tokens buy → FAQ.
  * Trust before value: the user needs to believe the price is fair before they
  * care what it gets them.
  */
