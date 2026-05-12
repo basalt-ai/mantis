@@ -2009,12 +2009,16 @@
   }
 
   .pricing-hero__stack-wrap {
-    /* viewBox is now cropped at y=20 (was 60) to fit the 5-pancake stack.
-       The wrap is fluid: aspect-ratio preserves the SVG's natural shape
-       while max-width caps it so it doesn't overgrow the right column. */
+    /* Aspect-ratio matches the SVG viewBox (330×460) exactly so the SVG
+       fills the wrap with no letterboxing. max-width is capped at 220px
+       so the pancake renders at the SAME pixel size as the original
+       /pricing card (scale = 220/330 = 0.667) — the slider-driven spring
+       motion then feels identical to before the 2-column rework. Going
+       bigger here makes the same spring travel ~30% more pixels, which
+       reads as "less smooth" even though the timing is the same. */
     width: 100%;
-    max-width: 300px;
-    aspect-ratio: 240 / 320;
+    max-width: 220px;
+    aspect-ratio: 330 / 460;
     justify-self: center;
     display: flex;
     align-items: flex-end;
