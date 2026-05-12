@@ -260,7 +260,7 @@ export const pricing = {
     cards: [
       {
         kicker: "QUICK TASKS",
-        tokenRange: "100K – 300K tokens",
+        tokenRange: "50K – 100K tokens",
         tag: "An hour of work, done in 5 minutes.",
         wide: false,
         user: {
@@ -278,7 +278,7 @@ export const pricing = {
       },
       {
         kicker: "WORKFLOWS",
-        tokenRange: "500K – 1.5M tokens",
+        tokenRange: "250K – 500K tokens",
         tag: "Half a day of ops, done while you focus on something else.",
         wide: false,
         user: {
@@ -296,7 +296,7 @@ export const pricing = {
       },
       {
         kicker: "FULL PROJECTS",
-        tokenRange: "2M – 5M tokens",
+        tokenRange: "1M – 2M tokens",
         tag: "A week of outbound a BDR would do.",
         wide: true,
         user: {
