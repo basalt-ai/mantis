@@ -1978,32 +1978,44 @@
     color: rgba(44, 0, 42, 0.64);
   }
 
-  /* ─── Pricing hero widget (monster + slider + total) ─── */
+  /* ─── Pricing hero widget — 2-column (info | pancake) ─── */
   .pricing-hero {
+    /* Two-column layout: info on the left, pancake mascot on the right.
+       Card is wider than the old vertical version because the slider now
+       carries 5 team-size stops that need horizontal room. On narrow
+       viewports the grid collapses to a single column with the pancake
+       moved on top (see responsive block at the bottom of the file). */
     width: 100%;
-    max-width: 720px;
-    display: flex;
-    flex-direction: column;
+    max-width: 960px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
     align-items: center;
     gap: calc(2 * var(--spacing-xl));
-    /* Asymmetric padding: top is tighter than sides + bottom because the
-       SVG viewBox is already cropped above the topmost pancake. 24px gives
-       the 4-pancake stack visible breathing from the card border without
-       reintroducing dead space. */
-    padding: calc(1.5 * var(--spacing-xl)) calc(2 * var(--spacing-xl))
-      calc(2 * var(--spacing-xl));
+    padding: calc(2 * var(--spacing-xl));
     background-color: var(--surface);
     border: 1px solid rgba(0, 0, 0, 0.16);
     border-radius: 32px;
     corner-shape: squircle;
   }
 
+  /* Left column — readout, slider, CTA. Stacks vertically with section gaps
+     so price / slider / cta each register as their own block. */
+  .pricing-hero__info {
+    display: flex;
+    flex-direction: column;
+    gap: calc(2 * var(--spacing-xl));
+    width: 100%;
+    min-width: 0;
+  }
+
   .pricing-hero__stack-wrap {
-    /* Height matched to the cropped viewBox aspect (330:420) so the SVG
-       renders at the same horizontal scale as the original 240×320 wrap.
-       Pancake pixel size is unchanged; only the dead area above gets cut. */
-    width: 240px;
-    height: 280px;
+    /* viewBox is now cropped at y=20 (was 60) to fit the 5-pancake stack.
+       The wrap is fluid: aspect-ratio preserves the SVG's natural shape
+       while max-width caps it so it doesn't overgrow the right column. */
+    width: 100%;
+    max-width: 300px;
+    aspect-ratio: 240 / 320;
+    justify-self: center;
     display: flex;
     align-items: flex-end;
     justify-content: center;
@@ -2018,9 +2030,22 @@
   .pricing-hero__readout {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--spacing-lg);
-    text-align: center;
+    text-align: left;
+  }
+
+  /* Active team-size kicker — small caps above the price. Updates live as
+     the user moves the slider; this is the "which tier is this?" answer
+     that replaces the old token-count subheader. */
+  .pricing-hero__team-label {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--strong-branded-surface);
   }
 
   .pricing-hero__total {
@@ -2062,7 +2087,7 @@
     font-weight: 400;
     color: var(--text);
     max-width: 32ch;
-    text-align: center;
+    text-align: left;
     line-height: 1.4;
   }
 
@@ -2074,7 +2099,7 @@
     margin: 0;
     display: flex;
     align-items: baseline;
-    justify-content: center;
+    justify-content: flex-start;
     flex-wrap: wrap;
     /* No horizontal gap on the row — the "+" span owns the spacing on
        both sides via its own width, so any optical offset from glyph side
@@ -2183,23 +2208,39 @@
     transform: scale(1.12);
   }
 
+  /* Slider stops carry team-size labels now (5 instead of 4). Each stop is
+     allocated equal flex with text-align matching its position so labels
+     read as anchored to their tick: first left, middle center, last right. */
   .pricing-hero__slider-stops {
     display: flex;
     justify-content: space-between;
-    gap: var(--spacing-sm);
+    gap: 2px;
+    margin-top: 2px;
   }
 
   .pricing-hero__slider-stop {
+    flex: 1 1 0;
     background: none;
     border: none;
-    padding: var(--spacing-xs) var(--spacing-sm);
+    padding: 4px 0;
     font-family: var(--font-body);
     font-size: 11px;
-    letter-spacing: 0.02em;
+    line-height: 1.25;
+    letter-spacing: 0.01em;
     color: var(--disabled-text);
     cursor: pointer;
     border-radius: var(--radius-sm);
     transition: color 120ms ease;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .pricing-hero__slider-stop:first-child {
+    text-align: left;
+  }
+
+  .pricing-hero__slider-stop:last-child {
+    text-align: right;
   }
 
   .pricing-hero__slider-stop:hover {
@@ -2214,8 +2255,12 @@
   .pricing-hero__cta {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--spacing-md);
+    width: 100%;
+  }
+
+  .pricing-hero__cta .button {
     width: 100%;
   }
 
@@ -2224,7 +2269,36 @@
     font-family: var(--font-body);
     font-size: var(--font-size-body-small);
     color: var(--subtle-text);
-    text-align: center;
+    text-align: left;
+  }
+
+  /* Below 760px the 2-column hero collapses to a single column with the
+     pancake on top, info underneath. Mirrors the old vertical layout so
+     mobile readers still get the visual anchor first. */
+  @media (max-width: 760px) {
+    .pricing-hero {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-xl);
+      padding: calc(1.5 * var(--spacing-xl));
+    }
+    .pricing-hero__stack-wrap {
+      order: -1;
+      max-width: 220px;
+    }
+    .pricing-hero__readout,
+    .pricing-hero__breakdown,
+    .pricing-hero__cta,
+    .pricing-hero__cta-caption {
+      align-items: center;
+      text-align: center;
+      justify-content: center;
+    }
+    .pricing-hero__work-scale {
+      text-align: center;
+    }
+    .pricing-hero__slider-stop {
+      font-size: 10px;
+    }
   }
 
   /* ─── "what your tokens buy" 3-card section ─── */
@@ -2284,6 +2358,16 @@
     gap: var(--spacing-sm);
   }
 
+  /* Kicker row: small caps eyebrow on the left, WiFi-style signal bars on
+     the right. The bars communicate task scale (1=quick, 2=workflow,
+     3=full project) without exposing a number. */
+  .pricing-buys__card-kicker-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+  }
+
   .pricing-buys__card-kicker {
     margin: 0;
     font-family: var(--font-body);
@@ -2293,22 +2377,46 @@
     color: var(--subtle-text);
   }
 
-  .pricing-buys__card-headline {
+  .pricing-buys__card-tag {
     margin: 0;
     font-family: var(--font-display);
     font-weight: 500;
     font-size: var(--font-size-header-03);
-    line-height: 1.1;
+    line-height: 1.15;
     letter-spacing: -0.5px;
     color: var(--text);
   }
 
-  .pricing-buys__card-tag {
-    margin: 0;
-    font-family: var(--font-body);
-    font-size: var(--font-size-body-regular);
-    color: var(--subtle-text);
-    line-height: 1.5;
+  /* Wi-Fi-style 3-bar signal indicator. Bars are tiny pills that grow in
+     height (left to right) so the eye reads "scale" — lit bars are full
+     pink, dim bars are chrome-40. Replaces the old token-range headline. */
+  .pricing-buys__signal {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 14px;
+  }
+
+  .pricing-buys__signal-bar {
+    display: block;
+    width: 5px;
+    border-radius: 1.5px;
+    background-color: var(--palette-chrome-40);
+    transition: background-color 120ms ease;
+  }
+
+  .pricing-buys__signal-bar:nth-child(1) {
+    height: 6px;
+  }
+  .pricing-buys__signal-bar:nth-child(2) {
+    height: 10px;
+  }
+  .pricing-buys__signal-bar:nth-child(3) {
+    height: 14px;
+  }
+
+  .pricing-buys__signal-bar[data-on="true"] {
+    background-color: var(--strong-branded-surface);
   }
 
   /* Slack-style chat block — reuses SlackUI's exact typography (Lato,

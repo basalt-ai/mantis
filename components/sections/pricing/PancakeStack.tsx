@@ -3,12 +3,13 @@
 import { AnimatePresence, motion } from "framer-motion";
 
 /**
- * Pancake-monster stack widget — 2 to 5 pancakes, animated.
+ * Pancake-monster stack widget — 1 to 5 pancakes, animated.
  *
  * Pancake shapes (sides + top) and master colours come from the Figma master
  * (file fr8NgOCTUxsEbrMEJA3YKu, node 177:11377) — a 3-stack of pink / purple /
- * golden-with-eyes. For 4 and 5 we add orange and mint pancakes using brand
- * palette tokens, keeping the master's shape paths unchanged.
+ * golden-with-eyes. For 4 and 5 we add orange and mint pancakes (mint pulled
+ * from --palette-green-10 so the brand palette stays consistent), keeping
+ * the master's shape paths unchanged.
  *
  * Z-order: bottom pancake is rendered FIRST so the eye pancake (always slot 0)
  * is drawn LAST and stays visibly on top. Each pancake's identity is keyed by
@@ -17,25 +18,27 @@ import { AnimatePresence, motion } from "framer-motion";
  * pancake plays the drop / fade animation.
  */
 
-type PancakeColor = "golden" | "purple" | "orange" | "pink";
+type PancakeColor = "golden" | "purple" | "orange" | "pink" | "mint";
 
 const PANCAKE_FILL: Record<PancakeColor, { top: string; sides: string }> = {
   golden: { top: "#FFBD7A", sides: "#FFDBB5" }, // master top — has eyes (always slot 0)
   purple: { top: "#BA8BFF", sides: "#DEC3F5" }, // master middle (added at 3-stack)
   orange: { top: "#FFA45F", sides: "#FFDDBE" }, // added at 4-stack
   pink:   { top: "#FF7AA0", sides: "#FFBBC7" }, // master bottom (added at 2-stack)
+  mint:   { top: "#68CEA7", sides: "#A8E5C9" }, // added at 5-stack (scaleup tier)
 };
 
 // Top-to-bottom composition. Slot 0 always has the eyes.
-const STACKS: Record<1 | 2 | 3 | 4, PancakeColor[]> = {
+const STACKS: Record<1 | 2 | 3 | 4 | 5, PancakeColor[]> = {
   1: ["golden"],
   2: ["golden", "pink"],
   3: ["golden", "purple", "pink"],
   4: ["golden", "purple", "orange", "pink"],
+  5: ["golden", "purple", "mint", "orange", "pink"],
 };
 
 // Alternating x offsets give the stack a playful lean (per slot from the top).
-const SLOT_X = [38, 64, 24, 58];
+const SLOT_X = [38, 64, 24, 58, 30];
 // Vertical spacing between pancake centres (master uses ~50 px).
 const SLOT_DY = 48;
 // Bottom-anchored: the last pancake's top edge always sits at the same y so
@@ -50,14 +53,15 @@ const VIEWBOX_W = 330;
 const VIEWBOX_H = 480;
 const GROUND_CX = 168;
 const GROUND_CY = 472;
-// Topmost rendered pixel (sides svg of slot 0 at count=4) sits around y=78.
-// Cropping the viewBox 60px off the top removes the dead area above the
-// pancake stack without touching pancake geometry. Pair with a proportional
-// reduction of the wrap height in CSS so the rendered scale stays identical.
-const VIEWBOX_Y = 60;
+// Topmost rendered pixel of the 5-pancake stack sits around y=30 (slot 0 at
+// count=5 is at slotY=8, sides svg starts at slotY+22.33). Crop the viewBox
+// to start at y=20 so the 5-stack has ~10px of breathing room from the top
+// edge of the SVG canvas. CSS wrap height bumped to match so pancake pixel
+// size stays close to the previous 4-stack layout.
+const VIEWBOX_Y = 20;
 const VIEWBOX_H_CROPPED = VIEWBOX_H - VIEWBOX_Y;
 
-export function PancakeStack({ count }: { count: 1 | 2 | 3 | 4 }) {
+export function PancakeStack({ count }: { count: 1 | 2 | 3 | 4 | 5 }) {
   const stack = STACKS[count];
   // Render slot indices in reverse so the bottom pancake is drawn first and
   // the eye pancake (slot 0) is drawn last → eyes always on top z-wise.

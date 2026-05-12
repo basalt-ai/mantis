@@ -34,8 +34,10 @@ function BuyCard({ card }: { card: Card }) {
       data-wide={card.wide ? "true" : undefined}
     >
       <header className="pricing-buys__card-header">
-        <p className="pricing-buys__card-kicker">{card.kicker}</p>
-        <p className="pricing-buys__card-headline">{card.tokenRange}</p>
+        <div className="pricing-buys__card-kicker-row">
+          <p className="pricing-buys__card-kicker">{card.kicker}</p>
+          <SignalBars intensity={card.intensity as 1 | 2 | 3} />
+        </div>
         <p className="pricing-buys__card-tag">{card.tag}</p>
       </header>
       <div className="pricing-buys__chat">
@@ -43,6 +45,29 @@ function BuyCard({ card }: { card: Card }) {
         <AgentMessage agent={card.agent} />
       </div>
     </article>
+  );
+}
+
+/**
+ * Wi-Fi-style 3-bar signal indicator — communicates the size of the work
+ * without exposing token counts. Bars 1..intensity light up; the rest stay
+ * dim. Replaces the old "50K – 100K tokens" technical headline.
+ */
+function SignalBars({ intensity }: { intensity: 1 | 2 | 3 }) {
+  return (
+    <span
+      className="pricing-buys__signal"
+      role="img"
+      aria-label={`Signal ${intensity} of 3`}
+    >
+      {[1, 2, 3].map((b) => (
+        <span
+          key={b}
+          className="pricing-buys__signal-bar"
+          data-on={b <= intensity ? "true" : undefined}
+        />
+      ))}
+    </span>
   );
 }
 

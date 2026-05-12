@@ -190,22 +190,27 @@ export const talkToHuman = {
 
 /**
  * Pricing — radically honest. Two costs: a small fixed $29 for an always-on
- * cloud machine plus tokens at retail (we make our margin on the bulk
- * discount the labs give us, not on a markup over the user). One plan,
- * one slider, one total. Numbers are the single source of truth for the page.
+ * cloud machine plus usage at cost (we make our margin on the bulk discount
+ * the labs give us, not on a markup over the user). One plan, one slider,
+ * one total. Numbers are the single source of truth for the page.
+ *
+ * The slider is calibrated to TEAM SIZE rather than token volumes — users
+ * don't think in tokens. Internally `tokens` is kept so back-office math
+ * and the FAQ remain honest, but nothing user-facing surfaces a number.
  */
 export const pricing = {
   // Hard pricing numbers — source of truth.
   infrastructureDollars: 29,
-  /** 4 discrete slider stops. Total includes the $29 infrastructure cost.
-   *  workScale converts abstract tokens into a human-scale mental model
-   *  (workweek hours of agent activity). Numbers stay proportional to the
-   *  token progression so the slider feels predictable: 5/25/50/75. */
+  /** 5 discrete slider stops. Each tier is identified by team-size label,
+   *  not token count. `pancakes` drives the mascot stack height (1–5).
+   *  `workScale` keeps the human-readable "X hours of agent work a week"
+   *  framing proportional to internal token volume. */
   tiers: [
-    { totalDollars: 49,  tokens: 5_000_000,  pancakes: 1, workScale: "About 5 hours of agent work a week" },
-    { totalDollars: 129, tokens: 25_000_000, pancakes: 2, workScale: "About 25 hours of agent work a week" },
-    { totalDollars: 229, tokens: 50_000_000, pancakes: 3, workScale: "About 50 hours of agent work a week" },
-    { totalDollars: 329, tokens: 75_000_000, pancakes: 4, workScale: "About 75 hours of agent work a week" },
+    { totalDollars: 49,  tokens: 5_000_000,   pancakes: 1, teamLabel: "Side project",  workScale: "About 5 hours of agent work a week" },
+    { totalDollars: 129, tokens: 25_000_000,  pancakes: 2, teamLabel: "Solopreneur",   workScale: "About 25 hours of agent work a week" },
+    { totalDollars: 229, tokens: 50_000_000,  pancakes: 3, teamLabel: "Founding team", workScale: "About 50 hours of agent work a week" },
+    { totalDollars: 349, tokens: 75_000_000,  pancakes: 4, teamLabel: "Startup",       workScale: "About 75 hours of agent work a week" },
+    { totalDollars: 529, tokens: 125_000_000, pancakes: 5, teamLabel: "Scaleup",       workScale: "Agents running around the clock" },
   ],
   defaultTierIndex: 0,
   trial: {
@@ -216,15 +221,12 @@ export const pricing = {
   currencySymbol: "$",
   // Hero copy.
   title: "No tiers. No tricks.",
-  subtitle: "$29 for the always-on setup. Tokens at cost.",
+  subtitle: "$29 for the always-on setup. Usage at cost.",
   perMonth: "/ month",
   /** Two-part breakdown shown as small math under the big price.
-   *  The labels are deliberately literal — no metaphor in the terse line. */
+   *  "in usage" replaces "in tokens" so the surface stays jargon-free. */
   breakdownFixedLabel: "always-on setup",
-  breakdownTokensLabel: "in tokens",
-  // Slider labels for the 4 stops.
-  sliderStopLabels: ["5M", "25M", "50M", "75M"],
-  sliderTokensLabel: "tokens / month",
+  breakdownTokensLabel: "in usage",
   // Trial CTA below the widget.
   trialCta: "Start your free trial",
   trialCaption: "7 days free. No card required.",
@@ -253,14 +255,17 @@ export const pricing = {
       },
     ],
   },
-  // "What your tokens buy" — asymmetric cards with Slack-style exchanges.
-  // Layout: 2 cards top row, 1 wide card bottom.
+  // "What you can do" — asymmetric cards with Slack-style exchanges.
+  // Layout: 2 cards top row, 1 wide card bottom. Each card carries an
+  // `intensity` (1/2/3) that drives a WiFi-style signal indicator
+  // signalling how "big" the work is. Replaces the old token-range
+  // strings which forced the user to do math.
   buys: {
-    title: "What your tokens buy",
+    title: "What you can do",
     cards: [
       {
         kicker: "QUICK TASKS",
-        tokenRange: "50K – 100K tokens",
+        intensity: 1,
         tag: "An hour of work, done in 5 minutes.",
         wide: false,
         user: {
@@ -278,7 +283,7 @@ export const pricing = {
       },
       {
         kicker: "WORKFLOWS",
-        tokenRange: "250K – 500K tokens",
+        intensity: 2,
         tag: "Half a day of ops, done while you focus on something else.",
         wide: false,
         user: {
@@ -296,7 +301,7 @@ export const pricing = {
       },
       {
         kicker: "FULL PROJECTS",
-        tokenRange: "1M – 2M tokens",
+        intensity: 3,
         tag: "A week of outbound a BDR would do.",
         wide: true,
         user: {
@@ -320,24 +325,24 @@ export const pricing = {
     title: "Questions",
     items: [
       {
-        q: "What counts as a token?",
-        a: "The same unit the labs use. Roughly 3 or 4 characters of text. We don't transform or repackage.",
+        q: "What is the $29 for?",
+        a: "The always-on machine your agents live in. A small cloud computer that holds your context, runs your jobs, and reports back. Think Mac mini in the cloud.",
       },
       {
-        q: "Do tokens roll over?",
-        a: "No. They reset on your billing day. Leftovers don't carry into next month.",
+        q: "Does my usage roll over?",
+        a: "No. It resets on your billing day. Leftovers don't carry into next month.",
       },
       {
         q: "How do seats work?",
-        a: "Unlimited. Your whole team shares one workspace and one pool of tokens.",
+        a: "Unlimited. Your whole team shares one workspace and one pool of usage.",
       },
       {
         q: "What if I run out mid-month?",
         a: "Bump the slider from your settings. The new tier takes effect immediately and you only pay the difference, prorated.",
       },
       {
-        q: "What is the $29 for?",
-        a: "The always-on machine your agents live in. A small cloud computer that holds your context, runs your jobs, and reports back. Think Mac mini in the cloud.",
+        q: "What are tokens? (and why don't you show them?)",
+        a: "Tokens are the unit the underlying labs (OpenAI, Anthropic) bill in. We pay for them at cost and pass them through, but we don't make you do the math — the slider shows you team-size scale instead.",
       },
     ],
   },
