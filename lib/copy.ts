@@ -197,15 +197,14 @@ export const pricing = {
   // Hard pricing numbers — source of truth.
   infrastructureDollars: 29,
   /** 4 discrete slider stops. Total includes the $29 infrastructure cost.
-   *  workScale is the single line we show under the price — it converts
-   *  abstract token counts into a human-scale mental model
-   *  (~100K tokens ≈ 1 minute of dense agent activity). It is the readout's
-   *  pedagogy, replacing the old "$29 kitchen + $X tokens" math. */
+   *  workScale converts abstract tokens into a human-scale mental model
+   *  (workweek hours of agent activity). Numbers stay proportional to the
+   *  token progression so the slider feels predictable: 5/25/50/75. */
   tiers: [
-    { totalDollars: 49,  tokens: 5_000_000,  pancakes: 1, workScale: "About 1 hour of agent work a day" },
-    { totalDollars: 129, tokens: 25_000_000, pancakes: 2, workScale: "About 4 hours of agent work a day" },
-    { totalDollars: 229, tokens: 50_000_000, pancakes: 3, workScale: "A full workday of agents, every day" },
-    { totalDollars: 329, tokens: 75_000_000, pancakes: 4, workScale: "Agents running around the clock" },
+    { totalDollars: 49,  tokens: 5_000_000,  pancakes: 1, workScale: "≈ 5 hours of agent work a week" },
+    { totalDollars: 129, tokens: 25_000_000, pancakes: 2, workScale: "≈ 25 hours of agent work a week" },
+    { totalDollars: 229, tokens: 50_000_000, pancakes: 3, workScale: "≈ 50 hours of agent work a week" },
+    { totalDollars: 329, tokens: 75_000_000, pancakes: 4, workScale: "≈ 75 hours of agent work a week" },
   ],
   defaultTierIndex: 0,
   trial: {
@@ -218,6 +217,11 @@ export const pricing = {
   title: "No tiers. No tricks.",
   subtitle: "$29 for the always-on setup. Tokens at cost.",
   perMonth: "/ month",
+  /** Two-part breakdown shown as small math under the big price. The labels
+   *  are deliberately literal (no metaphor). The "kitchen" framing lives in
+   *  the manifesto/FAQ where it has room to land. */
+  breakdownFixedLabel: "always-on setup",
+  breakdownTokensLabel: "in tokens",
   // Slider labels for the 4 stops.
   sliderStopLabels: ["5M", "25M", "50M", "75M"],
   sliderTokensLabel: "tokens / month",
