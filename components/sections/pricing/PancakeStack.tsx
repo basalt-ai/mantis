@@ -50,6 +50,12 @@ const VIEWBOX_W = 330;
 const VIEWBOX_H = 480;
 const GROUND_CX = 168;
 const GROUND_CY = 472;
+// Topmost rendered pixel (sides svg of slot 0 at count=4) sits around y=78.
+// Cropping the viewBox 60px off the top removes the dead area above the
+// pancake stack without touching pancake geometry. Pair with a proportional
+// reduction of the wrap height in CSS so the rendered scale stays identical.
+const VIEWBOX_Y = 60;
+const VIEWBOX_H_CROPPED = VIEWBOX_H - VIEWBOX_Y;
 
 export function PancakeStack({ count }: { count: 1 | 2 | 3 | 4 }) {
   const stack = STACKS[count];
@@ -60,9 +66,9 @@ export function PancakeStack({ count }: { count: 1 | 2 | 3 | 4 }) {
   return (
     <svg
       className="pancake-stack__svg"
-      viewBox={`0 0 ${VIEWBOX_W} ${VIEWBOX_H}`}
+      viewBox={`0 ${VIEWBOX_Y} ${VIEWBOX_W} ${VIEWBOX_H_CROPPED}`}
       width={VIEWBOX_W}
-      height={VIEWBOX_H}
+      height={VIEWBOX_H_CROPPED}
       role="img"
       aria-label={`stack of ${count} pancakes`}
     >

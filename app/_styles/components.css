@@ -1987,8 +1987,11 @@
   }
 
   .pricing-hero__stack-wrap {
+    /* Height matched to the cropped viewBox aspect (330:420) so the SVG
+       renders at the same horizontal scale as the original 240×320 wrap.
+       Pancake pixel size is unchanged; only the dead area above gets cut. */
     width: 240px;
-    height: 260px;
+    height: 280px;
     display: flex;
     align-items: flex-end;
     justify-content: center;
