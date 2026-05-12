@@ -10,16 +10,21 @@ import { PancakeStack } from "./PancakeStack";
 type Pricing = typeof pricingCopy;
 
 /**
- * Pricing hero — 2-column layout, pancake LIVES OUTSIDE THE CARD.
+ * Pricing hero — single card with a 2-column grid inside.
  *
- * Left column: the actual pricing card (price · audience · breakdown ·
- *   slider · CTA). Has the surface background and border.
- * Right column: the mascot — pancake stack + the plan name in big type
- *   beneath its shadow. No card background; the pancake stands on its own.
+ * Left column (`__info`): pricing mechanics — price · breakdown · slider · CTA.
+ * Right column (`__mascot`): brand identity — pancake stack + plan name +
+ *   audience caption.
  *
- * The plan-name colour tracks the newly-added pancake's brand colour
- * (via `tier.accent`), driven through a CSS custom property so the
- * transition between tiers cross-fades smoothly.
+ * The whole hero is the card surface; the two columns sit inside the same
+ * padded, bordered container so they read as one unit instead of a card
+ * with a floating mascot next to it.
+ *
+ * Plan name uses the global `.heading` typography (font-display, semibold,
+ * header-01 size) — the design-system heading style, just recoloured to
+ * the per-tier accent through `--plan-accent`. The custom property is set
+ * on the hero root so every accent-coloured element inside can pick it up,
+ * and animates smoothly between tiers via CSS transitions.
  */
 export function PricingHero({ pricing }: { pricing: Pricing }) {
   const tiers = pricing.tiers;
@@ -30,16 +35,16 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
   const tokenPortion = tier.totalDollars - pricing.infrastructureDollars;
 
   return (
-    <div className="pricing-hero">
-      <div className="pricing-hero__card">
+    <div
+      className="pricing-hero"
+      style={{ "--plan-accent": tier.accent } as React.CSSProperties}
+    >
+      <div className="pricing-hero__info">
         <div className="pricing-hero__readout">
           <p className="pricing-hero__total" aria-live="polite">
             <span className="pricing-hero__total-symbol">{pricing.currencySymbol}</span>
             {tier.totalDollars}
             <span className="pricing-hero__total-suffix">{pricing.perMonth}</span>
-          </p>
-          <p className="pricing-hero__work-scale" aria-live="polite">
-            {tier.forAudience}
           </p>
           <p className="pricing-hero__breakdown" aria-live="polite">
             <span className="pricing-hero__breakdown-part">
@@ -113,15 +118,19 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
         </div>
       </div>
 
-      <div
-        className="pricing-hero__mascot"
-        style={{ "--plan-accent": tier.accent } as React.CSSProperties}
-      >
+      <div className="pricing-hero__mascot">
         <div className="pricing-hero__mascot-stack" aria-hidden>
           <PancakeStack count={tier.pancakes as 1 | 2 | 3 | 4 | 5} />
         </div>
-        <p className="pricing-hero__plan-name" aria-live="polite">
+        <p
+          className="heading pricing-hero__plan-name"
+          data-level="1"
+          aria-live="polite"
+        >
           {tier.planName}
+        </p>
+        <p className="pricing-hero__plan-audience" aria-live="polite">
+          {tier.forAudience}
         </p>
       </div>
     </div>

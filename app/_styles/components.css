@@ -1979,44 +1979,45 @@
     color: rgba(44, 0, 42, 0.64);
   }
 
-  /* ─── Pricing hero — card-left, mascot-OUTSIDE-card-right ─── */
+  /* ─── Pricing hero — single card, two columns inside ─── */
   .pricing-hero {
-    /* Two-column wrapper: the actual pricing card on the left, pancake
-       mascot in the open on the right (no card around it). The hero
-       itself has no background — the surface lives on `.pricing-hero__card`. */
+    /* The hero IS the card — surface + border + padding live here. Inside,
+       a 2-column grid lays out the pricing mechanics on the left and the
+       mascot identity on the right. Both columns are part of the same
+       bordered surface so they read as one unit. */
     width: 100%;
     max-width: 1080px;
     display: grid;
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
     align-items: center;
     gap: calc(2.5 * var(--spacing-xl));
-  }
-
-  /* Left column — the pricing card. Holds the price, audience, breakdown,
-     slider, CTA. The surface background and border moved here from
-     .pricing-hero. */
-  .pricing-hero__card {
-    display: flex;
-    flex-direction: column;
-    gap: calc(2 * var(--spacing-xl));
     padding: calc(2 * var(--spacing-xl));
     background-color: var(--surface);
     border: 1px solid rgba(0, 0, 0, 0.16);
     border-radius: 32px;
     corner-shape: squircle;
+    /* Per-tier accent colour — set on PricingHero root via inline style.
+       Used by the plan name (full strength) and the audience caption
+       (muted). Defaults to text colour as a fallback. */
+    --plan-accent: var(--text);
+  }
+
+  /* Left column — pricing mechanics. Stack of (price · breakdown), slider,
+     CTA. No own surface; sits inside the hero card. */
+  .pricing-hero__info {
+    display: flex;
+    flex-direction: column;
+    gap: calc(2 * var(--spacing-xl));
     min-width: 0;
   }
 
-  /* Right column — mascot lives outside the card. The plan name sits in
-     big type beneath the pancake's shadow, coloured by the newly-added
-     pancake (passed in through --plan-accent). */
+  /* Right column — brand identity: pancake stack, plan name, audience. */
   .pricing-hero__mascot {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: var(--spacing-md);
     justify-self: center;
-    --plan-accent: var(--text);
   }
 
   .pricing-hero__mascot-stack {
@@ -2032,27 +2033,19 @@
     justify-content: center;
   }
 
+  /* Plan name uses the global `.heading` typography (font-display,
+     semibold, header-01 size). Only the colour is overridden here so it
+     tracks the per-tier accent and cross-fades between tiers. */
   .pricing-hero__plan-name {
     margin: 0;
-    font-family: var(--font-display);
-    font-weight: 700;
-    /* Bigger and bolder than a kicker — this IS the brand mark of the
-       tier. Italic gives the pancake-universe names (Syrup, Flapjack, …)
-       the playful, hand-written feel they're written in. */
-    font-style: italic;
-    font-size: clamp(52px, 7vw, 88px);
-    line-height: 0.95;
-    letter-spacing: -0.045em;
     color: var(--plan-accent);
-    /* Cross-fade colour as the user moves through tiers — the plan name
-       smoothly interpolates between accent hues instead of snapping. */
     transition: color 280ms ease;
     text-align: center;
+    line-height: 1;
   }
 
-  /* Small audience caption beneath the plan name, in the same accent
-     hue but muted, to give the mascot column a second beat of text and
-     anchor the identity to a buyer persona. */
+  /* Audience caption — small line under the plan name, in the same accent
+     hue but muted, anchoring the plan identity to a buyer persona. */
   .pricing-hero__plan-audience {
     margin: 0;
     font-family: var(--font-body);
@@ -2060,7 +2053,7 @@
     font-weight: 500;
     letter-spacing: 0.01em;
     color: var(--plan-accent);
-    opacity: 0.7;
+    opacity: 0.72;
     transition: color 280ms ease;
     text-align: center;
   }
@@ -2106,20 +2099,6 @@
     font-weight: 400;
     color: var(--subtle-text);
     letter-spacing: 0;
-  }
-
-  /* Human-scale translation directly under the price. Carries the meaning
-     of the tier — what the money actually buys in human terms — so it
-     deserves second-tier emphasis (regular weight, full text color). */
-  .pricing-hero__work-scale {
-    margin: 0;
-    font-family: var(--font-body);
-    font-size: var(--font-size-body-regular);
-    font-weight: 400;
-    color: var(--text);
-    max-width: 32ch;
-    text-align: left;
-    line-height: 1.4;
   }
 
   /* Cost breakdown — `$29 always-on setup  +  $X in tokens`.
@@ -2304,12 +2283,13 @@
   }
 
   /* Below 760px the 2-column hero collapses to a single column with the
-     mascot on top, card underneath. The card recentres its content for
-     the single-column reading order. */
+     mascot on top, info underneath. Content recentres for single-column
+     reading order. */
   @media (max-width: 760px) {
     .pricing-hero {
       grid-template-columns: 1fr;
       gap: var(--spacing-xl);
+      padding: calc(1.5 * var(--spacing-xl));
     }
     .pricing-hero__mascot {
       order: -1;
@@ -2318,10 +2298,7 @@
       max-width: 200px;
     }
     .pricing-hero__plan-name {
-      font-size: clamp(36px, 12vw, 56px);
-    }
-    .pricing-hero__card {
-      padding: calc(1.5 * var(--spacing-xl));
+      font-size: var(--font-size-header-02);
     }
     .pricing-hero__readout,
     .pricing-hero__breakdown,
@@ -2330,9 +2307,6 @@
       align-items: center;
       text-align: center;
       justify-content: center;
-    }
-    .pricing-hero__work-scale {
-      text-align: center;
     }
     .pricing-hero__slider-stop {
       font-size: 10px;
