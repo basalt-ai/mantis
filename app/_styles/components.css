@@ -1891,11 +1891,23 @@
      room above and below the card. */
   .pricing-section {
     width: 100%;
+    /* Full viewport height minus the navbar so the hero card sits in its
+       own framed screen. Navbar is ~68px on small viewports (spacing-lg
+       padding) and ~140px from `lg` up (2× spacing-xxl padding). The
+       inner element stretches by default, so its justify-content:center
+       handles the vertical centering of the card. */
+    min-height: calc(100dvh - 68px);
     padding-top: var(--spacing-xxl);
     padding-bottom: var(--spacing-xxl);
     background-color: var(--surface);
     color: var(--text);
     display: flex;
+  }
+
+  @media (min-width: 1024px) {
+    .pricing-section {
+      min-height: calc(100dvh - 140px);
+    }
   }
 
   .pricing-section__inner {
@@ -1964,6 +1976,710 @@
     font-size: 18px;
     line-height: 28px;
     color: rgba(44, 0, 42, 0.64);
+  }
+
+  /* ─── Pricing hero widget (monster + slider + total) ─── */
+  .pricing-hero {
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: calc(2 * var(--spacing-xl));
+    /* Asymmetric padding: top is tighter than sides + bottom because the
+       SVG viewBox is already cropped above the topmost pancake. 24px gives
+       the 4-pancake stack visible breathing from the card border without
+       reintroducing dead space. */
+    padding: calc(1.5 * var(--spacing-xl)) calc(2 * var(--spacing-xl))
+      calc(2 * var(--spacing-xl));
+    background-color: var(--surface);
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    border-radius: 32px;
+    corner-shape: squircle;
+  }
+
+  .pricing-hero__stack-wrap {
+    /* Height matched to the cropped viewBox aspect (330:420) so the SVG
+       renders at the same horizontal scale as the original 240×320 wrap.
+       Pancake pixel size is unchanged; only the dead area above gets cut. */
+    width: 240px;
+    height: 280px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .pancake-stack__svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .pricing-hero__readout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-lg);
+    text-align: center;
+  }
+
+  .pricing-hero__total {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 64px;
+    line-height: 1;
+    letter-spacing: -2px;
+    color: var(--text);
+  }
+
+  /* Aeonik renders the $ glyph noticeably taller than its lining digits;
+     scale the symbol down and lift it a bit so it reads as a prefix, not a
+     dominant character. */
+  .pricing-hero__total-symbol {
+    font-size: 0.62em;
+    vertical-align: 0.18em;
+    margin-right: 2px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  .pricing-hero__total-suffix {
+    margin-left: var(--spacing-sm);
+    font-size: var(--font-size-body-regular);
+    font-weight: 400;
+    color: var(--subtle-text);
+    letter-spacing: 0;
+  }
+
+  /* Human-scale translation directly under the price. Carries the meaning
+     of the tier — what the money actually buys in human terms — so it
+     deserves second-tier emphasis (regular weight, full text color). */
+  .pricing-hero__work-scale {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    font-weight: 400;
+    color: var(--text);
+    max-width: 32ch;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  /* Cost breakdown — `$29 always-on setup  +  $X in tokens`.
+     Apple-style rigor: one typeface (body), one size (13px). Hierarchy
+     comes from weight + color only, not face mixing. The `+` floats with
+     extra horizontal air so the two halves read as discrete components. */
+  .pricing-hero__breakdown {
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    flex-wrap: wrap;
+    /* No horizontal gap on the row — the "+" span owns the spacing on
+       both sides via its own width, so any optical offset from glyph side
+       bearings is cancelled. */
+    gap: 4px 0;
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--subtle-text);
+  }
+
+  .pricing-hero__breakdown-part {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  .pricing-hero__breakdown-amount {
+    font-weight: 600;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pricing-hero__breakdown-label {
+    font-weight: 400;
+    color: var(--subtle-text);
+  }
+
+  .pricing-hero__breakdown-plus {
+    /* Fixed-width centered box owns the spacing between the two halves so
+       the symbol is optically centered regardless of font side bearings.
+       40px = ~18px of breathing room on each side of the glyph. */
+    display: inline-flex;
+    justify-content: center;
+    align-items: baseline;
+    width: 40px;
+    text-align: center;
+    font-weight: 400;
+    color: var(--disabled-text);
+  }
+
+  .pricing-hero__slider-wrap {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  /* Slider visibility: the unfilled track was --alt-surface (#FFFCF8) which
+     reads as invisible against the white card. Switching to chrome-40 gives
+     a clear rail; thumb gets a 3.5px accent-pink border + drop shadow so it
+     reads as a draggable handle, not a floating dot. */
+  .pricing-hero__slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background: linear-gradient(
+      to right,
+      var(--strong-branded-surface) 0%,
+      var(--strong-branded-surface) calc(var(--progress) * 100%),
+      var(--palette-chrome-40) calc(var(--progress) * 100%),
+      var(--palette-chrome-40) 100%
+    );
+    background-color: var(--palette-chrome-40);
+    cursor: pointer;
+    outline: none;
+  }
+
+  .pricing-hero__slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background-color: var(--surface);
+    border: 3.5px solid var(--strong-branded-surface);
+    box-shadow: 0 2px 8px rgba(44, 0, 42, 0.22);
+    cursor: grab;
+    transition: transform 120ms ease, box-shadow 120ms ease;
+  }
+
+  .pricing-hero__slider::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background-color: var(--surface);
+    border: 3.5px solid var(--strong-branded-surface);
+    box-shadow: 0 2px 8px rgba(44, 0, 42, 0.22);
+    cursor: grab;
+  }
+
+  .pricing-hero__slider:hover::-webkit-slider-thumb {
+    transform: scale(1.08);
+    box-shadow: 0 3px 12px rgba(44, 0, 42, 0.28);
+  }
+
+  .pricing-hero__slider:focus-visible::-webkit-slider-thumb {
+    box-shadow: 0 0 0 4px var(--weak-branded-surface),
+      0 2px 8px rgba(44, 0, 42, 0.22);
+  }
+
+  .pricing-hero__slider:active::-webkit-slider-thumb {
+    cursor: grabbing;
+    transform: scale(1.12);
+  }
+
+  .pricing-hero__slider-stops {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+  }
+
+  .pricing-hero__slider-stop {
+    background: none;
+    border: none;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-family: var(--font-body);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    color: var(--disabled-text);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: color 120ms ease;
+  }
+
+  .pricing-hero__slider-stop:hover {
+    color: var(--text);
+  }
+
+  .pricing-hero__slider-stop[data-active="true"] {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .pricing-hero__cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+    width: 100%;
+  }
+
+  .pricing-hero__cta-caption {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-small);
+    color: var(--subtle-text);
+    text-align: center;
+  }
+
+  /* ─── "what your tokens buy" 3-card section ─── */
+  .pricing-buys {
+    width: 100%;
+    padding: calc(2 * var(--spacing-xxl)) var(--spacing-home-page-inline);
+    background-color: var(--alt-surface);
+  }
+
+  .pricing-buys__inner {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 1080px;
+    display: flex;
+    flex-direction: column;
+    gap: calc(2 * var(--spacing-xl));
+  }
+
+  .pricing-buys__title {
+    margin: 0;
+    font-size: var(--font-size-header-03);
+    letter-spacing: -0.5px;
+    color: var(--text);
+    text-align: center;
+  }
+
+  /* Asymmetric grid: 2 cards top row, 1 wide card bottom (mobile: stacked) */
+  .pricing-buys__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-xl);
+  }
+
+  @media (min-width: 768px) {
+    .pricing-buys__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .pricing-buys__card[data-wide="true"] {
+      grid-column: span 2;
+    }
+  }
+
+  .pricing-buys__card {
+    background-color: var(--surface);
+    border: 1px solid var(--subtle-stroke);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xxl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+    corner-shape: squircle;
+  }
+
+  .pricing-buys__card-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .pricing-buys__card-kicker {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-eyebrow);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--subtle-text);
+  }
+
+  .pricing-buys__card-headline {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: var(--font-size-header-03);
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    color: var(--text);
+  }
+
+  .pricing-buys__card-tag {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    color: var(--subtle-text);
+    line-height: 1.5;
+  }
+
+  /* Slack-style chat block — reuses SlackUI's exact typography (Lato,
+     15px / 1.46668, #1d1c1d) so the rhythm matches the home page Slack
+     section. */
+  .pricing-buys__chat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+    padding: var(--spacing-xl);
+    background-color: var(--surface);
+    border: 1px solid var(--subtle-stroke);
+    border-radius: var(--radius-md);
+    corner-shape: squircle;
+  }
+
+  /* `app/_styles/style.css` sets `* { font-family: var(--font-body) }` which
+     slams the project body face onto every element directly, defeating
+     inheritance. Same workaround the home Slack figure uses (see
+     `.home-landing-section__figure--slack` block above): re-scope Lato to
+     this chat block AND every descendant so the panel renders in Slack's
+     UI face without leaking. */
+  .pricing-buys__chat,
+  .pricing-buys__chat * {
+    font-family: var(--font-lato), "Lato", -apple-system, BlinkMacSystemFont,
+      "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  /* Ops-tool widget on the Full Projects agent reply. Mimics a Clay/Apollo
+     dashboard surface so the eye reads "real outbound running" instead of
+     "marketing illustration". Numbers match the chat copy verbatim. Caps at
+     ~280px so the wide card holds chat + artifact side-by-side. */
+  .pricing-buys__tracker {
+    margin: var(--spacing-md) 0 0 0;
+    width: 100%;
+    max-width: 280px;
+    padding: var(--spacing-lg);
+    background-color: var(--surface);
+    border: 1px solid var(--subtle-stroke);
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 12px rgba(44, 0, 42, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    corner-shape: squircle;
+    font-family: var(--font-body);
+  }
+
+  .pricing-buys__tracker-header {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .pricing-buys__tracker-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1.2;
+    color: var(--text);
+  }
+
+  .pricing-buys__tracker-meta {
+    margin: 0;
+    font-size: 11px;
+    color: var(--subtle-text);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .pricing-buys__tracker-running {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--positive-text);
+    font-weight: 600;
+  }
+
+  .pricing-buys__tracker-running::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--palette-green-30);
+    box-shadow: 0 0 0 2px rgba(3, 125, 72, 0.15);
+  }
+
+  .pricing-buys__tracker-stats {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .pricing-buys__tracker-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 6px;
+    background-color: var(--alt-surface);
+    border: 1px solid var(--subtle-stroke);
+    border-radius: var(--radius-sm);
+    corner-shape: squircle;
+  }
+
+  .pricing-buys__tracker-stat-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--subtle-text);
+    line-height: 1.2;
+  }
+
+  .pricing-buys__tracker-stat-value {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pricing-buys__tracker-goal {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .pricing-buys__tracker-goal-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .pricing-buys__tracker-goal-label {
+    font-size: 11px;
+    color: var(--subtle-text);
+  }
+
+  .pricing-buys__tracker-goal-value {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pricing-buys__tracker-goal-bar {
+    height: 6px;
+    background-color: var(--palette-chrome-30);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .pricing-buys__tracker-goal-fill {
+    display: block;
+    height: 100%;
+    background-color: var(--palette-purple-40);
+    border-radius: 999px;
+  }
+
+  .pricing-buys__tracker-channels {
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    padding: 8px 0;
+    border-top: 1px solid var(--subtle-stroke);
+    border-bottom: 1px solid var(--subtle-stroke);
+  }
+
+  .pricing-buys__tracker-channel {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .pricing-buys__tracker-channel dt {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--subtle-text);
+  }
+
+  .pricing-buys__tracker-channel dd {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .pricing-buys__tracker-replies {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .pricing-buys__tracker-reply {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 11px;
+  }
+
+  .pricing-buys__tracker-reply-company {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .pricing-buys__tracker-reply-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-radius: 999px;
+    line-height: 1.4;
+  }
+
+  .pricing-buys__tracker-reply-pill[data-tone="hot"] {
+    background-color: var(--palette-red-10);
+    color: var(--palette-red-30);
+  }
+
+  .pricing-buys__tracker-reply-pill[data-tone="booked"] {
+    background-color: var(--palette-green-10);
+    color: var(--palette-green-30);
+  }
+
+  .pricing-buys__tracker-reply-pill[data-tone="nurture"] {
+    background-color: var(--palette-yellow-10);
+    color: var(--palette-yellow-40);
+  }
+
+  /* ─── "how this works" 3-column manifesto ─── */
+  .pricing-manifesto {
+    width: 100%;
+    padding: calc(2 * var(--spacing-xxl)) var(--spacing-home-page-inline);
+    background-color: var(--surface);
+  }
+
+  .pricing-manifesto__inner {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 1080px;
+    display: flex;
+    flex-direction: column;
+    gap: calc(2 * var(--spacing-xl));
+  }
+
+  .pricing-manifesto__title {
+    margin: 0;
+    font-size: var(--font-size-header-03);
+    letter-spacing: -0.5px;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .pricing-manifesto__grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: calc(2 * var(--spacing-xl));
+  }
+
+  @media (min-width: 768px) {
+    .pricing-manifesto__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .pricing-manifesto__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .pricing-manifesto__item-title {
+    margin: 0;
+    font-size: var(--font-size-header-04);
+    color: var(--text);
+  }
+
+  .pricing-manifesto__item-body {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    color: var(--subtle-text);
+    line-height: 1.5;
+  }
+
+  /* ─── FAQ ─── */
+  .pricing-faq__container {
+    width: 100%;
+    padding: calc(2 * var(--spacing-xxl)) var(--spacing-home-page-inline);
+    background-color: var(--alt-surface);
+  }
+
+  .pricing-faq {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+  }
+
+  .pricing-faq__title {
+    margin: 0;
+    font-size: var(--font-size-header-03);
+    letter-spacing: -0.5px;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .pricing-faq__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .pricing-faq__item {
+    background-color: var(--surface);
+    border: 1px solid var(--subtle-stroke);
+    border-radius: var(--radius-md);
+    corner-shape: squircle;
+    overflow: hidden;
+  }
+
+  .pricing-faq__question {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    color: var(--text);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .pricing-faq__question:focus-visible {
+    outline: 2px solid var(--interactive-text);
+    outline-offset: -2px;
+  }
+
+  .pricing-faq__answer {
+    margin: 0;
+    padding: 0 var(--spacing-xl) var(--spacing-lg) var(--spacing-xl);
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    color: var(--subtle-text);
+    line-height: 1.5;
   }
 
   /* ─────────────────── Signup page ───────────────────

@@ -1,15 +1,20 @@
 /**
- * Pricing page — copy lifted from `lib/copy.ts` (`pricing.*`), redesigned in
- * the phase-3 home design system (Aeonik / Aeonik Fono, surface tokens,
- * 32 px squircle card, primary `.button[data-size="lg"]`). Uses the shared
- * `HomeNav` so the navbar matches the rest of the site exactly.
+ * Pricing — radically honest. Two costs: a small fixed $29 for an always-on
+ * cloud machine plus tokens at retail. Margin comes from the bulk discount
+ * the labs give us, not from marking up the user.
+ *
+ * Section order: hero → manifesto → what your tokens buy → FAQ.
+ * Trust before value: the user needs to believe the price is fair before they
+ * care what it gets them.
  */
 import type { Metadata } from "next";
-import Link from "next/link";
 
+import { PricingFaq } from "@/components/sections/pricing/PricingFaq";
+import { PricingHero } from "@/components/sections/pricing/PricingHero";
+import { TokensBuyCards } from "@/components/sections/pricing/TokensBuyCards";
 import { HomeNav } from "@/components/sections/home/HomeNav";
 import { Footer } from "@/components/shared/Footer";
-import { H2 } from "@/components/ui/Headings";
+import { H3 } from "@/components/ui/Headings";
 import { pricing } from "@/lib/copy";
 
 export const metadata: Metadata = {
@@ -21,29 +26,35 @@ export default function PricingPage() {
   return (
     <main className="flex min-h-screen flex-col">
       <HomeNav />
-      <section className="pricing-section flex-1" aria-labelledby="pricing-heading">
-        <div className="pricing-section__inner">
-          <header className="pricing-section__header">
-            <H2 id="pricing-heading" className="heading pricing-section__title text-center">
-              {pricing.title}
-            </H2>
-            <p className="pricing-section__lede text-center">{pricing.subtitle}</p>
-          </header>
 
-          <div className="pricing-card">
-            <p className="pricing-card__price">{pricing.priceLine}</p>
-            <p className="pricing-card__line">{pricing.cardLine}</p>
-            <Link
-              href="/signup"
-              className="button inline-flex w-fit shrink-0 items-center justify-center no-underline"
-              data-size="lg"
-              prefetch={false}
-            >
-              {pricing.cta}
-            </Link>
-          </div>
+      <section className="pricing-section" aria-label="Pricing">
+        <div className="pricing-section__inner">
+          <PricingHero pricing={pricing} />
         </div>
       </section>
+
+      <section className="pricing-manifesto" aria-labelledby="pricing-manifesto-title">
+        <div className="pricing-manifesto__inner">
+          <h2 id="pricing-manifesto-title" className="heading pricing-manifesto__title">
+            {pricing.manifesto.title}
+          </h2>
+          <ul className="pricing-manifesto__grid">
+            {pricing.manifesto.items.map((item) => (
+              <li key={item.title} className="pricing-manifesto__item">
+                <H3 className="heading pricing-manifesto__item-title">{item.title}</H3>
+                <p className="pricing-manifesto__item-body">{item.body}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <TokensBuyCards pricing={pricing} />
+
+      <div className="pricing-faq__container">
+        <PricingFaq pricing={pricing} />
+      </div>
+
       <Footer />
     </main>
   );

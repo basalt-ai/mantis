@@ -188,12 +188,159 @@ export const talkToHuman = {
   subtitle: "Let's put your company on autopilot",
 } as const;
 
+/**
+ * Pricing — radically honest. Two costs: a small fixed $29 for an always-on
+ * cloud machine plus tokens at retail (we make our margin on the bulk
+ * discount the labs give us, not on a markup over the user). One plan,
+ * one slider, one total. Numbers are the single source of truth for the page.
+ */
 export const pricing = {
-  title: "Simple pricing.",
-  subtitle: "One plan. Everything included.",
-  priceLine: "$49 / month",
-  cardLine: "Your full agent workforce",
-  cta: "Start building",
+  // Hard pricing numbers — source of truth.
+  infrastructureDollars: 29,
+  /** 4 discrete slider stops. Total includes the $29 infrastructure cost.
+   *  workScale converts abstract tokens into a human-scale mental model
+   *  (workweek hours of agent activity). Numbers stay proportional to the
+   *  token progression so the slider feels predictable: 5/25/50/75. */
+  tiers: [
+    { totalDollars: 49,  tokens: 5_000_000,  pancakes: 1, workScale: "About 5 hours of agent work a week" },
+    { totalDollars: 129, tokens: 25_000_000, pancakes: 2, workScale: "About 25 hours of agent work a week" },
+    { totalDollars: 229, tokens: 50_000_000, pancakes: 3, workScale: "About 50 hours of agent work a week" },
+    { totalDollars: 329, tokens: 75_000_000, pancakes: 4, workScale: "About 75 hours of agent work a week" },
+  ],
+  defaultTierIndex: 0,
+  trial: {
+    days: 7,
+    freeTokensDollars: 20,
+  },
+  currency: "USD" as const,
+  currencySymbol: "$",
+  // Hero copy.
+  title: "No tiers. No tricks.",
+  subtitle: "$29 for the always-on setup. Tokens at cost.",
+  perMonth: "/ month",
+  /** Two-part breakdown shown as small math under the big price.
+   *  The labels are deliberately literal — no metaphor in the terse line. */
+  breakdownFixedLabel: "always-on setup",
+  breakdownTokensLabel: "in tokens",
+  // Slider labels for the 4 stops.
+  sliderStopLabels: ["5M", "25M", "50M", "75M"],
+  sliderTokensLabel: "tokens / month",
+  // Trial CTA below the widget.
+  trialCta: "Start your free trial",
+  trialCaption: "7 days free. No card required.",
+  trialHref: "/signup",
+  // 3-column manifesto (shown BEFORE the buys cards — trust before value:
+  // the user needs to believe the price is fair before they care what it
+  // gets them). Title doubles as the page's main headline since the hero
+  // section above runs without an H1/H2.
+  manifesto: {
+    title: "No tiers. No tricks.",
+    items: [
+      {
+        title: "No platform markup.",
+        body:
+          "Most AI tools mark up tokens 3x or 5x. We charge exactly what OpenAI and Anthropic charge their direct customers. Our margin is the volume discount the labs give us for buying in bulk.",
+      },
+      {
+        title: "Your own cloud computer.",
+        body:
+          "$29 buys a small machine in the cloud. Always on, always yours, never shared.",
+      },
+      {
+        title: "No surprises.",
+        body:
+          "Tokens reset monthly. Hit the limit, bump the slider. Cancel anytime, takes effect immediately.",
+      },
+    ],
+  },
+  // "What your tokens buy" — asymmetric cards with Slack-style exchanges.
+  // Layout: 2 cards top row, 1 wide card bottom.
+  buys: {
+    title: "What your tokens buy",
+    cards: [
+      {
+        kicker: "QUICK TASKS",
+        tokenRange: "50K – 100K tokens",
+        tag: "An hour of work, done in 5 minutes.",
+        wide: false,
+        user: {
+          name: "Sarah",
+          initial: "S",
+          accent: "#E8E0F2",
+          accentInk: "#4A3C7B",
+          time: "8:14am",
+          text: "@pancake — write me an X thread about why we pivoted last month. Use the framing from my last 3 threads. Schedule it for 2pm today.",
+        },
+        agent: {
+          time: "8:19am",
+          text: "Drafted, edited, scheduled in Typefully for 2pm — pancake.dev/t/9f2. 6 posts, opens with a hook on the \"we were wrong\" angle you used in your March 12 thread. Want me to draft a LinkedIn version too?",
+        },
+      },
+      {
+        kicker: "WORKFLOWS",
+        tokenRange: "250K – 500K tokens",
+        tag: "Half a day of ops, done while you focus on something else.",
+        wide: false,
+        user: {
+          name: "Mike",
+          initial: "M",
+          accent: "#D5E4EB",
+          accentInk: "#1F4660",
+          time: "10:04am",
+          text: "@pancake — 27 demo requests came in over the weekend. Qualify each against our ICP (B2B SaaS, 20+ employees, US/EU). Reject the bottom half politely, book the top half on my Cal.com with a 1-pager prep doc for each.",
+        },
+        agent: {
+          time: "1:47pm",
+          text: "Done. 14 disqualified with a polite \"not a fit right now\" reply (drafts in your Gmail, awaiting your send). 13 qualified — 11 booked themselves on Cal, 2 pending. Prep docs in pancake.dev/inbound. Three look like fast closers — flagged at the top.",
+        },
+      },
+      {
+        kicker: "FULL PROJECTS",
+        tokenRange: "1M – 2M tokens",
+        tag: "A week of outbound a BDR would do.",
+        wide: true,
+        user: {
+          name: "Tom",
+          initial: "T",
+          accent: "#EAE2D2",
+          accentInk: "#6E5520",
+          time: "Monday 9:02am",
+          text: "@pancake — I want 30 sales calls booked by Friday. ICP is mid-market e-commerce, 50-500 employees, hiring growth or marketing roles. Find them, write personalized outbound, send from my Apollo, book demos on my Cal.com when they reply. Check in with me Wednesday.",
+        },
+        agent: {
+          time: "Wednesday 4:18pm",
+          text: "Day 3 update. 184 prospects sourced, 142 emails sent, 38 replies, 19 demos booked so far. 4 hot conversations need you (in #pancake-hot in Slack). Disqualified 8 that didn't match ICP on closer look. Tracking to ~32 demos by Friday — want me to push harder on the LinkedIn channel to hit 35?",
+          artifact: "outbound-tracker",
+        },
+      },
+    ],
+  },
+  // FAQ accordion.
+  faq: {
+    title: "Questions",
+    items: [
+      {
+        q: "What counts as a token?",
+        a: "The same unit the labs use. Roughly 3 or 4 characters of text. We don't transform or repackage.",
+      },
+      {
+        q: "Do tokens roll over?",
+        a: "No. They reset on your billing day. Leftovers don't carry into next month.",
+      },
+      {
+        q: "How do seats work?",
+        a: "Unlimited. Your whole team shares one workspace and one pool of tokens.",
+      },
+      {
+        q: "What if I run out mid-month?",
+        a: "Bump the slider from your settings. The new tier takes effect immediately and you only pay the difference, prorated.",
+      },
+      {
+        q: "What is the $29 for?",
+        a: "The always-on machine your agents live in. A small cloud computer that holds your context, runs your jobs, and reports back. Think Mac mini in the cloud.",
+      },
+    ],
+  },
 } as const;
 
 export const signup = {
