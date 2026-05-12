@@ -206,11 +206,11 @@ export const pricing = {
    *  shown where the old "X hours of agent work a week" sat. `pancakes`
    *  drives the mascot stack height (1–5). */
   tiers: [
-    { totalDollars: 49,  tokens: 5_000_000,   pancakes: 1, planName: "Crepe",        forAudience: "For side projects" },
-    { totalDollars: 129, tokens: 25_000_000,  pancakes: 2, planName: "Short stack",  forAudience: "For solopreneurs" },
-    { totalDollars: 229, tokens: 50_000_000,  pancakes: 3, planName: "Stack",        forAudience: "For small founding teams" },
-    { totalDollars: 329, tokens: 75_000_000,  pancakes: 4, planName: "Tall stack",   forAudience: "For startups" },
-    { totalDollars: 529, tokens: 125_000_000, pancakes: 5, planName: "Tower",        forAudience: "For scaleups" },
+    { totalDollars: 49,  tokens: 5_000_000,   pancakes: 1, planName: "Syrup",      forAudience: "For side projects" },
+    { totalDollars: 129, tokens: 25_000_000,  pancakes: 2, planName: "Flapjack",   forAudience: "For solopreneurs" },
+    { totalDollars: 229, tokens: 50_000_000,  pancakes: 3, planName: "Stack",      forAudience: "For small founding teams" },
+    { totalDollars: 329, tokens: 75_000_000,  pancakes: 4, planName: "Tower",      forAudience: "For startups" },
+    { totalDollars: 529, tokens: 125_000_000, pancakes: 5, planName: "Skyscraper", forAudience: "For scaleups" },
   ],
   defaultTierIndex: 0,
   trial: {
