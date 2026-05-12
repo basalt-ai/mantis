@@ -24,13 +24,14 @@ const TIER_DOT_COLORS = [
 /**
  * Pricing hero — single card with a 2-column grid inside.
  *
- * Left column (`__info`): price · audience · breakdown · slider · CTA.
- * Right column (`__mascot`): pancake stack + plan name.
- *
- * Plan name matches the `$49 / month` price typography — same font-family
- * (display), weight (500), size (64px), color (text) — so the two big
- * type beats on either side of the hero feel like a pair. No accent
- * colouring; the pancake itself is what carries the tier hue.
+ * Left column (`__info`): plan kicker · price · audience · breakdown ·
+ *   slider · CTA. The plan name lives here as a small-caps eyebrow ABOVE
+ *   the price, using the design system's existing kicker pattern
+ *   (font-body monospace, eyebrow size, uppercase, wide tracking, subtle
+ *   colour) — same style as `pricing-buys__card-kicker`. This frees the
+ *   plan name from competing with the pancake mascot for headline space.
+ * Right column (`__mascot`): pancake stack + tier-progression dots. Pure
+ *   visual composition; no display text fighting with the illustration.
  *
  * Slider stop labels are absolutely positioned at exact tick percentages
  * (0%, 25%, 50%, 75%, 100%) so they line up with the slider thumb track
@@ -48,11 +49,16 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
     <div className="pricing-hero">
       <div className="pricing-hero__info">
         <div className="pricing-hero__readout">
-          <p className="pricing-hero__total" aria-live="polite">
-            <span className="pricing-hero__total-symbol">{pricing.currencySymbol}</span>
-            {tier.totalDollars}
-            <span className="pricing-hero__total-suffix">{pricing.perMonth}</span>
-          </p>
+          <div className="pricing-hero__price-block">
+            <p className="pricing-hero__plan-kicker" aria-live="polite">
+              {tier.planName}
+            </p>
+            <p className="pricing-hero__total" aria-live="polite">
+              <span className="pricing-hero__total-symbol">{pricing.currencySymbol}</span>
+              {tier.totalDollars}
+              <span className="pricing-hero__total-suffix">{pricing.perMonth}</span>
+            </p>
+          </div>
           <p className="pricing-hero__audience" aria-live="polite">
             {tier.forAudience}
           </p>
@@ -133,9 +139,6 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
         <div className="pricing-hero__mascot-stack" aria-hidden>
           <PancakeStack count={tier.pancakes as 1 | 2 | 3 | 4 | 5} />
         </div>
-        <p className="pricing-hero__plan-name" aria-live="polite">
-          {tier.planName}
-        </p>
         <div className="pricing-hero__tier-dots" aria-hidden>
           {TIER_DOT_COLORS.map((color, i) => {
             const active = i < tier.pancakes;

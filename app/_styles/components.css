@@ -2006,14 +2006,14 @@
     min-width: 0;
   }
 
-  /* Right column — pancake stack + plan name + tier dots, composed as
-     one centred mark. Gaps are deliberately small so the three elements
-     read as a single brand lockup, not a list. */
+  /* Right column — pancake stack + tier-progression dots. No competing
+     display text; the mascot is the visual hero. The plan name is named
+     elsewhere (as a kicker above the price on the left). */
   .pricing-hero__mascot {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0;
+    gap: var(--spacing-md);
     justify-self: center;
   }
 
@@ -2030,34 +2030,16 @@
     justify-content: center;
   }
 
-  /* Plan name shares its typography with `.pricing-hero__total` ($49 /
-     month) — same font (display), weight (500), size (64), letter-spacing
-     (-2px), color (text). The two big text beats on either side of the
-     hero now read as a matched pair. Negative margin pulls the name up
-     toward the pancake's shadow so the lockup feels tight, not loose. */
-  .pricing-hero__plan-name {
-    margin: 0;
-    font-family: var(--font-display);
-    font-weight: 500;
-    font-size: 64px;
-    line-height: 1;
-    letter-spacing: -2px;
-    color: var(--text);
-    text-align: center;
-    margin-top: -8px;
-  }
-
-  /* Tier-progression dots beneath the plan name. Five outlined dots in a
+  /* Tier-progression dots beneath the pancake. Five outlined dots in a
      row; the first N (= tier.pancakes) are filled with the same brand
      colours as the pancakes in the stack above. Echoes the mascot's
-     palette in a refined geometric form and adds a third visual beat to
-     the column so it stops feeling top-heavy. */
+     palette in a refined geometric form and acts as the right column's
+     second beat, anchoring the pancake without competing with it. */
   .pricing-hero__tier-dots {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 12px;
-    margin-top: 16px;
   }
 
   .pricing-hero__tier-dot {
@@ -2089,6 +2071,31 @@
     align-items: flex-start;
     gap: var(--spacing-lg);
     text-align: left;
+  }
+
+  /* Kicker + price are tightly coupled (kicker labels the price) so they
+     live in their own block with a small gap, distinct from the larger
+     readout-level gap between price-block, audience, and breakdown. */
+  .pricing-hero__price-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  /* Plan-name kicker — small-caps eyebrow above the price. Reuses the
+     design system's kicker pattern (same as `.pricing-buys__card-kicker`):
+     font-body (monospace), eyebrow size, uppercase, wide tracking, muted
+     colour. Names the tier as a refined label rather than competing with
+     the pancake for headline space. */
+  .pricing-hero__plan-kicker {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-eyebrow);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--subtle-text);
   }
 
   .pricing-hero__total {
@@ -2335,11 +2342,8 @@
     .pricing-hero__mascot-stack {
       max-width: 200px;
     }
-    .pricing-hero__plan-name {
-      font-size: 44px;
-      letter-spacing: -1.2px;
-    }
     .pricing-hero__readout,
+    .pricing-hero__price-block,
     .pricing-hero__breakdown,
     .pricing-hero__cta,
     .pricing-hero__cta-caption {
