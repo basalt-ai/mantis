@@ -2076,7 +2076,10 @@
     align-items: baseline;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 4px 18px;
+    /* No horizontal gap on the row — the "+" span owns the spacing on
+       both sides via its own width, so any optical offset from glyph side
+       bearings is cancelled. */
+    gap: 4px 0;
     font-family: var(--font-body);
     font-size: 13px;
     line-height: 1.4;
@@ -2101,6 +2104,14 @@
   }
 
   .pricing-hero__breakdown-plus {
+    /* Fixed-width centered box owns the spacing between the two halves so
+       the symbol is optically centered regardless of font side bearings.
+       40px = ~18px of breathing room on each side of the glyph. */
+    display: inline-flex;
+    justify-content: center;
+    align-items: baseline;
+    width: 40px;
+    text-align: center;
     font-weight: 400;
     color: var(--disabled-text);
   }
