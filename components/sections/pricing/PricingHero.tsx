@@ -10,15 +10,16 @@ import { PancakeStack } from "./PancakeStack";
 type Pricing = typeof pricingCopy;
 
 /**
- * Pricing hero — 2-column layout.
- *   Left:  active team label, big price, work-scale, breakdown, slider with
- *          team-size stops, CTA.
- *   Right: pancake-monster stack (1–5), grows with the slider.
+ * Pricing hero — 2-column layout, pancake LIVES OUTSIDE THE CARD.
  *
- * The slider stops are calibrated to TEAM SIZE rather than token volumes;
- * each tier.teamLabel surfaces both above the price (as the active kicker)
- * and under the slider (as the stop label). No raw token counts on screen.
- * On narrow viewports the columns stack with the pancake on top.
+ * Left column: the actual pricing card (price · audience · breakdown ·
+ *   slider · CTA). Has the surface background and border.
+ * Right column: the mascot — pancake stack + the plan name in big type
+ *   beneath its shadow. No card background; the pancake stands on its own.
+ *
+ * The plan-name colour tracks the newly-added pancake's brand colour
+ * (via `tier.accent`), driven through a CSS custom property so the
+ * transition between tiers cross-fades smoothly.
  */
 export function PricingHero({ pricing }: { pricing: Pricing }) {
   const tiers = pricing.tiers;
@@ -30,11 +31,8 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
 
   return (
     <div className="pricing-hero">
-      <div className="pricing-hero__info">
+      <div className="pricing-hero__card">
         <div className="pricing-hero__readout">
-          <p className="pricing-hero__team-label" aria-live="polite">
-            {tier.planName}
-          </p>
           <p className="pricing-hero__total" aria-live="polite">
             <span className="pricing-hero__total-symbol">{pricing.currencySymbol}</span>
             {tier.totalDollars}
@@ -70,7 +68,7 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
 
         <div className="pricing-hero__slider-wrap">
           <label htmlFor={sliderId} className="sr-only">
-            team size
+            plan size
           </label>
           <input
             id={sliderId}
@@ -115,8 +113,16 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
         </div>
       </div>
 
-      <div className="pricing-hero__stack-wrap" aria-hidden>
-        <PancakeStack count={tier.pancakes as 1 | 2 | 3 | 4 | 5} />
+      <div
+        className="pricing-hero__mascot"
+        style={{ "--plan-accent": tier.accent } as React.CSSProperties}
+      >
+        <div className="pricing-hero__mascot-stack" aria-hidden>
+          <PancakeStack count={tier.pancakes as 1 | 2 | 3 | 4 | 5} />
+        </div>
+        <p className="pricing-hero__plan-name" aria-live="polite">
+          {tier.planName}
+        </p>
       </div>
     </div>
   );

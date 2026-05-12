@@ -205,12 +205,16 @@ export const pricing = {
    *  used as the active kicker above the price, plus an audience line
    *  shown where the old "X hours of agent work a week" sat. `pancakes`
    *  drives the mascot stack height (1–5). */
+  /** `accent` is the readable variant of the newly-added pancake's colour
+   *  for that tier — used as the colour of the big plan-name beneath the
+   *  pancake stack. Pulled from the brand palette (palette-XX-40 / -30) so
+   *  text contrast against the cream surface stays comfortable. */
   tiers: [
-    { totalDollars: 49,  tokens: 5_000_000,   pancakes: 1, planName: "Syrup",      forAudience: "For side projects" },
-    { totalDollars: 129, tokens: 25_000_000,  pancakes: 2, planName: "Flapjack",   forAudience: "For solopreneurs" },
-    { totalDollars: 229, tokens: 50_000_000,  pancakes: 3, planName: "Stack",      forAudience: "For small founding teams" },
-    { totalDollars: 329, tokens: 75_000_000,  pancakes: 4, planName: "Tower",      forAudience: "For startups" },
-    { totalDollars: 529, tokens: 125_000_000, pancakes: 5, planName: "Skyscraper", forAudience: "For scaleups" },
+    { totalDollars: 49,  tokens: 5_000_000,   pancakes: 1, planName: "Syrup",      forAudience: "For side projects",        accent: "#F38F43" }, // golden → yellow-40
+    { totalDollars: 129, tokens: 25_000_000,  pancakes: 2, planName: "Flapjack",   forAudience: "For solopreneurs",         accent: "#E33A6A" }, // pink-40
+    { totalDollars: 229, tokens: 50_000_000,  pancakes: 3, planName: "Stack",      forAudience: "For small founding teams", accent: "#8D43FD" }, // purple-40
+    { totalDollars: 329, tokens: 75_000_000,  pancakes: 4, planName: "Tower",      forAudience: "For startups",             accent: "#D43900" }, // orange-30
+    { totalDollars: 529, tokens: 125_000_000, pancakes: 5, planName: "Skyscraper", forAudience: "For scaleups",             accent: "#037D48" }, // green-30
   ],
   defaultTierIndex: 0,
   trial: {

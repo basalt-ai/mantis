@@ -1913,7 +1913,8 @@
   .pricing-section__inner {
     margin-inline: auto;
     width: 100%;
-    max-width: 720px;
+    /* Wider than the old 720px to fit the card + mascot side-by-side. */
+    max-width: 1080px;
     padding-inline: var(--spacing-home-page-inline);
     display: flex;
     flex-direction: column;
@@ -1978,51 +1979,71 @@
     color: rgba(44, 0, 42, 0.64);
   }
 
-  /* ─── Pricing hero widget — 2-column (info | pancake) ─── */
+  /* ─── Pricing hero — card-left, mascot-OUTSIDE-card-right ─── */
   .pricing-hero {
-    /* Two-column layout: info on the left, pancake mascot on the right.
-       Card is wider than the old vertical version because the slider now
-       carries 5 team-size stops that need horizontal room. On narrow
-       viewports the grid collapses to a single column with the pancake
-       moved on top (see responsive block at the bottom of the file). */
+    /* Two-column wrapper: the actual pricing card on the left, pancake
+       mascot in the open on the right (no card around it). The hero
+       itself has no background — the surface lives on `.pricing-hero__card`. */
     width: 100%;
-    max-width: 960px;
+    max-width: 1080px;
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
     align-items: center;
+    gap: calc(2.5 * var(--spacing-xl));
+  }
+
+  /* Left column — the pricing card. Holds the price, audience, breakdown,
+     slider, CTA. The surface background and border moved here from
+     .pricing-hero. */
+  .pricing-hero__card {
+    display: flex;
+    flex-direction: column;
     gap: calc(2 * var(--spacing-xl));
     padding: calc(2 * var(--spacing-xl));
     background-color: var(--surface);
     border: 1px solid rgba(0, 0, 0, 0.16);
     border-radius: 32px;
     corner-shape: squircle;
-  }
-
-  /* Left column — readout, slider, CTA. Stacks vertically with section gaps
-     so price / slider / cta each register as their own block. */
-  .pricing-hero__info {
-    display: flex;
-    flex-direction: column;
-    gap: calc(2 * var(--spacing-xl));
-    width: 100%;
     min-width: 0;
   }
 
-  .pricing-hero__stack-wrap {
-    /* Aspect-ratio matches the SVG viewBox (330×460) exactly so the SVG
-       fills the wrap with no letterboxing. max-width is capped at 220px
-       so the pancake renders at the SAME pixel size as the original
-       /pricing card (scale = 220/330 = 0.667) — the slider-driven spring
-       motion then feels identical to before the 2-column rework. Going
-       bigger here makes the same spring travel ~30% more pixels, which
-       reads as "less smooth" even though the timing is the same. */
-    width: 100%;
-    max-width: 220px;
-    aspect-ratio: 330 / 460;
+  /* Right column — mascot lives outside the card. The plan name sits in
+     big type beneath the pancake's shadow, coloured by the newly-added
+     pancake (passed in through --plan-accent). */
+  .pricing-hero__mascot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
     justify-self: center;
+    --plan-accent: var(--text);
+  }
+
+  .pricing-hero__mascot-stack {
+    /* Aspect-ratio matches the SVG viewBox (330×450 — y=30 crop) exactly
+       so the SVG fills the wrap without letterboxing. max-width tuned so
+       the pancake renders at ~scale 0.73 — close to the previous layout,
+       preserves the spring-motion feel. */
+    width: 100%;
+    max-width: 240px;
+    aspect-ratio: 330 / 450;
     display: flex;
     align-items: flex-end;
     justify-content: center;
+  }
+
+  .pricing-hero__plan-name {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(40px, 5.4vw, 64px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--plan-accent);
+    /* Cross-fade colour as the user moves through tiers — the plan name
+       smoothly interpolates between accent hues instead of snapping. */
+    transition: color 280ms ease;
+    text-align: center;
   }
 
   .pancake-stack__svg {
@@ -2037,19 +2058,6 @@
     align-items: flex-start;
     gap: var(--spacing-lg);
     text-align: left;
-  }
-
-  /* Active team-size kicker — small caps above the price. Updates live as
-     the user moves the slider; this is the "which tier is this?" answer
-     that replaces the old token-count subheader. */
-  .pricing-hero__team-label {
-    margin: 0;
-    font-family: var(--font-body);
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.16em;
-    color: var(--strong-branded-surface);
   }
 
   .pricing-hero__total {
@@ -2277,17 +2285,24 @@
   }
 
   /* Below 760px the 2-column hero collapses to a single column with the
-     pancake on top, info underneath. Mirrors the old vertical layout so
-     mobile readers still get the visual anchor first. */
+     mascot on top, card underneath. The card recentres its content for
+     the single-column reading order. */
   @media (max-width: 760px) {
     .pricing-hero {
       grid-template-columns: 1fr;
       gap: var(--spacing-xl);
-      padding: calc(1.5 * var(--spacing-xl));
     }
-    .pricing-hero__stack-wrap {
+    .pricing-hero__mascot {
       order: -1;
-      max-width: 220px;
+    }
+    .pricing-hero__mascot-stack {
+      max-width: 200px;
+    }
+    .pricing-hero__plan-name {
+      font-size: clamp(36px, 12vw, 56px);
+    }
+    .pricing-hero__card {
+      padding: calc(1.5 * var(--spacing-xl));
     }
     .pricing-hero__readout,
     .pricing-hero__breakdown,
