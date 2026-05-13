@@ -2038,7 +2038,7 @@
   }
 
   .pricing-hero__readout .pricing-hero__audience {
-    margin-top: var(--spacing-lg);
+    margin-top: var(--spacing-xxl);
   }
 
   /* Right column — pancake stack only. The stack's ground shadow is
