@@ -1891,14 +1891,14 @@
      room above and below the card. */
   .pricing-section {
     width: 100%;
-    /* Full viewport height minus the navbar so the hero card sits in its
-       own framed screen. Navbar is ~68px on small viewports (spacing-lg
-       padding) and ~140px from `lg` up (2× spacing-xxl padding). The
-       inner element stretches by default, so its justify-content:center
-       handles the vertical centering of the card. */
-    min-height: calc(100dvh - 68px);
-    padding-top: var(--spacing-xxl);
-    padding-bottom: var(--spacing-xxl);
+    /* No min-height: previously the section claimed `100dvh - navbar` and
+       vertical-centred the card, but that pushed the card down toward the
+       middle of the screen and left a wide empty band beneath the navbar.
+       Now the section is content-sized — the card sits immediately under
+       the navbar with just enough top padding to breathe. Bottom padding
+       carries the eye into the next section. */
+    padding-top: var(--spacing-xl);
+    padding-bottom: calc(2 * var(--spacing-xxl));
     background-color: var(--surface);
     color: var(--text);
     display: flex;
@@ -1906,14 +1906,16 @@
 
   @media (min-width: 1024px) {
     .pricing-section {
-      min-height: calc(100dvh - 140px);
+      padding-top: calc(1.5 * var(--spacing-xl));
+      padding-bottom: calc(3 * var(--spacing-xxl));
     }
   }
 
   .pricing-section__inner {
     margin-inline: auto;
     width: 100%;
-    max-width: 720px;
+    /* Wider than the old 720px to fit the card + mascot side-by-side. */
+    max-width: 1080px;
     padding-inline: var(--spacing-home-page-inline);
     display: flex;
     flex-direction: column;
@@ -1978,32 +1980,91 @@
     color: rgba(44, 0, 42, 0.64);
   }
 
-  /* ─── Pricing hero widget (monster + slider + total) ─── */
+  /* ─── Pricing hero — single card, two columns inside ─── */
   .pricing-hero {
+    /* The hero IS the card — surface + border + padding live here. Inside,
+       a 2-column grid lays out the pricing mechanics on the left and the
+       mascot on the right. Both columns share the same bordered surface
+       so they read as one unit. position: relative so the absolutely-
+       positioned plan kicker can anchor to the top-left corner.
+       align-items: stretch so the info column fills the full card height
+       (the mascot column drives that height); space-between inside the
+       info column then spreads its three sections — readout / slider /
+       CTA — to top / middle / bottom instead of centering them and
+       leaving dead air below the CTA. */
+    position: relative;
     width: 100%;
-    max-width: 720px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: calc(2 * var(--spacing-xl));
-    /* Asymmetric padding: top is tighter than sides + bottom because the
-       SVG viewBox is already cropped above the topmost pancake. 24px gives
-       the 4-pancake stack visible breathing from the card border without
-       reintroducing dead space. */
-    padding: calc(1.5 * var(--spacing-xl)) calc(2 * var(--spacing-xl))
-      calc(2 * var(--spacing-xl));
+    max-width: 1080px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    align-items: stretch;
+    gap: calc(2.5 * var(--spacing-xl));
+    padding: calc(2 * var(--spacing-xl));
     background-color: var(--surface);
     border: 1px solid rgba(0, 0, 0, 0.16);
     border-radius: 32px;
     corner-shape: squircle;
   }
 
-  .pricing-hero__stack-wrap {
-    /* Height matched to the cropped viewBox aspect (330:420) so the SVG
-       renders at the same horizontal scale as the original 240×320 wrap.
-       Pancake pixel size is unchanged; only the dead area above gets cut. */
-    width: 240px;
-    height: 280px;
+  /* Left column — three direct children stacked vertically and spread
+     with `justify-content: space-between`:
+       1. readout (price + breakdown + audience cluster)
+       2. slider (track + stops)
+       3. CTA (button + caption)
+     Stretches to the card height (mascot drives). Generous padding-top
+     descends the price-block: instead of the price hugging the SYRUP
+     kicker at top, there's breathing room above so the price sits in
+     the upper-third rather than pinned to the corner. */
+  .pricing-hero__info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    min-width: 0;
+    padding-top: calc(4 * var(--spacing-xl));
+    text-align: left;
+  }
+
+  /* Readout cluster — price + breakdown stacked tightly together as
+     ONE pricing beat, then audience caption below as a soft second
+     beat. Order is: $229/mo → $29 + $200 → "For small founding teams".
+     Internal spacing: tight (8px) inside the price+breakdown pair to
+     keep them visually fused; larger (12px) to the audience line so it
+     reads as a related-but-distinct caption rather than a third stat. */
+  .pricing-hero__readout {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+
+  .pricing-hero__readout .pricing-hero__audience {
+    margin-top: var(--spacing-xxl);
+  }
+
+  /* Right column — pancake stack only. No padding tricks: the SVG fills
+     the column at its natural aspect-ratio height (~390px for max-width
+     280), and the card height stays compact. The pancake's visual
+     centre naturally lands on the slider's horizontal axis because both
+     scale with the column height (the slider sits at the middle of the
+     space-between distribution; the pancake sits at the middle of the
+     SVG). The ground shadow ends up below the CTA button — that's an
+     acceptable trade-off to keep the card from inflating. */
+  .pricing-hero__mascot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-self: center;
+  }
+
+  .pricing-hero__mascot-stack {
+    /* Aspect-ratio matches the SVG viewBox (330×460 — y=20 crop) exactly
+       so the SVG fills the wrap without letterboxing. Width tuned so the
+       pancake renders at ~scale 0.78 — gives the mascot enough presence
+       in its column without compromising the motion feel. */
+    width: 100%;
+    max-width: 280px;
+    aspect-ratio: 330 / 460;
     display: flex;
     align-items: flex-end;
     justify-content: center;
@@ -2015,12 +2076,34 @@
     overflow: visible;
   }
 
-  .pricing-hero__readout {
-    display: flex;
-    flex-direction: column;
+  /* Plan-name kicker — small-caps pill anchored to the top-left CORNER
+     of the card. Tinted in the current tier's accent colour (set on the
+     hero root via `--plan-accent`). Same typography vocab as the design
+     system's kicker pattern (`.pricing-buys__card-kicker`: font-body
+     monospace, eyebrow size, uppercase, wide tracking). Background is
+     the accent at ~14% opacity (via color-mix), text is the accent at
+     full strength — playful and brand-coloured without going loud.
+     Cross-fades between tiers via the colour transitions.
+     Positioned absolutely so it acts as a tag for the WHOLE card rather
+     than a label for one specific element, and so it doesn't get pulled
+     into the grid's vertical centring. */
+  .pricing-hero__plan-kicker {
+    position: absolute;
+    top: var(--spacing-xxl);
+    left: var(--spacing-xxl);
+    margin: 0;
+    display: inline-flex;
     align-items: center;
-    gap: var(--spacing-lg);
-    text-align: center;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: var(--font-size-eyebrow);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--plan-accent);
+    background-color: color-mix(in srgb, var(--plan-accent) 14%, transparent);
+    transition: color 280ms ease, background-color 280ms ease;
   }
 
   .pricing-hero__total {
@@ -2052,17 +2135,18 @@
     letter-spacing: 0;
   }
 
-  /* Human-scale translation directly under the price. Carries the meaning
-     of the tier — what the money actually buys in human terms — so it
-     deserves second-tier emphasis (regular weight, full text color). */
-  .pricing-hero__work-scale {
+  /* Audience caption directly under the price — anchors the tier to a
+     buyer persona ("For side projects", "For startups", …). Body face,
+     full text colour, regular weight; sized like body copy so the price
+     stays the visual anchor. */
+  .pricing-hero__audience {
     margin: 0;
     font-family: var(--font-body);
     font-size: var(--font-size-body-regular);
     font-weight: 400;
     color: var(--text);
     max-width: 32ch;
-    text-align: center;
+    text-align: left;
     line-height: 1.4;
   }
 
@@ -2074,7 +2158,7 @@
     margin: 0;
     display: flex;
     align-items: baseline;
-    justify-content: center;
+    justify-content: flex-start;
     flex-wrap: wrap;
     /* No horizontal gap on the row — the "+" span owns the spacing on
        both sides via its own width, so any optical offset from glyph side
@@ -2183,23 +2267,43 @@
     transform: scale(1.12);
   }
 
+  /* Slider stops are positioned absolutely at the exact tick percentages
+     (0%, 25%, 50%, 75%, 100% for 5 stops). Flex-cell layouts placed the
+     middle labels at column centres (30%, 50%, 70%) — off by 5 points from
+     the actual slider thumb positions. Each label gets its `left: X%` via
+     inline style; the transform anchors it relative to that point. */
   .pricing-hero__slider-stops {
-    display: flex;
-    justify-content: space-between;
-    gap: var(--spacing-sm);
+    position: relative;
+    width: 100%;
+    height: 16px;
+    margin-top: 4px;
   }
 
   .pricing-hero__slider-stop {
+    position: absolute;
+    top: 0;
     background: none;
     border: none;
-    padding: var(--spacing-xs) var(--spacing-sm);
+    padding: 0;
     font-family: var(--font-body);
     font-size: 11px;
-    letter-spacing: 0.02em;
+    line-height: 1.25;
+    letter-spacing: 0.01em;
     color: var(--disabled-text);
     cursor: pointer;
-    border-radius: var(--radius-sm);
     transition: color 120ms ease;
+    white-space: nowrap;
+    /* Middle stops are centred on their tick; first/last are anchored to
+       the track edges so they don't visually leak past the slider. */
+    transform: translateX(-50%);
+  }
+
+  .pricing-hero__slider-stop:first-child {
+    transform: translateX(0);
+  }
+
+  .pricing-hero__slider-stop:last-child {
+    transform: translateX(-100%);
   }
 
   .pricing-hero__slider-stop:hover {
@@ -2214,8 +2318,12 @@
   .pricing-hero__cta {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--spacing-md);
+    width: 100%;
+  }
+
+  .pricing-hero__cta .button {
     width: 100%;
   }
 
@@ -2224,7 +2332,92 @@
     font-family: var(--font-body);
     font-size: var(--font-size-body-small);
     color: var(--subtle-text);
-    text-align: center;
+    text-align: left;
+  }
+
+  /* Below 760px the 2-column hero collapses to a single column with the
+     mascot on top, info underneath. Content recentres for single-column
+     reading order. The CTA/shadow alignment from the desktop layout no
+     longer applies (they're stacked, not side-by-side), so the mascot
+     column drops its padding-bottom and the info column drops its
+     padding-top spacer. The plan-name kicker stays absolutely positioned
+     at the top-left corner — the mascot is given enough top room (above
+     the SVG) so the SVG doesn't collide with the kicker pill. */
+  @media (max-width: 760px) {
+    .pricing-hero {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-xl);
+      padding: calc(1.5 * var(--spacing-xl));
+    }
+    .pricing-hero__mascot {
+      order: -1;
+      justify-content: center;
+      padding-top: calc(2 * var(--spacing-xxl));
+    }
+    .pricing-hero__mascot-stack {
+      max-width: 200px;
+    }
+    .pricing-hero__info,
+    .pricing-hero__readout,
+    .pricing-hero__breakdown,
+    .pricing-hero__cta,
+    .pricing-hero__cta-caption {
+      align-items: center;
+      text-align: center;
+      justify-content: center;
+    }
+    .pricing-hero__info {
+      gap: var(--spacing-lg);
+      justify-content: flex-start;
+      padding-top: 0;
+    }
+    .pricing-hero__readout .pricing-hero__audience {
+      margin-top: 0;
+    }
+    .pricing-hero__audience {
+      text-align: center;
+    }
+    .pricing-hero__slider-stop {
+      font-size: 10px;
+    }
+  }
+
+  /* Below 440px (small phones) — tighten the readout, slider, and CTA so
+     they fit comfortably in a narrow viewport. The pancake mascot also
+     scales down a touch so it doesn't dominate the screen. */
+  @media (max-width: 440px) {
+    .pricing-hero {
+      padding: var(--spacing-xl);
+      border-radius: 24px;
+    }
+    .pricing-hero__plan-kicker {
+      top: var(--spacing-xl);
+      left: var(--spacing-xl);
+      padding: 4px 10px;
+    }
+    .pricing-hero__mascot {
+      padding-top: calc(var(--spacing-xxl) + var(--spacing-md));
+    }
+    .pricing-hero__mascot-stack {
+      max-width: 160px;
+    }
+    .pricing-hero__total {
+      font-size: 48px;
+      letter-spacing: -1.5px;
+    }
+    .pricing-hero__slider-stops {
+      /* On tiny screens the 5 tick labels start to crowd. Hide the in-
+         between values ($100, $200, $300) and keep the endpoints visible
+         so the range remains legible. The thumb still snaps to every
+         tier — only the labels are hidden, not the stops themselves. */
+      pointer-events: none;
+    }
+    .pricing-hero__slider-stop {
+      font-size: 9px;
+    }
+    .pricing-hero__slider-stop:not(:first-child):not(:last-child) {
+      opacity: 0;
+    }
   }
 
   /* ─── "what your tokens buy" 3-card section ─── */
@@ -2284,6 +2477,16 @@
     gap: var(--spacing-sm);
   }
 
+  /* Kicker row: small caps eyebrow on the left, WiFi-style signal bars on
+     the right. The bars communicate task scale (1=quick, 2=workflow,
+     3=full project) without exposing a number. */
+  .pricing-buys__card-kicker-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+  }
+
   .pricing-buys__card-kicker {
     margin: 0;
     font-family: var(--font-body);
@@ -2293,22 +2496,46 @@
     color: var(--subtle-text);
   }
 
-  .pricing-buys__card-headline {
+  .pricing-buys__card-tag {
     margin: 0;
     font-family: var(--font-display);
     font-weight: 500;
     font-size: var(--font-size-header-03);
-    line-height: 1.1;
+    line-height: 1.15;
     letter-spacing: -0.5px;
     color: var(--text);
   }
 
-  .pricing-buys__card-tag {
-    margin: 0;
-    font-family: var(--font-body);
-    font-size: var(--font-size-body-regular);
-    color: var(--subtle-text);
-    line-height: 1.5;
+  /* Wi-Fi-style 3-bar signal indicator. Bars are tiny pills that grow in
+     height (left to right) so the eye reads "scale" — lit bars are full
+     pink, dim bars are chrome-40. Replaces the old token-range headline. */
+  .pricing-buys__signal {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 14px;
+  }
+
+  .pricing-buys__signal-bar {
+    display: block;
+    width: 5px;
+    border-radius: 1.5px;
+    background-color: var(--palette-chrome-40);
+    transition: background-color 120ms ease;
+  }
+
+  .pricing-buys__signal-bar:nth-child(1) {
+    height: 6px;
+  }
+  .pricing-buys__signal-bar:nth-child(2) {
+    height: 10px;
+  }
+  .pricing-buys__signal-bar:nth-child(3) {
+    height: 14px;
+  }
+
+  .pricing-buys__signal-bar[data-on="true"] {
+    background-color: var(--strong-branded-surface);
   }
 
   /* Slack-style chat block — reuses SlackUI's exact typography (Lato,
