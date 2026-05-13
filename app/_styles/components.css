@@ -2041,20 +2041,23 @@
     margin-top: var(--spacing-xxl);
   }
 
-  /* Right column — pancake stack only. The stack's ground shadow is
-     vertically centred with the CTA button on the left by pushing the
-     SVG UP via padding-bottom: the shadow sits ~7px above the SVG's
-     bottom edge, the CTA button's vertical centre sits ~52px above the
-     info column's bottom edge (caption + cta-gap + button-half).
-     padding-bottom = (52 - 7) = ~45px makes the two y positions match,
-     so a horizontal line drawn across the card cleanly crosses both
-     the button centre and the shadow centre. */
+  /* Right column — pancake stack only. Two simultaneous alignments:
+     1) Shadow ↔ CTA button:  padding-bottom on the mascot lifts the
+        whole SVG up by ~45px so the shadow's vertical centre aligns
+        with the CTA button's vertical centre on the left.
+     2) Pancake ↔ slider:      padding-top pushes the SVG further down
+        so the pancake's visual centre sits on the same horizontal line
+        as the slider track. Because both shadow and CTA are anchored
+        to the bottom of their (grid-stretched) columns, growing the
+        column via padding-top moves them down together — alignment 1
+        is preserved while we tune alignment 2. */
   .pricing-hero__mascot {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
     justify-self: center;
+    padding-top: 50px;
     padding-bottom: 45px;
   }
 
@@ -2353,8 +2356,8 @@
     .pricing-hero__mascot {
       order: -1;
       justify-content: center;
-      padding-bottom: 0;
       padding-top: calc(2 * var(--spacing-xxl));
+      padding-bottom: 0;
     }
     .pricing-hero__mascot-stack {
       max-width: 200px;
