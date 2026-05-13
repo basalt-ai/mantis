@@ -2005,21 +2005,37 @@
     corner-shape: squircle;
   }
 
-  /* Left column — price · audience · breakdown · slider · CTA. Readout
-     and slider cluster at the top with the normal 32px gap (the
-     "configure" zone); the CTA is pushed to the bottom of the card via
-     `margin-top: auto` on `.pricing-hero__cta`. One intentional
-     separation between configure and act, instead of two awkward voids
-     a `space-between` distribution would create.
-     padding-top clears the absolutely-positioned plan kicker (which
-     sits at top: spacing-xxl with ~24px of pill height) so the price
-     doesn't sit underneath it. */
+  /* Left column — four direct children stacked vertically and spread
+     evenly with `justify-content: space-between`:
+       1. price ($X / month)
+       2. details (audience + breakdown clustered)
+       3. slider (track + stops)
+       4. CTA (button + caption)
+     Stretches to the card height (mascot drives), so the three gaps
+     between elements end up equal — the column reads as four balanced
+     beats from kicker to bottom edge instead of clustering at the top.
+     padding-top clears the absolutely-positioned plan kicker so the
+     price doesn't sit underneath it. The `gap` is a minimum (kicks in
+     when the column is short — e.g. mobile — so items don't collide). */
   .pricing-hero__info {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
     gap: calc(2 * var(--spacing-xl));
     min-width: 0;
     padding-top: calc(var(--spacing-xxl) + var(--spacing-md));
+    text-align: left;
+  }
+
+  /* Audience caption + breakdown row, grouped tightly so they read as
+     one descriptive beat under the price rather than two separate items
+     in the spread. */
+  .pricing-hero__details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
   }
 
   /* Right column — pancake stack + tier-progression dots. No competing
@@ -2081,14 +2097,6 @@
     width: 100%;
     height: 100%;
     overflow: visible;
-  }
-
-  .pricing-hero__readout {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-lg);
-    text-align: left;
   }
 
   /* Plan-name kicker — small-caps pill anchored to the top-left CORNER
@@ -2336,11 +2344,6 @@
     align-items: flex-start;
     gap: var(--spacing-md);
     width: 100%;
-    /* Push the CTA to the bottom of the (stretched) info column so the
-       readout/slider cluster anchors top, CTA anchors bottom, and the
-       leftover height becomes one intentional gap above the CTA rather
-       than dead air below it. */
-    margin-top: auto;
   }
 
   .pricing-hero__cta .button {
@@ -2370,7 +2373,8 @@
     .pricing-hero__mascot-stack {
       max-width: 200px;
     }
-    .pricing-hero__readout,
+    .pricing-hero__info,
+    .pricing-hero__details,
     .pricing-hero__breakdown,
     .pricing-hero__cta,
     .pricing-hero__cta-caption {
