@@ -1985,13 +1985,18 @@
        a 2-column grid lays out the pricing mechanics on the left and the
        mascot on the right. Both columns share the same bordered surface
        so they read as one unit. position: relative so the absolutely-
-       positioned plan kicker can anchor to the top-left corner. */
+       positioned plan kicker can anchor to the top-left corner.
+       align-items: stretch so the info column fills the full card height
+       (the mascot column drives that height); space-between inside the
+       info column then spreads its three sections — readout / slider /
+       CTA — to top / middle / bottom instead of centering them and
+       leaving dead air below the CTA. */
     position: relative;
     width: 100%;
     max-width: 1080px;
     display: grid;
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-    align-items: center;
+    align-items: stretch;
     gap: calc(2.5 * var(--spacing-xl));
     padding: calc(2 * var(--spacing-xl));
     background-color: var(--surface);
@@ -2000,10 +2005,15 @@
     corner-shape: squircle;
   }
 
-  /* Left column — price · audience · breakdown · slider · CTA. */
+  /* Left column — price · audience · breakdown · slider · CTA, spread
+     vertically across the card height so the three blocks (readout,
+     slider, CTA) sit at top, middle, and bottom. The fixed `gap` acts
+     as a minimum spacing so the layout still reads sensibly when the
+     column is short (mobile / smaller cards). */
   .pricing-hero__info {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     gap: calc(2 * var(--spacing-xl));
     min-width: 0;
   }
