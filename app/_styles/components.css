@@ -1984,7 +1984,9 @@
     /* The hero IS the card — surface + border + padding live here. Inside,
        a 2-column grid lays out the pricing mechanics on the left and the
        mascot on the right. Both columns share the same bordered surface
-       so they read as one unit. */
+       so they read as one unit. position: relative so the absolutely-
+       positioned plan kicker can anchor to the top-left corner. */
+    position: relative;
     width: 100%;
     max-width: 1080px;
     display: grid;
@@ -2075,29 +2077,22 @@
     text-align: left;
   }
 
-  /* Kicker + price are tightly coupled (kicker labels the price) so they
-     live in their own block with a small gap, distinct from the larger
-     readout-level gap between price-block, audience, and breakdown. */
-  .pricing-hero__price-block {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
-
-  /* Plan-name kicker — small-caps pill above the price, tinted in the
-     current tier's accent colour. Same typography vocab as the design
+  /* Plan-name kicker — small-caps pill anchored to the top-left CORNER
+     of the card. Tinted in the current tier's accent colour (set on the
+     hero root via `--plan-accent`). Same typography vocab as the design
      system's kicker pattern (`.pricing-buys__card-kicker`: font-body
-     monospace, eyebrow size, uppercase, wide tracking) but wrapped in a
-     soft pill that picks up `--plan-accent` (set per-tier on the hero
-     root). Background is the accent at ~14% opacity, text is the accent
-     at full strength — playful and brand-coloured without going loud.
-     Cross-fades between tiers via the colour transitions. */
+     monospace, eyebrow size, uppercase, wide tracking). Background is
+     the accent at ~14% opacity (via color-mix), text is the accent at
+     full strength — playful and brand-coloured without going loud.
+     Cross-fades between tiers via the colour transitions.
+     Positioned absolutely so it acts as a tag for the WHOLE card rather
+     than a label for one specific element, and so it doesn't get pulled
+     into the grid's vertical centring. */
   .pricing-hero__plan-kicker {
+    position: absolute;
+    top: var(--spacing-xxl);
+    left: var(--spacing-xxl);
     margin: 0;
-    /* inline-flex sizes the pill to its content + padding rather than
-       stretching to the column width. Alignment follows the parent
-       price-block (flex-start on desktop, centre on mobile). */
     display: inline-flex;
     align-items: center;
     padding: 6px 12px;
@@ -2357,7 +2352,6 @@
       max-width: 200px;
     }
     .pricing-hero__readout,
-    .pricing-hero__price-block,
     .pricing-hero__breakdown,
     .pricing-hero__cta,
     .pricing-hero__cta-caption {

@@ -53,13 +53,17 @@ const SLOT_X = [38, 64, 24, 58, 30];
 const SLOT_DY = 48;
 // Bottom-anchored: the LOWEST pancake always sits here. Existing pancakes
 // shift up by SLOT_DY on tier-up; the newly added one lands at this y.
-const BOTTOM_PANCAKE_Y = 222;
+// Lifted from 222 → 197 so the pancake "floats" further above its shadow
+// without the shadow itself moving (the gap below grew from 15 → 40).
+const BOTTOM_PANCAKE_Y = 197;
 // Approximate visual height of a rendered pancake (sides svg, 212 px) plus
 // the y offset of the sides svg inside the Pancake group (22.33 px).
 const PANCAKE_VISUAL_HEIGHT = 234.5;
 // How far below the bottom pancake the ground shadow sits. Ground is FIXED
-// in the bottom-anchored model.
-const GROUND_OFFSET_BELOW_STACK = 15;
+// in the bottom-anchored model — GROUND_Y stays at the same viewBox y as
+// before (471.5); only the pancake position changed, so the visual gap
+// between pancake bottom and shadow grew.
+const GROUND_OFFSET_BELOW_STACK = 40;
 const GROUND_Y =
   BOTTOM_PANCAKE_Y + PANCAKE_VISUAL_HEIGHT + GROUND_OFFSET_BELOW_STACK;
 
@@ -73,9 +77,9 @@ const VIEWBOX_W = 330;
 const VIEWBOX_H = 480;
 const GROUND_CX = 168;
 // viewBox crops the dead area above the topmost pancake so the SVG fills
-// the wrap tightly. The 5-pancake stack (top at y=30 when count=5, bottom
-// fixed at y=222, visual bottom ~456, ground ~471.5) fits inside the
-// cropped viewBox with room for the shadow at the bottom.
+// the wrap tightly. The 5-pancake stack (top at y=5 when count=5, visual
+// top ~27, bottom fixed at y=197, visual bottom ~431, ground ~471.5)
+// fits inside the cropped viewBox with room for the shadow at the bottom.
 const VIEWBOX_Y = 20;
 const VIEWBOX_H_CROPPED = VIEWBOX_H - VIEWBOX_Y;
 
