@@ -228,10 +228,9 @@ export const pricing = {
   title: "No tiers. No tricks.",
   subtitle: "$29 for the always-on setup. Usage at cost.",
   perMonth: "/ month",
-  /** Two-part breakdown shown as small math under the big price.
-   *  "in usage" replaces "in tokens" so the surface stays jargon-free. */
+  /** Two-part breakdown shown as small math under the big price. */
   breakdownFixedLabel: "always-on setup",
-  breakdownTokensLabel: "in usage",
+  breakdownTokensLabel: "token usage",
   // Trial CTA below the widget.
   trialCta: "Start your free trial",
   trialCaption: "7 days free. No card required.",
