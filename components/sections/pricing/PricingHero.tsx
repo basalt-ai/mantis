@@ -9,18 +9,6 @@ import { PancakeStack } from "./PancakeStack";
 
 type Pricing = typeof pricingCopy;
 
-/* Pancake top-shell colours in the same TOP→BOTTOM order they're added to
-   the stack as the user moves up tiers (matches STACKS in PancakeStack).
-   Used to colour the tier indicator under the plan name — filled dots
-   visually echo the pancakes currently in the stack. */
-const TIER_DOT_COLORS = [
-  "#FFBD7A", // golden — tier 1+ (eyes-pancake, always present)
-  "#BA8BFF", // purple — tier 2+
-  "#68CEA7", // mint   — tier 3+
-  "#FFA45F", // orange — tier 4+
-  "#FF7AA0", // pink   — tier 5
-];
-
 /**
  * Pricing hero — single card with a 2-column grid inside.
  *
@@ -28,8 +16,10 @@ const TIER_DOT_COLORS = [
  *   coloured per tier via `--plan-accent`. Lives at the card corner,
  *   absolutely positioned, so it acts as a tag for the WHOLE card rather
  *   than a label for one specific element. Floats above the grid layout.
- * Left column (`__info`): price · audience · breakdown · slider · CTA.
- * Right column (`__mascot`): pancake stack + tier-progression dots.
+ * Left column (`__info`): price · breakdown · audience · slider · CTA.
+ * Right column (`__mascot`): pancake stack only. The stack's ground
+ *   shadow is vertically aligned with the CTA button via padding-bottom
+ *   on the mascot column (see components.css).
  *
  * Slider stop labels are absolutely positioned at exact tick percentages
  * (0%, 25%, 50%, 75%, 100%) so they line up with the slider thumb track
@@ -138,19 +128,6 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
       <div className="pricing-hero__mascot">
         <div className="pricing-hero__mascot-stack" aria-hidden>
           <PancakeStack count={tier.pancakes as 1 | 2 | 3 | 4 | 5} />
-        </div>
-        <div className="pricing-hero__tier-dots" aria-hidden>
-          {TIER_DOT_COLORS.map((color, i) => {
-            const active = i < tier.pancakes;
-            return (
-              <span
-                key={color}
-                className="pricing-hero__tier-dot"
-                data-active={active ? "true" : undefined}
-                style={active ? { backgroundColor: color } : undefined}
-              />
-            );
-          })}
         </div>
       </div>
     </div>
