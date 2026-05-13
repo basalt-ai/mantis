@@ -2005,25 +2005,40 @@
     corner-shape: squircle;
   }
 
-  /* Left column — five direct children stacked vertically and spread
-     evenly with `justify-content: space-between`:
-       1. price        ($49 / month)
-       2. audience     ("For side projects")
-       3. breakdown    ("$29 always-on + $X in usage")
-       4. slider       (track + stops)
-       5. CTA          (button + caption)
-     Stretches to the card height (mascot drives), so the four gaps
-     between items end up equal — every line gets equal vertical
-     breathing room rather than the readout cluster bunching at top.
-     Padding-top clears the absolutely-positioned plan kicker. */
+  /* Left column — three direct children stacked vertically and spread
+     with `justify-content: space-between`:
+       1. readout (price + breakdown + audience cluster)
+       2. slider (track + stops)
+       3. CTA (button + caption)
+     Stretches to the card height (mascot drives). Generous padding-top
+     descends the price-block: instead of the price hugging the SYRUP
+     kicker at top, there's breathing room above so the price sits in
+     the upper-third rather than pinned to the corner. */
   .pricing-hero__info {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-start;
     min-width: 0;
-    padding-top: calc(var(--spacing-xxl) + var(--spacing-md));
+    padding-top: calc(4 * var(--spacing-xl));
     text-align: left;
+  }
+
+  /* Readout cluster — price + breakdown stacked tightly together as
+     ONE pricing beat, then audience caption below as a soft second
+     beat. Order is: $229/mo → $29 + $200 → "For small founding teams".
+     Internal spacing: tight (8px) inside the price+breakdown pair to
+     keep them visually fused; larger (12px) to the audience line so it
+     reads as a related-but-distinct caption rather than a third stat. */
+  .pricing-hero__readout {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+
+  .pricing-hero__readout .pricing-hero__audience {
+    margin-top: var(--spacing-xs);
   }
 
   /* Right column — pancake stack + tier-progression dots. No competing
@@ -2362,6 +2377,7 @@
       max-width: 200px;
     }
     .pricing-hero__info,
+    .pricing-hero__readout,
     .pricing-hero__breakdown,
     .pricing-hero__cta,
     .pricing-hero__cta-caption {
@@ -2372,6 +2388,7 @@
     .pricing-hero__info {
       gap: var(--spacing-lg);
       justify-content: flex-start;
+      padding-top: 0;
     }
     .pricing-hero__audience {
       text-align: center;
