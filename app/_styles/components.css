@@ -2005,18 +2005,15 @@
     corner-shape: squircle;
   }
 
-  /* Left column — four direct children stacked vertically and spread
+  /* Left column — three direct children stacked vertically and spread
      evenly with `justify-content: space-between`:
-       1. price ($X / month)
-       2. details (audience + breakdown clustered)
-       3. slider (track + stops)
-       4. CTA (button + caption)
-     Stretches to the card height (mascot drives), so the three gaps
-     between elements end up equal — the column reads as four balanced
-     beats from kicker to bottom edge instead of clustering at the top.
-     padding-top clears the absolutely-positioned plan kicker so the
-     price doesn't sit underneath it. The `gap` is a minimum (kicks in
-     when the column is short — e.g. mobile — so items don't collide). */
+       1. readout (price + audience + breakdown — one tight block so
+          $49 sits right between the SYRUP kicker and "For side projects")
+       2. slider (track + stops)
+       3. CTA (button + caption)
+     Stretches to the card height (mascot drives), so the two gaps
+     between sections end up equal. padding-top clears the absolutely-
+     positioned plan kicker. */
   .pricing-hero__info {
     display: flex;
     flex-direction: column;
@@ -2028,10 +2025,11 @@
     text-align: left;
   }
 
-  /* Audience caption + breakdown row, grouped tightly so they read as
-     one descriptive beat under the price rather than two separate items
-     in the spread. */
-  .pricing-hero__details {
+  /* Readout block — price, audience caption, breakdown row stacked
+     tightly together as one beat under the kicker. Tight 8px gap so
+     the three lines read as a single descriptive cluster ("Syrup, $49
+     per month, for side projects, $29 + $20 in usage"). */
+  .pricing-hero__readout {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -2374,7 +2372,7 @@
       max-width: 200px;
     }
     .pricing-hero__info,
-    .pricing-hero__details,
+    .pricing-hero__readout,
     .pricing-hero__breakdown,
     .pricing-hero__cta,
     .pricing-hero__cta-caption {
