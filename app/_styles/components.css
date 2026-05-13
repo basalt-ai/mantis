@@ -2005,35 +2005,25 @@
     corner-shape: squircle;
   }
 
-  /* Left column — three direct children stacked vertically and spread
+  /* Left column — five direct children stacked vertically and spread
      evenly with `justify-content: space-between`:
-       1. readout (price + audience + breakdown — one tight block so
-          $49 sits right between the SYRUP kicker and "For side projects")
-       2. slider (track + stops)
-       3. CTA (button + caption)
-     Stretches to the card height (mascot drives), so the two gaps
-     between sections end up equal. padding-top clears the absolutely-
-     positioned plan kicker. */
+       1. price        ($49 / month)
+       2. audience     ("For side projects")
+       3. breakdown    ("$29 always-on + $X in usage")
+       4. slider       (track + stops)
+       5. CTA          (button + caption)
+     Stretches to the card height (mascot drives), so the four gaps
+     between items end up equal — every line gets equal vertical
+     breathing room rather than the readout cluster bunching at top.
+     Padding-top clears the absolutely-positioned plan kicker. */
   .pricing-hero__info {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-start;
-    gap: calc(2 * var(--spacing-xl));
     min-width: 0;
     padding-top: calc(var(--spacing-xxl) + var(--spacing-md));
     text-align: left;
-  }
-
-  /* Readout block — price, audience caption, breakdown row stacked
-     tightly together as one beat under the kicker. Tight 8px gap so
-     the three lines read as a single descriptive cluster ("Syrup, $49
-     per month, for side projects, $29 + $20 in usage"). */
-  .pricing-hero__readout {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-md);
   }
 
   /* Right column — pancake stack + tier-progression dots. No competing
@@ -2372,13 +2362,16 @@
       max-width: 200px;
     }
     .pricing-hero__info,
-    .pricing-hero__readout,
     .pricing-hero__breakdown,
     .pricing-hero__cta,
     .pricing-hero__cta-caption {
       align-items: center;
       text-align: center;
       justify-content: center;
+    }
+    .pricing-hero__info {
+      gap: var(--spacing-lg);
+      justify-content: flex-start;
     }
     .pricing-hero__audience {
       text-align: center;

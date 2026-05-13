@@ -53,39 +53,37 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
       </p>
 
       <div className="pricing-hero__info">
-        <div className="pricing-hero__readout">
-          <p className="pricing-hero__total" aria-live="polite">
-            <span className="pricing-hero__total-symbol">{pricing.currencySymbol}</span>
-            {tier.totalDollars}
-            <span className="pricing-hero__total-suffix">{pricing.perMonth}</span>
-          </p>
-          <p className="pricing-hero__audience" aria-live="polite">
-            {tier.forAudience}
-          </p>
-          <p className="pricing-hero__breakdown" aria-live="polite">
-            <span className="pricing-hero__breakdown-part">
-              <span className="pricing-hero__breakdown-amount">
-                {pricing.currencySymbol}
-                {pricing.infrastructureDollars}
-              </span>
-              <span className="pricing-hero__breakdown-label">
-                {pricing.breakdownFixedLabel}
-              </span>
+        <p className="pricing-hero__total" aria-live="polite">
+          <span className="pricing-hero__total-symbol">{pricing.currencySymbol}</span>
+          {tier.totalDollars}
+          <span className="pricing-hero__total-suffix">{pricing.perMonth}</span>
+        </p>
+        <p className="pricing-hero__audience" aria-live="polite">
+          {tier.forAudience}
+        </p>
+        <p className="pricing-hero__breakdown" aria-live="polite">
+          <span className="pricing-hero__breakdown-part">
+            <span className="pricing-hero__breakdown-amount">
+              {pricing.currencySymbol}
+              {pricing.infrastructureDollars}
             </span>
-            <span className="pricing-hero__breakdown-plus" aria-hidden>
-              +
+            <span className="pricing-hero__breakdown-label">
+              {pricing.breakdownFixedLabel}
             </span>
-            <span className="pricing-hero__breakdown-part">
-              <span className="pricing-hero__breakdown-amount">
-                {pricing.currencySymbol}
-                {tokenPortion}
-              </span>
-              <span className="pricing-hero__breakdown-label">
-                {pricing.breakdownTokensLabel}
-              </span>
+          </span>
+          <span className="pricing-hero__breakdown-plus" aria-hidden>
+            +
+          </span>
+          <span className="pricing-hero__breakdown-part">
+            <span className="pricing-hero__breakdown-amount">
+              {pricing.currencySymbol}
+              {tokenPortion}
             </span>
-          </p>
-        </div>
+            <span className="pricing-hero__breakdown-label">
+              {pricing.breakdownTokensLabel}
+            </span>
+          </span>
+        </p>
 
         <div className="pricing-hero__slider-wrap">
           <label htmlFor={sliderId} className="sr-only">
