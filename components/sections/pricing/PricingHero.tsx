@@ -46,7 +46,10 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
   const tokenPortion = tier.totalDollars - pricing.infrastructureDollars;
 
   return (
-    <div className="pricing-hero">
+    <div
+      className="pricing-hero"
+      style={{ "--plan-accent": tier.accent } as React.CSSProperties}
+    >
       <div className="pricing-hero__info">
         <div className="pricing-hero__readout">
           <div className="pricing-hero__price-block">

@@ -2008,12 +2008,14 @@
 
   /* Right column — pancake stack + tier-progression dots. No competing
      display text; the mascot is the visual hero. The plan name is named
-     elsewhere (as a kicker above the price on the left). */
+     elsewhere (as a kicker above the price on the left). Generous gap
+     between stack and dots so the shadow has room to breathe — without
+     it, the dots crowd right under the shadow and read as cramped. */
   .pricing-hero__mascot {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--spacing-md);
+    gap: calc(2 * var(--spacing-xxl));
     justify-self: center;
   }
 
@@ -2083,19 +2085,31 @@
     gap: 6px;
   }
 
-  /* Plan-name kicker — small-caps eyebrow above the price. Reuses the
-     design system's kicker pattern (same as `.pricing-buys__card-kicker`):
-     font-body (monospace), eyebrow size, uppercase, wide tracking, muted
-     colour. Names the tier as a refined label rather than competing with
-     the pancake for headline space. */
+  /* Plan-name kicker — small-caps pill above the price, tinted in the
+     current tier's accent colour. Same typography vocab as the design
+     system's kicker pattern (`.pricing-buys__card-kicker`: font-body
+     monospace, eyebrow size, uppercase, wide tracking) but wrapped in a
+     soft pill that picks up `--plan-accent` (set per-tier on the hero
+     root). Background is the accent at ~14% opacity, text is the accent
+     at full strength — playful and brand-coloured without going loud.
+     Cross-fades between tiers via the colour transitions. */
   .pricing-hero__plan-kicker {
     margin: 0;
+    /* inline-flex sizes the pill to its content + padding rather than
+       stretching to the column width. Alignment follows the parent
+       price-block (flex-start on desktop, centre on mobile). */
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 999px;
     font-family: var(--font-body);
     font-size: var(--font-size-eyebrow);
     font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--subtle-text);
+    letter-spacing: 0.12em;
+    color: var(--plan-accent);
+    background-color: color-mix(in srgb, var(--plan-accent) 14%, transparent);
+    transition: color 280ms ease, background-color 280ms ease;
   }
 
   .pricing-hero__total {
