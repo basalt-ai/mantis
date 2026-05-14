@@ -106,7 +106,7 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
                 style={{ left: `${(i / (tiers.length - 1)) * 100}%` }}
               >
                 {pricing.currencySymbol}
-                {t.totalDollars - pricing.infrastructureDollars}
+                {t.totalDollars}
               </button>
             ))}
           </div>
