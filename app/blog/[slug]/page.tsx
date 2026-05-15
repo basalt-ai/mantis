@@ -88,7 +88,7 @@ export default async function BlogPost({ params }: Props) {
       : null;
 
   return (
-    <main className="min-h-screen" style={{ backgroundColor: "var(--surface)", color: "var(--text)" }}>
+    <main className="flex min-h-screen flex-col" style={{ backgroundColor: "var(--surface)", color: "var(--text)" }}>
       {/* JSON-LD structured data */}
       <script
         type="application/ld+json"
@@ -103,7 +103,7 @@ export default async function BlogPost({ params }: Props) {
 
       <HomeNav />
 
-      <article className="mx-auto max-w-3xl px-6 py-24">
+      <article className="mx-auto w-full max-w-3xl flex-1 px-6 py-24">
         {/* Header */}
         <header className="mb-12">
           <time

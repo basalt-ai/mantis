@@ -22,10 +22,10 @@ export default function BlogIndex() {
   const posts = getAllPosts();
 
   return (
-    <main className="min-h-screen" style={{ backgroundColor: "var(--surface)", color: "var(--text)" }}>
+    <main className="flex min-h-screen flex-col" style={{ backgroundColor: "var(--surface)", color: "var(--text)" }}>
       <HomeNav />
 
-      <section className="mx-auto max-w-3xl px-6 py-24">
+      <section className="mx-auto w-full max-w-3xl flex-1 px-6 py-24">
         <h1
           className="mb-4"
           style={{ fontFamily: "var(--font-display)", fontSize: "var(--font-scale-4)", fontWeight: 700 }}
@@ -33,7 +33,7 @@ export default function BlogIndex() {
           Blog
         </h1>
         <p className="mb-16" style={{ color: "var(--subtle-text)", fontSize: "var(--font-scale-1)" }}>
-          Guides, strategies, and insights on AI-native company building.
+          We are Pancake and we help small teams achieve great things by leveraging AI. This is where we share our recipes, come cook with us!
         </p>
 
         {posts.length === 0 ? (

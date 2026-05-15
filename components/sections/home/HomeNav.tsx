@@ -117,6 +117,9 @@ export function HomeNav() {
             >
               <SiDiscord size={20} aria-hidden />
             </a>
+            <Link href="/blog" className={navLinkClassName}>
+              Blog
+            </Link>
             <Link href={sideLinkHref} className={navLinkClassName}>
               {sideLinkLabel}
             </Link>
@@ -165,6 +168,13 @@ export function HomeNav() {
             >
               Resources
             </a>
+            <Link
+              href="/blog"
+              className="home-nav-mobile-drawer__link"
+              onClick={() => setDrawerOpen(false)}
+            >
+              Blog
+            </Link>
             <Link
               href={sideLinkHref}
               className="home-nav-mobile-drawer__link"
