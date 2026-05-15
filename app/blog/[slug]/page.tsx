@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import "../blog.css";
 import { HomeNav } from "@/components/sections/home/HomeNav";
@@ -144,7 +145,7 @@ export default async function BlogPost({ params }: Props) {
 
         {/* Post body */}
         <div className="blog-prose">
-          <ReactMarkdown>{content}</ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
         </div>
 
         {/* FAQ section rendered from frontmatter */}
