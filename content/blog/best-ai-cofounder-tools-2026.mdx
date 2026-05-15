@@ -9,10 +9,12 @@ cover_image_alt: "Autonomous company platforms compared: Pancake vs Polsia vs Na
 faq:
   - question: "What is an autonomous company platform?"
     answer: "An autonomous company platform is software that runs recurring business operations on your behalf — outbound, customer support, engineering tasks, scheduling, ops — without you having to manually trigger every action. The key difference from a simple automation tool is that these platforms use AI agents that can reason, make decisions, and adapt based on context."
+  - question: "Which is the best autonomous company platform in 2026?"
+    answer: "Scored across six criteria a founder would actually weigh (control, transparency, pricing clarity, GitHub access, team support, and autonomy ceiling), Pancake ranks #1 with 28/30, Nanocorp #2 with 17/30, and Polsia #3 with 11/30. Pancake wins on every axis except raw autonomy ceiling — Polsia's only win, since it's the only platform built for fully hands-off operation. Nanocorp sits in the middle as the GitHub-connected hand-off option."
   - question: "What is the difference between Pancake, Polsia, and Nanocorp?"
     answer: "The core difference is control. Polsia and Nanocorp hand maximum autonomy to the AI — they're built for founders who want to describe a goal and let the system run. Pancake is built for founders who want to stay in the driver's seat: you guide the AI, approve key decisions, and shape the direction. Pancake also runs natively in Slack (vs. their own UI) and supports multiplayer use with multiple co-founders or teammates."
   - question: "Is Pancake more expensive than Polsia or Nanocorp?"
-    answer: "Pancake uses transparent pricing: a flat $29/month for the always-on cloud computer plus tokens billed at exactly what OpenAI and Anthropic charge. No markup, no credit system. Polsia and Nanocorp use credit-based pricing, which means costs are harder to predict and there is a structural incentive to run cheaper models and fewer tasks to preserve margin."
+    answer: "All three start at $49/month, but the pricing models are different. Polsia and Nanocorp bundle credits — you don't know how many tokens one credit buys or which models are being used. Pancake's $49 covers the cloud computer (OpenClaw VM, web browsing, email, phone number, 50GB storage) and you buy tokens directly at the public OpenAI/Anthropic rate with zero markup. Pancake makes money on volume discounts from the labs, not on your usage."
   - question: "Can multiple people use Pancake at the same time?"
     answer: "Yes. Pancake supports multiplayer — multiple co-founders or team members can interact with the same AI agents simultaneously through Slack. Polsia and Nanocorp are single-player by design."
   - question: "Do I need to use a specific app to talk to Pancake?"
@@ -31,23 +33,65 @@ Autonomous company platforms exist to change that math. The category is new — 
 
 ---
 
-## What Polsia and Nanocorp do well
+## Polsia: full autopilot, hands off the wheel
 
-Both platforms are designed for the maximum autonomy case: you describe what you want to build, and the AI runs as much of it as possible. If you're a solo founder who wants to get out of the way and let the system work, they're a real answer to a real problem.
+Polsia is the most autonomous of the three. It's designed to be 100% hands-off: you can guide the AI through a chatbot if you want, but the default mode is that it just runs. You don't see what models are being used, what the agents are doing in the background, or which tools they're calling. It's a true black box — by design.
 
-Nanocorp's pitch is that you can launch a business with a single prompt. Polsia focuses more on the operational layer — automating workflows across a handful of integrated tools. Both are genuinely useful for founders who want to spend their time on strategy and let execution happen in the background.
+The default cadence is one task per day, which means progress is slow if you sit on full autopilot. There's a "god mode" that unlocks unlimited tasks, but the philosophy is still the same: hand it over and let it cook. Reported results across the internet are mitigated — sometimes magical, sometimes disappointing — but it's genuinely fun to watch a company build itself.
 
-The tradeoff is control. Both platforms require you to work inside their UI, which means your company lives inside their system. The agent behavior is a black box — you can't inspect what's running, modify how tasks are being handled, or hand off individual components to a different tool. If the platform makes a bad call, your options are limited.
+Pricing is $49/month and includes a bundle of credits. You don't know how many tokens one credit buys, so cost-per-task is opaque. If your goal is to hand over a micro-SaaS to an AI and never think about it again, Polsia is the cleanest version of that bet.
 
 ---
 
-## Where Pancake takes a different position
+## Nanocorp: autopilot with a steering wheel
 
-Pancake starts from a different assumption: a company is only yours if you actually built it. AI that runs 100% autonomously produces a company that belongs to the platform, not to you. The founder's judgment, taste, and instincts are what make a business worth building — and those can't be outsourced.
+Nanocorp targets the same "hand it off to AI" persona as Polsia, but gives you noticeably more control. You can connect your own GitHub and actually work on the product alongside the AI cofounder. There's still a chat interface for talking to the AI, but now you can also see and touch the code it ships.
 
-So Pancake's approach is guided autonomy. You work alongside AI agents. You provide direction, feedback, and approval on anything consequential. Over time, as the agents learn your preferences and your business, more and more gets handled without you. But you remain in the loop, and the company reflects your decisions.
+You can tune how many tasks per day the system runs, which solves Polsia's slow-growth problem on default settings. The agent layer is still a black box — you don't know which models are running or what each sub-agent is actually doing — but the GitHub connection at least gives you visibility into the output.
 
-That takes longer to initialize. Pancake isn't a "launch a business in five minutes" pitch. It's closer to hiring a team that you actually have to onboard — and then, once onboarded, works at a pace you couldn't match with human employees.
+Pricing starts at $49/month with a credit bundle and scales up to $2000/month plans for heavier usage. Same caveat as Polsia: credits are an abstraction, and you don't know how many tokens each one represents. Nanocorp is the right pick if you want to hand off most of the work but still want code-level visibility.
+
+---
+
+## Pancake: maximum control, multiplayer by default
+
+Pancake starts from the opposite assumption: a company is only yours if you actually built it. So instead of optimizing for hand-off, it optimizes for control — you plug in your own GitHub, you pick the stack you want the agents to use, and you stay in the loop on anything consequential.
+
+The other major bet is multiplayer. Pancake runs natively in Slack, which means your AI cofounder can talk to freelancers, employees, or human co-founders in the same channels you already use. You can loop your cofounder into emails and iMessages with the AI. Polsia and Nanocorp are single-player by design — Pancake is the only one of the three built for teams that include other humans.
+
+Pricing is fully transparent. $49/month gets you a virtual machine with OpenClaw installed, web browsing, email, a phone number, and 50GB of storage to install dependencies — full control over the environment. Tokens are billed directly at the public OpenAI and Anthropic rates with zero markup; Pancake's margin comes from buying at scale, not from marking up your usage.
+
+The sub-agent layer is open too. Pancake ships "Open Source Agent Squads" — community-built squads like the LLM-SEO Agent Squad, the Outreach Agent Squad, and others — that you can hire into your org chart. Once hired, your Pancake adapts them to your company. You can inspect any squad, fork it, or replace it. The system is yours in a way closed platforms can't be.
+
+The tradeoff is initialization time. Pancake isn't a "launch a business in five minutes" pitch — the agents have to learn your company first. But once they're onboarded, they work with more context than most human employees would have, and the company that comes out the other side reflects your decisions, not the platform's.
+
+---
+
+## The 2026 ranking
+
+We scored each platform on six criteria a founder evaluating these tools would actually weigh. Each is rated 1–5, where 5 is best.
+
+| Criterion | Pancake | Nanocorp | Polsia |
+|---|---|---|---|
+| Control over your company | 5 | 3 | 1 |
+| Transparency (agents, models, tools) | 5 | 2 | 1 |
+| Pricing clarity | 5 | 2 | 2 |
+| GitHub access / your stack | 5 | 5 | 1 |
+| Team / multiplayer support | 5 | 1 | 1 |
+| Autonomy ceiling (hands-off mode) | 3 | 4 | 5 |
+| **Total** | **28 / 30** | **17 / 30** | **11 / 30** |
+
+### #1 — Pancake (28/30)
+
+Wins on control, transparency, pricing clarity, GitHub access, and multiplayer — the five criteria that matter most for founders who plan to keep their fingerprints on the company. The only point it loses is on raw autonomy ceiling: Pancake isn't designed to run with zero human input, and that's intentional.
+
+### #2 — Nanocorp (17/30)
+
+The middle ground. GitHub access is a real differentiator over Polsia and the tunable task cadence fixes Polsia's slow-growth default. But the agent layer is still a black box, pricing is credit-based and opaque, and it's not built for teams. Right pick if you want to hand off most of the work but keep code-level visibility.
+
+### #3 — Polsia (11/30)
+
+Wins decisively on one axis: raw autonomy. It's the only one of the three genuinely built to run on full autopilot, and that's a real product. Loses on everything else — full black box, no GitHub, no team support, opaque credits. If hand-off is the only thing you care about, Polsia is the cleanest bet.
 
 ---
 
@@ -67,15 +111,15 @@ Pancake runs natively in Slack, iMessage, and email. You're already in Slack. Yo
 
 ### 3. Black box vs. open source
 
-With Polsia and Nanocorp, you don't know what's running behind the product. The agent logic is proprietary. If something goes wrong, you get an error — not an explanation.
+With Polsia and Nanocorp, you don't know what's running behind the product. You can't see which models are being called, which sub-agents are active, or what tools they're using. If something goes wrong, you get an error — not an explanation.
 
-Pancake's sub-agents are open source and available on GitHub. Any agent can be inspected, forked, or replaced. The community builds skills and extensions. If you want to understand exactly how your outbound agent is writing emails, you can read the code. If you want to modify how it decides which leads to prioritize, you can. The system is yours in a way closed platforms can't be.
+Pancake's sub-agents are open source and shipped as Agent Squads on GitHub — LLM-SEO, Outreach, and others built by the community. You hire squads into your org chart and Pancake adapts them to your company. Any squad can be inspected, forked, or replaced. If you want to read exactly how your outbound agent writes emails, you can. The system is yours in a way closed platforms can't be.
 
 ### 4. Credit system vs. transparent pricing
 
-Polsia and Nanocorp use credits. You buy a bundle, the platform draws it down as tasks run. The problem is you never know exactly what each credit costs, which models are being used, or whether the system is making cost-saving substitutions that reduce quality.
+Polsia and Nanocorp both start at $49/month and bundle credits. The platform draws them down as tasks run, but you never know what each credit costs, which model handled the task, or whether the system silently swapped in a cheaper model to preserve margin. Nanocorp's plans scale up to $2000/month on the same credit model.
 
-Pancake charges $29/month for an always-on cloud computer, plus tokens billed at exactly the public rate from OpenAI and Anthropic. Our margin comes from the volume discount the labs give us — not from marking up your usage. You can see exactly what each task cost, which model ran it, and how many tokens were consumed.
+Pancake also starts at $49/month — but that fee covers the cloud computer itself: an OpenClaw-equipped VM, web browsing, email, a phone number, and 50GB of storage. Tokens are billed separately at the public OpenAI and Anthropic rates with zero markup. Pancake's margin comes from the volume discount the labs give us, not from marking up your usage. You can see exactly what each task cost, which model ran it, and how many tokens it consumed.
 
 ### 5. Initialization time
 
@@ -94,15 +138,18 @@ The tradeoff is intentional. A company that was launched in five minutes reflect
 | Who controls decisions | You — guided by AI | Mostly AI | Almost entirely AI |
 | Where you work | Slack, iMessage, email | Their UI | Their UI |
 | Level of autonomy | Guided — you stay in the loop | High — AI runs most of it | Very high |
-| Agent transparency | Open source on GitHub | Closed | Closed |
-| Pricing model | Flat fee + tokens at cost | Credits | Credits |
-| Multiplayer | Yes | No | No |
+| Agent transparency | Open source Agent Squads | Black box | Black box |
+| Pricing model | $49/mo VM + tokens at cost | $49/mo + credits | $49–$2000/mo + credits |
+| GitHub access | Yes — your repo, your stack | No | Yes |
+| Multiplayer | Yes (Slack, email, iMessage) | No | No |
 | Setup time | Days | Minutes | Minutes |
 
 The real question isn't team size — it's how much control you want to keep.
 
-If you want to hand execution to the AI and stay out of the way, Polsia or Nanocorp are built for that. You describe the goal; they run it.
+If you want full autopilot and don't care what's happening under the hood, **Polsia** is the cleanest expression of that bet. Hand over a micro-SaaS and watch it run.
 
-If you want to remain the one making the calls — shaping strategy, approving direction, with AI multiplying your output rather than replacing your judgment — Pancake is built for you. Solo founders use it too. The difference is how much you want your fingerprints on the company.
+If you want to hand off most of the work but keep code-level visibility through GitHub, **Nanocorp** is the middle ground. More control than Polsia, same black-box agent layer.
+
+If you want to remain the one making the calls — your stack, your GitHub, transparent pricing, open-source agent squads, and the only one of the three that's built for teams — **Pancake** is built for you. Solo founders use it too. The difference is how much you want your fingerprints on the company.
 
 ---
