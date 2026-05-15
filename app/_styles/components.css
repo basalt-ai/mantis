@@ -1921,7 +1921,11 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: calc(2 * var(--spacing-xxl));
+    /* Tighter gap between the hero card and the top-up card — they read
+       as siblings of one pricing surface, so a full 48px would feel like
+       a section break. spacing-xl (16px) keeps them visually paired
+       while still distinguishing the two as separate concepts. */
+    gap: var(--spacing-xl);
   }
 
   .pricing-section__header {
@@ -2200,6 +2204,55 @@
     color: var(--disabled-text);
   }
 
+  /* Pod-features line — small caps label + dot-separated feature list.
+     Lives directly under the breakdown, same body face/size so the two
+     read as one descriptive cluster: math on top, contents on bottom.
+     Colors lift the label to subtle-text (it's metadata) and keep
+     features at the same colour, with dots in disabled-text so they
+     don't compete with the words. */
+  .pricing-hero__pod-features {
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    font-family: var(--font-body);
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--subtle-text);
+  }
+
+  .pricing-hero__pod-features-label {
+    font-weight: 600;
+    color: var(--subtle-text);
+    /* Small leading dot to separate from the breakdown line above. */
+  }
+
+  .pricing-hero__pod-features-label::after {
+    content: ":";
+    margin-right: 2px;
+  }
+
+  .pricing-hero__pod-features-list {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 4px 6px;
+    align-items: baseline;
+  }
+
+  .pricing-hero__pod-feature {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .pricing-hero__pod-feature-sep {
+    color: var(--disabled-text);
+    font-weight: 400;
+  }
+
   .pricing-hero__slider-wrap {
     width: 100%;
     display: flex;
@@ -2418,6 +2471,92 @@
     .pricing-hero__slider-stop:not(:first-child):not(:last-child) {
       opacity: 0;
     }
+    .pricing-topup {
+      padding: var(--spacing-xl);
+      border-radius: 24px;
+    }
+    .pricing-topup__title {
+      font-size: 22px;
+    }
+  }
+
+  /* ─── Top-up card ─── Sits below the hero, in the same section, with
+     the same surface treatment but understated dimensions so the user
+     reads it as a sibling concept rather than a competing CTA. */
+  .pricing-topup {
+    width: 100%;
+    max-width: 1080px;
+    padding: calc(1.5 * var(--spacing-xl)) calc(2 * var(--spacing-xl));
+    background-color: var(--surface);
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    border-radius: 24px;
+    corner-shape: squircle;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+
+  /* Tiny eyebrow above the headline — borrows the same monospace +
+     uppercase + wide-tracking grammar as the hero's plan-name kicker so
+     the two cards rhyme typographically. */
+  .pricing-topup__kicker {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-eyebrow);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--subtle-text);
+  }
+
+  /* Headline = the emotional promise ("tokens never expire, stack
+     across months"). Sized between the hero's price (64px) and body
+     copy so it carries weight without competing with the subscription
+     card above. */
+  .pricing-topup__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    color: var(--text);
+  }
+
+  .pricing-topup__body {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    line-height: 1.5;
+    color: var(--subtle-text);
+    max-width: 60ch;
+  }
+
+  /* Terms row — two pills sitting on a single line, each calling out
+     one contract term (min spend, markup). Tinted background so they
+     register as discrete data chips rather than running prose. */
+  .pricing-topup__terms {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
+  }
+
+  .pricing-topup__term {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    background-color: var(--alt-surface);
+    border: 1px solid rgba(0, 0, 0, 0.08);
   }
 
   /* ─── "what your tokens buy" 3-card section ─── */

@@ -222,21 +222,47 @@ export const pricing = {
   defaultTierIndex: 0,
   trial: {
     days: 7,
-    freeTokensDollars: 20,
+    /** $100 token usage cap for the 7-day trial. Surfaced verbatim in
+     *  `trialCaption`; kept as a number for back-office math. */
+    freeTokensDollars: 100,
   },
   currency: "USD" as const,
   currencySymbol: "$",
   // Hero copy.
   title: "No tiers. No tricks.",
-  subtitle: "$49 for the always-on setup. Usage at cost.",
+  /** Reflects the new bundle structure: a $49 pod (the cloud machine
+   *  + everything that runs on it) plus a token allocation that ships
+   *  with the subscription each month. */
+  subtitle: "$49 pod + tokens, bundled monthly. Top up any time.",
   perMonth: "/ month",
-  /** Two-part breakdown shown as small math under the big price. */
-  breakdownFixedLabel: "always-on setup",
-  breakdownTokensLabel: "token usage",
+  /** Two-part breakdown shown as small math under the big price.
+   *  "pod" labels the always-on cloud machine + bundled tools (harness,
+   *  phone, email, vault, browser, 50GB). "tokens" labels the monthly
+   *  allocation that ships with the plan; users can buy more via the
+   *  separate top-up card below. */
+  breakdownFixedLabel: "pod",
+  breakdownTokensLabel: "tokens",
+  /** Subtle line under the breakdown listing what's bundled in the pod
+   *  — makes the "what does $49 buy?" answer scannable without forcing
+   *  the user into the FAQ. */
+  podLabel: "Pod includes",
+  podFeatures: ["harness", "phone", "email", "vault", "browser", "50GB"] as const,
   // Trial CTA below the widget.
   trialCta: "Start your free trial",
-  trialCaption: "7 days free. No card required.",
+  trialCaption: "7-day free trial · $100 token cap",
   trialHref: "/signup",
+  /** Top-up card — sits OUTSIDE the subscription card to make clear
+   *  that top-ups aren't part of the recurring bundle. Three values
+   *  surfaced explicitly: minimum spend, the +10% markup (we're upfront
+   *  about it), and the no-expiry/stack-across-months promise as the
+   *  emotional headline. */
+  topUp: {
+    kicker: "Top-ups",
+    title: "Tokens never expire. Stack across months.",
+    body: "Run out mid-month or want a buffer? Top up any amount, any time.",
+    minLabel: "Min $10",
+    markupLabel: "+10% markup",
+  },
   // 3-column manifesto (shown BEFORE the buys cards — trust before value:
   // the user needs to believe the price is fair before they care what it
   // gets them). Title doubles as the page's main headline since the hero
@@ -250,14 +276,14 @@ export const pricing = {
           "Most AI tools mark up tokens 3x or 5x. We charge exactly what OpenAI and Anthropic charge their direct customers. Our margin is the volume discount the labs give us for buying in bulk.",
       },
       {
-        title: "Your own cloud computer.",
+        title: "Your own pod.",
         body:
-          "$49 buys a small machine in the cloud. Always on, always yours, never shared.",
+          "$49 buys a small machine in the cloud with everything your agents need — harness, phone, email, vault, browser, 50GB storage. Always on, always yours, never shared.",
       },
       {
         title: "No surprises.",
         body:
-          "Tokens reset monthly. Hit the limit, bump the slider. Cancel anytime, takes effect immediately.",
+          "Bundled tokens reset monthly. Run out? Top up any amount at +10% — those tokens never expire and stack across months. Cancel anytime, takes effect immediately.",
       },
     ],
   },
@@ -332,11 +358,11 @@ export const pricing = {
     items: [
       {
         q: "What is the $49 for?",
-        a: "The always-on machine your agents live in. A small cloud computer that holds your context, runs your jobs, and reports back. Think Mac mini in the cloud.",
+        a: "Your pod — the always-on machine your agents live in. A small cloud computer that holds your context, runs your jobs, and reports back. Includes harness, phone, email, vault, browser, and 50GB storage. Think Mac mini in the cloud, with everything your agents need preinstalled.",
       },
       {
-        q: "Does my usage roll over?",
-        a: "No. It resets on your billing day. Leftovers don't carry into next month.",
+        q: "Does my bundled token allocation roll over?",
+        a: "Bundled tokens (the $50–$1000 that ships with your subscription) reset each billing day. Top-up tokens (anything you buy on top) NEVER expire and stack across months.",
       },
       {
         q: "How do seats work?",
@@ -344,7 +370,7 @@ export const pricing = {
       },
       {
         q: "What if I run out mid-month?",
-        a: "Bump the slider from your settings. The new tier takes effect immediately and you only pay the difference, prorated.",
+        a: "Two options. Bump the slider for next month — the new tier takes effect immediately, prorated. Or top up tokens right now: any amount from $10, +10% markup, and they never expire.",
       },
       {
         q: "What are tokens? (and why don't you show them?)",

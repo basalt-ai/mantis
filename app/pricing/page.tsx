@@ -11,6 +11,7 @@ import type { Metadata } from "next";
 
 import { PricingFaq } from "@/components/sections/pricing/PricingFaq";
 import { PricingHero } from "@/components/sections/pricing/PricingHero";
+import { PricingTopUp } from "@/components/sections/pricing/PricingTopUp";
 import { TokensBuyCards } from "@/components/sections/pricing/TokensBuyCards";
 import { HomeNav } from "@/components/sections/home/HomeNav";
 import { Footer } from "@/components/shared/Footer";
@@ -30,6 +31,7 @@ export default function PricingPage() {
       <section className="pricing-section" aria-label="Pricing">
         <div className="pricing-section__inner">
           <PricingHero pricing={pricing} />
+          <PricingTopUp pricing={pricing} />
         </div>
       </section>
 

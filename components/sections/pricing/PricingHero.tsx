@@ -72,6 +72,27 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
               </span>
             </span>
           </p>
+          {/* Pod-features line — makes the contents of the $49 pod
+              scannable directly under the breakdown so the user
+              understands WHAT they're paying for without leaving the
+              hero card. Visual weight matches the breakdown caption. */}
+          <p className="pricing-hero__pod-features">
+            <span className="pricing-hero__pod-features-label">
+              {pricing.podLabel}
+            </span>
+            <span className="pricing-hero__pod-features-list">
+              {pricing.podFeatures.map((feature, i) => (
+                <span key={feature} className="pricing-hero__pod-feature">
+                  {i > 0 && (
+                    <span className="pricing-hero__pod-feature-sep" aria-hidden>
+                      ·
+                    </span>
+                  )}
+                  {feature}
+                </span>
+              ))}
+            </span>
+          </p>
           <p className="pricing-hero__audience" aria-live="polite">
             {tier.forAudience}
           </p>
