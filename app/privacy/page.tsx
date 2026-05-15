@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <main className="flex min-h-screen flex-col">
+    <main id="main-content" className="flex min-h-screen flex-col">
       <HomeNav />
       <section className="legal-section flex-1" aria-labelledby="privacy-heading">
         <div className="legal-section__inner">

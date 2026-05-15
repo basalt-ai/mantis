@@ -73,7 +73,7 @@ const faqPageJsonLd = {
 
 export default function PricingPage() {
   return (
-    <main className="flex min-h-screen flex-col">
+    <main id="main-content" className="flex min-h-screen flex-col">
       {/* FAQPage JSON-LD — pricing page only */}
       <script
         type="application/ld+json"

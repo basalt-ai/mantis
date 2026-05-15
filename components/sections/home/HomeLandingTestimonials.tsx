@@ -16,6 +16,7 @@
  */
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import { gsap } from "gsap";
@@ -105,8 +106,7 @@ function Card({ t }: { t: Testimonial }) {
     <article className="home-landing-testimonial" aria-label={`Testimonial from ${t.name}`}>
       <div className="home-landing-testimonial__header">
         <div className="home-landing-testimonial__avatar">
-          {/* eslint-disable-next-line @next/next/no-img-element -- static avatar PNG */}
-          <img src={t.avatar} alt="" width={48} height={48} />
+          <Image src={t.avatar} alt="" width={48} height={48} loading="lazy" />
         </div>
         <div className="home-landing-testimonial__identity">
           <p className="home-landing-testimonial__name">{t.name}</p>

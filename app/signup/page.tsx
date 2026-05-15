@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 
 export default function SignupPage() {
   return (
-    <main className="flex min-h-screen flex-col">
+    <main id="main-content" className="flex min-h-screen flex-col">
       <HomeNav />
       <section className="signup-section flex-1" aria-labelledby="signup-heading">
         <div className="signup-section__inner">
