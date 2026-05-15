@@ -200,7 +200,9 @@ export const talkToHuman = {
  */
 export const pricing = {
   // Hard pricing numbers — source of truth.
-  infrastructureDollars: 29,
+  // $49 always-on setup + a token usage pack. Five discrete pack sizes:
+  // $50, $100, $250, $500, $1000 — visible as the slider stops.
+  infrastructureDollars: 49,
   /** 5 discrete slider stops. Each tier has a pancake-universe plan name
    *  used as the active kicker above the price, plus an audience line
    *  shown where the old "X hours of agent work a week" sat. `pancakes`
@@ -211,11 +213,11 @@ export const pricing = {
    *  golden → purple → mint → orange → pink. So each tier's accent maps
    *  to the colour that lands at the bottom of its stack. */
   tiers: [
-    { totalDollars: 49,  tokens: 5_000_000,   pancakes: 1, planName: "Syrup",      forAudience: "For side projects",        accent: "#F38F43" }, // golden → yellow-40
-    { totalDollars: 129, tokens: 25_000_000,  pancakes: 2, planName: "Flapjack",   forAudience: "For solopreneurs",         accent: "#8D43FD" }, // purple-40
-    { totalDollars: 229, tokens: 50_000_000,  pancakes: 3, planName: "Stack",      forAudience: "For small founding teams", accent: "#037D48" }, // green-30 (mint)
-    { totalDollars: 329, tokens: 75_000_000,  pancakes: 4, planName: "Tower",      forAudience: "For startups",             accent: "#D43900" }, // orange-30
-    { totalDollars: 529, tokens: 125_000_000, pancakes: 5, planName: "Skyscraper", forAudience: "For scaleups",             accent: "#E33A6A" }, // pink-40
+    { totalDollars: 99,   tokens: 12_500_000,  pancakes: 1, planName: "Syrup",      forAudience: "For side projects",        accent: "#F38F43" }, // $49 setup + $50 pack — golden → yellow-40
+    { totalDollars: 149,  tokens: 25_000_000,  pancakes: 2, planName: "Flapjack",   forAudience: "For solopreneurs",         accent: "#8D43FD" }, // $49 setup + $100 pack — purple-40
+    { totalDollars: 299,  tokens: 62_500_000,  pancakes: 3, planName: "Stack",      forAudience: "For small founding teams", accent: "#037D48" }, // $49 setup + $250 pack — green-30 (mint)
+    { totalDollars: 549,  tokens: 125_000_000, pancakes: 4, planName: "Tower",      forAudience: "For startups",             accent: "#D43900" }, // $49 setup + $500 pack — orange-30
+    { totalDollars: 1049, tokens: 250_000_000, pancakes: 5, planName: "Skyscraper", forAudience: "For scaleups",             accent: "#E33A6A" }, // $49 setup + $1000 pack — pink-40
   ],
   defaultTierIndex: 0,
   trial: {
@@ -226,7 +228,7 @@ export const pricing = {
   currencySymbol: "$",
   // Hero copy.
   title: "No tiers. No tricks.",
-  subtitle: "$29 for the always-on setup. Usage at cost.",
+  subtitle: "$49 for the always-on setup. Usage at cost.",
   perMonth: "/ month",
   /** Two-part breakdown shown as small math under the big price. */
   breakdownFixedLabel: "always-on setup",
@@ -250,7 +252,7 @@ export const pricing = {
       {
         title: "Your own cloud computer.",
         body:
-          "$29 buys a small machine in the cloud. Always on, always yours, never shared.",
+          "$49 buys a small machine in the cloud. Always on, always yours, never shared.",
       },
       {
         title: "No surprises.",
@@ -329,7 +331,7 @@ export const pricing = {
     title: "Questions",
     items: [
       {
-        q: "What is the $29 for?",
+        q: "What is the $49 for?",
         a: "The always-on machine your agents live in. A small cloud computer that holds your context, runs your jobs, and reports back. Think Mac mini in the cloud.",
       },
       {
