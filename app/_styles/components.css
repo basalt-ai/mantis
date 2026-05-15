@@ -2849,13 +2849,39 @@
   }
 
   .pricing-included__item {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: var(--spacing-md);
+    align-items: start;
     /* Soft top border-line for each item — gives the grid a
        checklist/receipt feel without heavy card chrome. */
     padding-top: var(--spacing-md);
     border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .pricing-included__icon {
+    /* 28px slot centers a 24px SVG. inline-flex so the SVG sits
+       at the top of the cell — aligned with the first line of text. */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    color: var(--text);
+    flex-shrink: 0;
+  }
+
+  .pricing-included__icon > svg {
+    width: 24px;
+    height: 24px;
+    display: block;
+  }
+
+  .pricing-included__text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
   }
 
   .pricing-included__name {

@@ -244,28 +244,29 @@ export const pricing = {
   breakdownFixedLabel: "always-on cloud",
   breakdownTokensLabel: "tokens",
   /** Everything bundled into the $49 always-on cloud — shown as a
-   *  dedicated section right under the hero. 11 items, two-line each
-   *  (short label + one-line detail). The "Soon" flag tags features
-   *  shipping later so we can promise without overpromising.
-   *  Ordered roughly by how concrete/visible the feature is to the
-   *  user (machine → comms surfaces → security → AI internals →
-   *  agentic capabilities → coming-soon). */
+   *  dedicated section right under the hero. 12 items, each with a
+   *  short label, a one-line detail, and an `icon` key that maps to
+   *  a branded or stroke icon in PricingIncluded. The "Soon" flag
+   *  tags features shipping later so the roadmap stays honest.
+   *  Order: machine → runtime → comms (slack/imessage/phone/email) →
+   *  security → AI internals → agentic capabilities → coming-soon. */
   included: {
     title: "Everything your $49 buys",
     subtitle:
       "All bundled. No add-ons, no upgrade tiers — every plan gets the full kit.",
     items: [
-      { name: "Isolated Linux environment", detail: "50GB storage, always-on" },
-      { name: "OpenClaw runtime",            detail: "The engine that runs your agents" },
-      { name: "Slack integration",           detail: "DMs + group channels" },
-      { name: "Phone number",                detail: "SMS + voice" },
-      { name: "Email address",               detail: "Your agent's own inbox" },
-      { name: "Secret vault",                detail: "API keys & credentials, end-to-end encrypted" },
-      { name: "Harness",                     detail: "Claude, GPT, Gemini — model-agnostic" },
-      { name: "Browser automation",          detail: "OmniConnect with authenticated profiles" },
-      { name: "Agentic deep search",         detail: "Plus web crawling" },
-      { name: "Sub-agent spawning",          detail: "Unlimited agents" },
-      { name: "Credit card",                 detail: "For real-world purchases", soon: true },
+      { name: "Isolated Linux environment", detail: "50GB storage, always-on",                       icon: "linux" },
+      { name: "OpenClaw runtime",            detail: "The engine that runs your agents",              icon: "runtime" },
+      { name: "Slack integration",           detail: "DMs + group channels",                          icon: "slack" },
+      { name: "iMessage",                    detail: "Native iMessage threads",                       icon: "imessage" },
+      { name: "Phone number",                detail: "SMS + voice",                                   icon: "phone" },
+      { name: "Email address",               detail: "Your agent's own inbox",                        icon: "mail" },
+      { name: "Secret vault",                detail: "API keys & credentials, end-to-end encrypted",  icon: "vault" },
+      { name: "Harness",                     detail: "Claude, GPT, Gemini — model-agnostic",          icon: "harness" },
+      { name: "Browser automation",          detail: "OmniConnect with authenticated profiles",       icon: "browser" },
+      { name: "Agentic deep search",         detail: "Plus web crawling",                             icon: "search" },
+      { name: "Sub-agent spawning",          detail: "Unlimited agents",                              icon: "subagents" },
+      { name: "Credit card",                 detail: "For real-world purchases",  soon: true,         icon: "creditcard" },
     ],
   } as const,
   // Trial CTA below the widget.
