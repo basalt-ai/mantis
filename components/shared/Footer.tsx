@@ -56,6 +56,13 @@ export function Footer() {
           className="flex items-center gap-4 sm:ml-auto"
         >
           <Link
+            href="/blog"
+            prefetch={false}
+            className="whitespace-nowrap transition-colors hover:text-[var(--text-on-inverted-surface)]"
+          >
+            Blog
+          </Link>
+          <Link
             href="/privacy"
             prefetch={false}
             className="whitespace-nowrap transition-colors hover:text-[var(--text-on-inverted-surface)]"
