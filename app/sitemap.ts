@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { getAllPosts } from "@/lib/posts";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
@@ -7,5 +8,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: "https://www.getpancake.ai/signup", lastModified: new Date(), priority: 0.9 },
     { url: "https://www.getpancake.ai/privacy", lastModified: new Date(), priority: 0.3 },
     { url: "https://www.getpancake.ai/terms", lastModified: new Date(), priority: 0.3 },
+    { url: "https://www.getpancake.ai/blog", lastModified: new Date(), priority: 0.8 },
+    ...getAllPosts().map((post) => ({
+      url: `https://www.getpancake.ai/blog/${post.slug}`,
+      lastModified: new Date(post.last_updated || post.date),
+      priority: 0.7 as number,
+    })),
   ];
 }

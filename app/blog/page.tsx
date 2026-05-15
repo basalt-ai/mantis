@@ -1,0 +1,79 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { getAllPosts } from "@/lib/posts";
+import "./blog.css";
+import { HomeNav } from "@/components/sections/home/HomeNav";
+import { Footer } from "@/components/shared/Footer";
+
+export const metadata: Metadata = {
+  title: "Blog — Pancake",
+  description: "Guides, strategies, and insights on AI-native company building, automation, and the future of work.",
+  alternates: { canonical: "https://www.getpancake.ai/blog" },
+  openGraph: {
+    type: "website",
+    url: "https://www.getpancake.ai/blog",
+    title: "Blog — Pancake",
+    description: "Guides, strategies, and insights on AI-native company building, automation, and the future of work.",
+    siteName: "Pancake",
+  },
+};
+
+export default function BlogIndex() {
+  const posts = getAllPosts();
+
+  return (
+    <main className="min-h-screen" style={{ backgroundColor: "var(--surface)", color: "var(--text)" }}>
+      <HomeNav />
+
+      <section className="mx-auto max-w-3xl px-6 py-24">
+        <h1
+          className="mb-4"
+          style={{ fontFamily: "var(--font-display)", fontSize: "var(--font-scale-4)", fontWeight: 700 }}
+        >
+          Blog
+        </h1>
+        <p className="mb-16" style={{ color: "var(--subtle-text)", fontSize: "var(--font-scale-1)" }}>
+          Guides, strategies, and insights on AI-native company building.
+        </p>
+
+        {posts.length === 0 ? (
+          <p style={{ color: "var(--subtle-text)" }}>No posts yet — check back soon.</p>
+        ) : (
+          <ul className="flex flex-col gap-12" style={{ listStyle: "none", padding: 0, margin: 0 }}>
+            {posts.map((post) => (
+              <li key={post.slug}>
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="group block no-underline"
+                  prefetch={false}
+                >
+                  <time
+                    dateTime={post.date}
+                    style={{ fontSize: "var(--font-scale-min-1)", color: "var(--subtle-text)" }}
+                  >
+                    {new Date(post.date).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </time>
+                  <h2
+                    className="mt-1 mb-2 transition-opacity group-hover:opacity-70"
+                    style={{ fontFamily: "var(--font-display)", fontSize: "var(--font-scale-2)", fontWeight: 600 }}
+                  >
+                    {post.title}
+                  </h2>
+                  <p style={{ color: "var(--subtle-text)", fontSize: "var(--font-scale-0)" }}>
+                    {post.description}
+                  </p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <Footer />
+    </main>
+  );
+}
