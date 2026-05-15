@@ -1,0 +1,50 @@
+# Pancake
+
+> Pancake is the AI co-founder infrastructure that takes you from $1 to $1M in revenue without hiring. It deploys an org of AI agents — growth, engineering, operations — that run 24/7, work while you sleep, and report back in Slack. Solo or multiplayer. Pancake runs on Pancake.
+
+## What Pancake does
+
+Pancake gives you an AI co-founder that knows your company better than you and handles 50% of the job. Every agent, role, and workflow is defined in Markdown files you control. Agents pull context from your Notion, docs, and meeting notes — they know your business. Every tool call, message, and decision is written to an immutable log. You always have the last word.
+
+## Who it's for
+
+Solo founders scaling past $50K ARR without wanting to hire. Multiplayer founding teams who want 10x the output with the same headcount. Operators who want AI that works proactively — not just when prompted.
+
+## The problem it solves
+
+Most AI tools are reactive. They wait to be prompted. When you close the tab, they stop. Pancake is the infrastructure — the harness — that lets AI work autonomously: running outbound, shipping content, filing invoices, monitoring production, while you sleep.
+
+## Key pages
+
+- [Homepage](https://getpancake.ai/) — what Pancake is and how it works
+- [Pricing](https://getpancake.ai/pricing) — plans and what's included
+- [Blog](https://getpancake.ai/blog) — founder stories and industry analysis
+- [Sign up](https://getpancake.ai/signup) — try for free, no credit card needed
+
+## Blog
+
+- [The next unicorns will have five employees](https://getpancake.ai/blog/the-next-unicorns-will-have-five-employees) — how AI agents that work while you sleep are about to change who can build a billion-dollar company. May 15, 2026.
+- [Pancake vs Polsia vs Nanocorp: which autonomous company platform is right for you?](https://getpancake.ai/blog/best-ai-cofounder-tools-2026) — a direct comparison of the three main autonomous company platforms in 2026. May 15, 2026.
+
+## Positioning
+
+- Category: AI co-founder / autonomous company platform
+- Differentiator: guided autonomy — you stay in the driver's seat while AI multiplies your output
+- Infrastructure layer: Markdown-configured agents, full audit log, human approval for anything consequential
+- Proof: Pancake runs on Pancake — we operate our own company with our own product
+
+## Founders
+
+- Theophile — co-founder, San Francisco
+- François / Guillaume — GTM co-founder, San Francisco
+- Zakaria — co-founder, San Francisco
+- Tristan — co-founder, San Francisco
+
+## Company
+
+- Founded: 2024
+- HQ: 535 Mission St, San Francisco, CA 94105, USA
+- Website: https://getpancake.ai
+- Twitter/X: https://x.com/getpancake_ai
+- YouTube: https://www.youtube.com/@trypancake
+- LinkedIn: https://www.linkedin.com/company/get-pancake
