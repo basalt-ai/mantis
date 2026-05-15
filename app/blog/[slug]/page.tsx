@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import "../blog.css";
@@ -31,11 +32,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       modifiedTime: post.meta.last_updated,
       authors: [post.meta.author],
       siteName: "Pancake",
+      images: post.meta.cover_image
+        ? [{ url: post.meta.cover_image, width: 1200, height: 630, alt: post.meta.cover_image_alt || post.meta.title }]
+        : [{ url: "/og-image.png", width: 1200, height: 630, alt: "Pancake" }],
     },
     twitter: {
       card: "summary_large_image",
       title: post.meta.title,
       description: post.meta.description,
+      images: post.meta.cover_image ? [post.meta.cover_image] : ["/og-image.png"],
     },
   };
 }
@@ -46,6 +51,9 @@ export default async function BlogPost({ params }: Props) {
   if (!post) notFound();
 
   const { meta, content } = post;
+
+  // OG image: prefer cover_image, fall back to default OG
+  const ogImage = meta.cover_image || "/og-image.png";
 
   // Build Article JSON-LD
   const articleJsonLd = {
@@ -141,6 +149,23 @@ export default async function BlogPost({ params }: Props) {
             </span>
           </div>
         </header>
+
+        {/* Cover image */}
+        {meta.cover_image && (
+          <div
+            className="mb-12 overflow-hidden"
+            style={{ borderRadius: "var(--radius-md)", aspectRatio: "1200/630" }}
+          >
+            <Image
+              src={meta.cover_image}
+              alt={meta.cover_image_alt || meta.title}
+              width={1200}
+              height={630}
+              className="w-full h-full object-cover"
+              priority
+            />
+          </div>
+        )}
 
         {/* Post body */}
         <div className="blog-prose">

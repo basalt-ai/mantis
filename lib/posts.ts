@@ -9,6 +9,8 @@ export interface PostFrontmatter {
   last_updated: string;
   author: string;
   slug: string;
+  cover_image?: string;
+  cover_image_alt?: string;
   faq?: { question: string; answer: string }[];
 }
 
