@@ -236,16 +236,17 @@ export const pricing = {
   subtitle: "$49 pod + tokens, bundled monthly. Top up any time.",
   perMonth: "/ month",
   /** Two-part breakdown shown as small math under the big price.
-   *  "pod" labels the always-on cloud machine + bundled tools (harness,
-   *  phone, email, vault, browser, 50GB). "tokens" labels the monthly
-   *  allocation that ships with the plan; users can buy more via the
-   *  separate top-up card below. */
-  breakdownFixedLabel: "pod",
+   *  "always-on cloud" labels the recurring infrastructure side of the
+   *  bundle (the cloud machine + tools that run on it). "tokens" labels
+   *  the monthly token allocation that ships with the plan; users can
+   *  buy more via the separate top-up card. Avoid jargon like "pod" —
+   *  the words should be self-explanatory at first read. */
+  breakdownFixedLabel: "always-on cloud",
   breakdownTokensLabel: "tokens",
-  /** Subtle line under the breakdown listing what's bundled in the pod
-   *  — makes the "what does $49 buy?" answer scannable without forcing
-   *  the user into the FAQ. */
-  podLabel: "Pod includes",
+  /** Subtle line under the breakdown listing what ships with the cloud
+   *  — makes the "what does $49 actually buy?" answer scannable without
+   *  forcing the user into the FAQ. */
+  podLabel: "Includes",
   podFeatures: ["harness", "phone", "email", "vault", "browser", "50GB"] as const,
   // Trial CTA below the widget.
   trialCta: "Start your free trial",
@@ -255,13 +256,15 @@ export const pricing = {
    *  that top-ups aren't part of the recurring bundle. Three values
    *  surfaced explicitly: minimum spend, the +10% markup (we're upfront
    *  about it), and the no-expiry/stack-across-months promise as the
-   *  emotional headline. */
+   *  emotional headline. The markup note is shown verbatim under the
+   *  pills — radical honesty rather than hiding our economics. */
   topUp: {
     kicker: "Top-ups",
     title: "Tokens never expire. Stack across months.",
     body: "Run out mid-month or want a buffer? Top up any amount, any time.",
     minLabel: "Min $10",
     markupLabel: "+10% markup",
+    markupNote: "That's how we make money. No other tricks.",
   },
   // 3-column manifesto (shown BEFORE the buys cards — trust before value:
   // the user needs to believe the price is fair before they care what it
@@ -276,7 +279,7 @@ export const pricing = {
           "Most AI tools mark up tokens 3x or 5x. We charge exactly what OpenAI and Anthropic charge their direct customers. Our margin is the volume discount the labs give us for buying in bulk.",
       },
       {
-        title: "Your own pod.",
+        title: "Your own cloud computer.",
         body:
           "$49 buys a small machine in the cloud with everything your agents need — harness, phone, email, vault, browser, 50GB storage. Always on, always yours, never shared.",
       },
@@ -358,7 +361,7 @@ export const pricing = {
     items: [
       {
         q: "What is the $49 for?",
-        a: "Your pod — the always-on machine your agents live in. A small cloud computer that holds your context, runs your jobs, and reports back. Includes harness, phone, email, vault, browser, and 50GB storage. Think Mac mini in the cloud, with everything your agents need preinstalled.",
+        a: "Your always-on cloud computer — the machine your agents live in. A small box in the cloud that holds your context, runs your jobs, and reports back. Includes harness, phone, email, vault, browser, and 50GB storage. Think Mac mini in the cloud, with everything your agents need preinstalled.",
       },
       {
         q: "Does my bundled token allocation roll over?",
