@@ -230,17 +230,17 @@ export const pricing = {
   currencySymbol: "$",
   // Hero copy.
   title: "No tiers. No tricks.",
-  /** Reflects the new bundle structure: a $49 pod (the cloud machine
-   *  + everything that runs on it) plus a token allocation that ships
-   *  with the subscription each month. */
-  subtitle: "$49 pod + tokens, bundled monthly. Top up any time.",
+  /** Reflects the bundle: a $49 always-on cloud (the machine + the
+   *  tools that run on it) plus a monthly token allocation. One slider,
+   *  one total. */
+  subtitle: "$49 always-on cloud + tokens. One slider, one total.",
   perMonth: "/ month",
   /** Two-part breakdown shown as small math under the big price.
    *  "always-on cloud" labels the recurring infrastructure side of the
    *  bundle (the cloud machine + tools that run on it). "tokens" labels
-   *  the monthly token allocation that ships with the plan; users can
-   *  buy more via the separate top-up card. Avoid jargon like "pod" —
-   *  the words should be self-explanatory at first read. */
+   *  the monthly token allocation that ships with the plan. Avoid
+   *  jargon like "pod" — the words should be self-explanatory at first
+   *  read. */
   breakdownFixedLabel: "always-on cloud",
   breakdownTokensLabel: "tokens",
   /** Subtle line under the breakdown listing what ships with the cloud
@@ -252,20 +252,6 @@ export const pricing = {
   trialCta: "Start your free trial",
   trialCaption: "7-day free trial · $100 token cap",
   trialHref: "/signup",
-  /** Top-up card — sits OUTSIDE the subscription card to make clear
-   *  that top-ups aren't part of the recurring bundle. Three values
-   *  surfaced explicitly: minimum spend, the +10% markup (we're upfront
-   *  about it), and the no-expiry/stack-across-months promise as the
-   *  emotional headline. The markup note is shown verbatim under the
-   *  pills — radical honesty rather than hiding our economics. */
-  topUp: {
-    kicker: "Top-ups",
-    title: "Tokens never expire. Stack across months.",
-    body: "Run out mid-month or want a buffer? Top up any amount, any time.",
-    minLabel: "Min $10",
-    markupLabel: "+10% markup",
-    markupNote: "That's how we make money. No other tricks.",
-  },
   // 3-column manifesto (shown BEFORE the buys cards — trust before value:
   // the user needs to believe the price is fair before they care what it
   // gets them). Title doubles as the page's main headline since the hero
@@ -286,7 +272,7 @@ export const pricing = {
       {
         title: "No surprises.",
         body:
-          "Bundled tokens reset monthly. Run out? Top up any amount at +10% — those tokens never expire and stack across months. Cancel anytime, takes effect immediately.",
+          "Tokens reset monthly. Hit the limit, bump the slider — the new tier takes effect immediately, prorated. Cancel anytime.",
       },
     ],
   },
@@ -364,8 +350,8 @@ export const pricing = {
         a: "Your always-on cloud computer — the machine your agents live in. A small box in the cloud that holds your context, runs your jobs, and reports back. Includes harness, phone, email, vault, browser, and 50GB storage. Think Mac mini in the cloud, with everything your agents need preinstalled.",
       },
       {
-        q: "Does my bundled token allocation roll over?",
-        a: "Bundled tokens (the $50–$1000 that ships with your subscription) reset each billing day. Top-up tokens (anything you buy on top) NEVER expire and stack across months.",
+        q: "Does my usage roll over?",
+        a: "No. It resets on your billing day. Leftovers don't carry into next month.",
       },
       {
         q: "How do seats work?",
@@ -373,7 +359,7 @@ export const pricing = {
       },
       {
         q: "What if I run out mid-month?",
-        a: "Two options. Bump the slider for next month — the new tier takes effect immediately, prorated. Or top up tokens right now: any amount from $10, +10% markup, and they never expire.",
+        a: "Bump the slider from your settings. The new tier takes effect immediately and you only pay the difference, prorated.",
       },
       {
         q: "What are tokens? (and why don't you show them?)",

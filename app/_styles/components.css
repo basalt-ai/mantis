@@ -1914,26 +1914,13 @@
   .pricing-section__inner {
     margin-inline: auto;
     width: 100%;
-    /* Slightly wider than the old hero-only layout so the right-hand
-       top-up column has room without squeezing the subscription card. */
-    max-width: 1200px;
+    /* Wider than the old 720px to fit the card + mascot side-by-side. */
+    max-width: 1080px;
     padding-inline: var(--spacing-home-page-inline);
-    /* Two-column layout: subscription hero takes ~4/5, top-up sits as a
-       narrow vertical column on the right (~1/5). Mascot + slider live
-       inside the hero card; the top-up is a separate sibling card so it
-       reads as "not part of the recurring bundle". align-items: stretch
-       keeps both cards at the same height. Below 900px the section
-       collapses to a single column (see media query). */
-    display: grid;
-    grid-template-columns: 4fr 1fr;
-    align-items: stretch;
-    gap: var(--spacing-xl);
-  }
-
-  @media (max-width: 900px) {
-    .pricing-section__inner {
-      grid-template-columns: 1fr;
-    }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 
   .pricing-section__header {
@@ -2478,151 +2465,6 @@
     }
     .pricing-hero__slider-stop:not(:first-child):not(:last-child) {
       opacity: 0;
-    }
-    .pricing-topup {
-      padding: var(--spacing-xl);
-      border-radius: 24px;
-    }
-    .pricing-topup__title {
-      font-size: 22px;
-    }
-  }
-
-  /* ─── Top-up card ─── Sits to the RIGHT of the subscription hero in a
-     narrow vertical column (~1/5 of the section grid). Same surface
-     treatment as the hero (border, radius, squircle) so they read as
-     siblings, but vertically arranged content so the headline can
-     breathe in a slim column. justify-content: space-between pins the
-     kicker/title to the top and the terms/markup-note to the bottom. */
-  .pricing-topup {
-    width: 100%;
-    padding: calc(1.5 * var(--spacing-xl)) var(--spacing-xl);
-    background-color: var(--surface);
-    border: 1px solid rgba(0, 0, 0, 0.16);
-    border-radius: 24px;
-    corner-shape: squircle;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: var(--spacing-xl);
-  }
-
-  .pricing-topup__top {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-md);
-  }
-
-  .pricing-topup__bottom {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-md);
-    width: 100%;
-  }
-
-  /* Tiny eyebrow above the headline — borrows the same monospace +
-     uppercase + wide-tracking grammar as the hero's plan-name kicker so
-     the two cards rhyme typographically. */
-  .pricing-topup__kicker {
-    margin: 0;
-    font-family: var(--font-body);
-    font-size: var(--font-size-eyebrow);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--subtle-text);
-  }
-
-  /* Headline = the emotional promise ("tokens never expire, stack
-     across months"). Sized to read as a real anchor inside the narrow
-     column — 24px wraps the line naturally over 3–4 lines, giving the
-     column a "tall poster" feel rather than crammed body copy. */
-  .pricing-topup__title {
-    margin: 0;
-    font-family: var(--font-display);
-    font-weight: 500;
-    font-size: 24px;
-    line-height: 1.2;
-    letter-spacing: -0.3px;
-    color: var(--text);
-  }
-
-  .pricing-topup__body {
-    margin: 0;
-    font-family: var(--font-body);
-    font-size: 13px;
-    line-height: 1.5;
-    color: var(--subtle-text);
-  }
-
-  /* Terms — stacked vertically (one per line) so the narrow column
-     reads as a clean spec list rather than wrapping pills awkwardly.
-     Each term is still a tinted chip so it registers as discrete data
-     rather than prose. */
-  .pricing-topup__terms {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-sm);
-  }
-
-  .pricing-topup__term {
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-family: var(--font-body);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-    background-color: var(--alt-surface);
-    border: 1px solid rgba(0, 0, 0, 0.08);
-  }
-
-  /* Radical-honesty markup note — small, italic-ish, sits right under
-     the terms pills so the +10% reads as deliberate transparency
-     rather than a hidden surcharge. */
-  .pricing-topup__markup-note {
-    margin: 0;
-    font-family: var(--font-body);
-    font-size: 12px;
-    line-height: 1.4;
-    color: var(--subtle-text);
-    font-style: italic;
-  }
-
-  /* Desktop-row → mobile-column collapse. Below 900px the section uses
-     a single column (hero stacked over top-up), so the top-up card
-     reverts to a horizontal layout: terms inline as pills, body line
-     visible at full width, no need for the "tall poster" vertical
-     rhythm anymore. */
-  @media (max-width: 900px) {
-    .pricing-topup {
-      padding: calc(1.5 * var(--spacing-xl)) calc(2 * var(--spacing-xl));
-      flex-direction: column;
-      gap: var(--spacing-md);
-    }
-    .pricing-topup__top,
-    .pricing-topup__bottom {
-      width: 100%;
-    }
-    .pricing-topup__title {
-      font-size: 28px;
-      line-height: 1.15;
-    }
-    .pricing-topup__body {
-      font-size: var(--font-size-body-regular);
-      max-width: 60ch;
-    }
-    .pricing-topup__terms {
-      flex-direction: row;
-      flex-wrap: wrap;
     }
   }
 
