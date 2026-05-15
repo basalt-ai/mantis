@@ -243,11 +243,31 @@ export const pricing = {
    *  read. */
   breakdownFixedLabel: "always-on cloud",
   breakdownTokensLabel: "tokens",
-  /** Subtle line under the breakdown listing what ships with the cloud
-   *  — makes the "what does $49 actually buy?" answer scannable without
-   *  forcing the user into the FAQ. */
-  podLabel: "Includes",
-  podFeatures: ["harness", "phone", "email", "vault", "browser", "50GB"] as const,
+  /** Everything bundled into the $49 always-on cloud — shown as a
+   *  dedicated section right under the hero. 11 items, two-line each
+   *  (short label + one-line detail). The "Soon" flag tags features
+   *  shipping later so we can promise without overpromising.
+   *  Ordered roughly by how concrete/visible the feature is to the
+   *  user (machine → comms surfaces → security → AI internals →
+   *  agentic capabilities → coming-soon). */
+  included: {
+    title: "Everything your $49 buys",
+    subtitle:
+      "All bundled. No add-ons, no upgrade tiers — every plan gets the full kit.",
+    items: [
+      { name: "Isolated Linux environment", detail: "50GB storage, always-on" },
+      { name: "OpenClaw runtime",            detail: "The engine that runs your agents" },
+      { name: "Slack integration",           detail: "DMs + group channels" },
+      { name: "Phone number",                detail: "SMS + voice" },
+      { name: "Email address",               detail: "Your agent's own inbox" },
+      { name: "Secret vault",                detail: "API keys & credentials, end-to-end encrypted" },
+      { name: "Harness",                     detail: "Claude, GPT, Gemini — model-agnostic" },
+      { name: "Browser automation",          detail: "OmniConnect with authenticated profiles" },
+      { name: "Agentic deep search",         detail: "Plus web crawling" },
+      { name: "Sub-agent spawning",          detail: "Unlimited agents" },
+      { name: "Credit card",                 detail: "For real-world purchases", soon: true },
+    ],
+  } as const,
   // Trial CTA below the widget.
   trialCta: "Start your free trial",
   trialCaption: "7-day free trial · $100 token cap",

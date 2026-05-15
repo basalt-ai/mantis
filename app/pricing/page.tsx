@@ -11,6 +11,7 @@ import type { Metadata } from "next";
 
 import { PricingFaq } from "@/components/sections/pricing/PricingFaq";
 import { PricingHero } from "@/components/sections/pricing/PricingHero";
+import { PricingIncluded } from "@/components/sections/pricing/PricingIncluded";
 import { TokensBuyCards } from "@/components/sections/pricing/TokensBuyCards";
 import { HomeNav } from "@/components/sections/home/HomeNav";
 import { Footer } from "@/components/shared/Footer";
@@ -32,6 +33,8 @@ export default function PricingPage() {
           <PricingHero pricing={pricing} />
         </div>
       </section>
+
+      <PricingIncluded pricing={pricing} />
 
       <section className="pricing-manifesto" aria-labelledby="pricing-manifesto-title">
         <div className="pricing-manifesto__inner">

@@ -2199,55 +2199,6 @@
     color: var(--disabled-text);
   }
 
-  /* Pod-features line — small caps label + dot-separated feature list.
-     Lives directly under the breakdown, same body face/size so the two
-     read as one descriptive cluster: math on top, contents on bottom.
-     Colors lift the label to subtle-text (it's metadata) and keep
-     features at the same colour, with dots in disabled-text so they
-     don't compete with the words. */
-  .pricing-hero__pod-features {
-    margin: 0;
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 4px 8px;
-    font-family: var(--font-body);
-    font-size: 12px;
-    line-height: 1.4;
-    color: var(--subtle-text);
-  }
-
-  .pricing-hero__pod-features-label {
-    font-weight: 600;
-    color: var(--subtle-text);
-    /* Small leading dot to separate from the breakdown line above. */
-  }
-
-  .pricing-hero__pod-features-label::after {
-    content: ":";
-    margin-right: 2px;
-  }
-
-  .pricing-hero__pod-features-list {
-    display: inline-flex;
-    flex-wrap: wrap;
-    gap: 4px 6px;
-    align-items: baseline;
-  }
-
-  .pricing-hero__pod-feature {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 6px;
-    color: var(--text);
-    font-weight: 500;
-  }
-
-  .pricing-hero__pod-feature-sep {
-    color: var(--disabled-text);
-    font-weight: 400;
-  }
-
   .pricing-hero__slider-wrap {
     width: 100%;
     display: flex;
@@ -2828,6 +2779,122 @@
   }
 
   /* ─── "how this works" 3-column manifesto ─── */
+  /* ─── "Everything your $49 buys" — receipt section ─── Sits directly
+     under the hero on an alt-surface background so the alternating
+     rhythm (surface → alt → surface → alt → surface) carries through
+     the page. Each line is a single included feature as bold name + a
+     subtle one-line detail. "Soon" pill marks roadmap items. */
+  .pricing-included {
+    width: 100%;
+    padding: calc(2 * var(--spacing-xxl)) var(--spacing-home-page-inline);
+    background-color: var(--alt-surface);
+  }
+
+  .pricing-included__inner {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 1080px;
+    display: flex;
+    flex-direction: column;
+    gap: calc(2 * var(--spacing-xl));
+  }
+
+  .pricing-included__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+    text-align: center;
+  }
+
+  .pricing-included__title {
+    margin: 0;
+    font-size: var(--font-size-header-03);
+    letter-spacing: -0.5px;
+    color: var(--text);
+  }
+
+  .pricing-included__subtitle {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    color: var(--subtle-text);
+    max-width: 56ch;
+    line-height: 1.5;
+  }
+
+  /* 11 items split across the grid: 3 cols on desktop reads as a
+     short receipt without dense crowding (4 rows; last row has 2
+     items left-aligned). Below 768px collapses to 2 cols, then 1 on
+     small phones. */
+  .pricing-included__grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: calc(1.5 * var(--spacing-xl)) calc(2 * var(--spacing-xl));
+  }
+
+  @media (min-width: 560px) {
+    .pricing-included__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (min-width: 880px) {
+    .pricing-included__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .pricing-included__item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    /* Soft top border-line for each item — gives the grid a
+       checklist/receipt feel without heavy card chrome. */
+    padding-top: var(--spacing-md);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .pricing-included__name {
+    margin: 0;
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text);
+  }
+
+  .pricing-included__detail {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--subtle-text);
+  }
+
+  /* "Soon" badge — tiny tinted pill inside the feature name so the
+     roadmap-status is co-located with the feature itself, never a
+     separate column the eye has to search for. */
+  .pricing-included__soon {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--subtle-text);
+    background-color: rgba(0, 0, 0, 0.06);
+  }
+
   .pricing-manifesto {
     width: 100%;
     padding: calc(2 * var(--spacing-xxl)) var(--spacing-home-page-inline);
