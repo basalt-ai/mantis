@@ -242,11 +242,11 @@ export const pricing = {
   basePlan: {
     kicker: "Always-on",
     title: "Your own cloud computer",
-    body: "Runs 24/7, holds your context, and ships everything in the list below — bundled into one flat price.",
+    body: "Always on. Every feature below included.",
   },
   /** Tokens card framing. */
   tokenPickLabel: "Pick your token pack",
-  tokenPickCaption: "How much your agents are allowed to spend each month. Bigger pack = more work shipped.",
+  tokenPickCaption: "Bigger pack, more output.",
   totalLabel: "/ month total",
   /** Two-part breakdown — kept for back-office/aria use; the visible
    *  hero no longer shows them as inline math. */
