@@ -248,21 +248,26 @@ export const pricing = {
    *  with a marketing-ready label + a one-line detail + an `icon`
    *  key mapped in IncludedIcons. The "Soon" flag tags features
    *  shipping later so the roadmap stays honest.
-   *  Order: machine → comms (slack/imessage/phone/email) → security →
-   *  AI internals → agentic capabilities (browse/live/search/sub-
-   *  agents) → coming-soon. */
+   *
+   *  Order is row-grouped (3 cols × 4 rows) so related items sit next
+   *  to each other in the grid:
+   *    R1 — foundation:  compute · secrets · LLM
+   *    R2 — messaging:   Slack · iMessage · phone   ← iMessage + phone
+   *                                                   adjacent (linked)
+   *    R3 — written/web: inbox · browsing · live web
+   *    R4 — capabilities: search · sub-agents · credit-card */
   included: {
     title: "Everything your $49 buys",
     subtitle:
       "All bundled. No add-ons, no upgrade tiers — every plan gets the full kit.",
     items: [
       { name: "Always-on compute",        detail: "Private cloud computer, 50GB storage", icon: "linux" },
+      { name: "Encrypted secrets",        detail: "API keys + credentials, E2E",          icon: "vault" },
+      { name: "Any LLM, your choice",     detail: "Claude, GPT, Gemini — model-agnostic", icon: "harness" },
       { name: "Slack-native",             detail: "Lives in your channels and DMs",       icon: "slack" },
       { name: "iMessage access",          detail: "Real iMessage threads",                icon: "imessage" },
       { name: "Real phone number",        detail: "SMS + voice",                          icon: "phone" },
       { name: "Dedicated inbox",          detail: "Send and receive email",               icon: "mail" },
-      { name: "Encrypted secrets",        detail: "API keys + credentials, E2E",          icon: "vault" },
-      { name: "Any LLM, your choice",     detail: "Claude, GPT, Gemini — model-agnostic", icon: "harness" },
       { name: "Authenticated browsing",   detail: "Signed into your accounts",            icon: "browser" },
       { name: "Live web access",          detail: "Real-time fetch from any URL",         icon: "globe" },
       { name: "Deep web search",          detail: "Agentic research + crawling",          icon: "search" },
