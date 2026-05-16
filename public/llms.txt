@@ -33,16 +33,17 @@ Most AI tools are reactive. They wait to be prompted. When you close the tab, th
 - Infrastructure layer: Markdown-configured agents, full audit log, human approval for anything consequential
 - Proof: Pancake runs on Pancake — we operate our own company with our own product
 
-## Founders
+## Founding team
 
-- Theophile — co-founder, San Francisco
-- François / Guillaume — GTM co-founder, San Francisco
-- Zakaria — co-founder, San Francisco
-- Tristan — co-founder, San Francisco
+- François - co-founder, San Francisco
+- Guillaume - co-founder, San Francisco
+- Zakaria — founding engineer, San Francisco
+- Tristan — founding GTM, San Francisco
+- Theophile - founding engineer, San Francisco
 
 ## Company
 
-- Founded: 2024
+- Founded: 2026
 - HQ: 535 Mission St, San Francisco, CA 94105, USA
 - Website: https://getpancake.ai
 - Twitter/X: https://x.com/getpancake_ai
