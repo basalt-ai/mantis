@@ -256,7 +256,7 @@ export const pricing = {
     subtitle:
       "All bundled. No add-ons, no upgrade tiers — every plan gets the full kit.",
     items: [
-      { name: "Always-on compute",        detail: "Isolated Linux box, 50GB storage",     icon: "linux" },
+      { name: "Always-on compute",        detail: "Private cloud computer, 50GB storage", icon: "linux" },
       { name: "Slack-native",             detail: "Lives in your channels and DMs",       icon: "slack" },
       { name: "iMessage access",          detail: "Real iMessage threads",                icon: "imessage" },
       { name: "Real phone number",        detail: "SMS + voice",                          icon: "phone" },
@@ -266,7 +266,7 @@ export const pricing = {
       { name: "Authenticated browsing",   detail: "Signed into your accounts",            icon: "browser" },
       { name: "Live web access",          detail: "Real-time fetch from any URL",         icon: "globe" },
       { name: "Deep web search",          detail: "Agentic research + crawling",          icon: "search" },
-      { name: "Unlimited sub-agents",     detail: "Spawn helpers as the work demands",    icon: "subagents" },
+      { name: "Unlimited sub-agents",     detail: "Run multiple agents in parallel",      icon: "subagents" },
       { name: "Credit card for agents",   detail: "For real-world purchases", soon: true, icon: "creditcard" },
     ],
   } as const,
