@@ -235,12 +235,18 @@ export const pricing = {
    *  one total. */
   subtitle: "$49 always-on cloud + tokens. One slider, one total.",
   perMonth: "/ month",
-  /** New hero framing: present the $49 as the FIXED promise (the big
-   *  hero number) and the token pack as a separate VARIABLE the user
-   *  picks. Reads "Pancake is $49 + tokens you choose" rather than
-   *  "Pancake costs $99 broken down into $49 + $50". */
-  basePriceCaption: "always-on cloud — every feature below included",
+  /** Two-card hero. LEFT card = the fixed-price promise; RIGHT card =
+   *  the variable token pack the user picks. Reads as "Pancake is $49
+   *  for the always-on cloud. Tokens are bought separately, you pick
+   *  the pack." */
+  basePlan: {
+    kicker: "Always-on",
+    title: "Your own cloud computer",
+    body: "Runs 24/7, holds your context, and ships everything in the list below — bundled into one flat price.",
+  },
+  /** Tokens card framing. */
   tokenPickLabel: "Pick your token pack",
+  tokenPickCaption: "How much your agents are allowed to spend each month. Bigger pack = more work shipped.",
   totalLabel: "/ month total",
   /** Two-part breakdown — kept for back-office/aria use; the visible
    *  hero no longer shows them as inline math. */

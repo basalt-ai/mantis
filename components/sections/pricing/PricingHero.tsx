@@ -10,29 +10,31 @@ import { PancakeStack } from "./PancakeStack";
 type Pricing = typeof pricingCopy;
 
 /**
- * Pricing hero — single card with a 2-column grid inside.
+ * Token-pack card — the RIGHT of the two pricing cards. The $49
+ * base plan lives on the LEFT (PricingBase, fixed). This card is
+ * entirely about the variable: the user picks a token pack via the
+ * slider, the pancake mascot grows to match, and the trial CTA
+ * sends them off.
  *
- * The price reads as a math equation rather than one big total:
+ * Internal layout: a 2-column grid (info left, pancake right). The
+ * info column flows top-to-bottom as:
  *
- *   $49 / month                  ← THE PROMISE (fixed, big, anchored)
- *   always-on cloud · everything below included
+ *   SYRUP                       ← tier kicker (top-left, tier-tinted)
+ *   Pick your token pack
+ *   How much your agents…       ← caption, framing what the slider does
  *
- *   + Pick your token pack       ← THE CHOICE (variable, slider)
- *   [────●─── slider ───]
+ *   [────●────]
  *   $50  $100  $250  $500  $1000
  *
- *   = $X / month total · For X audience   ← THE RESULT (small)
+ *   $99 / month total · For side projects
  *
- * Why: the previous layout led with "$99/month" as the big number
- * and showed "$49 + $50" as a tiny breakdown line. That framing made
- * users anchor on the total. Inverting the hierarchy — $49 huge,
- * tokens as a separate user-chosen step, total as a calculation
- * footer — communicates the real promise: "Pancake is $49. Then you
- * pick the tokens you need."
+ *   [Start your free trial]
+ *   7-day free trial · $100 token cap
  *
- * Top-left corner: plan kicker (tier name) as a soft tinted pill,
- *   brand-coloured per tier via `--plan-accent`.
- * Right column: pancake stack only.
+ *   (pancake mascot column on the right, full height)
+ *
+ * No $49 mention here — that's the OTHER card's job. Keeping the two
+ * concerns separate is the whole point of the two-card split.
  */
 export function PricingHero({ pricing }: { pricing: Pricing }) {
   const tiers = pricing.tiers;
@@ -52,76 +54,49 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
       </p>
 
       <div className="pricing-hero__info">
-        {/* THE PROMISE — fixed, big, anchored. The $49 is the brand
-            commitment; it never changes regardless of slider position. */}
-        <div className="pricing-hero__base">
-          <p className="pricing-hero__base-price">
-            <span className="pricing-hero__base-symbol">
-              {pricing.currencySymbol}
-            </span>
-            {pricing.infrastructureDollars}
-            <span className="pricing-hero__base-suffix">{pricing.perMonth}</span>
-          </p>
-          <p className="pricing-hero__base-caption">
-            {pricing.basePriceCaption}
+        <div className="pricing-hero__choice">
+          <p className="pricing-hero__choice-label">{pricing.tokenPickLabel}</p>
+          <p className="pricing-hero__choice-caption">
+            {pricing.tokenPickCaption}
           </p>
         </div>
 
-        {/* THE CHOICE — variable, user-driven. The slider is framed as
-            "pick your pack" rather than "size your plan", so tokens
-            feel like a deliberate add-on, not an upgrade tier. The
-            leading "+" makes the math metaphor explicit. */}
-        <div className="pricing-hero__choice">
-          <p className="pricing-hero__choice-label">
-            <span className="pricing-hero__choice-plus" aria-hidden>
-              +
-            </span>
-            {pricing.tokenPickLabel}
-          </p>
-          <div className="pricing-hero__slider-wrap">
-            <label htmlFor={sliderId} className="sr-only">
-              token pack size
-            </label>
-            <input
-              id={sliderId}
-              type="range"
-              min={0}
-              max={tiers.length - 1}
-              step={1}
-              value={tierIndex}
-              onChange={(e) => setTierIndex(Number(e.target.value))}
-              aria-valuetext={`${pricing.currencySymbol}${tokenPortion} token pack, ${pricing.currencySymbol}${tier.totalDollars} per month total`}
-              className="pricing-hero__slider"
-              style={
-                { "--progress": tierIndex / (tiers.length - 1) } as React.CSSProperties
-              }
-            />
-            <div className="pricing-hero__slider-stops" aria-hidden>
-              {tiers.map((t, i) => (
-                <button
-                  key={t.planName}
-                  type="button"
-                  className="pricing-hero__slider-stop"
-                  data-active={i === tierIndex ? "true" : undefined}
-                  onClick={() => setTierIndex(i)}
-                  style={{ left: `${(i / (tiers.length - 1)) * 100}%` }}
-                >
-                  {pricing.currencySymbol}
-                  {t.totalDollars - pricing.infrastructureDollars}
-                </button>
-              ))}
-            </div>
+        <div className="pricing-hero__slider-wrap">
+          <label htmlFor={sliderId} className="sr-only">
+            token pack size
+          </label>
+          <input
+            id={sliderId}
+            type="range"
+            min={0}
+            max={tiers.length - 1}
+            step={1}
+            value={tierIndex}
+            onChange={(e) => setTierIndex(Number(e.target.value))}
+            aria-valuetext={`${pricing.currencySymbol}${tokenPortion} token pack, ${pricing.currencySymbol}${tier.totalDollars} per month total`}
+            className="pricing-hero__slider"
+            style={
+              { "--progress": tierIndex / (tiers.length - 1) } as React.CSSProperties
+            }
+          />
+          <div className="pricing-hero__slider-stops" aria-hidden>
+            {tiers.map((t, i) => (
+              <button
+                key={t.planName}
+                type="button"
+                className="pricing-hero__slider-stop"
+                data-active={i === tierIndex ? "true" : undefined}
+                onClick={() => setTierIndex(i)}
+                style={{ left: `${(i / (tiers.length - 1)) * 100}%` }}
+              >
+                {pricing.currencySymbol}
+                {t.totalDollars - pricing.infrastructureDollars}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* THE RESULT — small, deliberately understated. The total is
-            just a calculation outcome here, not the headline. Pairs
-            with the audience label so the user can sanity-check both
-            number and persona-fit in one glance. */}
         <p className="pricing-hero__result" aria-live="polite">
-          <span className="pricing-hero__result-equals" aria-hidden>
-            =
-          </span>
           <span className="pricing-hero__result-amount">
             {pricing.currencySymbol}
             {tier.totalDollars}

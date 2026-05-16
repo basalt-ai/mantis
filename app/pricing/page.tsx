@@ -9,6 +9,7 @@
  */
 import type { Metadata } from "next";
 
+import { PricingBase } from "@/components/sections/pricing/PricingBase";
 import { PricingFaq } from "@/components/sections/pricing/PricingFaq";
 import { PricingHero } from "@/components/sections/pricing/PricingHero";
 import { PricingIncluded } from "@/components/sections/pricing/PricingIncluded";
@@ -30,6 +31,7 @@ export default function PricingPage() {
 
       <section className="pricing-section" aria-label="Pricing">
         <div className="pricing-section__inner">
+          <PricingBase pricing={pricing} />
           <PricingHero pricing={pricing} />
         </div>
       </section>

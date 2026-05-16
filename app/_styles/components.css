@@ -1914,13 +1914,25 @@
   .pricing-section__inner {
     margin-inline: auto;
     width: 100%;
-    /* Wider than the old 720px to fit the card + mascot side-by-side. */
-    max-width: 1080px;
+    /* Bumped from 1080 → 1200 to fit the two-card hero (base on the
+       left, token-pack on the right) side-by-side with breathing room. */
+    max-width: 1200px;
     padding-inline: var(--spacing-home-page-inline);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    /* Two-card grid. Left card (base $49 plan) gets 1fr; right card
+       (token slider + pancake mascot) gets 1.5fr because it has more
+       content stacked vertically. align-items: stretch keeps both
+       cards the same height. Collapses to a single column below
+       880px so each card takes the full width on tablets/phones. */
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    align-items: stretch;
+    gap: var(--spacing-xl);
+  }
+
+  @media (max-width: 880px) {
+    .pricing-section__inner {
+      grid-template-columns: 1fr;
+    }
   }
 
   .pricing-section__header {
@@ -2020,69 +2032,47 @@
     justify-content: space-between;
     align-items: flex-start;
     min-width: 0;
-    padding-top: calc(4 * var(--spacing-xl));
+    /* Padding-top clears the absolutely-positioned tier kicker; less
+       than before because the right card no longer leads with a big
+       price block (that's the left card's job now). */
+    padding-top: calc(2 * var(--spacing-xl));
     text-align: left;
   }
 
-  /* Base price block — "$49 / month" anchored as the hero number.
-     Price + caption stacked tight (8px). This is THE PROMISE: a fixed
-     number that doesn't move when the slider does. Sits at the top of
-     the info column so it's the first thing the eye lands on. */
-  .pricing-hero__base {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-md);
-  }
-
-  .pricing-hero__base-caption {
-    margin: 0;
-    font-family: var(--font-body);
-    font-size: var(--font-size-body-regular);
-    font-weight: 400;
-    color: var(--subtle-text);
-    max-width: 36ch;
-    text-align: left;
-    line-height: 1.4;
-  }
-
-  /* Choice block — "Pick your token pack" + the slider. Framed as a
-     deliberate add-on (the leading "+" makes the math metaphor
-     explicit) rather than an upgrade tier the user must select. */
+  /* Choice block — "Pick your token pack" heading + caption stacked
+     tightly above the slider. The choice card (right) is entirely
+     about this single decision: how big a token pack to subscribe to. */
   .pricing-hero__choice {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--spacing-md);
+    gap: var(--spacing-xs);
     width: 100%;
   }
 
   .pricing-hero__choice-label {
     margin: 0;
-    display: inline-flex;
-    align-items: baseline;
-    gap: var(--spacing-sm);
-    font-family: var(--font-body);
-    font-size: var(--font-size-body-regular);
-    font-weight: 600;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 1.1;
+    letter-spacing: -0.4px;
     color: var(--text);
   }
 
-  /* Big faded "+" that ties the choice block visually to the base
-     price above. Same size as the rest of the heading but dimmed so
-     it reads as a separator/operator, not punctuation. */
-  .pricing-hero__choice-plus {
-    font-family: var(--font-display);
-    font-size: 1.4em;
-    font-weight: 500;
-    line-height: 0.8;
-    color: var(--disabled-text);
+  .pricing-hero__choice-caption {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    line-height: 1.4;
+    color: var(--subtle-text);
+    max-width: 42ch;
   }
 
-  /* Result line — "= $99 / month total · For side projects".
-     Small, understated. The total is shown as the OUTCOME of the
-     math above, not the headline. The audience persona shares the
-     line so the user can sanity-check both at once. */
+  /* Result line — "$99 / month total · For side projects". Lives
+     directly under the slider stops. The TOTAL is the outcome of
+     base + selected pack; the audience persona shares the line so
+     the user reads price + persona-fit in one glance. */
   .pricing-hero__result {
     margin: 0;
     display: inline-flex;
@@ -2093,13 +2083,6 @@
     font-size: var(--font-size-body-regular);
     line-height: 1.4;
     color: var(--subtle-text);
-  }
-
-  .pricing-hero__result-equals {
-    font-family: var(--font-display);
-    font-size: 1.2em;
-    font-weight: 500;
-    color: var(--disabled-text);
   }
 
   .pricing-hero__result-amount {
@@ -2114,6 +2097,93 @@
 
   .pricing-hero__result-audience {
     color: var(--subtle-text);
+  }
+
+  /* ─── Base plan card (LEFT) ─── The fixed $49/month promise. Same
+     surface treatment as the right card (border, radius, padding,
+     squircle) so the two read as a balanced pair. Content centred
+     vertically because the card has less content than the right one
+     — centering puts the big $49 at the optical mid-point, aligning
+     visually with the slider on the right card. */
+  .pricing-base {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: var(--spacing-lg);
+    padding: calc(2 * var(--spacing-xl));
+    background-color: var(--surface);
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    border-radius: 32px;
+    corner-shape: squircle;
+  }
+
+  /* Always-on kicker — neutral-tinted pill (no tier accent here; the
+     base price never changes so it doesn't need to colour-shift). */
+  .pricing-base__kicker {
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: var(--font-size-eyebrow);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--subtle-text);
+    background-color: rgba(0, 0, 0, 0.06);
+  }
+
+  /* Big $49 — same display typography as the old hero __total. The
+     scale signals "this is THE price". */
+  .pricing-base__price {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 64px;
+    line-height: 1;
+    letter-spacing: -2px;
+    color: var(--text);
+  }
+
+  .pricing-base__symbol {
+    font-size: 0.62em;
+    vertical-align: 0.18em;
+    margin-right: 2px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  .pricing-base__suffix {
+    margin-left: var(--spacing-sm);
+    font-size: var(--font-size-body-regular);
+    font-weight: 400;
+    color: var(--subtle-text);
+    letter-spacing: 0;
+  }
+
+  /* Headline under the price — one short noun phrase ("Your own
+     cloud computer"). Display face for character but smaller than
+     the price so it reads as a subtitle. */
+  .pricing-base__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 1.15;
+    letter-spacing: -0.3px;
+    color: var(--text);
+  }
+
+  .pricing-base__body {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    color: var(--subtle-text);
+    line-height: 1.5;
+    max-width: 36ch;
   }
 
   /* Right column — pancake stack only. No padding tricks: the SVG fills
@@ -2178,38 +2248,6 @@
     color: var(--plan-accent);
     background-color: color-mix(in srgb, var(--plan-accent) 14%, transparent);
     transition: color 280ms ease, background-color 280ms ease;
-  }
-
-  /* Hero price — "$49 / month" anchored as the big number. Same
-     typography as the old `__total` (64px display) — the size is what
-     makes it read as THE price, not a breakdown line. */
-  .pricing-hero__base-price {
-    margin: 0;
-    font-family: var(--font-display);
-    font-weight: 500;
-    font-size: 64px;
-    line-height: 1;
-    letter-spacing: -2px;
-    color: var(--text);
-  }
-
-  /* Aeonik renders the $ glyph noticeably taller than its lining digits;
-     scale the symbol down and lift it a bit so it reads as a prefix, not
-     a dominant character. */
-  .pricing-hero__base-symbol {
-    font-size: 0.62em;
-    vertical-align: 0.18em;
-    margin-right: 2px;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-  }
-
-  .pricing-hero__base-suffix {
-    margin-left: var(--spacing-sm);
-    font-size: var(--font-size-body-regular);
-    font-weight: 400;
-    color: var(--subtle-text);
-    letter-spacing: 0;
   }
 
   .pricing-hero__slider-wrap {
@@ -2370,7 +2408,6 @@
       max-width: 200px;
     }
     .pricing-hero__info,
-    .pricing-hero__base,
     .pricing-hero__choice,
     .pricing-hero__cta,
     .pricing-hero__cta-caption {
@@ -2383,7 +2420,7 @@
       justify-content: flex-start;
       padding-top: 0;
     }
-    .pricing-hero__base-caption {
+    .pricing-hero__choice-caption {
       text-align: center;
     }
     .pricing-hero__result {
@@ -2391,6 +2428,14 @@
     }
     .pricing-hero__slider-stop {
       font-size: 10px;
+    }
+    .pricing-base {
+      align-items: center;
+      text-align: center;
+      padding: calc(1.5 * var(--spacing-xl));
+    }
+    .pricing-base__body {
+      max-width: none;
     }
   }
 
@@ -2413,9 +2458,12 @@
     .pricing-hero__mascot-stack {
       max-width: 160px;
     }
-    .pricing-hero__base-price {
+    .pricing-base__price {
       font-size: 48px;
       letter-spacing: -1.5px;
+    }
+    .pricing-base__title {
+      font-size: 20px;
     }
     .pricing-hero__slider-stops {
       /* On tiny screens the 5 tick labels start to crowd. Hide the in-
