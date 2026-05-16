@@ -77,6 +77,34 @@ export const metadata: Metadata = {
   },
 };
 
+// Organization JSON-LD — injected on every page via root layout.
+// Helps search engines and AI crawlers understand what Pancake is.
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Pancake",
+  alternateName: "Pancake AI",
+  url: "https://getpancake.ai",
+  logo: "https://getpancake.ai/logo.png",
+  description:
+    "Pancake is the AI co-founder that makes your company autonomous. Deploy an org of AI agents — growth, engineering, operations — that run 24/7 and let you go from $1 to $1M in revenue without hiring.",
+  foundingDate: "2024",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "535 Mission St",
+    addressLocality: "San Francisco",
+    addressRegion: "CA",
+    postalCode: "94105",
+    addressCountry: "US",
+  },
+  sameAs: [
+    "https://x.com/getpancake_ai",
+    "https://www.youtube.com/@trypancake",
+    "https://www.linkedin.com/company/get-pancake",
+    "https://trypancake.ai",
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -93,6 +121,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-M37BB9RG');`,
           }}
+        />
+        {/* Organization JSON-LD — present on every page */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
       </head>
       {/* Body styles (margin: 0; background-color: var(--surface); color:
