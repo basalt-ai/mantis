@@ -200,7 +200,9 @@ export const talkToHuman = {
  */
 export const pricing = {
   // Hard pricing numbers — source of truth.
-  infrastructureDollars: 29,
+  // $49 always-on setup + a token usage pack. Five discrete pack sizes:
+  // $50, $100, $250, $500, $1000 — visible as the slider stops.
+  infrastructureDollars: 49,
   /** 5 discrete slider stops. Each tier has a pancake-universe plan name
    *  used as the active kicker above the price, plus an audience line
    *  shown where the old "X hours of agent work a week" sat. `pancakes`
@@ -211,29 +213,80 @@ export const pricing = {
    *  golden → purple → mint → orange → pink. So each tier's accent maps
    *  to the colour that lands at the bottom of its stack. */
   tiers: [
-    { totalDollars: 49,  tokens: 5_000_000,   pancakes: 1, planName: "Syrup",      forAudience: "For side projects",        accent: "#F38F43" }, // golden → yellow-40
-    { totalDollars: 129, tokens: 25_000_000,  pancakes: 2, planName: "Flapjack",   forAudience: "For solopreneurs",         accent: "#8D43FD" }, // purple-40
-    { totalDollars: 229, tokens: 50_000_000,  pancakes: 3, planName: "Stack",      forAudience: "For small founding teams", accent: "#037D48" }, // green-30 (mint)
-    { totalDollars: 329, tokens: 75_000_000,  pancakes: 4, planName: "Tower",      forAudience: "For startups",             accent: "#D43900" }, // orange-30
-    { totalDollars: 529, tokens: 125_000_000, pancakes: 5, planName: "Skyscraper", forAudience: "For scaleups",             accent: "#E33A6A" }, // pink-40
+    { totalDollars: 99,   tokens: 12_500_000,  pancakes: 1, planName: "Syrup",      forAudience: "For side projects",        accent: "#F38F43" }, // $49 setup + $50 pack — golden → yellow-40
+    { totalDollars: 149,  tokens: 25_000_000,  pancakes: 2, planName: "Flapjack",   forAudience: "For solopreneurs",         accent: "#8D43FD" }, // $49 setup + $100 pack — purple-40
+    { totalDollars: 299,  tokens: 62_500_000,  pancakes: 3, planName: "Stack",      forAudience: "For small founding teams", accent: "#037D48" }, // $49 setup + $250 pack — green-30 (mint)
+    { totalDollars: 549,  tokens: 125_000_000, pancakes: 4, planName: "Tower",      forAudience: "For startups",             accent: "#D43900" }, // $49 setup + $500 pack — orange-30
+    { totalDollars: 1049, tokens: 250_000_000, pancakes: 5, planName: "Skyscraper", forAudience: "For scaleups",             accent: "#E33A6A" }, // $49 setup + $1000 pack — pink-40
   ],
   defaultTierIndex: 0,
   trial: {
     days: 7,
-    freeTokensDollars: 20,
+    /** $100 token usage cap for the 7-day trial. Surfaced verbatim in
+     *  `trialCaption`; kept as a number for back-office math. */
+    freeTokensDollars: 100,
   },
   currency: "USD" as const,
   currencySymbol: "$",
   // Hero copy.
   title: "No tiers. No tricks.",
-  subtitle: "$29 for the always-on setup. Usage at cost.",
+  /** Reflects the bundle: a $49 always-on cloud (the machine + the
+   *  tools that run on it) plus a monthly token allocation. One slider,
+   *  one total. */
+  subtitle: "$49 always-on cloud + tokens. One slider, one total.",
   perMonth: "/ month",
-  /** Two-part breakdown shown as small math under the big price. */
-  breakdownFixedLabel: "always-on setup",
-  breakdownTokensLabel: "token usage",
+  /** Two-card hero. LEFT card = the fixed-price promise; RIGHT card =
+   *  the variable token pack the user picks. Reads as "Pancake is $49
+   *  for the always-on cloud. Tokens are bought separately, you pick
+   *  the pack." */
+  basePlan: {
+    kicker: "Always-on",
+    title: "Your own cloud computer",
+    body: "Always on. Every feature below included.",
+  },
+  /** Tokens card framing. */
+  tokenPickLabel: "Pick your token pack",
+  tokenPickCaption: "Bigger pack, more output.",
+  totalLabel: "/ month total",
+  /** Two-part breakdown — kept for back-office/aria use; the visible
+   *  hero no longer shows them as inline math. */
+  breakdownFixedLabel: "always-on cloud",
+  breakdownTokensLabel: "tokens",
+  /** Everything bundled into the $49 always-on cloud — shown as a
+   *  dedicated section right under the hero. 12 punchy items, each
+   *  with a marketing-ready label + a one-line detail + an `icon`
+   *  key mapped in IncludedIcons. The "Soon" flag tags features
+   *  shipping later so the roadmap stays honest.
+   *
+   *  Order is row-grouped (3 cols × 4 rows) so related items sit next
+   *  to each other in the grid:
+   *    R1 — foundation:  compute · secrets · LLM
+   *    R2 — messaging:   Slack · iMessage · phone   ← iMessage + phone
+   *                                                   adjacent (linked)
+   *    R3 — written/web: inbox · browsing · live web
+   *    R4 — capabilities: search · sub-agents · credit-card */
+  included: {
+    title: "Everything your $49 buys",
+    subtitle:
+      "All bundled. No add-ons, no upgrade tiers — every plan gets the full kit.",
+    items: [
+      { name: "Always-on compute",        detail: "Private cloud computer, 50GB storage", icon: "linux" },
+      { name: "Encrypted secrets",        detail: "API keys + credentials, E2E",          icon: "vault" },
+      { name: "Any LLM, your choice",     detail: "Claude, GPT, Gemini — model-agnostic", icon: "harness" },
+      { name: "Slack-native",             detail: "Lives in your channels and DMs",       icon: "slack" },
+      { name: "iMessage access",          detail: "Real iMessage threads",                icon: "imessage" },
+      { name: "Real phone number",        detail: "SMS + voice",                          icon: "phone" },
+      { name: "Dedicated inbox",          detail: "Send and receive email",               icon: "mail" },
+      { name: "Authenticated browsing",   detail: "Signed into your accounts",            icon: "browser" },
+      { name: "Live web access",          detail: "Real-time fetch from any URL",         icon: "globe" },
+      { name: "Deep web search",          detail: "Agentic research + crawling",          icon: "search" },
+      { name: "Unlimited sub-agents",     detail: "Run multiple agents in parallel",      icon: "subagents" },
+      { name: "Credit card for agents",   detail: "For real-world purchases", soon: true, icon: "creditcard" },
+    ],
+  } as const,
   // Trial CTA below the widget.
   trialCta: "Start your free trial",
-  trialCaption: "7 days free. No card required.",
+  trialCaption: "7-day free trial · $100 token cap",
   trialHref: "/signup",
   // 3-column manifesto (shown BEFORE the buys cards — trust before value:
   // the user needs to believe the price is fair before they care what it
@@ -250,12 +303,12 @@ export const pricing = {
       {
         title: "Your own cloud computer.",
         body:
-          "$29 buys a small machine in the cloud. Always on, always yours, never shared.",
+          "$49 buys a small machine in the cloud with everything your agents need — harness, phone, email, vault, browser, 50GB storage. Always on, always yours, never shared.",
       },
       {
         title: "No surprises.",
         body:
-          "Tokens reset monthly. Hit the limit, bump the slider. Cancel anytime, takes effect immediately.",
+          "Tokens reset monthly. Hit the limit, bump the slider — the new tier takes effect immediately, prorated. Cancel anytime.",
       },
     ],
   },
@@ -329,8 +382,8 @@ export const pricing = {
     title: "Questions",
     items: [
       {
-        q: "What is the $29 for?",
-        a: "The always-on machine your agents live in. A small cloud computer that holds your context, runs your jobs, and reports back. Think Mac mini in the cloud.",
+        q: "What is the $49 for?",
+        a: "Your always-on cloud computer — the machine your agents live in. A small box in the cloud that holds your context, runs your jobs, and reports back. Includes harness, phone, email, vault, browser, and 50GB storage. Think Mac mini in the cloud, with everything your agents need preinstalled.",
       },
       {
         q: "Does my usage roll over?",

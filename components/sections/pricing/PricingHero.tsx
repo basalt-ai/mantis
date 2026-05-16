@@ -10,20 +10,31 @@ import { PancakeStack } from "./PancakeStack";
 type Pricing = typeof pricingCopy;
 
 /**
- * Pricing hero — single card with a 2-column grid inside.
+ * Token-pack card — the RIGHT of the two pricing cards. The $49
+ * base plan lives on the LEFT (PricingBase, fixed). This card is
+ * entirely about the variable: the user picks a token pack via the
+ * slider, the pancake mascot grows to match, and the trial CTA
+ * sends them off.
  *
- * Top-left corner: plan kicker (tier name) as a soft tinted pill, brand-
- *   coloured per tier via `--plan-accent`. Lives at the card corner,
- *   absolutely positioned, so it acts as a tag for the WHOLE card rather
- *   than a label for one specific element. Floats above the grid layout.
- * Left column (`__info`): price · breakdown · audience · slider · CTA.
- * Right column (`__mascot`): pancake stack only. The stack's ground
- *   shadow is vertically aligned with the CTA button via padding-bottom
- *   on the mascot column (see components.css).
+ * Internal layout: a 2-column grid (info left, pancake right). The
+ * info column flows top-to-bottom as:
  *
- * Slider stop labels are absolutely positioned at exact tick percentages
- * (0%, 25%, 50%, 75%, 100%) so they line up with the slider thumb track
- * positions rather than drifting based on flex-cell math.
+ *   SYRUP                       ← tier kicker (top-left, tier-tinted)
+ *   Pick your token pack
+ *   How much your agents…       ← caption, framing what the slider does
+ *
+ *   [────●────]
+ *   $50  $100  $250  $500  $1000
+ *
+ *   $99 / month total · For side projects
+ *
+ *   [Start your free trial]
+ *   7-day free trial · $100 token cap
+ *
+ *   (pancake mascot column on the right, full height)
+ *
+ * No $49 mention here — that's the OTHER card's job. Keeping the two
+ * concerns separate is the whole point of the two-card split.
  */
 export function PricingHero({ pricing }: { pricing: Pricing }) {
   const tiers = pricing.tiers;
@@ -43,43 +54,16 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
       </p>
 
       <div className="pricing-hero__info">
-        <div className="pricing-hero__readout">
-          <p className="pricing-hero__total" aria-live="polite">
-            <span className="pricing-hero__total-symbol">{pricing.currencySymbol}</span>
-            {tier.totalDollars}
-            <span className="pricing-hero__total-suffix">{pricing.perMonth}</span>
-          </p>
-          <p className="pricing-hero__breakdown" aria-live="polite">
-            <span className="pricing-hero__breakdown-part">
-              <span className="pricing-hero__breakdown-amount">
-                {pricing.currencySymbol}
-                {pricing.infrastructureDollars}
-              </span>
-              <span className="pricing-hero__breakdown-label">
-                {pricing.breakdownFixedLabel}
-              </span>
-            </span>
-            <span className="pricing-hero__breakdown-plus" aria-hidden>
-              +
-            </span>
-            <span className="pricing-hero__breakdown-part">
-              <span className="pricing-hero__breakdown-amount">
-                {pricing.currencySymbol}
-                {tokenPortion}
-              </span>
-              <span className="pricing-hero__breakdown-label">
-                {pricing.breakdownTokensLabel}
-              </span>
-            </span>
-          </p>
-          <p className="pricing-hero__audience" aria-live="polite">
-            {tier.forAudience}
+        <div className="pricing-hero__choice">
+          <p className="pricing-hero__choice-label">{pricing.tokenPickLabel}</p>
+          <p className="pricing-hero__choice-caption">
+            {pricing.tokenPickCaption}
           </p>
         </div>
 
         <div className="pricing-hero__slider-wrap">
           <label htmlFor={sliderId} className="sr-only">
-            plan size
+            token pack size
           </label>
           <input
             id={sliderId}
@@ -89,7 +73,7 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
             step={1}
             value={tierIndex}
             onChange={(e) => setTierIndex(Number(e.target.value))}
-            aria-valuetext={`${tier.planName}, ${pricing.currencySymbol}${tier.totalDollars} per month`}
+            aria-valuetext={`${pricing.currencySymbol}${tokenPortion} token pack, ${pricing.currencySymbol}${tier.totalDollars} per month total`}
             className="pricing-hero__slider"
             style={
               { "--progress": tierIndex / (tiers.length - 1) } as React.CSSProperties
@@ -110,6 +94,17 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
               </button>
             ))}
           </div>
+        </div>
+
+        <div className="pricing-hero__result" aria-live="polite">
+          <p className="pricing-hero__result-amount">
+            {pricing.currencySymbol}
+            {tier.totalDollars}
+            {pricing.totalLabel}
+          </p>
+          <p className="pricing-hero__result-audience">
+            {tier.forAudience}
+          </p>
         </div>
 
         <div className="pricing-hero__cta">
