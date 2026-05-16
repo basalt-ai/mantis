@@ -2024,21 +2024,96 @@
     text-align: left;
   }
 
-  /* Readout cluster — price + breakdown stacked tightly together as
-     ONE pricing beat, then audience caption below as a soft second
-     beat. Order is: $229/mo → $29 + $200 → "For small founding teams".
-     Internal spacing: tight (8px) inside the price+breakdown pair to
-     keep them visually fused; larger (12px) to the audience line so it
-     reads as a related-but-distinct caption rather than a third stat. */
-  .pricing-hero__readout {
+  /* Base price block — "$49 / month" anchored as the hero number.
+     Price + caption stacked tight (8px). This is THE PROMISE: a fixed
+     number that doesn't move when the slider does. Sits at the top of
+     the info column so it's the first thing the eye lands on. */
+  .pricing-hero__base {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: var(--spacing-md);
   }
 
-  .pricing-hero__readout .pricing-hero__audience {
-    margin-top: var(--spacing-xxl);
+  .pricing-hero__base-caption {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    font-weight: 400;
+    color: var(--subtle-text);
+    max-width: 36ch;
+    text-align: left;
+    line-height: 1.4;
+  }
+
+  /* Choice block — "Pick your token pack" + the slider. Framed as a
+     deliberate add-on (the leading "+" makes the math metaphor
+     explicit) rather than an upgrade tier the user must select. */
+  .pricing-hero__choice {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    width: 100%;
+  }
+
+  .pricing-hero__choice-label {
+    margin: 0;
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--spacing-sm);
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* Big faded "+" that ties the choice block visually to the base
+     price above. Same size as the rest of the heading but dimmed so
+     it reads as a separator/operator, not punctuation. */
+  .pricing-hero__choice-plus {
+    font-family: var(--font-display);
+    font-size: 1.4em;
+    font-weight: 500;
+    line-height: 0.8;
+    color: var(--disabled-text);
+  }
+
+  /* Result line — "= $99 / month total · For side projects".
+     Small, understated. The total is shown as the OUTCOME of the
+     math above, not the headline. The audience persona shares the
+     line so the user can sanity-check both at once. */
+  .pricing-hero__result {
+    margin: 0;
+    display: inline-flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    font-family: var(--font-body);
+    font-size: var(--font-size-body-regular);
+    line-height: 1.4;
+    color: var(--subtle-text);
+  }
+
+  .pricing-hero__result-equals {
+    font-family: var(--font-display);
+    font-size: 1.2em;
+    font-weight: 500;
+    color: var(--disabled-text);
+  }
+
+  .pricing-hero__result-amount {
+    font-weight: 600;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pricing-hero__result-sep {
+    color: var(--disabled-text);
+  }
+
+  .pricing-hero__result-audience {
+    color: var(--subtle-text);
   }
 
   /* Right column — pancake stack only. No padding tricks: the SVG fills
@@ -2105,7 +2180,10 @@
     transition: color 280ms ease, background-color 280ms ease;
   }
 
-  .pricing-hero__total {
+  /* Hero price — "$49 / month" anchored as the big number. Same
+     typography as the old `__total` (64px display) — the size is what
+     makes it read as THE price, not a breakdown line. */
+  .pricing-hero__base-price {
     margin: 0;
     font-family: var(--font-display);
     font-weight: 500;
@@ -2116,9 +2194,9 @@
   }
 
   /* Aeonik renders the $ glyph noticeably taller than its lining digits;
-     scale the symbol down and lift it a bit so it reads as a prefix, not a
-     dominant character. */
-  .pricing-hero__total-symbol {
+     scale the symbol down and lift it a bit so it reads as a prefix, not
+     a dominant character. */
+  .pricing-hero__base-symbol {
     font-size: 0.62em;
     vertical-align: 0.18em;
     margin-right: 2px;
@@ -2126,77 +2204,12 @@
     letter-spacing: -0.02em;
   }
 
-  .pricing-hero__total-suffix {
+  .pricing-hero__base-suffix {
     margin-left: var(--spacing-sm);
     font-size: var(--font-size-body-regular);
     font-weight: 400;
     color: var(--subtle-text);
     letter-spacing: 0;
-  }
-
-  /* Audience caption directly under the price — anchors the tier to a
-     buyer persona ("For side projects", "For startups", …). Body face,
-     full text colour, regular weight; sized like body copy so the price
-     stays the visual anchor. */
-  .pricing-hero__audience {
-    margin: 0;
-    font-family: var(--font-body);
-    font-size: var(--font-size-body-regular);
-    font-weight: 400;
-    color: var(--text);
-    max-width: 32ch;
-    text-align: left;
-    line-height: 1.4;
-  }
-
-  /* Cost breakdown — `$29 always-on setup  +  $X in tokens`.
-     Apple-style rigor: one typeface (body), one size (13px). Hierarchy
-     comes from weight + color only, not face mixing. The `+` floats with
-     extra horizontal air so the two halves read as discrete components. */
-  .pricing-hero__breakdown {
-    margin: 0;
-    display: flex;
-    align-items: baseline;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    /* No horizontal gap on the row — the "+" span owns the spacing on
-       both sides via its own width, so any optical offset from glyph side
-       bearings is cancelled. */
-    gap: 4px 0;
-    font-family: var(--font-body);
-    font-size: 13px;
-    line-height: 1.4;
-    color: var(--subtle-text);
-  }
-
-  .pricing-hero__breakdown-part {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 6px;
-  }
-
-  .pricing-hero__breakdown-amount {
-    font-weight: 600;
-    color: var(--text);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .pricing-hero__breakdown-label {
-    font-weight: 400;
-    color: var(--subtle-text);
-  }
-
-  .pricing-hero__breakdown-plus {
-    /* Fixed-width centered box owns the spacing between the two halves so
-       the symbol is optically centered regardless of font side bearings.
-       40px = ~18px of breathing room on each side of the glyph. */
-    display: inline-flex;
-    justify-content: center;
-    align-items: baseline;
-    width: 40px;
-    text-align: center;
-    font-weight: 400;
-    color: var(--disabled-text);
   }
 
   .pricing-hero__slider-wrap {
@@ -2357,8 +2370,8 @@
       max-width: 200px;
     }
     .pricing-hero__info,
-    .pricing-hero__readout,
-    .pricing-hero__breakdown,
+    .pricing-hero__base,
+    .pricing-hero__choice,
     .pricing-hero__cta,
     .pricing-hero__cta-caption {
       align-items: center;
@@ -2370,11 +2383,11 @@
       justify-content: flex-start;
       padding-top: 0;
     }
-    .pricing-hero__readout .pricing-hero__audience {
-      margin-top: 0;
-    }
-    .pricing-hero__audience {
+    .pricing-hero__base-caption {
       text-align: center;
+    }
+    .pricing-hero__result {
+      justify-content: center;
     }
     .pricing-hero__slider-stop {
       font-size: 10px;
@@ -2400,7 +2413,7 @@
     .pricing-hero__mascot-stack {
       max-width: 160px;
     }
-    .pricing-hero__total {
+    .pricing-hero__base-price {
       font-size: 48px;
       letter-spacing: -1.5px;
     }

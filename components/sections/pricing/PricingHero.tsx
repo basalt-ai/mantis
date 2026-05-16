@@ -12,18 +12,27 @@ type Pricing = typeof pricingCopy;
 /**
  * Pricing hero — single card with a 2-column grid inside.
  *
- * Top-left corner: plan kicker (tier name) as a soft tinted pill, brand-
- *   coloured per tier via `--plan-accent`. Lives at the card corner,
- *   absolutely positioned, so it acts as a tag for the WHOLE card rather
- *   than a label for one specific element. Floats above the grid layout.
- * Left column (`__info`): price · breakdown · audience · slider · CTA.
- * Right column (`__mascot`): pancake stack only. The stack's ground
- *   shadow is vertically aligned with the CTA button via padding-bottom
- *   on the mascot column (see components.css).
+ * The price reads as a math equation rather than one big total:
  *
- * Slider stop labels are absolutely positioned at exact tick percentages
- * (0%, 25%, 50%, 75%, 100%) so they line up with the slider thumb track
- * positions rather than drifting based on flex-cell math.
+ *   $49 / month                  ← THE PROMISE (fixed, big, anchored)
+ *   always-on cloud · everything below included
+ *
+ *   + Pick your token pack       ← THE CHOICE (variable, slider)
+ *   [────●─── slider ───]
+ *   $50  $100  $250  $500  $1000
+ *
+ *   = $X / month total · For X audience   ← THE RESULT (small)
+ *
+ * Why: the previous layout led with "$99/month" as the big number
+ * and showed "$49 + $50" as a tiny breakdown line. That framing made
+ * users anchor on the total. Inverting the hierarchy — $49 huge,
+ * tokens as a separate user-chosen step, total as a calculation
+ * footer — communicates the real promise: "Pancake is $49. Then you
+ * pick the tokens you need."
+ *
+ * Top-left corner: plan kicker (tier name) as a soft tinted pill,
+ *   brand-coloured per tier via `--plan-accent`.
+ * Right column: pancake stack only.
  */
 export function PricingHero({ pricing }: { pricing: Pricing }) {
   const tiers = pricing.tiers;
@@ -43,74 +52,88 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
       </p>
 
       <div className="pricing-hero__info">
-        <div className="pricing-hero__readout">
-          <p className="pricing-hero__total" aria-live="polite">
-            <span className="pricing-hero__total-symbol">{pricing.currencySymbol}</span>
-            {tier.totalDollars}
-            <span className="pricing-hero__total-suffix">{pricing.perMonth}</span>
+        {/* THE PROMISE — fixed, big, anchored. The $49 is the brand
+            commitment; it never changes regardless of slider position. */}
+        <div className="pricing-hero__base">
+          <p className="pricing-hero__base-price">
+            <span className="pricing-hero__base-symbol">
+              {pricing.currencySymbol}
+            </span>
+            {pricing.infrastructureDollars}
+            <span className="pricing-hero__base-suffix">{pricing.perMonth}</span>
           </p>
-          <p className="pricing-hero__breakdown" aria-live="polite">
-            <span className="pricing-hero__breakdown-part">
-              <span className="pricing-hero__breakdown-amount">
-                {pricing.currencySymbol}
-                {pricing.infrastructureDollars}
-              </span>
-              <span className="pricing-hero__breakdown-label">
-                {pricing.breakdownFixedLabel}
-              </span>
-            </span>
-            <span className="pricing-hero__breakdown-plus" aria-hidden>
-              +
-            </span>
-            <span className="pricing-hero__breakdown-part">
-              <span className="pricing-hero__breakdown-amount">
-                {pricing.currencySymbol}
-                {tokenPortion}
-              </span>
-              <span className="pricing-hero__breakdown-label">
-                {pricing.breakdownTokensLabel}
-              </span>
-            </span>
-          </p>
-          <p className="pricing-hero__audience" aria-live="polite">
-            {tier.forAudience}
+          <p className="pricing-hero__base-caption">
+            {pricing.basePriceCaption}
           </p>
         </div>
 
-        <div className="pricing-hero__slider-wrap">
-          <label htmlFor={sliderId} className="sr-only">
-            plan size
-          </label>
-          <input
-            id={sliderId}
-            type="range"
-            min={0}
-            max={tiers.length - 1}
-            step={1}
-            value={tierIndex}
-            onChange={(e) => setTierIndex(Number(e.target.value))}
-            aria-valuetext={`${tier.planName}, ${pricing.currencySymbol}${tier.totalDollars} per month`}
-            className="pricing-hero__slider"
-            style={
-              { "--progress": tierIndex / (tiers.length - 1) } as React.CSSProperties
-            }
-          />
-          <div className="pricing-hero__slider-stops" aria-hidden>
-            {tiers.map((t, i) => (
-              <button
-                key={t.planName}
-                type="button"
-                className="pricing-hero__slider-stop"
-                data-active={i === tierIndex ? "true" : undefined}
-                onClick={() => setTierIndex(i)}
-                style={{ left: `${(i / (tiers.length - 1)) * 100}%` }}
-              >
-                {pricing.currencySymbol}
-                {t.totalDollars - pricing.infrastructureDollars}
-              </button>
-            ))}
+        {/* THE CHOICE — variable, user-driven. The slider is framed as
+            "pick your pack" rather than "size your plan", so tokens
+            feel like a deliberate add-on, not an upgrade tier. The
+            leading "+" makes the math metaphor explicit. */}
+        <div className="pricing-hero__choice">
+          <p className="pricing-hero__choice-label">
+            <span className="pricing-hero__choice-plus" aria-hidden>
+              +
+            </span>
+            {pricing.tokenPickLabel}
+          </p>
+          <div className="pricing-hero__slider-wrap">
+            <label htmlFor={sliderId} className="sr-only">
+              token pack size
+            </label>
+            <input
+              id={sliderId}
+              type="range"
+              min={0}
+              max={tiers.length - 1}
+              step={1}
+              value={tierIndex}
+              onChange={(e) => setTierIndex(Number(e.target.value))}
+              aria-valuetext={`${pricing.currencySymbol}${tokenPortion} token pack, ${pricing.currencySymbol}${tier.totalDollars} per month total`}
+              className="pricing-hero__slider"
+              style={
+                { "--progress": tierIndex / (tiers.length - 1) } as React.CSSProperties
+              }
+            />
+            <div className="pricing-hero__slider-stops" aria-hidden>
+              {tiers.map((t, i) => (
+                <button
+                  key={t.planName}
+                  type="button"
+                  className="pricing-hero__slider-stop"
+                  data-active={i === tierIndex ? "true" : undefined}
+                  onClick={() => setTierIndex(i)}
+                  style={{ left: `${(i / (tiers.length - 1)) * 100}%` }}
+                >
+                  {pricing.currencySymbol}
+                  {t.totalDollars - pricing.infrastructureDollars}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
+
+        {/* THE RESULT — small, deliberately understated. The total is
+            just a calculation outcome here, not the headline. Pairs
+            with the audience label so the user can sanity-check both
+            number and persona-fit in one glance. */}
+        <p className="pricing-hero__result" aria-live="polite">
+          <span className="pricing-hero__result-equals" aria-hidden>
+            =
+          </span>
+          <span className="pricing-hero__result-amount">
+            {pricing.currencySymbol}
+            {tier.totalDollars}
+            {pricing.totalLabel}
+          </span>
+          <span className="pricing-hero__result-sep" aria-hidden>
+            ·
+          </span>
+          <span className="pricing-hero__result-audience">
+            {tier.forAudience}
+          </span>
+        </p>
 
         <div className="pricing-hero__cta">
           <Link

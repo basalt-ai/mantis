@@ -235,12 +235,15 @@ export const pricing = {
    *  one total. */
   subtitle: "$49 always-on cloud + tokens. One slider, one total.",
   perMonth: "/ month",
-  /** Two-part breakdown shown as small math under the big price.
-   *  "always-on cloud" labels the recurring infrastructure side of the
-   *  bundle (the cloud machine + tools that run on it). "tokens" labels
-   *  the monthly token allocation that ships with the plan. Avoid
-   *  jargon like "pod" — the words should be self-explanatory at first
-   *  read. */
+  /** New hero framing: present the $49 as the FIXED promise (the big
+   *  hero number) and the token pack as a separate VARIABLE the user
+   *  picks. Reads "Pancake is $49 + tokens you choose" rather than
+   *  "Pancake costs $99 broken down into $49 + $50". */
+  basePriceCaption: "always-on cloud — every feature below included",
+  tokenPickLabel: "Pick your token pack",
+  totalLabel: "/ month total",
+  /** Two-part breakdown — kept for back-office/aria use; the visible
+   *  hero no longer shows them as inline math. */
   breakdownFixedLabel: "always-on cloud",
   breakdownTokensLabel: "tokens",
   /** Everything bundled into the $49 always-on cloud — shown as a
