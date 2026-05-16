@@ -16,6 +16,7 @@
  */
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import {
@@ -259,8 +260,7 @@ export function HomeOrgDiagramMobile() {
 
         <div className="home-org-mobile-mascot home-org-mobile-mascot--pancake">
           <div className="home-org-mobile-mascot__icon">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/pancake-monster.png" alt="" width={108} height={108} />
+            <Image src="/pancake-monster.png" alt="" width={108} height={108} />
           </div>
           <div className="home-org-mobile-mascot__chip">
             <p className="home-org-mobile-mascot__title">Pancake</p>

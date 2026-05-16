@@ -6,6 +6,7 @@
 
 "use client";
 
+import Image from "next/image";
 import { useId, useRef, useState } from "react";
 
 import { getInitialDeptMap, HomeOrgLiveRows } from "@/components/sections/home/HomeOrgLiveRows";
@@ -131,8 +132,14 @@ export function HomeOrgDiagram() {
         </div>
 
         <div className="home-org-diagram__monster home-org-diagram__abs" data-node-id="428:15009">
-          {/* eslint-disable-next-line @next/next/no-img-element -- static mascot asset; sized to Figma 128² */}
-          <img className="home-org-diagram__monster-img" src="/pancake-monster.png" alt="" width={128} height={128} decoding="async" />
+          <Image
+            className="home-org-diagram__monster-img"
+            src="/pancake-monster.png"
+            alt=""
+            width={128}
+            height={128}
+            priority
+          />
         </div>
 
         <HomeOrgLiveRows scrollRootRef={diagramRootRef} deptRows={deptRows} setDeptRows={setDeptRows} />

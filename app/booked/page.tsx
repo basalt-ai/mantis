@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function BookedPage() {
   return (
-    <main className="min-h-screen">
+    <main id="main-content" className="min-h-screen">
       <Nav />
       <div className="px-4 pb-24 pt-[calc(4.5rem+3rem)] sm:px-6 sm:pt-[calc(4.5rem+4rem)]">
         <div className="mx-auto max-w-3xl text-center">

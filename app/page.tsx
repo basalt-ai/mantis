@@ -28,7 +28,7 @@ const softwareApplicationJsonLd = {
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main id="main-content" className="min-h-screen">
       {/* SoftwareApplication JSON-LD — homepage only */}
       <script
         type="application/ld+json"

@@ -22,7 +22,7 @@ export default function BlogIndex() {
   const posts = getAllPosts();
 
   return (
-    <main className="flex min-h-screen flex-col" style={{ backgroundColor: "var(--surface)", color: "var(--text)" }}>
+    <main id="main-content" className="flex min-h-screen flex-col" style={{ backgroundColor: "var(--surface)", color: "var(--text)" }}>
       <HomeNav />
 
       <section className="mx-auto w-full max-w-3xl flex-1 px-6 py-24">

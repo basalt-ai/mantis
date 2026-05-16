@@ -141,6 +141,40 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
+        <a href="#main-content" className="skip-to-content">
+          Skip to main content
+        </a>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                name: "Pancake",
+                url: "https://www.getpancake.ai",
+                logo: "https://www.getpancake.ai/icon.png",
+                description:
+                  "Pancake gets you a cofounder that knows your company better than you and handles 50% of the job.",
+                sameAs: [
+                  "https://x.com/getpancake_ai",
+                  "https://www.linkedin.com/company/getpancake",
+                ],
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                name: "Pancake",
+                url: "https://www.getpancake.ai",
+                potentialAction: {
+                  "@type": "SearchAction",
+                  target: "https://www.getpancake.ai/search?q={search_term_string}",
+                  "query-input": "required name=search_term_string",
+                },
+              },
+            ]),
+          }}
+        />
         {children}
       </body>
     </html>

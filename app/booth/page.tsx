@@ -1,4 +1,5 @@
 import QRCode from "qrcode";
+import Image from "next/image";
 import { BasaltOfficialLogo } from "@/components/shared/BasaltOfficialLogo";
 import { getBoothQrEmailDisplay, getBoothQrPayload } from "@/lib/booth-url";
 
@@ -115,8 +116,7 @@ export default async function BoothPage() {
             className="border-[8px] border-black bg-white p-2"
             style={{ boxShadow: "6px 6px 0 0 #0a0a0a" }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element -- data URL from server QR */}
-            <img src={qrDataUrl} width={240} height={240} alt="" decoding="async" />
+            <Image src={qrDataUrl} width={240} height={240} alt="" unoptimized />
           </div>
           <p
             className="text-center font-mono text-[22px] font-semibold text-black"

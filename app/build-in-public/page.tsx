@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function BuildInPublicPage() {
-  return <main className="min-h-screen" />;
+  return <main id="main-content" className="min-h-screen" />;
 }

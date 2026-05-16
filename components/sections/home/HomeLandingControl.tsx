@@ -14,6 +14,8 @@
  * All asset paths point at `public/control/` (SVGs exported via Figma MCP).
  */
 
+import Image from "next/image";
+
 const FEATURE_LIST_TIMEOUT_LABEL = "Approve before it ships";
 const FEATURE_AUDIT_LABEL = "Audit every action";
 const FEATURE_SCOPE_LABEL = "Limit the scope";
@@ -96,8 +98,7 @@ function ApprovalCard() {
           <li key={row.id} className="home-landing-control-approve-row">
             <div className="home-landing-control-approve-row__main">
               <p className="home-landing-control-approve-row__role">
-                {/* eslint-disable-next-line @next/next/no-img-element -- Figma SVG export */}
-                <img src={row.dotSrc} alt="" width={7} height={7} aria-hidden />
+                <Image src={row.dotSrc} alt="" width={7} height={7} aria-hidden unoptimized />
                 <span>{row.role}</span>
               </p>
               <p className="home-landing-control-approve-row__action">{row.action}</p>
@@ -170,28 +171,22 @@ function ScopeCard() {
       </header>
       <div className="home-landing-control-scope" aria-hidden>
         <div className="home-landing-control-scope__ellipse home-landing-control-scope__ellipse--center">
-          {/* eslint-disable-next-line @next/next/no-img-element -- Figma SVG */}
-          <img src="/control/sandbox-e1.svg" alt="" />
+          <Image src="/control/sandbox-e1.svg" alt="" fill unoptimized />
         </div>
         <div className="home-landing-control-scope__ellipse home-landing-control-scope__ellipse--right">
-          {/* eslint-disable-next-line @next/next/no-img-element -- Figma SVG */}
-          <img src="/control/sandbox-e2.svg" alt="" />
+          <Image src="/control/sandbox-e2.svg" alt="" fill unoptimized />
         </div>
         <div className="home-landing-control-scope__ellipse home-landing-control-scope__ellipse--left">
-          {/* eslint-disable-next-line @next/next/no-img-element -- Figma SVG */}
-          <img src="/control/sandbox-e3.svg" alt="" />
+          <Image src="/control/sandbox-e3.svg" alt="" fill unoptimized />
         </div>
         <div className="home-landing-control-scope__icon home-landing-control-scope__icon--a">
-          {/* eslint-disable-next-line @next/next/no-img-element -- Figma SVG */}
-          <img src="/control/sandbox-icon-1.svg" alt="" />
+          <Image src="/control/sandbox-icon-1.svg" alt="" fill unoptimized />
         </div>
         <div className="home-landing-control-scope__icon home-landing-control-scope__icon--b">
-          {/* eslint-disable-next-line @next/next/no-img-element -- Figma SVG */}
-          <img src="/control/sandbox-icon-2.svg" alt="" />
+          <Image src="/control/sandbox-icon-2.svg" alt="" fill unoptimized />
         </div>
         <div className="home-landing-control-scope__icon home-landing-control-scope__icon--c">
-          {/* eslint-disable-next-line @next/next/no-img-element -- Figma SVG */}
-          <img src="/control/sandbox-icon-3.svg" alt="" />
+          <Image src="/control/sandbox-icon-3.svg" alt="" fill unoptimized />
         </div>
       </div>
     </article>

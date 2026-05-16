@@ -89,7 +89,7 @@ export default async function BlogPost({ params }: Props) {
       : null;
 
   return (
-    <main className="flex min-h-screen flex-col" style={{ backgroundColor: "var(--surface)", color: "var(--text)" }}>
+    <main id="main-content" className="flex min-h-screen flex-col" style={{ backgroundColor: "var(--surface)", color: "var(--text)" }}>
       {/* JSON-LD structured data */}
       <script
         type="application/ld+json"
