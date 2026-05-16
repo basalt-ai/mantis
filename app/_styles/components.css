@@ -2104,8 +2104,11 @@
      squircle) so the two read as a balanced pair. Content centred
      vertically because the card has less content than the right one
      — centering puts the big $49 at the optical mid-point, aligning
-     visually with the slider on the right card. */
+     visually with the slider on the right card. position: relative
+     so the "Always-on" kicker can anchor to the top-left corner the
+     same way the SYRUP kicker does on the right card. */
   .pricing-base {
+    position: relative;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -2120,8 +2123,14 @@
   }
 
   /* Always-on kicker — neutral-tinted pill (no tier accent here; the
-     base price never changes so it doesn't need to colour-shift). */
+     base price never changes so it doesn't need to colour-shift).
+     Absolutely positioned at the top-left corner with the SAME offset
+     as the SYRUP kicker on the right card (top/left: spacing-xxl) so
+     the two kickers line up perfectly across the section. */
   .pricing-base__kicker {
+    position: absolute;
+    top: var(--spacing-xxl);
+    left: var(--spacing-xxl);
     margin: 0;
     display: inline-flex;
     align-items: center;
@@ -2447,7 +2456,8 @@
       padding: var(--spacing-xl);
       border-radius: 24px;
     }
-    .pricing-hero__plan-kicker {
+    .pricing-hero__plan-kicker,
+    .pricing-base__kicker {
       top: var(--spacing-xl);
       left: var(--spacing-xl);
       padding: 4px 10px;
