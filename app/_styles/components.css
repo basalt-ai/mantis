@@ -2069,33 +2069,32 @@
     max-width: 42ch;
   }
 
-  /* Result line — "$99 / month total · For side projects". Lives
-     directly under the slider stops. The TOTAL is the outcome of
-     base + selected pack; the audience persona shares the line so
-     the user reads price + persona-fit in one glance. */
+  /* Result block — "$X / month total" on line 1, audience persona
+     on line 2. Stacked (not inline) so the audience NEVER wraps onto
+     a second line on its own, regardless of whether the total is
+     "$99" (short) or "$1049" (long). Previously the inline-flex +
+     flex-wrap layout was inconsistent: at small totals both fit on
+     one line; at large totals the audience dropped to a new line —
+     felt like a layout glitch when scrubbing the slider. */
   .pricing-hero__result {
     margin: 0;
-    display: inline-flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: var(--spacing-sm);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
     font-family: var(--font-body);
     font-size: var(--font-size-body-regular);
     line-height: 1.4;
-    color: var(--subtle-text);
   }
 
   .pricing-hero__result-amount {
+    margin: 0;
     font-weight: 600;
     color: var(--text);
     font-variant-numeric: tabular-nums;
   }
 
-  .pricing-hero__result-sep {
-    color: var(--disabled-text);
-  }
-
   .pricing-hero__result-audience {
+    margin: 0;
     color: var(--subtle-text);
   }
 
@@ -2433,7 +2432,8 @@
       text-align: center;
     }
     .pricing-hero__result {
-      justify-content: center;
+      align-items: center;
+      text-align: center;
     }
     .pricing-hero__slider-stop {
       font-size: 10px;

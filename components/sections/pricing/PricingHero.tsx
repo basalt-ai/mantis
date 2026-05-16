@@ -96,19 +96,16 @@ export function PricingHero({ pricing }: { pricing: Pricing }) {
           </div>
         </div>
 
-        <p className="pricing-hero__result" aria-live="polite">
-          <span className="pricing-hero__result-amount">
+        <div className="pricing-hero__result" aria-live="polite">
+          <p className="pricing-hero__result-amount">
             {pricing.currencySymbol}
             {tier.totalDollars}
             {pricing.totalLabel}
-          </span>
-          <span className="pricing-hero__result-sep" aria-hidden>
-            ·
-          </span>
-          <span className="pricing-hero__result-audience">
+          </p>
+          <p className="pricing-hero__result-audience">
             {tier.forAudience}
-          </span>
-        </p>
+          </p>
+        </div>
 
         <div className="pricing-hero__cta">
           <Link
